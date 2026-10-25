@@ -1,4 +1,4 @@
-// POST /api/interpret {spread, question, cards:[{id, reversed}]} -> {text}
+// POST /api/interpret {spread, question, cards:[{id, reversed}]} -> {cards:[one reading per card], whole}
 // Writes a personal interpretation of a finished tarot reading with OpenAI. Cards are looked up on the
 // server from public/tarot.js, so only ids and orientations are accepted from the client.
 import '../../public/tarot.js';
@@ -34,9 +34,10 @@ export default async req => {
     body: JSON.stringify({
       model: Netlify.env.get('OPENAI_TEXT_MODEL') || 'gpt-5.4-mini',
       messages: [
-        { role: 'system', content: 'You are the gentle tarot reader of Kosmia, a vintage, contemplative astrology app. Write a warm, thoughtful interpretation in British English, 150 to 230 words, in three short paragraphs: how the cards speak to each other in their positions, what they suggest about the question, and one reflective invitation to close. Speak to the reader as "you". Treat tarot as a mirror for reflection, not prediction: no certainties about the future, no medical, legal or financial advice. Plain prose, no headings, no lists, no emoji.' },
+        { role: 'system', content: 'You are the gentle tarot reader of Kosmia, a vintage, contemplative astrology app. Write in British English, speaking to the reader as "you". Treat tarot as a mirror for reflection, not prediction: no certainties about the future, no medical, legal or financial advice, no emoji. Reply with JSON only: {"cards": [one string per card, in the order given, 40 to 70 words each, reading that card in its position and in light of the question], "whole": "the reading as a whole, 110 to 170 words in two short paragraphs: how the cards connect and build on one another, what they suggest together about the question, closing with one reflective invitation"}.' },
         { role: 'user', content: `Spread: ${sp[0]}\nQuestion: ${q || '(none, a general reading)'}\nCards:\n${lines}` }
       ],
+      response_format: { type: 'json_object' },
       user: user.id
     })
   });
@@ -45,7 +46,10 @@ export default async req => {
     console.error('openai', res.status, body.error?.message);
     return fail(502, 'The cards are quiet right now. Try again in a moment.');
   }
-  return Response.json({ text: body.choices?.[0]?.message?.content?.trim() || '' });
+  let out = {};
+  try { out = JSON.parse(body.choices?.[0]?.message?.content || '{}'); } catch {}
+  const per = Array.isArray(out.cards) ? out.cards.slice(0, cards.length).map(x => String(x || '').trim()) : [];
+  return Response.json({ cards: per, whole: String(out.whole || '').trim() });
 };
 
 export const config = { path: '/api/interpret', method: 'POST' };

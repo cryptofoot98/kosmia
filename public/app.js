@@ -184,8 +184,7 @@ const FOOT={
  horoscopes:[['general','Overview'],['love','Love'],['health','Health'],['career','Career'],['finance','Finance']],
  love:[['match','Compatibility'],['saved','Saved Affinities']],
  fortune:[['today','Today’s Whisper'],['collection','My Collection'],['reflections','Reflections']],
- tarot:[['new','New Reading'],['history','History']],
- chart:[['chart','Chart'],['planets','Planets'],['aspects','Aspects']],
+  chart:[['chart','Chart'],['planets','Planets'],['aspects','Aspects']],
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
 };
@@ -234,8 +233,8 @@ views.home=()=>{
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
  <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-act="tohoroscope">More</button></div></section>
- <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<div class="row whisper-acts"><button class="btn ghost" data-act="savecard" ${S.saved.some(x=>x.date===dkey())?'disabled':''}>${S.saved.some(x=>x.date===dkey())?'Saved':'Save Whisper'}</button><button class="btn" data-act="toreflect">Your Reflection</button></div>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
- <div class="cosmos">${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}</div>
+ <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<div class="row whisper-acts"><button class="btn ghost" data-act="savecard" ${S.saved.some(x=>x.date===dkey())?'disabled':''}>${S.saved.some(x=>x.date===dkey())?'Saved':'Save Whisper'}</button><button class="btn" data-act="toreflect">My Reflection</button></div>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
+ <div class="cosmos">${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`,'glass')}</div>
  </div>`;
 };
 // a tarot card's face: its painted artwork (art/deck) and the numeral and title set by the app
@@ -285,7 +284,6 @@ views.fortune=()=>{
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
- if(t==='history')return `<div class="stack"><h1>Reading History</h1>${S.readings.length?S.readings.map(r=>panel(`<h3>${esc(SPREADS[r.spread].n)}</h3><p class="muted">${r.date}${r.q?' · “'+esc(r.q)+'”':''}</p>${r.cards.map(c=>`<p>${esc(c.pos)}: ${esc(c.name)}${c.rev?' (reversed)':''}</p>`).join('')}`)).join(''):panel('<h3>Your reading history is waiting for its first story</h3><p>Complete a reading and save it to find it here.</p>')}</div>`;
  const sp=SPREADS[T.spread];
  // 1. the question and the reading type, chosen like a sign; choosing one shuffles the deck
  if(T.stage==='setup')return `<div class="stack"><h1>What Is Yet to Be Revealed?</h1><p class="quote" style="text-align:center">A question, a choice, a turn of a card. What might you discover?</p><div class="label">Choose your reading</div><div class="row sign-row spread-row" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="chip" role="radio" aria-checked="${T.spread===k}" data-act="tspread" data-k="${k}">${pic('spreads',k,'sign-ico')||'<span class="glyph">✦</span>'}<span class="sign-nm">${x.s}</span><span class="spread-n">${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything, or a topic: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
@@ -293,8 +291,8 @@ views.tarot=()=>{
  if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted" style="text-align:center">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
  const cards=T.drawn,done=cards.every(c=>c.shown);
- return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote" style="text-align:center">“${esc(T.q)}”</p>`:''}<p class="muted" style="text-align:center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p>${cards.map((c,i)=>`<div class="rd"><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face">${tarotFace(c)}</div></div></div><div><div class="label">${c.pos}</div>${c.shown?`<h3>${c.name}${c.rv?' · reversed':''}</h3><p class="muted">${c.rv?c.rev:c.up}</p><p>${c.rv?c.revm:c.upm}</p>`:'<p class="muted">Face down</p>'}</div></div>`).join('')}
- ${done?panel(`<h3>Interpretation</h3>${T.ai?`<div class="ai-read">${T.ai.split(/\n+/).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in from Settings for a personal AI interpretation.</p>':''}`}<p class="muted">Symbols for reflection, not predictions.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`):''}
+ return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote" style="text-align:center">“${esc(T.q)}”</p>`:''}<p class="muted" style="text-align:center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p><div class="rd-grid${cards.length===1?' solo':''}">${cards.map((c,i)=>`<div class="rd-cell"><div class="label">${c.pos}</div><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face bare">${pic('deck',c.id,'tarot-art')}</div></div></div></div>`).join('')}</div>
+ ${done?panel(`<h3>Interpretation</h3>${T.ai?`<div class="ai-read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<div class="label">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</div><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><div class="label">The reading as a whole</div>${T.ai.whole.split(/\n+/).map(x=>`<p>${esc(x)}</p>`).join('')}`:''}</div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in from Settings for a personal AI interpretation.</p>':''}`}<p class="muted">Symbols for reflection, not predictions.</p><button class="btn" data-act="newread" style="align-self:center">New reading</button>`,'glass'):''}
  ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
 };
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
@@ -306,7 +304,7 @@ function tarotPop(c){const k=V.tctx||'love';
  <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="quote">${c[k]}</p></div></div>`}
 // once every card is face up, ask the server for a personal interpretation (signed-in only)
 function interpret(){const T=V.tarot;if(!C.user||T.aiState)return;T.aiState='loading';
- C.interpret(T.spread,T.q,T.drawn.map(c=>({id:c.id,reversed:c.rv}))).then(r=>{if(V.tarot===T&&r.text){T.ai=r.text}},e=>toast(e.message||'Could not interpret the reading')).then(()=>{T.aiState='done';render()})}
+ C.interpret(T.spread,T.q,T.drawn.map(c=>({id:c.id,reversed:c.rv}))).then(r=>{if(V.tarot===T&&(r.cards||r.whole)){T.ai=r}},e=>toast(e.message||'Could not interpret the reading')).then(()=>{T.aiState='done';render()})}
 
 function birthCalc(){
  const b=V.birth,[y,mo,d]=b.date.split('-').map(Number),[h,mi]=(b.unk?'12:00':b.time).split(':').map(Number);
@@ -383,8 +381,9 @@ function framed(sec,html){
   if(sec==='horoscopes'){const s=sg(V.exploreSign||S.sign);kick='Horoscope';title=s.name;sub=s.dates}
   if(plain(title).includes(kick))kick='';
  }
- const fs=Math.min(64,Math.round(720/Math.max(plain(title).length,1)));
- return `<div class="page"><header class="banner">${kick?`<span class="b-kick">${kick}</span>`:''}<h1 class="b-title" style="--fs:${fs}">${title}</h1>${sub?`<span class="b-sub">${sub}</span>`:''}</header><div class="frame"><div class="frame-in">${html}</div></div></div>`;
+ const n=Math.max(plain(title).length,1),wrap=n>16,fs=wrap?Math.max(44,Math.min(58,Math.round(1560/n))):Math.min(64,Math.round(720/n));
+ if(wrap)kick='';
+ return `<div class="page"><header class="banner">${kick?`<span class="b-kick">${kick}</span>`:''}<h1 class="b-title${wrap?' b-wrap':''}" style="--fs:${fs}">${title}</h1>${sub?`<span class="b-sub">${sub}</span>`:''}</header><div class="frame"><div class="frame-in">${html}</div></div></div>`;
 }
 // the page reserves exactly the menu bar's height (it grows when labels wrap on narrow screens)
 const navH=()=>{const n=$('#nav');if(!n.hidden)document.documentElement.style.setProperty('--navh',n.offsetHeight+'px')};

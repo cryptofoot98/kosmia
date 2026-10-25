@@ -87,8 +87,6 @@ textarea{min-height:110px;resize:vertical}
 .mini{aspect-ratio:2/3;border-radius:4px;border:1px solid #6b2a22;background:#4a1712 url(/art/cards/tarot-back.webp) center/cover;cursor:pointer;padding:0;position:relative}
 .mini[aria-pressed=true]{outline:2px solid var(--plum);transform:translateY(-6px)}
 .mini::after{content:none}
-.rd{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:start}
-.rd .scene{width:118px;cursor:pointer}
 .rev .face.front svg,.rev .face.front img.art{transform:rotate(180deg)}
 .face.front img.art{width:78%;aspect-ratio:1;object-fit:cover;mix-blend-mode:multiply}
 .sign-art{display:block;width:120px;height:120px;margin:0 auto;mix-blend-mode:multiply}
@@ -193,7 +191,7 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .whisper-acts .btn,.whisper-acts .btn.ghost{background:var(--lavender);color:#F6EAE2;opacity:1}
 .whisper-acts .btn[disabled]{background:#6B5843}
 /* horoscope page: illustrated sign icons (art/icons) with their names, no box; every category reuses the dashboard scene */
-.sign-row{gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:2px calc(50% - 33px) 6px;align-items:flex-start}
+.sign-row{gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:2px 0 6px;align-items:flex-start}
 .sign-row .chip,.sign-grid .chip{flex:0 0 auto;width:66px;height:auto;min-height:0;padding:0;border:0;border-radius:0;background:none;flex-direction:column;gap:2px}
 .sign-row .chip[aria-checked=true],.sign-grid .chip[aria-checked=true]{background:none;color:var(--plum);box-shadow:none}
 .sign-row .chip[aria-checked=true] .sign-ico,.sign-grid .chip[aria-checked=true] .sign-ico{filter:drop-shadow(0 0 5px rgba(139,106,62,.55))}
@@ -231,8 +229,7 @@ body.has-nav #app{padding-top:var(--navh,70px)}
 .reflect .reflect-q{margin-bottom:4px}
 /* tarot: burgundy sun-and-moon backs (art/cards/tarot-back.webp); faces are the painted art (art/deck) with the numeral and
    title set in the app on parchment, like a printed deck */
-.rd .face.back,.tarot-face~.face.back{background:#4a1712 url(/art/cards/tarot-back.webp) center/cover}
-.rd .face.back{background:#4a1712 url(/art/cards/tarot-back.webp) center/cover}
+.rd-cell .face.back{background:#4a1712 url(/art/cards/tarot-back.webp) center/cover}
 .face.front.tarot-face{padding:0;justify-content:flex-end;background:#EFE3CE;container-type:inline-size;justify-content:flex-end}
 .tarot-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .tf-num{position:absolute;top:3cqw;left:50%;transform:translateX(-50%);min-width:16cqw;padding:.4cqw 3cqw;border-radius:99px;background:rgba(244,234,214,.94);border:1px solid var(--gold);font-family:var(--serif);font-weight:700;font-size:6cqw;color:var(--plum);text-align:center}
@@ -253,13 +250,27 @@ body.has-nav #app{padding-top:var(--navh,70px)}
 .pop-x{position:absolute;top:8px;right:10px;width:40px;height:40px;border:0;background:none;font-size:1.8rem;line-height:1;color:var(--plum);cursor:pointer}
 /* horoscope page: the sign's scene sits small on the left, the reading on the right; the text may overlap the art's faded edge,
    so it carries a soft parchment halo to stay readable */
-.today.side{display:grid;grid-template-columns:42% 1fr;align-items:start;margin:0 -6px;text-align:left}
+.today.side{display:grid;grid-template-columns:52% 1fr;align-items:start;margin:0 -10px;text-align:left}
 .today.side .today-art{grid-area:1/1;width:100%;-webkit-mask-image:linear-gradient(to right,#000 55%,transparent 98%),linear-gradient(to bottom,transparent,#000 8%,#000 80%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,#000 55%,transparent 98%),linear-gradient(to bottom,transparent,#000 8%,#000 80%,transparent);mask-composite:intersect}
-.today.side .today-in{grid-area:1/2;margin:0 0 0 -14px;padding:14px 4px 6px 0;align-items:flex-start;gap:8px;text-shadow:0 0 6px #EFE3CE,0 0 12px #EFE3CE,0 0 2px #EFE3CE}
+.today.side .today-in{grid-area:1/2;margin:0 0 0 -22px;padding:12px 6px 6px 0;align-items:flex-start;gap:8px;text-shadow:0 0 6px #EFE3CE,0 0 12px #EFE3CE,0 0 2px #EFE3CE}
 .today.side .today-art+.today-in{margin-top:0}
 .today.side .today-in p{font-size:1rem}
 .today.side .btn{text-shadow:none}
 /* tarot reading types: a sliding row like the sign picker */
-.spread-row .chip{width:84px}
-.spread-row .sign-ico{width:64px;height:64px}
-.spread-row .sign-nm{white-space:normal;text-align:center;font-size:.74rem;line-height:1.2}
+.spread-row{overflow:visible;gap:2px}
+.spread-row .chip{flex:1 1 0;width:auto;min-width:0}
+.spread-row .sign-ico{width:min(52px,13vw);height:min(52px,13vw)}
+.spread-row .sign-nm{white-space:normal;text-align:center;font-size:clamp(9px,2.5vw,11px);line-height:1.15}
+.spread-row .spread-n{font-size:clamp(8.5px,2.3vw,10.5px)}
+/* see-through panels: Cosmic Energy Today and the tarot interpretation */
+.panel.glass{background:rgba(250,243,228,.14)}
+/* long banner titles wrap onto two lines at a size close to the other pages' */
+.b-title.b-wrap{white-space:normal;line-height:1.05;max-width:100%}
+/* tarot reveal: the drawn cards as a grid of artwork only (no title plate until a card is opened) */
+.rd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 10px;justify-items:center}
+.rd-grid.solo{grid-template-columns:1fr}
+.rd-grid.solo .scene{width:min(220px,58vw)}
+.rd-cell{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;text-align:center}
+.rd-cell .label{font-size:.68rem;min-height:2.2em;display:flex;align-items:flex-end;justify-content:center}
+.rd-cell .scene{width:100%;cursor:pointer}
+.tarot-face.bare .tf-plate,.tarot-face.bare .tf-num{display:none}
