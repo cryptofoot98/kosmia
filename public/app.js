@@ -231,13 +231,12 @@ views.welcome=views.join;
 views.home=()=>{
  const sign=sg(S.sign),now=new Date(),c=todayCard(),rev=!!S.revealed[dkey()];
  if(!A)return needLib();
- const m=moonInfo(now),ss=sunSign(now),ev=events(now,90).slice(0,8),h=horoscope(sign.id,'daily','general');
+ const m=moonInfo(now),ss=sunSign(now),h=horoscope(sign.id,'daily','general');
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
  <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-go="horoscopes">More</button></div></section>
  <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<div class="row whisper-acts"><button class="btn ghost" data-act="savecard" ${S.saved.some(x=>x.date===dkey())?'disabled':''}>${S.saved.some(x=>x.date===dkey())?'Saved':'Save Whisper'}</button><button class="btn" data-act="toreflect">Your Reflection</button></div>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
- <div class="cosmos">${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}
- <div class="stack" style="gap:10px"><h2>Upcoming Cosmic Events</h2><div class="scroller" tabindex="0" aria-label="Upcoming events">${ev.map(e=>panel(`<h3>${e.name}</h3><p class="muted">${evt(e.date)}</p><p style="font-size:.88rem">${e.a}</p><p style="font-size:.88rem;font-style:italic">${e.s}</p><p class="muted">“${e.r}”</p>`)).join('')}</div></div></div>
+ <div class="cosmos">${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}</div>
  </div>`;
 };
 function cardScene(c,flipped,id){

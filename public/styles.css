@@ -152,11 +152,11 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .b-kick,.b-sub{font-family:var(--serif);font-weight:600;font-size:max(9px,calc(var(--k) * 24));letter-spacing:.18em;text-transform:uppercase;color:var(--mauve);line-height:1;white-space:nowrap}
 .b-sub{letter-spacing:.06em;text-transform:none;font-style:italic;font-size:max(10px,calc(var(--k) * 26))}
 .b-title{font-family:var(--serif);font-weight:600;font-size:calc(var(--k) * var(--fs,64));line-height:1;letter-spacing:.04em;white-space:nowrap}
-/* dashboard: the day's thought, then an open horoscope (no box) over its sign's scene from art/scenes; the scene's paper is
-   lightened to blend with the page and every edge fades out, most of all the bottom where the text sits */
+/* dashboard: the day's thought, then an open horoscope (no box) over its sign's scene from art/scenes. The scenes' paper was
+   lifted to white, so under multiply only the drawn figure shows; every edge fades out, most of all the bottom where the text sits */
 .thought{text-align:center;font-size:1.3rem;padding:2px 6px}
-.today{position:relative;margin-inline:-10px;text-align:center}
-.today-art{display:block;width:100%;mix-blend-mode:multiply;filter:brightness(1.12) saturate(.95);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 42%,transparent 90%),linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 42%,transparent 90%),linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-composite:intersect}
+.today{position:relative;margin:-26px -10px 0;text-align:center}
+.today-art{display:block;width:100%;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 40%,transparent 86%),linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 40%,transparent 86%),linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-composite:intersect}
 .today-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 22px 6px}
 .today-art+.today-in{margin-top:-50%}
 .today-in h2{font-size:1.25rem;letter-spacing:.04em}
@@ -194,10 +194,10 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .kept{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .kept+.kept{margin-top:14px}
 .kept-note{max-width:300px;display:flex;flex-direction:column;gap:6px}
-/* dashboard: from Cosmic Energy Today down, a sepia starfield (art/cosmos.webp) as a faint watermark fading at both ends */
+/* dashboard: behind Cosmic Energy Today, a sepia starfield (art/cosmos.webp) as a faint watermark fading at both ends */
 .cosmos{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:18px}
-.cosmos .panel{background:rgba(250,243,228,.38)}
-.cosmos::before{content:"";position:absolute;inset:-60px -10px;z-index:-1;background:url(/art/cosmos.webp) center/cover no-repeat;mix-blend-mode:multiply;opacity:.6;
+.cosmos .panel{background:rgba(250,243,228,.14)}
+.cosmos::before{content:"";position:absolute;inset:-60px -10px;z-index:-1;background:url(/art/cosmos.webp) center/cover no-repeat;mix-blend-mode:multiply;opacity:.9;
   -webkit-mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);pointer-events:none}
 /* belt and braces for Safari: each face is hidden outright while turned away, switching at the flip's midpoint (1.1s) */
 .scene:not(.flat) .face.front{transition:visibility 0s .55s}
