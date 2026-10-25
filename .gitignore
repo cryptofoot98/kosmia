@@ -1,0 +1,6 @@
+public/config.js
+.env
+.netlify/
+node_modules/
+supabase/.temp/
+.DS_Store
