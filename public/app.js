@@ -164,12 +164,10 @@ function match(a,b){
 }
 
 /* ---------- tarot ---------- */
-const MAJ=[['The Fool','new beginnings, trust, a leap of faith','hesitation, recklessness'],['The Magician','skill, focus, resourcefulness','scattered effort, self-doubt'],['The High Priestess','intuition, inner knowing','ignored intuition, secrets'],['The Empress','nurture, abundance, creativity','creative block, neglected self-care'],['The Emperor','structure, stability, authority','rigidity, control'],['The Hierophant','tradition, learning, guidance','questioning convention'],['The Lovers','union, choices aligned with values','disharmony, misaligned choices'],['The Chariot','determination, direction','lack of direction, forcing things'],['Strength','courage, gentle resilience','self-doubt, depleted energy'],['The Hermit','solitude, inner guidance','isolation, withdrawal'],['Wheel of Fortune','cycles, change, turning points','resisting change, setbacks'],['Justice','fairness, truth, accountability','imbalance, avoiding responsibility'],['The Hanged Man','pause, a new perspective','stalling, resistance'],['Death','endings, transformation','clinging to the past'],['Temperance','balance, patience, moderation','excess, imbalance'],['The Devil','attachment, shadow, habit','release, reclaiming power'],['The Tower','sudden change, revelation','avoiding upheaval, fear of change'],['The Star','hope, renewal, calm','discouragement, lost faith'],['The Moon','dreams, uncertainty, intuition','clarity emerging, confusion lifting'],['The Sun','joy, vitality, openness','dimmed enthusiasm'],['Judgement','reflection, awakening, a calling','self-doubt, avoiding the call'],['The World','completion, wholeness','unfinished business, loose ends']];
-const SUITS=[['Wands','passion, ambition and creative drive'],['Cups','emotion, relationships and intuition'],['Swords','thought, communication and truth'],['Pentacles','work, money and the body']];
-const RANKS=[['Ace','a seed of new possibility'],['Two','choice and balance'],['Three','growth and collaboration'],['Four','stability and pause'],['Five','conflict and challenge'],['Six','harmony and movement'],['Seven','assessment and perseverance'],['Eight','focus and momentum'],['Nine','near-fulfilment'],['Ten','culmination and weight'],['Page','curiosity and messages'],['Knight','pursuit and momentum'],['Queen','mature nurturing'],['King','mastery and leadership']];
-const SYMS=['star','sun','moon','flower','key','eye','wheel','lily','crystal','tree','path','ship'];
-const DECK=[...MAJ.map((m,i)=>({id:'m'+i,name:m[0],up:m[1],rev:m[2],sym:SYMS[i%12]})),
- ...SUITS.flatMap((s,si)=>RANKS.map((r,ri)=>({id:'s'+si+'-'+ri,name:r[0]+' of '+s[0],up:r[1]+' in the realm of '+s[1],rev:r[1]+' blocked, delayed or turned inward ('+s[0].toLowerCase()+')',sym:SYMS[(si*3+ri)%12]})))];
+/* the full 78-card deck lives in tarot.js; each card carries upright/reversed meanings and love/work/money/growth readings */
+const DECK=(window.KOSMIA_TAROT||[]);
+const CTX={love:'Love',work:'Work',money:'Money',growth:'Growth'};
+const SPREAD_CTX={love:'love',career:'work'};
 const SPREADS={
  one:{n:'One Card — Cosmic Guidance',p:['Guidance']},
  ppf:{n:'Three Cards — Past, Present, Future',p:['Past','Present','Future']},
@@ -186,7 +184,7 @@ const FOOT={
  horoscopes:[['general','Overview'],['love','Love'],['health','Health'],['career','Career'],['finance','Finance']],
  love:[['match','Compatibility'],['saved','Saved Affinities']],
  fortune:[['today','Today’s Whisper'],['collection','My Collection'],['reflections','Reflections']],
- tarot:[['new','New Reading'],['spreads','Spreads'],['history','History']],
+ tarot:[['new','New Reading'],['deck','The Deck'],['spreads','Spreads'],['history','History']],
  chart:[['chart','Chart'],['planets','Planets'],['aspects','Aspects']],
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
@@ -240,6 +238,8 @@ views.home=()=>{
  <div class="cosmos">${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}</div>
  </div>`;
 };
+// a tarot card's face: its painted artwork (art/deck) and the numeral and title set by the app
+const tarotFace=c=>`${pic('deck',c.id,'tarot-art')}<div class="tf-num">${c.arcana==='major'?c.num:''}</div><div class="tf-plate"><span>${c.name}</span></div>`;
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
  return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${whisperFace(c)}</div></div>${sp}</div>`;
@@ -285,14 +285,22 @@ views.fortune=()=>{
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
+ if(t==='deck'){
+  if(V.tcard){const c=DECK.find(x=>x.id===V.tcard)||DECK[0],k=V.tctx||'love';
+   return `<div class="stack"><h1>${c.name}</h1><button class="btn ghost" data-act="tdeck" style="align-self:flex-start">← The deck</button><div class="scene flat" role="img" aria-label="${esc(c.name)}"><div class="face front tarot-face">${tarotFace(c)}</div></div>
+   <div class="label">Upright · ${c.up}</div><p>${c.upm}</p><div class="label">Reversed · ${c.rev}</div><p>${c.revm}</p><div class="rule"></div>
+   <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="quote">${c[k]}</p></div>`}
+  const grp=[['Major Arcana',DECK.filter(c=>c.arcana==='major')],...['Wands','Cups','Swords','Pentacles'].map(su=>[su,DECK.filter(c=>c.suit===su)])];
+  return `<div class="stack"><h1>The Deck</h1><p class="muted" style="text-align:center">78 cards · 22 Major and 56 Minor Arcana</p>${grp.map(([g,cs])=>`<div class="label">${g}</div><div class="deck-grid">${cs.map(c=>`<button class="deck-card" data-act="tcard" data-k="${c.id}" aria-label="${esc(c.name)}">${pic('deck',c.id,'tarot-art')||`<span class="glyph">✦</span>`}<span>${c.name}</span></button>`).join('')}</div>`).join('')}</div>`;
+ }
  if(t==='spreads')return `<div class="stack"><h1>Spreads</h1>${Object.entries(SPREADS).map(([k,s])=>panel(`<h3>${s.n}</h3><p class="muted">${s.p.join(' · ')}</p><button class="btn ghost" data-act="usespread" data-k="${k}">Use this spread</button>`)).join('')}</div>`;
  if(t==='history')return `<div class="stack"><h1>Reading History</h1>${S.readings.length?S.readings.map(r=>panel(`<h3>${esc(SPREADS[r.spread].n)}</h3><p class="muted">${r.date}${r.q?' · “'+esc(r.q)+'”':''}</p>${r.cards.map(c=>`<p>${esc(c.pos)}: ${esc(c.name)}${c.rev?' (reversed)':''}</p>`).join('')}`)).join(''):panel('<h3>Your reading history is waiting for its first story</h3><p>Complete a reading and save it to find it here.</p>')}</div>`;
  const sp=SPREADS[T.spread];
  if(T.stage==='setup')return `<div class="stack"><h1>Ask the Universe</h1><p class="quote">Hold your question in your mind. Let the cards guide your reflection.</p><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="What should I focus on?"></div><div class="field"><label for="sp">Reading type</label><select id="sp">${Object.entries(SPREADS).map(([k,s])=>`<option value="${k}" ${k===T.spread?'selected':''}>${s.n}</option>`).join('')}</select></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
  if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted">${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div><button class="btn" data-act="reveal-reading" ${T.picks.length===sp.p.length?'':'disabled'}>Turn the cards</button></div>`;
  const cards=T.drawn,flipped=T.flipped;
- return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rev?'rev':''}"><div class="card3d"><div class="face back"></div><div class="face front"><div class="ct">${c.name.split(' of ')[0]}</div>${pic('tarot',c.id)||symbol(c.sym)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rev?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rev?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
- ${flipped<cards.length?`<button class="btn" data-act="flipnext">Turn next card</button>`:panel(`<h3>Interpretation</h3>${cards.map(c=>`<p><strong>${c.pos}.</strong> ${c.name}${c.rev?' reversed':''} points to ${c.rev?c.revm:c.upm}.</p>`).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'} These are symbols for reflection, not predictions.</p><p class="note">Preview interpretation, assembled from traditional meanings. The app sends your question and cards to an AI service for a personal reading.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`)}</div>`;
+ return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rv?'rev':''}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face">${tarotFace(c)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rv?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rv?c.rev:c.up}</p><p>${c.rv?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
+ ${flipped<cards.length?`<button class="btn" data-act="flipnext">Turn next card</button>`:panel(`<h3>Interpretation</h3>${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'} These are symbols for reflection, not predictions.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`)}</div>`;
 };
 function birthCalc(){
  const b=V.birth,[y,mo,d]=b.date.split('-').map(Number),[h,mi]=(b.unk?'12:00':b.time).split(':').map(Number);
@@ -354,6 +362,8 @@ function render(){
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${pic('cats',k,'foot-ico')}${l}</button>`).join('');
  $('#navin').innerHTML=NAV.map(([k,l,g])=>`<button data-nav="${k}" ${sec===k?'aria-current="page"':''}>${pic('nav',k,'nav-ico')||`<span class="glyph">${g}</span>`}<span>${l}</span></button>`).join('');
  navH();
+ // keep the chosen sign in the middle of the horoscope picker
+ const pk=$('.sign-row [aria-checked=true]');if(pk){const row=pk.parentElement,rb=row.getBoundingClientRect(),cb=pk.getBoundingClientRect();row.scrollLeft+=cb.left+cb.width/2-(rb.left+rb.width/2)}
  if(sec==='join'||sec==='welcome')bindJoin();
 }
 /* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign with its
@@ -463,9 +473,12 @@ document.addEventListener('click',e=>{
  const T=V.tarot;
  if(a==='usespread'){T.spread=t.dataset.k;T.stage='setup';V.tab.tarot='new';return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value;T.spread=($('#sp')||{value:T.spread}).value;T.deck=shuffle(DECK);T.picks=[];T.stage='pick';return render()}
- if(a==='reveal-reading'){const sp=SPREADS[T.spread];T.drawn=T.picks.map((i,x)=>{const c=T.deck[i];const r=new Uint8Array(1);crypto.getRandomValues(r);return {id:c.id,name:c.name,sym:c.sym,pos:sp.p[x],rev:r[0]<64,upm:c.up,revm:c.rev}});T.flipped=0;T.stage='read';return render()}
+ if(a==='reveal-reading'){const sp=SPREADS[T.spread];T.drawn=T.picks.map((i,x)=>{const c=T.deck[i];const r=new Uint8Array(1);crypto.getRandomValues(r);return Object.assign({},c,{pos:sp.p[x],rv:r[0]<64})});T.flipped=0;T.stage='read';return render()}
  if(a==='flipnext'){T.flipped++;return render()}
- if(a==='saveread'){const r={spread:T.spread,q:T.q,date:dkey(),cards:T.drawn.map(c=>({pos:c.pos,name:c.name,rev:c.rev}))};S.readings.push(r);save();C.saveReading(r).then(id=>{if(id){r.rid=id;save()}});toast('Reading saved');return}
+ if(a==='saveread'){const r={spread:T.spread,q:T.q,date:dkey(),cards:T.drawn.map(c=>({pos:c.pos,name:c.name,rev:c.rv}))};S.readings.push(r);save();C.saveReading(r).then(id=>{if(id){r.rid=id;save()}});toast('Reading saved');return}
+ if(a==='tcard'){V.tcard=t.dataset.k;V.tctx='love';render();return window.scrollTo(0,0)}
+ if(a==='tdeck'){V.tcard=null;return render()}
+ if(a==='tctx'){V.tctx=t.dataset.k;return render()}
  if(a==='newread'){T.stage='setup';T.q='';return render()}
 });
 const tap=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));

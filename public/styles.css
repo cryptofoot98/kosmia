@@ -48,8 +48,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .signs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .signs .chip{flex-direction:column;gap:0;min-height:72px;padding:6px}
 .signs .g{font-size:1.6rem;line-height:1.2}
-/* Daily / Monthly / Annual: a soft embossed parchment strip, no lines; the chosen period is pressed into the page */
-.seg{display:flex;gap:6px;padding:5px;border:0;border-radius:14px;overflow:visible;background:linear-gradient(#F3E8D2,#E6D6B8);box-shadow:0 2px 3px rgba(255,250,240,.7) inset,0 -2px 3px rgba(120,95,60,.18) inset,0 3px 8px rgba(70,52,32,.18),0 1px 0 rgba(255,250,240,.6)}
+/* Daily / Monthly / Annual: no strip of its own, it shares the page; only the chosen period is pressed into the paper */
+.seg{display:flex;gap:6px;padding:2px;border:0;overflow:visible;background:none;box-shadow:none}
 .seg button{flex:1;min-height:42px;border:0;border-radius:10px;background:transparent;cursor:pointer;font-family:var(--serif);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;color:var(--mauve);transition:box-shadow .25s,background .25s,color .25s}
 input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],input[type=number],textarea,select{width:100%;min-height:46px;border-radius:3px;border:1px solid var(--gold);background:rgba(250,243,228,.75);padding:10px 14px}
 textarea{min-height:110px;resize:vertical}
@@ -84,7 +84,7 @@ textarea{min-height:110px;resize:vertical}
 .bar>i{display:block;height:100%;background:var(--lavender)}
 .score{font-family:var(--serif);font-size:3.2rem;font-weight:600;line-height:1}
 .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.mini{aspect-ratio:2/3;border-radius:4px;border:1px solid var(--gold);background:#101a2b url(/art/cards/back.webp) center/cover;cursor:pointer;padding:0;position:relative}
+.mini{aspect-ratio:2/3;border-radius:4px;border:1px solid #6b2a22;background:#4a1712 url(/art/cards/tarot-back.webp) center/cover;cursor:pointer;padding:0;position:relative}
 .mini[aria-pressed=true]{outline:2px solid var(--plum);transform:translateY(-6px)}
 .mini::after{content:none}
 .rd{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:start}
@@ -199,7 +199,7 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .whisper-acts .btn,.whisper-acts .btn.ghost{background:var(--lavender);color:#F6EAE2;opacity:1}
 .whisper-acts .btn[disabled]{background:#6B5843}
 /* horoscope page: illustrated sign icons (art/icons) with their names, no box; every category reuses the dashboard scene */
-.sign-row{gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 6px;align-items:flex-start}
+.sign-row{gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:2px calc(50% - 33px) 6px;align-items:flex-start}
 .sign-row .chip,.sign-grid .chip{flex:0 0 auto;width:66px;height:auto;min-height:0;padding:0;border:0;border-radius:0;background:none;flex-direction:column;gap:2px}
 .sign-row .chip[aria-checked=true],.sign-grid .chip[aria-checked=true]{background:none;color:var(--plum);box-shadow:none}
 .sign-row .chip[aria-checked=true] .sign-ico,.sign-grid .chip[aria-checked=true] .sign-ico{filter:drop-shadow(0 0 5px rgba(139,106,62,.55))}
@@ -235,3 +235,18 @@ body.has-nav #app{padding-top:var(--navh,70px)}
 /* reflections: unboxed, with the dashboard's starfield behind it */
 .reflect{padding-bottom:20px}
 .reflect .reflect-q{margin-bottom:4px}
+/* tarot: burgundy sun-and-moon backs (art/cards/tarot-back.webp); faces are the painted art (art/deck) with the numeral and
+   title set in the app on parchment, like a printed deck */
+.rd .face.back,.tarot-face~.face.back{background:#4a1712 url(/art/cards/tarot-back.webp) center/cover}
+.rd .face.back{background:#4a1712 url(/art/cards/tarot-back.webp) center/cover}
+.face.front.tarot-face{padding:0;justify-content:flex-end;background:#EFE3CE;container-type:inline-size;justify-content:flex-end}
+.tarot-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tf-num{position:absolute;top:3cqw;left:50%;transform:translateX(-50%);min-width:16cqw;padding:.4cqw 3cqw;border-radius:99px;background:rgba(244,234,214,.94);border:1px solid var(--gold);font-family:var(--serif);font-weight:700;font-size:6cqw;color:var(--plum);text-align:center}
+.tf-num:empty{display:none}
+.tf-plate{position:relative;margin:0 4cqw 4cqw;padding:2.6cqw 2cqw;background:rgba(244,234,214,.95);border:1px solid var(--gold);box-shadow:inset 0 0 0 1.2cqw rgba(244,234,214,.95),inset 0 0 0 calc(1.2cqw + 1px) var(--gold);text-align:center}
+.tf-plate span{font-family:var(--serif);font-weight:700;font-size:6cqw;letter-spacing:.08em;line-height:1.1;text-transform:uppercase;color:var(--plum)}
+.rev .tarot-art{transform:rotate(180deg)}
+/* deck gallery */
+.deck-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.deck-card{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;padding:0;cursor:pointer;font-family:var(--serif);font-weight:600;font-size:.7rem;line-height:1.15;color:var(--mauve);text-align:center}
+.deck-card .tarot-art{position:static;aspect-ratio:2/3;height:auto;border-radius:4px;border:1px solid var(--gold);box-shadow:0 3px 8px rgba(58,48,38,.25)}
