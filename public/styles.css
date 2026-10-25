@@ -1,5 +1,5 @@
 /* Layout: one phone-width column (max 480px) drawn as an engraved parchment page (art/frame.webp) in a sepia palette.
-   Wax-seal menu button bottom-right, contextual footer pinned bottom. */
+   Main menu pinned to the top, contextual footer pinned to the bottom. */
 :root{
   /* names kept from the first palette; values are now parchment, sepia ink and antique gold */
   --lavender:#4A3B2A; --lilac:#D8C29A; --rose:#D9BFA0; --blush:#E7D6B6; --parchment:#EFE3CE;
@@ -55,16 +55,6 @@ textarea{min-height:110px;resize:vertical}
 .field{display:flex;flex-direction:column;gap:6px}
 .err{color:var(--danger)}
 /* menu */
-#fab{position:fixed;right:max(12px,calc((100vw - var(--fw)) / 2 + 12px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:40;width:52px;height:52px;border-radius:50%;border:2px solid #D8B98A;background:radial-gradient(circle at 35% 30%,#7A2E22,#4E1A13);color:#F0D9A8;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 12px rgba(58,48,38,.45),inset 0 0 0 3px rgba(240,217,168,.25)}
-body.has-footer #fab{bottom:calc(env(safe-area-inset-bottom,0px) + 76px)}
-#fab[hidden]{display:none!important}
-#sheet{position:fixed;inset:0;z-index:50;background:rgba(40,32,24,.5);display:flex;align-items:flex-end;justify-content:center}
-#sheet[hidden]{display:none!important}
-#sheet .box{width:100%;max-width:480px;background:var(--parchment) url(/art/frame-paper.webp) center top/100% auto;border:1px solid var(--gold);box-shadow:inset 0 0 0 4px var(--parchment),inset 0 0 0 5px var(--gold);border-radius:4px 4px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px))}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-.tile{min-height:84px;border-radius:3px;border:.8px solid var(--gold);background:rgba(250,243,228,.6);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;font-family:var(--serif);font-weight:600;font-size:.8rem;line-height:1.2;text-align:center}
-.tile .g{font-size:1.5rem;color:var(--gold)}
-.tile[aria-current=page]{background:var(--lilac)}
 /* footer */
 #foot{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--parchment) url(/art/frame-paper.webp) center/100% auto;border-top:3px double var(--gold);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));display:flex;justify-content:center;box-shadow:0 -4px 14px rgba(58,48,38,.18)}
 #foot[hidden]{display:none!important}
@@ -221,4 +211,14 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .foot-ico{width:34px;height:34px;object-fit:contain}
 #foot button[aria-selected=true] .foot-ico{filter:drop-shadow(0 0 4px rgba(139,106,62,.55))}
 #app.has-footer.foot-icons{padding-bottom:86px}
-body.foot-icons #fab{bottom:calc(env(safe-area-inset-bottom,0px) + 96px)}
+/* main menu: fixed bar at the top of every page, one engraved icon (art/nav) per section, all eight across; two-word names wrap */
+#nav{position:fixed;top:0;left:0;right:0;z-index:30;background:var(--parchment) url(/art/frame-paper.webp) center/100% auto;border-bottom:3px double var(--gold);box-shadow:0 4px 14px rgba(58,48,38,.18);padding-top:env(safe-area-inset-top,0px)}
+#nav .in{display:flex;gap:3px;max-width:480px;margin:0 auto;overflow-x:auto;scrollbar-width:none;padding:4px 4px 3px}
+#nav .in::-webkit-scrollbar{display:none}
+#nav button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;border:0;background:none;cursor:pointer;padding:2px 1px;color:var(--mauve);font-family:var(--serif);font-weight:600;font-size:clamp(8.5px,2.6vw,11px);line-height:1.05;letter-spacing:0;text-align:center;border-bottom:2px solid transparent}
+#nav button span:last-child{min-height:2.1em;display:flex;align-items:flex-start;justify-content:center}
+#nav button[aria-current=page]{color:var(--plum);border-bottom-color:var(--gold)}
+#nav button[aria-current=page] .nav-ico{filter:drop-shadow(0 0 4px rgba(139,106,62,.6))}
+.nav-ico{width:min(32px,8.4vw);height:min(32px,8.4vw);object-fit:contain}
+#nav .glyph{font-size:1.4rem;line-height:32px}
+body.has-nav #app{padding-top:var(--navh,70px)}

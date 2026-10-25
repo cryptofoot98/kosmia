@@ -181,10 +181,10 @@ const SPREADS={
 function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRandomValues(r);for(let i=a.length-1;i>0;i--){const j=r[i]%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ---------- ui state ---------- */
-const NAV=[['home','Home','☉︎'],['horoscopes','Horoscopes','♎︎'],['love','Love Match','♡'],['fortune','Whispers','✦'],['tarot','Tarot','☽︎'],['chart','Birth Chart','⊕'],['calendar','Cosmic Calendar','☾'],['universe','My Universe','✧']];
+const NAV=[['home','Home','☉︎'],['horoscopes','Horoscopes','♎︎'],['love','Affinity','♡'],['fortune','Whispers','✦'],['tarot','Tarot','☽︎'],['chart','Birth Chart','⊕'],['calendar','Cosmic Calendar','☾'],['universe','My Universe','✧']];
 const FOOT={
  horoscopes:[['general','Overview'],['love','Love'],['health','Health'],['career','Career'],['finance','Finance']],
- love:[['match','Compatibility'],['saved','Saved Matches']],
+ love:[['match','Compatibility'],['saved','Saved Affinities']],
  fortune:[['today','Today’s Whisper'],['collection','My Collection'],['reflections','Reflections']],
  tarot:[['new','New Reading'],['spreads','Spreads'],['history','History']],
  chart:[['chart','Chart'],['planets','Planets'],['aspects','Aspects']],
@@ -268,11 +268,11 @@ views.horoscopes=()=>{
 };
 views.love=()=>{
  const a=V.love.a||S.sign,b=V.love.b;
- if(tab()==='saved')return `<div class="stack"><h1>Saved Matches</h1>${S.matches.length?S.matches.map(m=>{const r=match(m[0],m[1]);return panel(`<h3><span class="glyph">${sg(m[0]).g}</span> ${sg(m[0]).name} + ${sg(m[1]).name} <span class="glyph">${sg(m[1]).g}</span></h3><p class="muted">Symbolic score ${r.sc.Overall}%</p><button class="btn ghost" data-act="openmatch" data-a="${m[0]}" data-b="${m[1]}">View</button>`)}).join(''):panel('<h3>No matches saved yet</h3><p>Compare two signs, then save the pairing to find it here.</p>')}</div>`;
+ if(tab()==='saved')return `<div class="stack"><h1>Saved Affinities</h1>${S.matches.length?S.matches.map(m=>{const r=match(m[0],m[1]);return panel(`<h3><span class="glyph">${sg(m[0]).g}</span> ${sg(m[0]).name} + ${sg(m[1]).name} <span class="glyph">${sg(m[1]).g}</span></h3><p class="muted">Symbolic score ${r.sc.Overall}%</p><button class="btn ghost" data-act="openmatch" data-a="${m[0]}" data-b="${m[1]}">View</button>`)}).join(''):panel('<h3>No matches saved yet</h3><p>Compare two signs, then save the pairing to find it here.</p>')}</div>`;
  let res='';
  if(V.love.done&&a&&b){const r=match(a,b),saved=S.matches.some(m=>m[0]===a&&m[1]===b);
   res=panel(`<div class="row" style="justify-content:center;gap:14px"><span class="glyph" style="font-size:2.2rem">${sg(a).g}</span><svg width="80" height="30" viewBox="0 0 80 30" aria-hidden="true"><path d="M2 15C20 2 30 28 40 15S62 2 78 15" fill="none" stroke="#D8B98A" stroke-width="1.2"/><circle cx="40" cy="15" r="3" fill="#D8B98A"/></svg><span class="glyph" style="font-size:2.2rem">${sg(b).g}</span></div><div style="text-align:center"><div class="score">${r.sc.Overall}%</div><p class="muted">Symbolic score, for entertainment. Not a measured probability.</p></div>${Object.entries(r.sc).filter(x=>x[0]!=='Overall').map(([k,v])=>`<div><div class="row" style="justify-content:space-between"><span>${k}</span><span class="muted">${v}%</span></div><div class="bar"><i style="width:${v}%"></i></div></div>`).join('')}<div class="label">Strengths</div><p>${r.text.strengths}</p><div class="label">Potential challenges</div><p>${r.text.challenges}</p><div class="label">Guidance</div><p>${r.text.guidance}</p><button class="btn ghost" data-act="savematch">${saved?'Saved':'Save this match'}</button>`);}
- return `<div class="stack"><h1>Love Match</h1><div class="label">Your sign</div>${signGrid('Your sign',a)}<div class="label">Their sign</div><div class="signs" role="radiogroup" aria-label="Their sign">${SIGNS.map(s=>`<button class="chip" role="radio" aria-checked="${b===s.id}" data-sign2="${s.id}"><span class="g glyph">${s.g}</span><span style="font-size:.78rem">${s.name}</span></button>`).join('')}</div><button class="btn" data-act="domatch" ${b?'':'disabled'}>Discover Our Cosmic Connection</button>${res}</div>`;
+ return `<div class="stack"><h1>Affinity</h1><div class="label">Your sign</div>${signGrid('Your sign',a)}<div class="label">Their sign</div><div class="signs" role="radiogroup" aria-label="Their sign">${SIGNS.map(s=>`<button class="chip" role="radio" aria-checked="${b===s.id}" data-sign2="${s.id}"><span class="g glyph">${s.g}</span><span style="font-size:.78rem">${s.name}</span></button>`).join('')}</div><button class="btn" data-act="domatch" ${b?'':'disabled'}>Discover Our Cosmic Connection</button>${res}</div>`;
 };
 views.fortune=()=>{
  const c=todayCard(),rev=!!S.revealed[dkey()],t=tab();
@@ -347,11 +347,12 @@ function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&sec!=='welcome'&&sec!=='join';
  const html=(views[sec]||views.home)();
  app.innerHTML=sec==='welcome'||sec==='join'?html:framed(sec,html);
- $('#fab').hidden=!authed;
+ $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
  const f=FOOT[sec],foot=$('#foot');
  foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('foot-icons',!!(authed&&f)&&sec==='horoscopes');app.classList.toggle('foot-icons',!!(authed&&f)&&sec==='horoscopes');app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${sec==='horoscopes'?pic('cats',k,'foot-ico'):''}${l}</button>`).join('');
- $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
+ $('#navin').innerHTML=NAV.map(([k,l,g])=>`<button data-nav="${k}" ${sec===k?'aria-current="page"':''}>${pic('nav',k,'nav-ico')||`<span class="glyph">${g}</span>`}<span>${l}</span></button>`).join('');
+ navH();
  if(sec==='join'||sec==='welcome')bindJoin();
 }
 /* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign with its
@@ -368,7 +369,10 @@ function framed(sec,html){
  const fs=Math.min(64,Math.round(720/Math.max(plain(title).length,1)));
  return `<div class="page"><header class="banner">${kick?`<span class="b-kick">${kick}</span>`:''}<h1 class="b-title" style="--fs:${fs}">${title}</h1>${sub?`<span class="b-sub">${sub}</span>`:''}</header><div class="frame"><div class="frame-in">${html}</div></div></div>`;
 }
-function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=true;render();window.scrollTo(0,0)}
+// the page reserves exactly the menu bar's height (it grows when labels wrap on narrow screens)
+const navH=()=>{const n=$('#nav');if(!n.hidden)document.documentElement.style.setProperty('--navh',n.offsetHeight+'px')};
+addEventListener('resize',navH);
+function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;render();window.scrollTo(0,0)}
 /* Onboarding: create an account (email, password, sign), sign in, or, in local mode, just enter. */
 function joinState(){
  const up=V.auth!=='in',acct=C.enabled&&!C.user,s=V.joinSign&&sg(V.joinSign),em=$('#em'),pw=$('#pw');
@@ -411,7 +415,7 @@ function reveal(){
 }
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-go],[data-nav],[data-tab],[data-act],[data-sign],[data-sign2],[data-period],[data-pick],[data-planet]');
- if(!t){if(e.target.id==='sheet')$('#sheet').hidden=true;return}
+ if(!t)return;
  if(t.dataset.go)return go(t.dataset.go);
  if(t.dataset.nav)return go(t.dataset.nav);
  if(t.dataset.tab){V.tab[V.sec]=t.dataset.tab;return render()}
@@ -474,8 +478,6 @@ document.addEventListener('change',e=>{
  if(V.sec==='chart'){if(id==='bd')b.date=i.value;if(id==='bt')b.time=i.value;if(id==='bo')b.off=i.value;if(id==='bu')b.unk=i.checked;if(id==='bla')b.lat=i.value;if(id==='blo')b.lon=i.value;if(id&&id[0]==='b')render()}
  if(V.sec==='universe'&&id&&id.startsWith('n_')){const n=S.notif;if(id==='n_on')n.on=i.checked;if(id==='n_time')n.time=i.value;if(id==='n_s2')n.sign2=i.value;if(id==='n_mo')n.monthly=i.checked;if(id==='n_an')n.annual=i.checked;if(id==='n_ev')n.events=i.checked;save();syncProfile();toast('Preference saved')}
 });
-$('#fab').addEventListener('click',()=>{$('#sheet').hidden=false});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#sheet').hidden=true});
 // With accounts enabled, only a saved session opens straight onto home; everyone else starts at onboarding.
 V.sec=S.sign&&(!C.enabled||C.hasStoredSession())?'home':'welcome';
 render();
