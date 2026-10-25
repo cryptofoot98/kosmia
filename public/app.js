@@ -56,7 +56,6 @@ function symbol(k){
  };
  return `<svg viewBox="0 0 100 100" aria-hidden="true">${m[k]||m.star}</svg>`;
 }
-const BACK=`<svg viewBox="0 0 100 160" aria-hidden="true"><path d="M6 6H94V154H6Z" fill="none" stroke="#D8B98A" stroke-width="1.2"/><path d="M11 11H89V149H11Z" fill="none" stroke="#D8B98A" stroke-width=".5"/><circle cx="50" cy="80" r="16" fill="none" stroke="#D8B98A"/><circle cx="50" cy="80" r="6" fill="none" stroke="#D8B98A" stroke-width=".8"/>${Array.from({length:24},(_,i)=>{const a=i/24*Math.PI*2;return `<line x1="${50+Math.cos(a)*20}" y1="${80+Math.sin(a)*20}" x2="${50+Math.cos(a)*28}" y2="${80+Math.sin(a)*28}" stroke="#D8B98A" stroke-width=".5"/>`}).join('')}<path d="M44 30A10 10 0 1 0 44 50A8 8 0 1 1 44 30Z" fill="none" stroke="#D8B98A" stroke-width=".9"/><path d="M50 118L52 124L58 126L52 128L50 134L48 128L42 126L48 124Z" fill="none" stroke="#D8B98A" stroke-width=".8"/></svg>`;
 
 /* ---------- storage ---------- */
 const KEY='kosmia.v1';
@@ -204,7 +203,7 @@ const FOOT={
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
 };
-const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},painting:false,say:null,auth:'up',busy:false,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
+const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},cardArt:{},painting:false,say:null,auth:'up',busy:false,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
 const tab=()=>V.tab[V.sec]||(FOOT[V.sec]?FOOT[V.sec][0][0]:'');
 function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
 const panel=(h,cls='')=>`<section class="panel ${cls}"><div class="in">${h}</div></section>`;
@@ -248,14 +247,31 @@ views.home=()=>{
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
  <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-go="horoscopes">More</button></div></section>
- ${panel(`<h2 style="text-align:center">A Message From the Universe</h2><p class="quote" style="text-align:center">One card. One message. Just for today.</p>${cardScene(c,rev,'homeCard')}${rev?`<p class="quote" style="text-align:center">${c.msg}</p><button class="btn ghost" data-go="fortune">Open in Daily Fortune</button>`:`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Fortune</button>`}`,'lilac')}
+ <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?'':`<button class="btn" data-act="reveal">Reveal My Fortune</button>`}</section>
  ${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}
  <div class="stack" style="gap:10px"><h2>Upcoming Cosmic Events</h2><div class="scroller" tabindex="0" aria-label="Upcoming events">${ev.map(e=>panel(`<h3>${e.name}</h3><p class="muted">${evt(e.date)}</p><p style="font-size:.88rem">${e.a}</p><p style="font-size:.88rem;font-style:italic">${e.s}</p><p class="muted">“${e.r}”</p>`)).join('')}</div></div>
  </div>`;
 };
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
- return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Daily fortune card, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back">${BACK}</div><div class="face front"><div class="ct">${c.title}</div>${pic('oracle',c.id)||symbol(c.sym)}<div class="quote" style="font-size:.9rem;color:var(--mauve)">The Universe Is With You</div></div></div>${sp}</div>`;
+ return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Daily fortune card, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${flipped?`<img class="day-art" data-day="${dkey()}" data-card="${c.id}" alt="">`:''}<div class="ph">${pic('oracle',c.id)||symbol(c.sym)}${flipped&&C.user?'<p class="ph-note">The cosmos is painting today’s card…</p>':''}</div><div class="card-banner"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div></div>${sp}</div>`;
+}
+/* Daily card artwork from /api/card-art: painted once per day and card, shared by everyone. A missing image
+   asks the server to paint it (signed-in only), then polls while another visitor's request is painting. */
+const artSrc=(day,card,v)=>`/api/card-art?day=${day}&card=${encodeURIComponent(card)}${v?'&v='+v:''}`;
+function wireDayArt(){
+ document.querySelectorAll('img.day-art').forEach(img=>{
+  const {day,card}=img.dataset,k=day+'/'+card,st=V.cardArt[k]||(V.cardArt[k]={});
+  img.onload=()=>img.closest('.face').classList.add('has-art');
+  img.onerror=()=>{if(!st.asked&&C.user){st.asked=true;paintDayArt(day,card,st,0)}};
+  img.src=artSrc(day,card,st.v);
+ });
+}
+function paintDayArt(day,card,st,tries){
+ C.cardArt(day,card).then(r=>{
+  if(r.ready){st.v=Date.now();document.querySelectorAll(`img.day-art[data-card="${card}"]`).forEach(i=>{i.src=artSrc(day,card,st.v)});return}
+  if(r.pending&&tries<24)setTimeout(()=>paintDayArt(day,card,st,tries+1),6000);
+ },e=>{st.asked=false;console.warn('card art',e.message)});
 }
 /* ---------- AI: painted cards (OpenAI) and read-aloud (ElevenLabs), signed-in only ---------- */
 const AUDIO=new Map();let player=null;
@@ -291,7 +307,7 @@ views.fortune=()=>{
  if(t==='collection')return `<div class="stack"><h1>My Collection</h1>${S.saved.length?S.saved.slice().reverse().map(x=>{const o=ORACLE.find(c=>c.id===x.id);return o?panel(`<h3>${o.title}</h3><p class="muted">${x.date}</p><p class="quote" style="font-size:1.1rem">${o.msg}</p>${S.notes[x.date]?`<p class="muted">Your note: ${esc(S.notes[x.date])}</p>`:''}`):''}).join(''):panel('<h3>No cards saved yet</h3><p>Your cosmic collection begins with today’s fortune.</p>')}</div>`;
  if(t==='reflections')return `<div class="stack"><h1>Reflections</h1>${rev?panel(`<div class="label">${c.title}</div><p class="quote" style="font-size:1.1rem">${c.ref}</p><label class="label" for="note">Private reflection</label><textarea id="note" placeholder="What does this message mean to me today?">${esc(S.notes[dkey()]||'')}</textarea><button class="btn" data-act="savenote">Save reflection</button><p class="muted">${C.user?'Synced to your account and private to you.':'Stored in this browser. Sign in from Settings to keep it private in your account.'}</p>`):panel('<h3>Reveal today’s card first</h3><p>Your reflection space opens once you have received today’s message.</p>')}</div>`;
  const sv=S.saved.some(x=>x.date===dkey());
- return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Your Daily Fortune</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`<p class="quote">${c.msg}</p>${listenBtn(c.title+'. '+c.msg)}<div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save My Fortune'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
+ return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Your Daily Fortune</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`${listenBtn(c.title+'. '+c.msg)}<div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save My Fortune'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
@@ -301,7 +317,7 @@ views.tarot=()=>{
  if(T.stage==='setup')return `<div class="stack"><h1>Ask the Universe</h1><p class="quote">Hold your question in your mind. Let the cards guide your reflection.</p><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="What should I focus on?"></div><div class="field"><label for="sp">Reading type</label><select id="sp">${Object.entries(SPREADS).map(([k,s])=>`<option value="${k}" ${k===T.spread?'selected':''}>${s.n}</option>`).join('')}</select></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
  if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted">${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div><button class="btn" data-act="reveal-reading" ${T.picks.length===sp.p.length?'':'disabled'}>Turn the cards</button></div>`;
  const cards=T.drawn,flipped=T.flipped;
- return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rev?'rev':''}"><div class="card3d"><div class="face back">${BACK}</div><div class="face front"><div class="ct">${c.name.split(' of ')[0]}</div>${pic('tarot',c.id)||symbol(c.sym)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rev?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rev?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
+ return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rev?'rev':''}"><div class="card3d"><div class="face back"></div><div class="face front"><div class="ct">${c.name.split(' of ')[0]}</div>${pic('tarot',c.id)||symbol(c.sym)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rev?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rev?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
  ${flipped<cards.length?`<button class="btn" data-act="flipnext">Turn next card</button>`:panel(`<h3>Interpretation</h3>${cards.map(c=>`<p><strong>${c.pos}.</strong> ${c.name}${c.rev?' reversed':''} points to ${c.rev?c.revm:c.upm}.</p>`).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'} These are symbols for reflection, not predictions.</p><p class="note">Preview interpretation, assembled from traditional meanings. The app sends your question and cards to an AI service for a personal reading.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`)}</div>`;
 };
 function birthCalc(){
@@ -364,6 +380,7 @@ function render(){
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${l}</button>`).join('');
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
  if(sec==='join'||sec==='welcome')bindJoin();
+ wireDayArt();
 }
 /* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign with its
    element and ruler; Horoscopes shows the sign being read and its dates. */

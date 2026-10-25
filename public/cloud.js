@@ -79,6 +79,8 @@ const Cloud={
  },
  paint(day,cardId,sign){return Cloud.api('/api/paint',{day,cardId,sign}).then(r=>r.json())},
  speak(text){return Cloud.api('/api/speak',{text}).then(r=>r.blob())},
+ // Asks the server to paint today's card artwork; resolves {ready} or {pending} (someone else is painting it).
+ cardArt(day,card){return Cloud.api('/api/card-art',{day,card}).then(r=>r.json())},
  // Signed URL for a painting made earlier, or null when there is none.
  async paintingUrl(day){
   if(!user)return null;
