@@ -34,9 +34,14 @@ p{margin:0}
 .stack{display:flex;flex-direction:column;gap:18px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .row>*{min-width:0}
-.panel{background:rgba(250,243,228,.55);border:1px solid var(--gold);border-radius:3px;padding:3px}
-.panel>.in{border:.6px solid var(--gold);border-radius:1px;padding:16px;display:flex;flex-direction:column;gap:10px}
-.panel.blush{background:rgba(231,214,182,.65)} .panel.lilac{background:var(--lilac)}
+/* every box is an engraved cartouche like the header banner: corners and rules from art/cards/cartouche.webp (9-slice, so
+   any size keeps its ornaments), the banner's own crest on top and ornament below; the tint stops at the inner rule */
+.panel{--tint:rgba(250,243,228,.55);position:relative;margin:14px 0 12px;border:34px solid transparent;border-image:url(/art/cards/cartouche.webp) 150 / 34px stretch;background:var(--tint) no-repeat border-box;background-origin:border-box;background-position:8px 8px;background-size:calc(100% - 16px) calc(100% - 16px);background-image:linear-gradient(var(--tint),var(--tint));background-color:transparent;padding:0}
+.panel::before,.panel::after{content:"";position:absolute;left:50%;transform:translateX(-50%);width:96px;pointer-events:none;background:center/contain no-repeat}
+.panel::before{top:-48px;height:40px;background-image:url(/art/cards/crest.webp)}
+.panel::after{bottom:-46px;height:36px;background-image:url(/art/cards/ornament.webp)}
+.panel>.in{border:0;margin:-14px -12px;padding:4px 2px;display:flex;flex-direction:column;gap:10px}
+.panel.blush{--tint:rgba(231,214,182,.65)} .panel.lilac{--tint:var(--lilac)}
 .rule{height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14'%3E%3Cpath d='M10 7H86M114 7H190' stroke='%238B6A3E' stroke-width='.8'/%3E%3Cpath d='M100 1L103 7L100 13L97 7Z' fill='none' stroke='%238B6A3E' stroke-width='.9'/%3E%3C/svg%3E") center/100% 14px no-repeat}
 button,input,select,textarea{font:inherit;color:inherit}
 .btn{min-height:46px;border-radius:3px;padding:0 22px;border:1px solid var(--gold);background:var(--lavender);color:#F6EAE2;font-family:var(--serif);font-weight:600;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
@@ -263,7 +268,7 @@ body.has-nav #app{padding-top:var(--navh,70px)}
 .spread-row .sign-nm{white-space:normal;text-align:center;font-size:clamp(9px,2.5vw,11px);line-height:1.15}
 .spread-row .spread-n{font-size:clamp(8.5px,2.3vw,10.5px)}
 /* see-through panels: Cosmic Energy Today and the tarot interpretation */
-.panel.glass{background:rgba(250,243,228,.14)}
+.panel.glass{--tint:rgba(250,243,228,.14)}
 /* long banner titles wrap onto two lines at a size close to the other pages' */
 .b-title.b-wrap{white-space:normal;line-height:1.05;max-width:100%}
 /* tarot reveal: the drawn cards as a grid of artwork only (no title plate until a card is opened) */
