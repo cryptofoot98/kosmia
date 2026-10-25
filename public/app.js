@@ -38,16 +38,16 @@ const THOUGHTS=['You cannot command the stars, but you can choose how you naviga
 
 /* gold line-art symbols (original, drawn in code) */
 function symbol(k){
- const s='fill="none" stroke="#C5A477" stroke-width="1.4" stroke-linecap="round"';
+ const s='fill="none" stroke="#8B6A3E" stroke-width="1.4" stroke-linecap="round"';
  let rays='';for(let i=0;i<16;i++){const a=i/16*Math.PI*2;rays+=`<line x1="${50+Math.cos(a)*26}" y1="${50+Math.sin(a)*26}" x2="${50+Math.cos(a)*42}" y2="${50+Math.sin(a)*42}" ${s}/>`}
  const m={
-  moon:`<path d="M62 14A36 36 0 1 0 62 86A28 28 0 1 1 62 14Z" ${s}/><circle cx="76" cy="30" r="1.8" fill="#C5A477"/>`,
+  moon:`<path d="M62 14A36 36 0 1 0 62 86A28 28 0 1 1 62 14Z" ${s}/><circle cx="76" cy="30" r="1.8" fill="#8B6A3E"/>`,
   sun:`<circle cx="50" cy="50" r="18" ${s}/>${rays}`,
   star:`<path d="M50 8L58 40L92 50L58 60L50 92L42 60L8 50L42 40Z" ${s}/>`,
-  path:`<path d="M30 92C40 60 60 60 50 36C46 24 54 16 50 8" ${s}/><path d="M70 92C62 66 70 54 56 38" ${s}/><circle cx="50" cy="8" r="2" fill="#C5A477"/>`,
+  path:`<path d="M30 92C40 60 60 60 50 36C46 24 54 16 50 8" ${s}/><path d="M70 92C62 66 70 54 56 38" ${s}/><circle cx="50" cy="8" r="2" fill="#8B6A3E"/>`,
   key:`<circle cx="34" cy="34" r="16" ${s}/><path d="M46 46L84 84M70 70L78 62M78 78L86 70" ${s}/>`,
   flower:[0,72,144,216,288].map(r=>`<path d="M50 50C36 34 44 14 50 12C56 14 64 34 50 50" transform="rotate(${r} 50 50)" ${s}/>`).join('')+`<circle cx="50" cy="50" r="4" ${s}/><path d="M50 56L50 94" ${s}/>`,
-  eye:`<path d="M8 50C28 20 72 20 92 50C72 80 28 80 8 50Z" ${s}/><circle cx="50" cy="50" r="12" ${s}/><circle cx="50" cy="50" r="4" fill="#C5A477"/>`,
+  eye:`<path d="M8 50C28 20 72 20 92 50C72 80 28 80 8 50Z" ${s}/><circle cx="50" cy="50" r="12" ${s}/><circle cx="50" cy="50" r="4" fill="#8B6A3E"/>`,
   ship:`<path d="M18 66L82 66L72 82L28 82Z" ${s}/><path d="M50 66L50 14M50 20L78 58L50 58M50 26L26 58L50 58" ${s}/><path d="M10 90C24 84 34 94 48 88C62 82 72 94 90 88" ${s}/>`,
   tree:`<path d="M50 94L50 56M50 70L34 56M50 64L66 50" ${s}/><circle cx="50" cy="34" r="22" ${s}/><circle cx="32" cy="46" r="12" ${s}/><circle cx="68" cy="46" r="12" ${s}/>`,
   wheel:`<circle cx="50" cy="50" r="40" ${s}/><circle cx="50" cy="50" r="8" ${s}/>`+[0,45,90,135].map(r=>`<line x1="50" y1="10" x2="50" y2="90" transform="rotate(${r} 50 50)" ${s}/>`).join(''),
@@ -56,7 +56,7 @@ function symbol(k){
  };
  return `<svg viewBox="0 0 100 100" aria-hidden="true">${m[k]||m.star}</svg>`;
 }
-const BACK=`<svg viewBox="0 0 100 160" aria-hidden="true"><path d="M6 6H94V154H6Z" fill="none" stroke="#C5A477" stroke-width="1.2"/><path d="M11 11H89V149H11Z" fill="none" stroke="#C5A477" stroke-width=".5"/><circle cx="50" cy="80" r="16" fill="none" stroke="#C5A477"/><circle cx="50" cy="80" r="6" fill="none" stroke="#C5A477" stroke-width=".8"/>${Array.from({length:24},(_,i)=>{const a=i/24*Math.PI*2;return `<line x1="${50+Math.cos(a)*20}" y1="${80+Math.sin(a)*20}" x2="${50+Math.cos(a)*28}" y2="${80+Math.sin(a)*28}" stroke="#C5A477" stroke-width=".5"/>`}).join('')}<path d="M44 30A10 10 0 1 0 44 50A8 8 0 1 1 44 30Z" fill="none" stroke="#C5A477" stroke-width=".9"/><path d="M50 118L52 124L58 126L52 128L50 134L48 128L42 126L48 124Z" fill="none" stroke="#C5A477" stroke-width=".8"/></svg>`;
+const BACK=`<svg viewBox="0 0 100 160" aria-hidden="true"><path d="M6 6H94V154H6Z" fill="none" stroke="#D8B98A" stroke-width="1.2"/><path d="M11 11H89V149H11Z" fill="none" stroke="#D8B98A" stroke-width=".5"/><circle cx="50" cy="80" r="16" fill="none" stroke="#D8B98A"/><circle cx="50" cy="80" r="6" fill="none" stroke="#D8B98A" stroke-width=".8"/>${Array.from({length:24},(_,i)=>{const a=i/24*Math.PI*2;return `<line x1="${50+Math.cos(a)*20}" y1="${80+Math.sin(a)*20}" x2="${50+Math.cos(a)*28}" y2="${80+Math.sin(a)*28}" stroke="#D8B98A" stroke-width=".5"/>`}).join('')}<path d="M44 30A10 10 0 1 0 44 50A8 8 0 1 1 44 30Z" fill="none" stroke="#D8B98A" stroke-width=".9"/><path d="M50 118L52 124L58 126L52 128L50 134L48 128L42 126L48 124Z" fill="none" stroke="#D8B98A" stroke-width=".8"/></svg>`;
 
 /* ---------- storage ---------- */
 const KEY='kosmia.v1';
@@ -247,7 +247,7 @@ views.home=()=>{
  if(!A)return needLib();
  const m=moonInfo(now),ss=sunSign(now),ev=events(now,90).slice(0,8),h=horoscope(sign.id,'daily','general');
  return `<div class="stack">
- <div><p class="muted">${long(now)} · <span class="glyph">${sign.g}</span> ${sign.name}</p><h1>${greet()}${S.name?' '+esc(S.name)+'.':''}</h1></div>
+ <h2 class="greet">${S.name?greet().replace('.',', '+esc(S.name)+'.'):greet()}</h2>
  ${S.intro?'':panel(`<p class="quote">Welcome to your universe. The stars have a story to tell.</p><button class="btn ghost" data-act="intro">Begin</button>`,'blush')}
  ${panel(`<h2><span class="glyph">${sign.g}</span> ${sign.name} · Today</h2><p class="muted">${sign.el} · ruled by ${sign.ruler}</p><p>${h.body}</p><p class="note">Sample text. Published readings arrive through the content pipeline.</p><button class="btn" data-go="horoscopes">Explore Your Horoscope</button>`)}
  ${panel(`<h2 style="text-align:center">A Message From the Universe</h2><p class="quote" style="text-align:center">One card. One message. Just for today.</p>${cardScene(c,rev,'homeCard')}${rev?`<p class="quote" style="text-align:center">${c.msg}</p><button class="btn ghost" data-go="fortune">Open in Daily Fortune</button>`:`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Fortune</button>`}`,'lilac')}
@@ -286,7 +286,7 @@ views.love=()=>{
  if(tab()==='saved')return `<div class="stack"><h1>Saved Matches</h1>${S.matches.length?S.matches.map(m=>{const r=match(m[0],m[1]);return panel(`<h3><span class="glyph">${sg(m[0]).g}</span> ${sg(m[0]).name} + ${sg(m[1]).name} <span class="glyph">${sg(m[1]).g}</span></h3><p class="muted">Symbolic score ${r.sc.Overall}%</p><button class="btn ghost" data-act="openmatch" data-a="${m[0]}" data-b="${m[1]}">View</button>`)}).join(''):panel('<h3>No matches saved yet</h3><p>Compare two signs, then save the pairing to find it here.</p>')}</div>`;
  let res='';
  if(V.love.done&&a&&b){const r=match(a,b),saved=S.matches.some(m=>m[0]===a&&m[1]===b);
-  res=panel(`<div class="row" style="justify-content:center;gap:14px"><span class="glyph" style="font-size:2.2rem">${sg(a).g}</span><svg width="80" height="30" viewBox="0 0 80 30" aria-hidden="true"><path d="M2 15C20 2 30 28 40 15S62 2 78 15" fill="none" stroke="#C5A477" stroke-width="1.2"/><circle cx="40" cy="15" r="3" fill="#C5A477"/></svg><span class="glyph" style="font-size:2.2rem">${sg(b).g}</span></div><div style="text-align:center"><div class="score">${r.sc.Overall}%</div><p class="muted">Symbolic score, for entertainment. Not a measured probability.</p></div>${Object.entries(r.sc).filter(x=>x[0]!=='Overall').map(([k,v])=>`<div><div class="row" style="justify-content:space-between"><span>${k}</span><span class="muted">${v}%</span></div><div class="bar"><i style="width:${v}%"></i></div></div>`).join('')}<div class="label">Strengths</div><p>${r.text.strengths}</p><div class="label">Potential challenges</div><p>${r.text.challenges}</p><div class="label">Guidance</div><p>${r.text.guidance}</p><button class="btn ghost" data-act="savematch">${saved?'Saved':'Save this match'}</button>`);}
+  res=panel(`<div class="row" style="justify-content:center;gap:14px"><span class="glyph" style="font-size:2.2rem">${sg(a).g}</span><svg width="80" height="30" viewBox="0 0 80 30" aria-hidden="true"><path d="M2 15C20 2 30 28 40 15S62 2 78 15" fill="none" stroke="#D8B98A" stroke-width="1.2"/><circle cx="40" cy="15" r="3" fill="#D8B98A"/></svg><span class="glyph" style="font-size:2.2rem">${sg(b).g}</span></div><div style="text-align:center"><div class="score">${r.sc.Overall}%</div><p class="muted">Symbolic score, for entertainment. Not a measured probability.</p></div>${Object.entries(r.sc).filter(x=>x[0]!=='Overall').map(([k,v])=>`<div><div class="row" style="justify-content:space-between"><span>${k}</span><span class="muted">${v}%</span></div><div class="bar"><i style="width:${v}%"></i></div></div>`).join('')}<div class="label">Strengths</div><p>${r.text.strengths}</p><div class="label">Potential challenges</div><p>${r.text.challenges}</p><div class="label">Guidance</div><p>${r.text.guidance}</p><button class="btn ghost" data-act="savematch">${saved?'Saved':'Save this match'}</button>`);}
  return `<div class="stack"><h1>Love Match</h1><div class="label">Your sign</div>${signGrid('Your sign',a)}<div class="label">Their sign</div><div class="signs" role="radiogroup" aria-label="Their sign">${SIGNS.map(s=>`<button class="chip" role="radio" aria-checked="${b===s.id}" data-sign2="${s.id}"><span class="g glyph">${s.g}</span><span style="font-size:.78rem">${s.name}</span></button>`).join('')}</div><button class="btn" data-act="domatch" ${b?'':'disabled'}>Discover Our Cosmic Connection</button>${res}</div>`;
 };
 views.fortune=()=>{
@@ -331,7 +331,7 @@ views.chart=()=>{
  if(t==='planets')return `<div class="stack"><h1>Planets</h1>${form}${note}${panel(`<div class="tbl"><table><tr><th></th><th>Planet</th><th>Position</th></tr>${c.pl.map(p=>`<tr><td class="glyph">${p.g}</td><td>${p.n}</td><td>${deg(p.lon)}</td></tr>`).join('')}${c.asc!==null?`<tr><td>AC</td><td>Ascendant</td><td>${deg(c.asc)}</td></tr>`:''}</table></div>`)}</div>`;
  if(t==='aspects')return `<div class="stack"><h1>Aspects</h1>${form}${panel(`<div class="tbl"><table><tr><th>Pair</th><th>Aspect</th><th>Orb</th></tr>${c.asp.map(a=>`<tr><td><span class="glyph">${a.a.g}</span> ${a.a.n} · <span class="glyph">${a.b.g}</span> ${a.b.n}</td><td>${a.n}</td><td>${a.orb.toFixed(1)}°</td></tr>`).join('')}</table></div>`)}<p class="muted">Positions are geocentric and computed from an ephemeris. Aspect orbs are conventional and chosen for this prototype.</p></div>`;
  const R=130,C=150,pt=(lon,r)=>{const ph=(180+lon-(c.asc!==null?c.asc:0))*Math.PI/180;return [C+r*Math.cos(ph),C-r*Math.sin(ph)]};
- const wheel=`<svg viewBox="0 0 300 300" width="100%" role="img" aria-label="Natal chart wheel"><circle cx="${C}" cy="${C}" r="${R}" fill="#FFF9F2" stroke="#C5A477" stroke-width="1.4"/><circle cx="${C}" cy="${C}" r="${R-26}" fill="none" stroke="#C5A477" stroke-width=".8"/><circle cx="${C}" cy="${C}" r="${R-72}" fill="none" stroke="#C5A477" stroke-width=".5"/>${SIGNS.map((s,i)=>{const [x1,y1]=pt(i*30,R),[x2,y2]=pt(i*30,R-26),[gx,gy]=pt(i*30+15,R-13);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#C5A477" stroke-width=".8"/><text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#51405F" font-family="Noto Sans Symbols,Segoe UI Symbol,serif">${s.g}</text>`}).join('')}${c.asp.filter(a=>a.n!=='conjunction').map(a=>{const [x1,y1]=pt(a.a.lon,R-72),[x2,y2]=pt(a.b.lon,R-72);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#C5A477" stroke-width=".7" opacity=".8"/>`}).join('')}${c.pl.map(p=>{const [x,y]=pt(p.lon,R-48);const sel=V.chartSel===p.n;return `<g data-planet="${p.n}" tabindex="0" role="button" aria-label="${p.n} in ${signAt(p.lon).name}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="11" fill="${sel?'#C9B3CC':'#F1DDE0'}" stroke="#C5A477"/><text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#51405F" font-family="Noto Sans Symbols,Segoe UI Symbol,serif">${p.g}</text></g>`}).join('')}</svg>`;
+ const wheel=`<svg viewBox="0 0 300 300" width="100%" role="img" aria-label="Natal chart wheel"><circle cx="${C}" cy="${C}" r="${R}" fill="#F7EEDD" stroke="#D8B98A" stroke-width="1.4"/><circle cx="${C}" cy="${C}" r="${R-26}" fill="none" stroke="#D8B98A" stroke-width=".8"/><circle cx="${C}" cy="${C}" r="${R-72}" fill="none" stroke="#D8B98A" stroke-width=".5"/>${SIGNS.map((s,i)=>{const [x1,y1]=pt(i*30,R),[x2,y2]=pt(i*30,R-26),[gx,gy]=pt(i*30+15,R-13);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#D8B98A" stroke-width=".8"/><text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#3A3026" font-family="Noto Sans Symbols,Segoe UI Symbol,serif">${s.g}</text>`}).join('')}${c.asp.filter(a=>a.n!=='conjunction').map(a=>{const [x1,y1]=pt(a.a.lon,R-72),[x2,y2]=pt(a.b.lon,R-72);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#D8B98A" stroke-width=".7" opacity=".8"/>`}).join('')}${c.pl.map(p=>{const [x,y]=pt(p.lon,R-48);const sel=V.chartSel===p.n;return `<g data-planet="${p.n}" tabindex="0" role="button" aria-label="${p.n} in ${signAt(p.lon).name}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="11" fill="${sel?'#D8C29A':'#E7D6B6'}" stroke="#D8B98A"/><text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#3A3026" font-family="Noto Sans Symbols,Segoe UI Symbol,serif">${p.g}</text></g>`}).join('')}</svg>`;
  const sel=c.pl.find(p=>p.n===V.chartSel);
  return `<div class="stack"><h1>Birth Chart</h1>${form}${note}${panel(wheel+(sel?`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${signAt(sel.lon).name}</h3><p>${sel.n} traditionally describes ${PM[sel.n]}. In ${signAt(sel.lon).name} (${signAt(sel.lon).el.toLowerCase()}, ${signAt(sel.lon).mod.toLowerCase()}), that tends to show up through ${THEME[signAt(sel.lon).el][0]}.</p>`:'<p class="muted" style="text-align:center">Tap a planet to explore it.</p>')+(c.asc!==null?`<p class="muted">Ascendant ${deg(c.asc)}. The wheel is drawn with the Ascendant at the left.</p>`:'<p class="muted">Without an Ascendant the wheel starts from 0° Aries.</p>'))}<p class="muted">Sun ${signAt(c.pl[0].lon).name} · Moon ${signAt(c.pl[1].lon).name}${c.asc!==null?' · Rising '+signAt(c.asc).name:''}</p></div>`;
 };
@@ -359,13 +359,28 @@ views.universe=()=>{
 /* ---------- render + events ---------- */
 function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&sec!=='welcome'&&sec!=='join';
- app.innerHTML=(views[sec]||views.home)();
+ const html=(views[sec]||views.home)();
+ app.innerHTML=sec==='welcome'||sec==='join'?html:framed(sec,html);
  $('#fab').hidden=!authed;
  const f=FOOT[sec],foot=$('#foot');
- foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
+ foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('has-footer',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${l}</button>`).join('');
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
  if(sec==='join'||sec==='welcome')bindJoin();
+}
+/* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign and
+   the date; Horoscopes shows the sign being read and its dates. */
+const KICK=Object.fromEntries(NAV.map(([k,l])=>[k,l]));
+function framed(sec,html){
+ const m=/<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html);let kick=KICK[sec]||'Kosmia',title=m?m[1]:'Kosmia',sub='';
+ if(sec==='home'){const s=sg(S.sign);kick='Kosmia';title=s.name;sub=long(new Date())}
+ else{
+  if(m)html=html.replace(m[0],'');
+  if(sec==='horoscopes'){const s=sg(V.exploreSign||S.sign);kick='Horoscope';title=s.name;sub=s.dates}
+  if(plain(title).includes(kick))kick='Kosmia';
+ }
+ const fs=Math.min(64,Math.round(720/Math.max(plain(title).length,1)));
+ return `<div class="page"><header class="banner"><span class="b-kick">${kick}</span><h1 class="b-title" style="--fs:${fs}">${title}</h1>${sub?`<span class="b-sub">${sub}</span>`:''}</header><div class="frame"><div class="frame-in">${html}</div></div></div>`;
 }
 function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=true;render();window.scrollTo(0,0)}
 /* Onboarding: create an account (email, password, sign), sign in, or, in local mode, just enter. */
