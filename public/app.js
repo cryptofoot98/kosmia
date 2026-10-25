@@ -215,7 +215,7 @@ const needLib=()=>A?'':panel('<h3>Astronomy library unavailable</h3><p>The ephem
 /* ---------- views ---------- */
 const views={};
 /* Onboarding poster. art/onboarding.webp is 1024x1536 with the wheel centred at (512,803), radii 488x520.
-   It is shown in three slices: the title (rows 0-149), the blank band under it (rows 149-266, stretched
+   It is shown in three slices: the title (rows 0-149), the blank band under it (rows 149-266, grown
    to hold the account form) and the wheel (rows 266-1536). The wheel's twelve panels pick the sign. */
 const WHEEL={cx:512,cy:803,rx:488,ry:520,inner:.37};
 function wedge(i){
@@ -234,7 +234,7 @@ views.join=()=>{
    :'New to Kosmia? <button type="button" class="link" data-act="authmode">Create an account</button> · <button type="button" class="link" data-act="forgot">Forgot password?</button>'}</p>`:''}`;
  return `<div class="stack"><div class="poster">
  <div class="ps ps-top"><img src="${ART_SRC}" alt="Kosmia. The Universe Is With You."></div>
- <form class="ps ps-band" id="authForm" novalidate><img src="${ART_SRC}" alt=""><div class="auth">${form}</div></form>
+ <form class="ps ps-band" id="authForm" novalidate><div class="auth">${form}</div></form>
  <div class="ps ps-wheel"><img src="${ART_SRC}" alt="An engraved zodiac wheel with the sun at its centre and the twelve signs around it.">
  <svg class="wheel${pick?' has-pick':''}" viewBox="0 266 1024 1270" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map((x,i)=>`<path d="${wedge(i)}" data-sign="${x.id}" role="radio" tabindex="${(pick?pick===x.id:i===0)?0:-1}" aria-checked="${pick===x.id}" aria-label="${x.name}, ${x.dates}"><title>${x.name}</title></path>`).join('')}</svg>
  <button class="poster-btn" id="joinBtn" type="submit" form="authForm" disabled></button></div>
@@ -362,7 +362,7 @@ function render(){
  app.innerHTML=(views[sec]||views.home)();
  $('#fab').hidden=!authed;
  const f=FOOT[sec],foot=$('#foot');
- foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');
+ foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${l}</button>`).join('');
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
  if(sec==='join'||sec==='welcome')bindJoin();
@@ -384,7 +384,6 @@ function pickSign(id){
 const authMsg=x=>{const m=(x&&x.message)||'';
  if(/invalid login/i.test(m))return 'That email and password don’t match.';
  if(/already (registered|exists)/i.test(m))return 'An account already exists for this email. Sign in instead.';
- if(/not confirmed/i.test(m))return 'Please confirm your email first, then sign in.';
  if(/rate limit|too many/i.test(m))return 'Too many attempts. Please wait a minute and try again.';
  return m||'Something went wrong. Please try again.'};
 async function submitJoin(e){
@@ -395,7 +394,7 @@ async function submitJoin(e){
  try{
   if(V.auth!=='in'){
    const r=await C.signUp(email,pw.value,V.joinSign);
-   if(!r.session){V.busy=false;V.auth='in';S.email=email;render();return toast('Check your email to confirm your account, then sign in.')}
+   if(!r.session)throw new Error('Could not create your account. Please try again.');
    S.sign=V.joinSign;
   }else await C.signIn(email,pw.value);
   S.email=email;save();V.busy=false;

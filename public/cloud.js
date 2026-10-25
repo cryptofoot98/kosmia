@@ -32,9 +32,9 @@ const Cloud={
   });
   return user;
  },
- // Resolves to {user, session}; session is null when the project requires email confirmation.
+ // Email confirmation is off for this project (supabase/config.toml), so sign-up signs the user in.
  async signUp(email,password,sign){
-  return check(await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin+'/',data:{sign}}}));
+  return check(await sb.auth.signUp({email,password,options:{data:{sign}}}));
  },
  async signIn(email,password){return check(await sb.auth.signInWithPassword({email,password}))},
  async resetPassword(email){check(await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'}))},
