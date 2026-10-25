@@ -152,7 +152,16 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .b-kick,.b-sub{font-family:var(--serif);font-weight:600;font-size:max(9px,calc(var(--k) * 24));letter-spacing:.18em;text-transform:uppercase;color:var(--mauve);line-height:1;white-space:nowrap}
 .b-sub{letter-spacing:.06em;text-transform:none;font-style:italic;font-size:max(10px,calc(var(--k) * 26))}
 .b-title{font-family:var(--serif);font-weight:600;font-size:calc(var(--k) * var(--fs,64));line-height:1;letter-spacing:.04em;white-space:nowrap}
-.greet{font-size:1.6rem;text-align:center}
+/* dashboard: the day's thought, then an open horoscope (no box) over its sign's scene from art/scenes; the scene's paper is
+   lightened to blend with the page and every edge fades out, most of all the bottom where the text sits */
+.thought{text-align:center;font-size:1.3rem;padding:2px 6px}
+.today{position:relative;margin-inline:-10px;text-align:center}
+.today-art{display:block;width:100%;mix-blend-mode:multiply;filter:brightness(1.12) saturate(.95);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 42%,transparent 90%),linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 42%,transparent 90%),linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-composite:intersect}
+.today-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 22px 6px}
+.today-art+.today-in{margin-top:-50%}
+.today-in h2{font-size:1.25rem;letter-spacing:.04em}
+.today-in p{font-size:1.08rem}
+.today-in .btn{min-width:140px}
 #app.has-footer .frame{min-height:calc(100svh - 64px)}
 /* thin sepia scrollbars on sideways rows (sign picker, events) instead of the stark default */
 *{scrollbar-width:thin;scrollbar-color:rgba(139,106,62,.55) transparent}

@@ -96,7 +96,6 @@ async function pullMerge(){
 const dkey=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 const long=d=>new Intl.DateTimeFormat('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(d);
 const evt=d=>new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(d);
-function greet(){const h=new Date().getHours();return h<5?'The night is quiet. The universe is listening.':h<12?'Good morning. The universe has something to tell you.':h<18?'Good afternoon. The stars are still with you.':'Good evening. Your cosmic journey continues.'}
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 const cardFor=k=>{const s=S.saved.find(x=>x.date===k),o=s&&ORACLE.find(c=>c.id===s.id);return o||ORACLE[hash((S.email||'guest').toLowerCase()+':'+k)%ORACLE.length]};
 const todayCard=()=>cardFor(dkey());
@@ -247,13 +246,11 @@ views.home=()=>{
  if(!A)return needLib();
  const m=moonInfo(now),ss=sunSign(now),ev=events(now,90).slice(0,8),h=horoscope(sign.id,'daily','general');
  return `<div class="stack">
- <h2 class="greet">${S.name?greet().replace('.',', '+esc(S.name)+'.'):greet()}</h2>
- ${S.intro?'':panel(`<p class="quote">Welcome to your universe. The stars have a story to tell.</p><button class="btn ghost" data-act="intro">Begin</button>`,'blush')}
- ${panel(`<h2><span class="glyph">${sign.g}</span> ${sign.name} · Today</h2><p class="muted">${sign.el} · ruled by ${sign.ruler}</p><p>${h.body}</p><p class="note">Sample text. Published readings arrive through the content pipeline.</p><button class="btn" data-go="horoscopes">Explore Your Horoscope</button>`)}
+ <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
+ <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-go="horoscopes">More</button></div></section>
  ${panel(`<h2 style="text-align:center">A Message From the Universe</h2><p class="quote" style="text-align:center">One card. One message. Just for today.</p>${cardScene(c,rev,'homeCard')}${rev?`<p class="quote" style="text-align:center">${c.msg}</p><button class="btn ghost" data-go="fortune">Open in Daily Fortune</button>`:`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Fortune</button>`}`,'lilac')}
  ${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}
  <div class="stack" style="gap:10px"><h2>Upcoming Cosmic Events</h2><div class="scroller" tabindex="0" aria-label="Upcoming events">${ev.map(e=>panel(`<h3>${e.name}</h3><p class="muted">${evt(e.date)}</p><p style="font-size:.88rem">${e.a}</p><p style="font-size:.88rem;font-style:italic">${e.s}</p><p class="muted">“${e.r}”</p>`)).join('')}</div></div>
- ${panel(`<div class="label">Cosmic thought of the day</div><p class="quote">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>`,'blush')}
  </div>`;
 };
 function cardScene(c,flipped,id){
@@ -368,19 +365,19 @@ function render(){
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
  if(sec==='join'||sec==='welcome')bindJoin();
 }
-/* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign and
-   the date; Horoscopes shows the sign being read and its dates. */
+/* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign with its
+   element and ruler; Horoscopes shows the sign being read and its dates. */
 const KICK=Object.fromEntries(NAV.map(([k,l])=>[k,l]));
 function framed(sec,html){
- const m=/<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html);let kick=KICK[sec]||'Kosmia',title=m?m[1]:'Kosmia',sub='';
- if(sec==='home'){const s=sg(S.sign);kick='Kosmia';title=s.name;sub=long(new Date())}
+ const m=/<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html);let kick=KICK[sec]||'',title=m?m[1]:'Kosmia',sub='';
+ if(sec==='home'){const s=sg(S.sign);kick='';title=s.name;sub=`${s.el} · ruled by ${s.ruler}`}
  else{
   if(m)html=html.replace(m[0],'');
   if(sec==='horoscopes'){const s=sg(V.exploreSign||S.sign);kick='Horoscope';title=s.name;sub=s.dates}
-  if(plain(title).includes(kick))kick='Kosmia';
+  if(plain(title).includes(kick))kick='';
  }
  const fs=Math.min(64,Math.round(720/Math.max(plain(title).length,1)));
- return `<div class="page"><header class="banner"><span class="b-kick">${kick}</span><h1 class="b-title" style="--fs:${fs}">${title}</h1>${sub?`<span class="b-sub">${sub}</span>`:''}</header><div class="frame"><div class="frame-in">${html}</div></div></div>`;
+ return `<div class="page"><header class="banner">${kick?`<span class="b-kick">${kick}</span>`:''}<h1 class="b-title" style="--fs:${fs}">${title}</h1>${sub?`<span class="b-sub">${sub}</span>`:''}</header><div class="frame"><div class="frame-in">${html}</div></div></div>`;
 }
 function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=true;render();window.scrollTo(0,0)}
 /* Onboarding: create an account (email, password, sign), sign in, or, in local mode, just enter. */
