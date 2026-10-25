@@ -166,12 +166,16 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 /* thin sepia scrollbars on sideways rows (sign picker, events) instead of the stark default */
 *{scrollbar-width:thin;scrollbar-color:rgba(139,106,62,.55) transparent}
 /* whisper card: lunar-chart back (art/cards/back.webp); the front is that whisper's artwork (art/whispers) with its
-   message on an engraved sepia plaque (art/cards/plaque.webp, 1400x591: inner rule x 54-1347, y 87-565) */
+   message on an engraved sepia plaque (art/cards/plaque.webp, 1400x591: inner rule x 54-1347, y 87-565). Everything is
+   placed in card-width units (the .scene is a size container) so every browser lays it out identically inside the card's frame. */
 .face.front.daily{padding:0;justify-content:flex-end;background:#F2E7D0 url(/art/frame-paper.webp) center/200% auto}
 .day-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ph{position:absolute;inset:0 0 34%;display:flex;align-items:center;justify-content:center;padding:18px}
 .ph svg{width:58%;height:auto}
-.card-banner{position:relative;z-index:1;align-self:stretch;margin:0 3% 4%;aspect-ratio:1400/591;background:url(/art/cards/plaque.webp) center/100% 100% no-repeat;filter:drop-shadow(0 4px 10px rgba(20,14,8,.45));color:var(--plum)}
+.card-banner{position:absolute;z-index:1;left:50%;margin-left:-44cqw;bottom:6cqw;width:88cqw;height:calc(88cqw * 591 / 1400);background:url(/art/cards/plaque.webp) center/100% 100% no-repeat;color:var(--plum)}
+/* Safari flattens 3D under a filter and lets the front show through the back, so the card's layers carry no filter
+   and hide their own back faces */
+.day-art,.card-banner,.ph{-webkit-backface-visibility:hidden;backface-visibility:hidden}
 /* text box = the inner rule inset by an equal margin on every side (and clear of the corner vines), so it stays centred in the border */
 .cb-in{position:absolute;left:12%;right:12%;top:calc(14.7% + 5%);bottom:calc(4.4% + 5%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
 /* plaque text scales with the card (container units) so the longest whisper fits on a 320px phone */
@@ -183,3 +187,20 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 /* reflections: the day's message, then the question to sit with */
 .reflect-msg{font-size:1.08rem;color:var(--mauve)}
 .reflect-q{font-family:var(--serif);font-weight:600;font-size:1.35rem;line-height:1.3}
+.whisper-acts{justify-content:center}
+/* My Collection: saved whispers as flat cards, the reflection written that day beneath */
+.scene.flat{perspective:none}
+.scene.flat .face.front{transform:none}
+.kept{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.kept+.kept{margin-top:14px}
+.kept-note{max-width:300px;display:flex;flex-direction:column;gap:6px}
+/* dashboard: from Cosmic Energy Today down, a sepia starfield (art/cosmos.webp) as a faint watermark fading at both ends */
+.cosmos{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:18px}
+.cosmos .panel{background:rgba(250,243,228,.38)}
+.cosmos::before{content:"";position:absolute;inset:-60px -10px;z-index:-1;background:url(/art/cosmos.webp) center/cover no-repeat;mix-blend-mode:multiply;opacity:.6;
+  -webkit-mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);pointer-events:none}
+/* belt and braces for Safari: each face is hidden outright while turned away, switching at the flip's midpoint (1.1s) */
+.scene:not(.flat) .face.front{transition:visibility 0s .55s}
+.scene:not(.flat):not(.flipped) .face.front{visibility:hidden}
+.scene .face.back{transition:visibility 0s .55s}
+.scene.flipped .face.back{visibility:hidden}
