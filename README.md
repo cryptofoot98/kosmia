@@ -40,6 +40,26 @@ netlify.toml              publish dir, SPA fallback, headers
 2. Set environment variables `SUPABASE_URL` and `SUPABASE_ANON_KEY` (see `.env.example`).
 3. Deploy.
 
+## AI features
+
+OpenAI and ElevenLabs keys stay on the server. Never put them in `config.js`.
+
+- **Crafted art**: run `node scripts/craft-images.mjs` locally. It reads `OPENAI_API_KEY` from `.env`
+  and writes square art for the 12 oracle cards, 22 major arcana and 12 signs into `public/art/`,
+  plus `public/art/index.js` listing what exists. Commit the results. Cards fall back to the SVG
+  symbols for anything missing. Use `--only oracle|tarot|signs`, `--force` and `--quality`.
+- **Paint my card** (`netlify/functions/paint.mjs`, `POST /api/paint`): a signed-in user gets a
+  personal painting of today's oracle card for their sign. Prompts are built on the server from card and sign
+  ids, so users cannot send free-form prompts. Images go to the private `paintings` Storage bucket.
+- **Listen** (`netlify/functions/speak.mjs`, `POST /api/speak`): ElevenLabs reads a horoscope or
+  oracle message aloud.
+- Both endpoints check the user's Supabase token and claim from a per-user daily quota
+  (`claim_ai_quota`, defaults of 3 paintings and 30 readings). Set `PAINT_DAILY_LIMIT` / `SPEAK_DAILY_LIMIT` to change it.
+
+On Netlify, set `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` as **secret** variables scoped to Functions.
+`SUPABASE_URL` and `SUPABASE_ANON_KEY` must be scoped to both Builds and Functions. See `.env.example`
+for optional overrides (model, voice, limits).
+
 ## Local development
 
 ```sh

@@ -1,0 +1,1 @@
+window.KOSMIA_ART={};

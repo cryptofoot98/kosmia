@@ -97,7 +97,10 @@ textarea{min-height:110px;resize:vertical}
 .rd .scene{width:84px}
 .rd .face .ct{font-size:.55rem}
 .rd .face.front{padding:8px 4px}
-.rev .face.front svg{transform:rotate(180deg)}
+.rev .face.front svg,.rev .face.front img.art{transform:rotate(180deg)}
+.face.front img.art{width:78%;aspect-ratio:1;object-fit:cover;mix-blend-mode:multiply}
+.sign-art{display:block;width:120px;height:120px;margin:0 auto;mix-blend-mode:multiply}
+.painting{display:block;width:100%;border-radius:14px;border:1.5px solid var(--gold)}
 .tbl{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:.88rem}
 td,th{padding:6px 8px;border-bottom:1px solid var(--lilac);text-align:left;white-space:nowrap}
@@ -107,3 +110,18 @@ td,th{padding:6px 8px;border-bottom:1px solid var(--lilac);text-align:left;white
 @media (prefers-reduced-motion:reduce){.card3d{transition:none}.scene.rise,.scene.rise .spark{animation:none}}
 [hidden]{display:none!important}
 img{max-width:100%}
+/* onboarding poster (art/onboarding.webp, 2:3); overlays are placed in the image's blank bands */
+#app.onboard{padding-block:max(16px,env(safe-area-inset-top,0px)) 32px}
+.poster{position:relative;container-type:inline-size;width:min(100%,calc((100svh - 32px)*2/3));aspect-ratio:2/3;margin:0 auto;border-radius:6px;overflow:hidden;box-shadow:0 14px 34px rgba(81,64,95,.22)}
+.poster>img{display:block;width:100%;height:100%}
+.poster .poster-email{position:absolute;left:19%;width:62%;top:11.3%;height:5.4%;min-height:0;padding:0 3cqw;border:1px solid #8B6A3E;border-radius:3px;background:rgba(255,249,242,.85);color:#3E3226;font:500 max(16px,3.6cqw)/1 var(--serif);letter-spacing:.06em;text-align:center}
+.poster .poster-email::placeholder{color:#8B7A66;font-style:italic}
+.poster .poster-email:focus{outline:2px solid var(--gold);outline-offset:2px}
+.wheel{position:absolute;inset:0;width:100%;height:100%}
+.wheel path{fill:transparent;cursor:pointer;outline:none;transition:fill .25s}
+.wheel.has-pick path{fill:rgba(246,234,226,.45)}
+.wheel path:hover{fill:rgba(197,164,119,.16)}
+.wheel path[aria-checked=true]{fill:rgba(197,164,119,.10);stroke:#8B6A3E;stroke-width:5}
+.wheel path:focus-visible{stroke:var(--plum);stroke-width:6}
+.poster-btn{position:absolute;left:12%;width:76%;top:88.4%;height:5.8%;border:1px solid var(--gold);border-radius:3px;background:#4A3B2A;color:#F6EAE2;font:600 max(12px,3.1cqw)/1 var(--serif);letter-spacing:.08em;padding:0 2cqw;text-transform:uppercase;white-space:nowrap;cursor:pointer}
+.poster-btn[disabled]{opacity:.6;cursor:not-allowed}

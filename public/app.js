@@ -1,9 +1,12 @@
 (function(){
 'use strict';
 const A = window.Astronomy;
-const C = window.KosmiaCloud||{enabled:false,user:null,onAuth(){},onError(){},init:async()=>null,saveProfile(){},saveFortune(){},saveMatch(){},saveReading:async()=>null};
+const C = window.KosmiaCloud||{enabled:false,user:null,onAuth(){},onError(){},init:async()=>null,saveProfile(){},saveFortune(){},saveMatch(){},saveReading:async()=>null,paint:async()=>{throw new Error('offline')},speak:async()=>{throw new Error('offline')},paintingUrl:async()=>null};
 const $ = (s,r=document)=>r.querySelector(s);
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* crafted art from scripts/craft-images.mjs; falls back to the SVG symbols when absent */
+const ART=window.KOSMIA_ART||{};
+const pic=(kind,id,cls='art')=>(ART[kind]||[]).includes(id)?`<img class="${cls}" src="/art/${kind}/${id}.webp" alt="" loading="lazy">`:'';
 const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
 /* ---------- data ---------- */
@@ -54,7 +57,6 @@ function symbol(k){
  return `<svg viewBox="0 0 100 100" aria-hidden="true">${m[k]||m.star}</svg>`;
 }
 const BACK=`<svg viewBox="0 0 100 160" aria-hidden="true"><path d="M6 6H94V154H6Z" fill="none" stroke="#C5A477" stroke-width="1.2"/><path d="M11 11H89V149H11Z" fill="none" stroke="#C5A477" stroke-width=".5"/><circle cx="50" cy="80" r="16" fill="none" stroke="#C5A477"/><circle cx="50" cy="80" r="6" fill="none" stroke="#C5A477" stroke-width=".8"/>${Array.from({length:24},(_,i)=>{const a=i/24*Math.PI*2;return `<line x1="${50+Math.cos(a)*20}" y1="${80+Math.sin(a)*20}" x2="${50+Math.cos(a)*28}" y2="${80+Math.sin(a)*28}" stroke="#C5A477" stroke-width=".5"/>`}).join('')}<path d="M44 30A10 10 0 1 0 44 50A8 8 0 1 1 44 30Z" fill="none" stroke="#C5A477" stroke-width=".9"/><path d="M50 118L52 124L58 126L52 128L50 134L48 128L42 126L48 124Z" fill="none" stroke="#C5A477" stroke-width=".8"/></svg>`;
-const EMBLEM=`<svg viewBox="0 0 120 120" width="150" height="150" role="img" aria-label="Kosmia sun and crescent moon emblem">${Array.from({length:28},(_,i)=>{const a=i/28*Math.PI*2,r2=i%2?46:54;return `<line x1="${60+Math.cos(a)*34}" y1="${60+Math.sin(a)*34}" x2="${60+Math.cos(a)*r2}" y2="${60+Math.sin(a)*r2}" stroke="#C5A477" stroke-width=".7"/>`}).join('')}<circle cx="60" cy="60" r="30" fill="none" stroke="#C5A477" stroke-width="1.2"/><path d="M68 38A22 22 0 1 0 68 82A17 17 0 1 1 68 38Z" fill="#E8CBD2" stroke="#C5A477"/></svg>`;
 
 /* ---------- storage ---------- */
 const KEY='kosmia.v1';
@@ -203,7 +205,7 @@ const FOOT={
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
 };
-const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
+const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},painting:false,say:null,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
 const tab=()=>V.tab[V.sec]||(FOOT[V.sec]?FOOT[V.sec][0][0]:'');
 function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
 const panel=(h,cls='')=>`<section class="panel ${cls}"><div class="in">${h}</div></section>`;
@@ -212,12 +214,23 @@ const needLib=()=>A?'':panel('<h3>Astronomy library unavailable</h3><p>The ephem
 
 /* ---------- views ---------- */
 const views={};
-views.welcome=()=>`<div class="stack" style="align-items:center;text-align:center;padding-top:40px">${EMBLEM}<h1 style="font-size:2.9rem;letter-spacing:.32em;margin-right:-.32em">KOSMIA</h1><p class="quote" style="color:var(--mauve)">The Universe Is With You.</p><div class="rule" style="width:220px"></div><p class="muted">Your journey through the cosmos begins here.</p><button class="btn" data-go="join">Enter Your Universe</button></div>`;
-views.join=()=>`<div class="stack"><h1>Step into your universe</h1><p class="muted">Two things only: where we can reach you, and your sign.</p>
- <div class="field"><label for="em">Email address</label><input id="em" type="email" autocomplete="email" inputmode="email" placeholder="your@email.com" value="${esc(S.email)}"></div>
- <div class="label">Your zodiac sign</div>${signGrid('Your zodiac sign',V.joinSign||'')}
- <button class="btn" id="joinBtn" disabled>Continue</button>
- ${C.enabled?'<p class="note">You can start straight away. We will also email you a sign-in link: open it to keep your universe in sync across devices.</p>':'<p class="note">Local mode: nothing leaves your browser. Connect Supabase to enable accounts and sync.</p>'}</div>`;
+/* Onboarding poster. art/onboarding.webp is 1024x1536 with the wheel centred at (512,803), radii 488x520.
+   The email field and button sit in the poster's two blank bands; the wheel's twelve panels pick the sign. */
+const WHEEL={cx:512,cy:803,rx:488,ry:520,inner:.37};
+function wedge(i){
+ const {cx,cy,rx,ry,inner}=WHEEL,a0=(-105+30*i)*Math.PI/180,a1=a0+Math.PI/6;
+ const p=(a,k)=>`${(cx+rx*k*Math.cos(a)).toFixed(1)} ${(cy+ry*k*Math.sin(a)).toFixed(1)}`;
+ return `M${p(a0,1)}A${rx} ${ry} 0 0 1 ${p(a1,1)}L${p(a1,inner)}A${(rx*inner).toFixed(1)} ${(ry*inner).toFixed(1)} 0 0 0 ${p(a0,inner)}Z`;
+}
+views.join=()=>{
+ const pick=V.joinSign||'',s=pick&&sg(pick);
+ return `<div class="stack"><div class="poster"><img src="/art/onboarding.webp" alt="Kosmia. The Universe Is With You. An engraved zodiac wheel with the sun at its centre and the twelve signs around it." width="1024" height="1536">
+ <input id="em" class="poster-email" type="email" autocomplete="email" inputmode="email" placeholder="your@email.com" aria-label="Email address" value="${esc(S.email)}">
+ <svg class="wheel${pick?' has-pick':''}" viewBox="0 0 1024 1536" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map((x,i)=>`<path d="${wedge(i)}" data-sign="${x.id}" role="radio" tabindex="${(pick?pick===x.id:i===0)?0:-1}" aria-checked="${pick===x.id}" aria-label="${x.name}, ${x.dates}"><title>${x.name}</title></path>`).join('')}</svg>
+ <button class="poster-btn" id="joinBtn" disabled>${s?`Enter as <span class="glyph">${s.g}</span> ${s.name}`:'Choose your sign'}</button></div>
+ ${C.enabled?'<p class="note">We will email you a sign-in link: open it to keep your universe in sync across devices. You can start straight away.</p>':'<p class="note">Local mode: nothing leaves your browser. Connect Supabase to enable accounts and sync.</p>'}</div>`;
+};
+views.welcome=views.join;
 views.home=()=>{
  const sign=sg(S.sign),now=new Date(),c=todayCard(),rev=!!S.revealed[dkey()];
  if(!A)return needLib();
@@ -234,7 +247,20 @@ views.home=()=>{
 };
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
- return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Daily fortune card, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back">${BACK}</div><div class="face front"><div class="ct">${c.title}</div>${symbol(c.sym)}<div class="quote" style="font-size:.9rem;color:var(--mauve)">The Universe Is With You</div></div></div>${sp}</div>`;
+ return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Daily fortune card, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back">${BACK}</div><div class="face front"><div class="ct">${c.title}</div>${pic('oracle',c.id)||symbol(c.sym)}<div class="quote" style="font-size:.9rem;color:var(--mauve)">The Universe Is With You</div></div></div>${sp}</div>`;
+}
+/* ---------- AI: painted cards (OpenAI) and read-aloud (ElevenLabs), signed-in only ---------- */
+const AUDIO=new Map();let player=null;
+const plain=s=>String(s).replace(/<[^>]*>/g,'');
+const listenBtn=text=>{if(!C.user)return '';const p=plain(text);return `<button class="btn ghost" data-act="listen" data-say="${esc(p)}" style="align-self:flex-start">${V.say===p?'■ Stop':'▶ Listen'}</button>`};
+function stopAudio(){if(player){player.pause();player=null}V.say=null}
+function paintPanel(c){
+ const head='<div class="label">Your painted card</div>';
+ if(!C.user)return C.enabled?panel(head+'<p class="muted">Sign in from Settings to have today’s card painted just for you.</p>'):'';
+ const k=dkey(),p=V.paint[k];
+ if(p===undefined){V.paint[k]='';C.paintingUrl(k).then(u=>{if(u){V.paint[k]=u;render()}}).catch(()=>{})}
+ if(p)return panel(`${head}<img class="painting" src="${esc(p)}" alt="${esc(c.title)}, painted for ${sg(S.sign).name}">`);
+ return panel(`${head}<p>Have today’s card painted just for you, in the spirit of ${sg(S.sign).name}.</p><button class="btn ghost" data-act="paint" ${V.painting?'disabled':''}>${V.painting?'Painting… this can take up to a minute':'Paint My Card'}</button>`);
 }
 views.horoscopes=()=>{
  const cat=tab(),ex=V.exploreSign||S.sign,s=sg(ex),h=horoscope(ex,V.period,cat);
@@ -242,7 +268,7 @@ views.horoscopes=()=>{
  return `<div class="stack"><h1>Horoscopes</h1>
  <div class="row" style="gap:6px;flex-wrap:nowrap;overflow-x:auto" role="radiogroup" aria-label="Explore a sign">${SIGNS.map(x=>`<button class="chip" style="flex:0 0 auto" role="radio" aria-checked="${x.id===ex}" data-sign="${x.id}" aria-label="${x.name}"><span class="glyph">${x.g}</span></button>`).join('')}</div>
  <div class="seg" role="tablist">${['daily','monthly','annual'].map(p=>`<button role="tab" aria-selected="${V.period===p}" data-period="${p}">${cap(p)}</button>`).join('')}</div>
- ${panel(`<div class="row" style="justify-content:space-between"><h2><span class="glyph">${s.g}</span> ${s.name}</h2><span class="muted">${s.dates}</span></div><p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p><div class="rule"></div><div class="label">${CATS[cat]} · ${head}</div><p>${h.body}</p><div class="label">Theme</div><p>${h.theme}</p><div class="label">Reflection</div><p class="quote" style="font-size:1.1rem">${h.ref}</p>${cat==='finance'?'<p class="muted">Reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">Reflection only. This is not medical advice.</p>':''}<p class="note">Sample text for the prototype. Readings stay fixed for their day, month or year once published.</p>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as My Sign</button>`:''}`)}</div>`;
+ ${panel(`${pic('signs',s.id,'sign-art')}<div class="row" style="justify-content:space-between"><h2><span class="glyph">${s.g}</span> ${s.name}</h2><span class="muted">${s.dates}</span></div><p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p><div class="rule"></div><div class="label">${CATS[cat]} · ${head}</div><p>${h.body}</p><div class="label">Theme</div><p>${h.theme}</p><div class="label">Reflection</div><p class="quote" style="font-size:1.1rem">${h.ref}</p>${listenBtn(h.body+' '+h.theme+' '+h.ref)}${cat==='finance'?'<p class="muted">Reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">Reflection only. This is not medical advice.</p>':''}<p class="note">Sample text for the prototype. Readings stay fixed for their day, month or year once published.</p>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as My Sign</button>`:''}`)}</div>`;
 };
 views.love=()=>{
  const a=V.love.a||S.sign,b=V.love.b;
@@ -257,7 +283,7 @@ views.fortune=()=>{
  if(t==='collection')return `<div class="stack"><h1>My Collection</h1>${S.saved.length?S.saved.slice().reverse().map(x=>{const o=ORACLE.find(c=>c.id===x.id);return o?panel(`<h3>${o.title}</h3><p class="muted">${x.date}</p><p class="quote" style="font-size:1.1rem">${o.msg}</p>${S.notes[x.date]?`<p class="muted">Your note: ${esc(S.notes[x.date])}</p>`:''}`):''}).join(''):panel('<h3>No cards saved yet</h3><p>Your cosmic collection begins with today’s fortune.</p>')}</div>`;
  if(t==='reflections')return `<div class="stack"><h1>Reflections</h1>${rev?panel(`<div class="label">${c.title}</div><p class="quote" style="font-size:1.1rem">${c.ref}</p><label class="label" for="note">Private reflection</label><textarea id="note" placeholder="What does this message mean to me today?">${esc(S.notes[dkey()]||'')}</textarea><button class="btn" data-act="savenote">Save reflection</button><p class="muted">${C.user?'Synced to your account and private to you.':'Stored in this browser. Sign in from Settings to keep it private in your account.'}</p>`):panel('<h3>Reveal today’s card first</h3><p>Your reflection space opens once you have received today’s message.</p>')}</div>`;
  const sv=S.saved.some(x=>x.date===dkey());
- return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Your Daily Fortune</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`<p class="quote">${c.msg}</p><div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save My Fortune'}</button>`):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
+ return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Your Daily Fortune</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`<p class="quote">${c.msg}</p>${listenBtn(c.title+'. '+c.msg)}<div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save My Fortune'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
@@ -267,7 +293,7 @@ views.tarot=()=>{
  if(T.stage==='setup')return `<div class="stack"><h1>Ask the Universe</h1><p class="quote">Hold your question in your mind. Let the cards guide your reflection.</p><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="What should I focus on?"></div><div class="field"><label for="sp">Reading type</label><select id="sp">${Object.entries(SPREADS).map(([k,s])=>`<option value="${k}" ${k===T.spread?'selected':''}>${s.n}</option>`).join('')}</select></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
  if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted">${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div><button class="btn" data-act="reveal-reading" ${T.picks.length===sp.p.length?'':'disabled'}>Turn the cards</button></div>`;
  const cards=T.drawn,flipped=T.flipped;
- return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rev?'rev':''}"><div class="card3d"><div class="face back">${BACK}</div><div class="face front"><div class="ct">${c.name.split(' of ')[0]}</div>${symbol(c.sym)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rev?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rev?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
+ return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rev?'rev':''}"><div class="card3d"><div class="face back">${BACK}</div><div class="face front"><div class="ct">${c.name.split(' of ')[0]}</div>${pic('tarot',c.id)||symbol(c.sym)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rev?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rev?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
  ${flipped<cards.length?`<button class="btn" data-act="flipnext">Turn next card</button>`:panel(`<h3>Interpretation</h3>${cards.map(c=>`<p><strong>${c.pos}.</strong> ${c.name}${c.rev?' reversed':''} points to ${c.rev?c.revm:c.upm}.</p>`).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'} These are symbols for reflection, not predictions.</p><p class="note">Preview interpretation, assembled from traditional meanings. The app sends your question and cards to an AI service for a personal reading.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`)}</div>`;
 };
 function birthCalc(){
@@ -325,12 +351,12 @@ function render(){
  app.innerHTML=(views[sec]||views.home)();
  $('#fab').hidden=!authed;
  const f=FOOT[sec],foot=$('#foot');
- foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));
+ foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${l}</button>`).join('');
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
- if(sec==='join')bindJoin();
+ if(sec==='join'||sec==='welcome')bindJoin();
 }
-function go(sec,t){V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=true;render();window.scrollTo(0,0)}
+function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=true;render();window.scrollTo(0,0)}
 function bindJoin(){
  const em=$('#em'),btn=$('#joinBtn'),chk=()=>{btn.disabled=!(/^\S+@\S+\.\S+$/.test(em.value.trim())&&V.joinSign)};
  em.addEventListener('input',chk);chk();
@@ -355,7 +381,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.sign2){V.love.b=t.dataset.sign2;V.love.done=false;return render()}
  if(t.dataset.sign){
   const id=t.dataset.sign;
-  if(V.sec==='join'){V.joinSign=id;const v=$('#em').value;S.email=v;render();$('#em').value=v;return}
+  if(V.sec==='join'||V.sec==='welcome'){V.joinSign=id;const v=$('#em').value;S.email=v;render();$('#em').value=v;const w=$(`.wheel [data-sign="${id}"]`);if(w)w.focus({preventScroll:true});return}
   if(V.sec==='horoscopes'&&!t.dataset.act){V.exploreSign=id;return render()}
   if(V.sec==='love'){V.love.a=id;V.love.done=false;return render()}
   if(V.sec==='universe'&&!t.dataset.act){S.sign=id;save();syncProfile();toast('Your sign is now '+sg(id).name);return render()}
@@ -370,17 +396,31 @@ document.addEventListener('click',e=>{
  if(a==='savecard'){const k=dkey(),c=todayCard();if(!S.saved.some(x=>x.date===k)){S.saved.push({id:c.id,date:k});save();syncFortune(k);toast('Saved to My Collection')}return render()}
  if(a==='savenote'){const k=dkey();S.notes[k]=$('#note').value;if(!S.saved.some(x=>x.date===k))S.saved.push({id:todayCard().id,date:k});save();syncFortune(k);return toast('Reflection saved')}
  if(a==='savename'){S.name=$('#nm').value.trim();save();syncProfile();return toast('Saved')}
- if(a==='signout'){Promise.resolve(C.user&&C.signOut()).catch(()=>{});try{localStorage.removeItem(KEY)}catch(x){}S=fresh();V.joinSign='';return go('welcome')}
+ if(a==='signout'){Promise.resolve(C.user&&C.signOut()).catch(()=>{});try{localStorage.removeItem(KEY)}catch(x){}S=fresh();V.joinSign='';V.paint={};return go('welcome')}
+ if(a==='paint'){const k=dkey(),c=todayCard();V.painting=true;render();
+  C.paint(k,c.id,S.sign).then(d=>{V.paint[k]=d.image},e=>toast(e.message||'Could not paint your card')).then(()=>{V.painting=false;render()});return}
+ if(a==='listen'){const txt=t.dataset.say;
+  if(V.say===txt){stopAudio();return render()}
+  stopAudio();V.say=txt;render();
+  (AUDIO.has(txt)?Promise.resolve(AUDIO.get(txt)):C.speak(txt).then(b=>{const u=URL.createObjectURL(b);AUDIO.set(txt,u);return u}))
+   .then(u=>{if(V.say!==txt)return;player=new Audio(u);player.onended=()=>{player=null;V.say=null;render()};return player.play()})
+   .catch(e=>{if(V.say===txt){V.say=null;render()}toast(e.message||'Could not play the reading')});
+  return}
  if(a==='sendlink'){t.disabled=true;C.sendLink(S.email,S.sign).then(()=>toast('Sign-in link sent. Check your email.'),()=>{t.disabled=false;toast('Could not send the sign-in link')});return}
  const T=V.tarot;
  if(a==='usespread'){T.spread=t.dataset.k;T.stage='setup';V.tab.tarot='new';return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value;T.spread=($('#sp')||{value:T.spread}).value;T.deck=shuffle(DECK);T.picks=[];T.stage='pick';return render()}
- if(a==='reveal-reading'){const sp=SPREADS[T.spread];T.drawn=T.picks.map((i,x)=>{const c=T.deck[i];const r=new Uint8Array(1);crypto.getRandomValues(r);return {name:c.name,sym:c.sym,pos:sp.p[x],rev:r[0]<64,upm:c.up,revm:c.rev}});T.flipped=0;T.stage='read';return render()}
+ if(a==='reveal-reading'){const sp=SPREADS[T.spread];T.drawn=T.picks.map((i,x)=>{const c=T.deck[i];const r=new Uint8Array(1);crypto.getRandomValues(r);return {id:c.id,name:c.name,sym:c.sym,pos:sp.p[x],rev:r[0]<64,upm:c.up,revm:c.rev}});T.flipped=0;T.stage='read';return render()}
  if(a==='flipnext'){T.flipped++;return render()}
  if(a==='saveread'){const r={spread:T.spread,q:T.q,date:dkey(),cards:T.drawn.map(c=>({pos:c.pos,name:c.name,rev:c.rev}))};S.readings.push(r);save();C.saveReading(r).then(id=>{if(id){r.rid=id;save()}});toast('Reading saved');return}
  if(a==='newread'){T.stage='setup';T.q='';return render()}
 });
-document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.scene[data-act],[data-planet]')){e.preventDefault();e.target.click()}});
+const tap=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+document.addEventListener('keydown',e=>{
+ const w=e.target.closest&&e.target.closest('.wheel [data-sign]');
+ if(w&&/^Arrow/.test(e.key)){e.preventDefault();const i=SIGNS.findIndex(s=>s.id===w.dataset.sign),d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:-1;return tap($(`.wheel [data-sign="${SIGNS[(i+d+12)%12].id}"]`))}
+ if((e.key==='Enter'||e.key===' ')&&e.target.matches('.scene[data-act],[data-planet],.wheel [data-sign]')){e.preventDefault();tap(e.target)}
+});
 document.addEventListener('change',e=>{
  const i=e.target,id=i.id,b=V.birth;
  if(V.sec==='chart'){if(id==='bd')b.date=i.value;if(id==='bt')b.time=i.value;if(id==='bo')b.off=i.value;if(id==='bu')b.unk=i.checked;if(id==='bla')b.lat=i.value;if(id==='blo')b.lon=i.value;if(id&&id[0]==='b')render()}
