@@ -233,7 +233,7 @@ views.join=()=>{
   ${acct?`<p class="auth-alt">${up?'Already have an account? <button type="button" class="link" data-act="authmode">Sign in</button>'
    :'New to Kosmia? <button type="button" class="link" data-act="authmode">Create an account</button> · <button type="button" class="link" data-act="forgot">Forgot password?</button>'}</p>`:''}`;
  return `<div class="stack"><div class="poster">
- <div class="ps ps-top"><img src="${ART_SRC}" alt="Kosmia. The Universe Is With You."></div>
+ <div class="ps ps-top"><img src="${ART_SRC}" alt="Kosmia"><p class="ps-sub">What If the Cosmos Is Listening?</p></div>
  <form class="ps ps-band" id="authForm" novalidate><div class="auth">${form}</div></form>
  <div class="ps ps-wheel"><img src="${ART_SRC}" alt="An engraved zodiac wheel with the sun at its centre and the twelve signs around it.">
  <svg class="wheel${pick?' has-pick':''}" viewBox="0 266 1024 1270" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map((x,i)=>`<path d="${wedge(i)}" data-sign="${x.id}" role="radio" tabindex="${(pick?pick===x.id:i===0)?0:-1}" aria-checked="${pick===x.id}" aria-label="${x.name}, ${x.dates}"><title>${x.name}</title></path>`).join('')}</svg>
@@ -372,7 +372,7 @@ function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=tr
 function joinState(){
  const up=V.auth!=='in',acct=C.enabled&&!C.user,s=V.joinSign&&sg(V.joinSign),em=$('#em'),pw=$('#pw');
  const ok=(!em||/^\S+@\S+\.\S+$/.test(em.value.trim()))&&(!pw||pw.value.length>=6)&&((acct&&!up)||!!s);
- const label=acct&&!up?'Sign in':s?`${acct?'Begin':'Enter'} as <span class="glyph">${s.g}</span> ${s.name}`:'Choose your sign below';
+ const label=acct&&!up?'Sign in':s?`${acct?'Begin':'Enter'} as <span class="glyph">${s.g}</span> ${s.name}`:'Choose your sign';
  return {ok,label};
 }
 function syncJoin(){const b=$('#joinBtn');if(!b)return;const j=joinState();b.innerHTML=V.busy?'One moment…':j.label;b.disabled=!j.ok||V.busy}
