@@ -183,7 +183,7 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 /* ---------- ui state ---------- */
 const NAV=[['home','Home','☉︎'],['horoscopes','Horoscopes','♎︎'],['love','Love Match','♡'],['fortune','Whispers','✦'],['tarot','Tarot','☽︎'],['chart','Birth Chart','⊕'],['calendar','Cosmic Calendar','☾'],['universe','My Universe','✧']];
 const FOOT={
- horoscopes:[['general','Overview'],['career','Career'],['finance','Finance'],['love','Love'],['health','Health']],
+ horoscopes:[['general','Overview'],['love','Love'],['health','Health'],['career','Career'],['finance','Finance']],
  love:[['match','Compatibility'],['saved','Saved Matches']],
  fortune:[['today','Today’s Whisper'],['collection','My Collection'],['reflections','Reflections']],
  tarot:[['new','New Reading'],['spreads','Spreads'],['history','History']],
@@ -349,8 +349,8 @@ function render(){
  app.innerHTML=sec==='welcome'||sec==='join'?html:framed(sec,html);
  $('#fab').hidden=!authed;
  const f=FOOT[sec],foot=$('#foot');
- foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('has-footer',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
- if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${l}</button>`).join('');
+ foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('foot-icons',!!(authed&&f)&&sec==='horoscopes');app.classList.toggle('foot-icons',!!(authed&&f)&&sec==='horoscopes');app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
+ if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${sec==='horoscopes'?pic('cats',k,'foot-ico'):''}${l}</button>`).join('');
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
  if(sec==='join'||sec==='welcome')bindJoin();
 }

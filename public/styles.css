@@ -216,3 +216,9 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .sign-nm{font-family:var(--serif);font-weight:600;font-size:.72rem;letter-spacing:.04em;color:var(--mauve);line-height:1.3;white-space:nowrap}
 .sign-ico{width:60px;height:60px;object-fit:contain}
 .today-in .label{margin-top:4px}
+/* horoscope footer: an illustrated icon (art/cats) above each category name */
+#foot button:has(.foot-ico){display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:2px}
+.foot-ico{width:34px;height:34px;object-fit:contain}
+#foot button[aria-selected=true] .foot-ico{filter:drop-shadow(0 0 4px rgba(139,106,62,.55))}
+#app.has-footer.foot-icons{padding-bottom:86px}
+body.foot-icons #fab{bottom:calc(env(safe-area-inset-bottom,0px) + 96px)}
