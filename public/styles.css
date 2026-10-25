@@ -207,11 +207,12 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 /* the two buttons under the whisper card are solid, never see-through */
 .whisper-acts .btn,.whisper-acts .btn.ghost{background:var(--lavender);color:#F6EAE2;opacity:1}
 .whisper-acts .btn[disabled]{background:#6B5843}
-/* horoscope page: illustrated sign icons (art/icons) and an unboxed reading; Overview reuses the dashboard scene */
-.sign-row{gap:6px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 6px}
-.sign-row .chip{flex:0 0 auto;width:60px;height:60px;padding:3px;background:rgba(250,243,228,.45)}
-.sign-row .chip[aria-checked=true]{background:rgba(231,214,182,.95);box-shadow:inset 0 0 0 2px var(--gold)}
-.sign-ico{width:100%;height:100%;object-fit:contain}
-.today.plain{margin-top:0}
-.today.plain .today-in{padding-top:4px}
+/* horoscope page: illustrated sign icons (art/icons) with their names, no box; every category reuses the dashboard scene */
+.sign-row{gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 6px;align-items:flex-start}
+.sign-row .chip{flex:0 0 auto;width:66px;height:auto;min-height:0;padding:0;border:0;border-radius:0;background:none;flex-direction:column;gap:2px}
+.sign-row .chip[aria-checked=true]{background:none;color:var(--plum);box-shadow:none}
+.sign-row .chip[aria-checked=true] .sign-ico{filter:drop-shadow(0 0 5px rgba(139,106,62,.55))}
+.sign-row .chip[aria-checked=true] .sign-nm{color:var(--plum);border-bottom:1px solid var(--gold)}
+.sign-nm{font-family:var(--serif);font-weight:600;font-size:.72rem;letter-spacing:.04em;color:var(--mauve);line-height:1.3;white-space:nowrap}
+.sign-ico{width:60px;height:60px;object-fit:contain}
 .today-in .label{margin-top:4px}
