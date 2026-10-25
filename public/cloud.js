@@ -79,6 +79,8 @@ const Cloud={
  },
  paint(day,cardId,sign){return Cloud.api('/api/paint',{day,cardId,sign}).then(r=>r.json())},
  speak(text){return Cloud.api('/api/speak',{text}).then(r=>r.blob())},
+ // personal interpretation of a finished tarot reading (cards are sent as ids and orientations only)
+ interpret(spread,question,cards){return Cloud.api('/api/interpret',{spread,question,cards}).then(r=>r.json())},
  // Signed URL for a painting made earlier, or null when there is none.
  async paintingUrl(day){
   if(!user)return null;

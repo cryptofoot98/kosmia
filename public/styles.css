@@ -87,10 +87,8 @@ textarea{min-height:110px;resize:vertical}
 .mini{aspect-ratio:2/3;border-radius:4px;border:1px solid #6b2a22;background:#4a1712 url(/art/cards/tarot-back.webp) center/cover;cursor:pointer;padding:0;position:relative}
 .mini[aria-pressed=true]{outline:2px solid var(--plum);transform:translateY(-6px)}
 .mini::after{content:none}
-.rd{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:start}
-.rd .scene{width:84px}
-.rd .face .ct{font-size:.55rem}
-.rd .face.front{padding:8px 4px}
+.rd{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:start}
+.rd .scene{width:118px;cursor:pointer}
 .rev .face.front svg,.rev .face.front img.art{transform:rotate(180deg)}
 .face.front img.art{width:78%;aspect-ratio:1;object-fit:cover;mix-blend-mode:multiply}
 .sign-art{display:block;width:120px;height:120px;margin:0 auto;mix-blend-mode:multiply}
@@ -246,7 +244,14 @@ body.has-nav #app{padding-top:var(--navh,70px)}
 .tf-plate{position:relative;margin:0 4cqw 4cqw;padding:2.6cqw 2cqw;background:rgba(244,234,214,.95);border:1px solid var(--gold);box-shadow:inset 0 0 0 1.2cqw rgba(244,234,214,.95),inset 0 0 0 calc(1.2cqw + 1px) var(--gold);text-align:center}
 .tf-plate span{font-family:var(--serif);font-weight:700;font-size:6cqw;letter-spacing:.08em;line-height:1.1;text-transform:uppercase;color:var(--plum)}
 .rev .tarot-art{transform:rotate(180deg)}
-/* deck gallery */
-.deck-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.deck-card{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;padding:0;cursor:pointer;font-family:var(--serif);font-weight:600;font-size:.7rem;line-height:1.15;color:var(--mauve);text-align:center}
-.deck-card .tarot-art{position:static;aspect-ratio:2/3;height:auto;border-radius:4px;border:1px solid var(--gold);box-shadow:0 3px 8px rgba(58,48,38,.25)}
+/* reading types: illustrated like the sign picker, three per row */
+.signs.spread-grid{grid-template-columns:repeat(3,1fr);gap:14px 6px}
+.spread-grid .sign-ico{width:min(78px,21vw);height:min(78px,21vw)}
+.spread-grid .sign-nm{white-space:normal;text-align:center;font-size:.8rem}
+.spread-n{font-size:.68rem;color:var(--mauve);font-style:italic}
+.ai-read p+p{margin-top:8px}
+/* card details pop-up */
+.pop{position:fixed;inset:0;z-index:70;background:rgba(40,28,18,.6);display:flex;align-items:flex-end;justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 24px)}
+.pop-box{position:relative;width:100%;max-width:460px;max-height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:22px 20px calc(24px + env(safe-area-inset-bottom,0px));background:var(--parchment) url(/art/frame-paper.webp) center top/100% auto;border:1px solid var(--gold);box-shadow:inset 0 0 0 4px var(--parchment),inset 0 0 0 5px var(--gold);border-radius:6px 6px 0 0}
+.pop-box .scene{width:min(260px,70vw);margin:4px auto 8px}
+.pop-x{position:absolute;top:8px;right:10px;width:40px;height:40px;border:0;background:none;font-size:1.8rem;line-height:1;color:var(--plum);cursor:pointer}

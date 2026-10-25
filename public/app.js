@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 const A = window.Astronomy;
-const C = window.KosmiaCloud||{enabled:false,user:null,onAuth(){},onError(){},init:async()=>null,saveProfile(){},saveFortune(){},saveMatch(){},saveReading:async()=>null,paint:async()=>{throw new Error('offline')},speak:async()=>{throw new Error('offline')},paintingUrl:async()=>null,hasStoredSession:()=>false,recovering:false};
+const C = window.KosmiaCloud||{enabled:false,user:null,onAuth(){},onError(){},init:async()=>null,saveProfile(){},saveFortune(){},saveMatch(){},saveReading:async()=>null,paint:async()=>{throw new Error('offline')},speak:async()=>{throw new Error('offline')},paintingUrl:async()=>null,interpret:async()=>{throw new Error('offline')},hasStoredSession:()=>false,recovering:false};
 const $ = (s,r=document)=>r.querySelector(s);
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* crafted art from scripts/craft-images.mjs; falls back to the SVG symbols when absent */
@@ -169,12 +169,12 @@ const DECK=(window.KOSMIA_TAROT||[]);
 const CTX={love:'Love',work:'Work',money:'Money',growth:'Growth'};
 const SPREAD_CTX={love:'love',career:'work'};
 const SPREADS={
- one:{n:'One Card — Cosmic Guidance',p:['Guidance']},
- ppf:{n:'Three Cards — Past, Present, Future',p:['Past','Present','Future']},
- scg:{n:'Three Cards — Situation, Challenge, Guidance',p:['Situation','Challenge','Guidance']},
- love:{n:'Love Reading',p:['You','Them','The connection','The challenge','The direction']},
- career:{n:'Career Reading',p:['Where you are','Your strengths','The obstacle','Action to take','Where it tends']},
- celtic:{n:'Celtic Cross',p:['The present','The challenge','The foundation','The past','The crown','The near future','Yourself','Your surroundings','Hopes and fears','The outcome']}
+ one:{s:'One Card',n:'One Card — Cosmic Guidance',p:['Guidance']},
+ ppf:{s:'Past · Present · Future',n:'Three Cards — Past, Present, Future',p:['Past','Present','Future']},
+ scg:{s:'Situation · Challenge',n:'Three Cards — Situation, Challenge, Guidance',p:['Situation','Challenge','Guidance']},
+ love:{s:'Love',n:'Love Reading',p:['You','Them','The connection','The challenge','The direction']},
+ career:{s:'Career',n:'Career Reading',p:['Where you are','Your strengths','The obstacle','Action to take','Where it tends']},
+ celtic:{s:'Celtic Cross',n:'Celtic Cross',p:['The present','The challenge','The foundation','The past','The crown','The near future','Yourself','Your surroundings','Hopes and fears','The outcome']}
 };
 function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRandomValues(r);for(let i=a.length-1;i>0;i--){const j=r[i]%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 
@@ -184,7 +184,7 @@ const FOOT={
  horoscopes:[['general','Overview'],['love','Love'],['health','Health'],['career','Career'],['finance','Finance']],
  love:[['match','Compatibility'],['saved','Saved Affinities']],
  fortune:[['today','Today’s Whisper'],['collection','My Collection'],['reflections','Reflections']],
- tarot:[['new','New Reading'],['deck','The Deck'],['spreads','Spreads'],['history','History']],
+ tarot:[['new','New Reading'],['history','History']],
  chart:[['chart','Chart'],['planets','Planets'],['aspects','Aspects']],
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
@@ -285,23 +285,29 @@ views.fortune=()=>{
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
- if(t==='deck'){
-  if(V.tcard){const c=DECK.find(x=>x.id===V.tcard)||DECK[0],k=V.tctx||'love';
-   return `<div class="stack"><h1>${c.name}</h1><button class="btn ghost" data-act="tdeck" style="align-self:flex-start">← The deck</button><div class="scene flat" role="img" aria-label="${esc(c.name)}"><div class="face front tarot-face">${tarotFace(c)}</div></div>
-   <div class="label">Upright · ${c.up}</div><p>${c.upm}</p><div class="label">Reversed · ${c.rev}</div><p>${c.revm}</p><div class="rule"></div>
-   <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="quote">${c[k]}</p></div>`}
-  const grp=[['Major Arcana',DECK.filter(c=>c.arcana==='major')],...['Wands','Cups','Swords','Pentacles'].map(su=>[su,DECK.filter(c=>c.suit===su)])];
-  return `<div class="stack"><h1>The Deck</h1><p class="muted" style="text-align:center">78 cards · 22 Major and 56 Minor Arcana</p>${grp.map(([g,cs])=>`<div class="label">${g}</div><div class="deck-grid">${cs.map(c=>`<button class="deck-card" data-act="tcard" data-k="${c.id}" aria-label="${esc(c.name)}">${pic('deck',c.id,'tarot-art')||`<span class="glyph">✦</span>`}<span>${c.name}</span></button>`).join('')}</div>`).join('')}</div>`;
- }
- if(t==='spreads')return `<div class="stack"><h1>Spreads</h1>${Object.entries(SPREADS).map(([k,s])=>panel(`<h3>${s.n}</h3><p class="muted">${s.p.join(' · ')}</p><button class="btn ghost" data-act="usespread" data-k="${k}">Use this spread</button>`)).join('')}</div>`;
  if(t==='history')return `<div class="stack"><h1>Reading History</h1>${S.readings.length?S.readings.map(r=>panel(`<h3>${esc(SPREADS[r.spread].n)}</h3><p class="muted">${r.date}${r.q?' · “'+esc(r.q)+'”':''}</p>${r.cards.map(c=>`<p>${esc(c.pos)}: ${esc(c.name)}${c.rev?' (reversed)':''}</p>`).join('')}`)).join(''):panel('<h3>Your reading history is waiting for its first story</h3><p>Complete a reading and save it to find it here.</p>')}</div>`;
  const sp=SPREADS[T.spread];
- if(T.stage==='setup')return `<div class="stack"><h1>Ask the Universe</h1><p class="quote">Hold your question in your mind. Let the cards guide your reflection.</p><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="What should I focus on?"></div><div class="field"><label for="sp">Reading type</label><select id="sp">${Object.entries(SPREADS).map(([k,s])=>`<option value="${k}" ${k===T.spread?'selected':''}>${s.n}</option>`).join('')}</select></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
- if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted">${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div><button class="btn" data-act="reveal-reading" ${T.picks.length===sp.p.length?'':'disabled'}>Turn the cards</button></div>`;
- const cards=T.drawn,flipped=T.flipped;
- return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote">“${esc(T.q)}”</p>`:''}${cards.map((c,i)=>`<div class="rd"><div class="scene ${i<flipped?'flipped':''} ${c.rv?'rev':''}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face">${tarotFace(c)}</div></div></div><div><div class="label">${c.pos}</div><h3>${c.name}${c.rv?' · reversed':''}</h3>${i<flipped?`<p class="muted">${c.rv?c.rev:c.up}</p><p>${c.rv?c.revm:c.upm}</p>`:''}</div></div>`).join('')}
- ${flipped<cards.length?`<button class="btn" data-act="flipnext">Turn next card</button>`:panel(`<h3>Interpretation</h3>${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'} These are symbols for reflection, not predictions.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`)}</div>`;
+ // 1. the question and the reading type, chosen like a sign; choosing one shuffles the deck
+ if(T.stage==='setup')return `<div class="stack"><h1>What Is Yet to Be Revealed?</h1><p class="quote" style="text-align:center">A question, a choice, a turn of a card. What might you discover?</p><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="What should I focus on?"></div><div class="label">Choose your reading</div><div class="signs sign-grid spread-grid" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="chip" role="radio" aria-checked="false" data-act="shuffle" data-k="${k}">${pic('spreads',k,'sign-ico')||'<span class="glyph">✦</span>'}<span class="sign-nm">${x.s}</span><span class="spread-n">${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div></div>`;
+ // 2. pick face-down cards; the reveal opens by itself once enough are chosen
+ if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted" style="text-align:center">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
+ // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
+ const cards=T.drawn,done=cards.every(c=>c.shown);
+ return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote" style="text-align:center">“${esc(T.q)}”</p>`:''}<p class="muted" style="text-align:center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p>${cards.map((c,i)=>`<div class="rd"><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face">${tarotFace(c)}</div></div></div><div><div class="label">${c.pos}</div>${c.shown?`<h3>${c.name}${c.rv?' · reversed':''}</h3><p class="muted">${c.rv?c.rev:c.up}</p><p>${c.rv?c.revm:c.upm}</p>`:'<p class="muted">Face down</p>'}</div></div>`).join('')}
+ ${done?panel(`<h3>Interpretation</h3>${T.ai?`<div class="ai-read">${T.ai.split(/\n+/).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in from Settings for a personal AI interpretation.</p>':''}`}<p class="muted">Symbols for reflection, not predictions.</p><div class="row"><button class="btn" data-act="saveread">Save reading</button><button class="btn ghost" data-act="newread">New reading</button></div>`):''}
+ ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
 };
+// pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
+function tarotPop(c){const k=V.tctx||'love';
+ return `<div class="pop" role="dialog" aria-modal="true" aria-label="${esc(c.name)}" data-act="tpopclose"><div class="pop-box"><button class="pop-x" data-act="tpopclose" aria-label="Close">×</button>
+ <div class="label" style="text-align:center">${c.arcana==='major'?'Major Arcana · '+c.num:'Minor Arcana · '+c.suit}${c.rv?' · reversed':''}</div><h2 style="text-align:center">${c.name}</h2>
+ <div class="scene flat ${c.rv?'rev':''}" role="img" aria-label="${esc(c.name)}"><div class="face front tarot-face">${tarotFace(c)}</div></div>
+ <div class="label">Upright · ${c.up}</div><p>${c.upm}</p><div class="label">Reversed · ${c.rev}</div><p>${c.revm}</p><div class="rule"></div>
+ <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="quote">${c[k]}</p></div></div>`}
+// once every card is face up, ask the server for a personal interpretation (signed-in only)
+function interpret(){const T=V.tarot;if(!C.user||T.aiState)return;T.aiState='loading';
+ C.interpret(T.spread,T.q,T.drawn.map(c=>({id:c.id,reversed:c.rv}))).then(r=>{if(V.tarot===T&&r.text){T.ai=r.text}},e=>toast(e.message||'Could not interpret the reading')).then(()=>{T.aiState='done';render()})}
+
 function birthCalc(){
  const b=V.birth,[y,mo,d]=b.date.split('-').map(Number),[h,mi]=(b.unk?'12:00':b.time).split(':').map(Number);
  const date=new Date(Date.UTC(y,mo-1,d,h-Number(b.off||0),mi));
@@ -418,6 +424,9 @@ async function submitJoin(e){
  }catch(x){V.busy=false;syncJoin();if(err)err.textContent=authMsg(x)}
 }
 function bindJoin(){const f=$('#authForm');f.addEventListener('input',syncJoin);f.addEventListener('submit',submitJoin);syncJoin()}
+function drawCards(){const T=V.tarot,sp=SPREADS[T.spread];
+ T.drawn=T.picks.map((i,x)=>{const r=new Uint8Array(1);crypto.getRandomValues(r);return Object.assign({},T.deck[i],{pos:sp.p[x],rv:r[0]<64,shown:false})});
+ T.stage='read';V.tpop=null;render();window.scrollTo(0,0)}
 function reveal(){
  const k=dkey();if(S.revealed[k])return;
  const sc=$('.scene');if(sc)sc.classList.add('rise');
@@ -432,7 +441,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.tab){V.tab[V.sec]=t.dataset.tab;return render()}
  if(t.dataset.period){V.period=t.dataset.period;return render()}
  if(t.dataset.planet){V.chartSel=t.dataset.planet;return render()}
- if(t.dataset.pick!==undefined){const T=V.tarot,i=Number(t.dataset.pick),n=SPREADS[T.spread].p.length,x=T.picks.indexOf(i);if(x>=0)T.picks.splice(x,1);else if(T.picks.length<n)T.picks.push(i);return render()}
+ if(t.dataset.pick!==undefined){const T=V.tarot,i=Number(t.dataset.pick),n=SPREADS[T.spread].p.length,x=T.picks.indexOf(i);if(x>=0)T.picks.splice(x,1);else if(T.picks.length<n)T.picks.push(i);render();if(T.picks.length===n)setTimeout(drawCards,450);return}
  if(t.dataset.sign2){V.love.b=t.dataset.sign2;V.love.done=false;return render()}
  if(t.dataset.sign){
   const id=t.dataset.sign;
@@ -471,18 +480,16 @@ document.addEventListener('click',e=>{
  if(a==='setpw'){const v=$('#npw').value;if(v.length<6)return toast('Use at least 6 characters');
   t.disabled=true;C.updatePassword(v).then(()=>{toast('Password updated');go(S.sign?'home':'welcome')},x=>{t.disabled=false;toast(authMsg(x))});return}
  const T=V.tarot;
- if(a==='usespread'){T.spread=t.dataset.k;T.stage='setup';V.tab.tarot='new';return render()}
- if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value;T.spread=($('#sp')||{value:T.spread}).value;T.deck=shuffle(DECK);T.picks=[];T.stage='pick';return render()}
- if(a==='reveal-reading'){const sp=SPREADS[T.spread];T.drawn=T.picks.map((i,x)=>{const c=T.deck[i];const r=new Uint8Array(1);crypto.getRandomValues(r);return Object.assign({},c,{pos:sp.p[x],rv:r[0]<64})});T.flipped=0;T.stage='read';return render()}
- if(a==='flipnext'){T.flipped++;return render()}
+ if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.spread=t.dataset.k;T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
+ if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
+ if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const r={spread:T.spread,q:T.q,date:dkey(),cards:T.drawn.map(c=>({pos:c.pos,name:c.name,rev:c.rv}))};S.readings.push(r);save();C.saveReading(r).then(id=>{if(id){r.rid=id;save()}});toast('Reading saved');return}
- if(a==='tcard'){V.tcard=t.dataset.k;V.tctx='love';render();return window.scrollTo(0,0)}
- if(a==='tdeck'){V.tcard=null;return render()}
  if(a==='tctx'){V.tctx=t.dataset.k;return render()}
- if(a==='newread'){T.stage='setup';T.q='';return render()}
+ if(a==='newread'){T.stage='setup';T.q='';T.ai='';T.aiState='';V.tpop=null;render();return window.scrollTo(0,0)}
 });
 const tap=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));
 document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}
  const w=e.target.closest&&e.target.closest('.wheel [data-sign]');
  if(w&&/^Arrow/.test(e.key)){e.preventDefault();const i=SIGNS.findIndex(s=>s.id===w.dataset.sign),d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:-1;return tap($(`.wheel [data-sign="${SIGNS[(i+d+12)%12].id}"]`))}
  if((e.key==='Enter'||e.key===' ')&&e.target.matches('.scene[data-act],[data-planet],.wheel [data-sign]')){e.preventDefault();tap(e.target)}
