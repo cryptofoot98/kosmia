@@ -195,7 +195,8 @@ const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',do
 const tab=()=>V.tab[V.sec]||(FOOT[V.sec]?FOOT[V.sec][0][0]:'');
 function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
 const panel=(h,cls='')=>`<section class="panel ${cls}"><div class="in">${h}</div></section>`;
-const signGrid=(name,sel)=>`<div class="signs" role="radiogroup" aria-label="${name}">${SIGNS.map(s=>`<button class="chip" role="radio" aria-checked="${sel===s.id}" data-sign="${s.id}"><span class="g glyph">${s.g}</span><span style="font-size:.78rem">${s.name}</span></button>`).join('')}</div>`;
+// sign grid with the horoscope page's illustrated icons (art/icons) and names, no boxes; attr picks data-sign or data-sign2
+const signGrid=(name,sel,attr='sign')=>`<div class="signs sign-grid" role="radiogroup" aria-label="${name}">${SIGNS.map(s=>`<button class="chip" role="radio" aria-checked="${sel===s.id}" data-${attr}="${s.id}">${pic('icons',s.id,'sign-ico')||`<span class="g glyph">${s.g}</span>`}<span class="sign-nm">${s.name}</span></button>`).join('')}</div>`;
 const needLib=()=>A?'':panel('<h3>Astronomy library unavailable</h3><p>The ephemeris could not load, so astronomical data is not shown rather than guessed. Check your connection and reload.</p>');
 
 /* ---------- views ---------- */
@@ -272,7 +273,7 @@ views.love=()=>{
  let res='';
  if(V.love.done&&a&&b){const r=match(a,b),saved=S.matches.some(m=>m[0]===a&&m[1]===b);
   res=panel(`<div class="row" style="justify-content:center;gap:14px"><span class="glyph" style="font-size:2.2rem">${sg(a).g}</span><svg width="80" height="30" viewBox="0 0 80 30" aria-hidden="true"><path d="M2 15C20 2 30 28 40 15S62 2 78 15" fill="none" stroke="#D8B98A" stroke-width="1.2"/><circle cx="40" cy="15" r="3" fill="#D8B98A"/></svg><span class="glyph" style="font-size:2.2rem">${sg(b).g}</span></div><div style="text-align:center"><div class="score">${r.sc.Overall}%</div><p class="muted">Symbolic score, for entertainment. Not a measured probability.</p></div>${Object.entries(r.sc).filter(x=>x[0]!=='Overall').map(([k,v])=>`<div><div class="row" style="justify-content:space-between"><span>${k}</span><span class="muted">${v}%</span></div><div class="bar"><i style="width:${v}%"></i></div></div>`).join('')}<div class="label">Strengths</div><p>${r.text.strengths}</p><div class="label">Potential challenges</div><p>${r.text.challenges}</p><div class="label">Guidance</div><p>${r.text.guidance}</p><button class="btn ghost" data-act="savematch">${saved?'Saved':'Save this match'}</button>`);}
- return `<div class="stack"><h1>Affinity</h1><div class="label">Your sign</div>${signGrid('Your sign',a)}<div class="label">Their sign</div><div class="signs" role="radiogroup" aria-label="Their sign">${SIGNS.map(s=>`<button class="chip" role="radio" aria-checked="${b===s.id}" data-sign2="${s.id}"><span class="g glyph">${s.g}</span><span style="font-size:.78rem">${s.name}</span></button>`).join('')}</div><button class="btn" data-act="domatch" ${b?'':'disabled'}>Discover Our Cosmic Connection</button>${res}</div>`;
+ return `<div class="stack"><h1>Affinity</h1><div class="label">Your sign</div>${signGrid('Your sign',a)}<div class="label">Their sign</div>${signGrid('Their sign',b,'sign2')}<button class="btn" data-act="domatch" ${b?'':'disabled'}>Discover Our Cosmic Connection</button>${res}</div>`;
 };
 views.fortune=()=>{
  const c=todayCard(),rev=!!S.revealed[dkey()],t=tab();
@@ -280,7 +281,7 @@ views.fortune=()=>{
   return `<article class="kept"><div class="label">${long(new Date(x.date+'T12:00:00'))}</div><div class="scene flat" role="img" aria-label="${esc(o.title+'. '+o.msg)}"><div class="face front daily">${whisperFace(o)}</div></div>${n?`<div class="kept-note"><p class="muted">${o.ref}</p><div class="label">Your reflection</div><p class="quote">“${esc(n)}”</p></div>`:''}</article>`}).join(''):panel('<h3>No cards saved yet</h3><p>Your cosmic collection begins with today’s whisper.</p>')}</div>`;
  if(t==='reflections')return `<div class="stack"><h1>Reflections</h1>${rev?panel(`<div class="label">Today’s whisper · ${c.title}</div><p class="quote reflect-msg">“${c.msg}”</p><div class="rule"></div><div class="label">Sit with it</div><p class="reflect-q">${c.ref}</p><label class="label" for="note">Your reflection</label><textarea id="note" placeholder="Take your time. Write whatever rises.">${esc(S.notes[dkey()]||'')}</textarea><button class="btn" data-act="savenote">Save reflection</button><p class="muted">${C.user?'Synced to your account and private to you.':'Stored in this browser. Sign in from Settings to keep it private in your account.'}</p>`):panel('<h3>Reveal today’s card first</h3><p>Your reflection space opens once you have received today’s message.</p>')}</div>`;
  const sv=S.saved.some(x=>x.date===dkey());
- return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Whispers</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`${listenBtn(c.title+'. '+c.msg)}<button class="btn" data-act="toreflect">Your Reflection</button><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save Whisper'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
+ return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Whispers</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?`<div class="row whisper-acts"><button class="btn" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved':'Save Whisper'}</button></div>`:`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Whisper</button>`}</div>`;
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
@@ -349,8 +350,8 @@ function render(){
  app.innerHTML=sec==='welcome'||sec==='join'?html:framed(sec,html);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
  const f=FOOT[sec],foot=$('#foot');
- foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('foot-icons',!!(authed&&f)&&sec==='horoscopes');app.classList.toggle('foot-icons',!!(authed&&f)&&sec==='horoscopes');app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
- if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${sec==='horoscopes'?pic('cats',k,'foot-ico'):''}${l}</button>`).join('');
+ foot.hidden=!(authed&&f);app.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('has-footer',!!(authed&&f));document.body.classList.toggle('foot-icons',!!(authed&&f));app.classList.toggle('foot-icons',!!(authed&&f));app.classList.toggle('onboard',sec==='welcome'||sec==='join');document.body.classList.toggle('onboarding',sec==='welcome'||sec==='join');
+ if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${pic('cats',k,'foot-ico')}${l}</button>`).join('');
  $('#navin').innerHTML=NAV.map(([k,l,g])=>`<button data-nav="${k}" ${sec===k?'aria-current="page"':''}>${pic('nav',k,'nav-ico')||`<span class="glyph">${g}</span>`}<span>${l}</span></button>`).join('');
  navH();
  if(sec==='join'||sec==='welcome')bindJoin();
