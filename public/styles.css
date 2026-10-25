@@ -197,10 +197,21 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 /* dashboard: behind Cosmic Energy Today, a sepia starfield (art/cosmos.webp) as a faint watermark fading at both ends */
 .cosmos{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:18px}
 .cosmos .panel{background:rgba(250,243,228,.14)}
-.cosmos::before{content:"";position:absolute;inset:-60px -10px;z-index:-1;background:url(/art/cosmos.webp) center/cover no-repeat;mix-blend-mode:multiply;opacity:.9;
+.cosmos::before{content:"";position:absolute;inset:0 -10px -60px;z-index:-1;background:url(/art/cosmos.webp) center/cover no-repeat;mix-blend-mode:multiply;opacity:.9;
   -webkit-mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);pointer-events:none}
 /* belt and braces for Safari: each face is hidden outright while turned away, switching at the flip's midpoint (1.1s) */
 .scene:not(.flat) .face.front{transition:visibility 0s .55s}
 .scene:not(.flat):not(.flipped) .face.front{visibility:hidden}
 .scene .face.back{transition:visibility 0s .55s}
 .scene.flipped .face.back{visibility:hidden}
+/* the two buttons under the whisper card are solid, never see-through */
+.whisper-acts .btn,.whisper-acts .btn.ghost{background:var(--lavender);color:#F6EAE2;opacity:1}
+.whisper-acts .btn[disabled]{background:#6B5843}
+/* horoscope page: illustrated sign icons (art/icons) and an unboxed reading; Overview reuses the dashboard scene */
+.sign-row{gap:6px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 6px}
+.sign-row .chip{flex:0 0 auto;width:60px;height:60px;padding:3px;background:rgba(250,243,228,.45)}
+.sign-row .chip[aria-checked=true]{background:rgba(231,214,182,.95);box-shadow:inset 0 0 0 2px var(--gold)}
+.sign-ico{width:100%;height:100%;object-fit:contain}
+.today.plain{margin-top:0}
+.today.plain .today-in{padding-top:4px}
+.today-in .label{margin-top:4px}

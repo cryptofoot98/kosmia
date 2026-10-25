@@ -234,7 +234,7 @@ views.home=()=>{
  const m=moonInfo(now),ss=sunSign(now),h=horoscope(sign.id,'daily','general');
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
- <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-go="horoscopes">More</button></div></section>
+ <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-act="tohoroscope">More</button></div></section>
  <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<div class="row whisper-acts"><button class="btn ghost" data-act="savecard" ${S.saved.some(x=>x.date===dkey())?'disabled':''}>${S.saved.some(x=>x.date===dkey())?'Saved':'Save Whisper'}</button><button class="btn" data-act="toreflect">Your Reflection</button></div>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
  <div class="cosmos">${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}</div>
  </div>`;
@@ -262,9 +262,9 @@ views.horoscopes=()=>{
  const cat=tab(),ex=V.exploreSign||S.sign,s=sg(ex),h=horoscope(ex,V.period,cat);
  const head=V.period==='daily'?long(new Date()):V.period==='monthly'?new Intl.DateTimeFormat('en-GB',{month:'long',year:'numeric'}).format(new Date()):'The year '+new Date().getFullYear();
  return `<div class="stack"><h1>Horoscopes</h1>
- <div class="row" style="gap:6px;flex-wrap:nowrap;overflow-x:auto" role="radiogroup" aria-label="Explore a sign">${SIGNS.map(x=>`<button class="chip" style="flex:0 0 auto" role="radio" aria-checked="${x.id===ex}" data-sign="${x.id}" aria-label="${x.name}"><span class="glyph">${x.g}</span></button>`).join('')}</div>
+ <div class="row sign-row" role="radiogroup" aria-label="Explore a sign">${SIGNS.map(x=>`<button class="chip" style="flex:0 0 auto" role="radio" aria-checked="${x.id===ex}" data-sign="${x.id}" aria-label="${x.name}">${pic('icons',x.id,'sign-ico')||`<span class="glyph">${x.g}</span>`}</button>`).join('')}</div>
  <div class="seg" role="tablist">${['daily','monthly','annual'].map(p=>`<button role="tab" aria-selected="${V.period===p}" data-period="${p}">${cap(p)}</button>`).join('')}</div>
- ${panel(`${pic('signs',s.id,'sign-art')}<div class="row" style="justify-content:space-between"><h2><span class="glyph">${s.g}</span> ${s.name}</h2><span class="muted">${s.dates}</span></div><p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p><div class="rule"></div><div class="label">${CATS[cat]} · ${head}</div><p>${h.body}</p><div class="label">Theme</div><p>${h.theme}</p><div class="label">Reflection</div><p class="quote" style="font-size:1.1rem">${h.ref}</p>${listenBtn(h.body+' '+h.theme+' '+h.ref)}${cat==='finance'?'<p class="muted">Reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">Reflection only. This is not medical advice.</p>':''}<p class="note">Sample text for the prototype. Readings stay fixed for their day, month or year once published.</p>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as My Sign</button>`:''}`)}</div>`;
+ <section class="today${cat==='general'?'':' plain'}">${cat==='general'?pic('scenes',s.id,'today-art'):''}<div class="today-in"><div class="label">${CATS[cat]} · ${head}</div><p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p><p>${h.body}</p><div class="label">Theme</div><p>${h.theme}</p>${cat==='finance'?'<p class="muted">Reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">Reflection only. This is not medical advice.</p>':''}${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as My Sign</button>`:''}</div></section></div>`;
 };
 views.love=()=>{
  const a=V.love.a||S.sign,b=V.love.b;
@@ -446,6 +446,7 @@ document.addEventListener('click',e=>{
    .then(u=>{if(V.say!==txt)return;player=new Audio(u);player.onended=()=>{player=null;V.say=null;render()};return player.play()})
    .catch(e=>{if(V.say===txt){V.say=null;render()}toast(e.message||'Could not play the reading')});
   return}
+ if(a==='tohoroscope'){V.exploreSign=null;V.period='daily';return go('horoscopes','general')}
  if(a==='toreflect')return go('fortune','reflections');
  if(a==='toauth'){V.auth=S.email?'in':'up';return go('welcome')}
  if(a==='authmode'){const em=$('#em');if(em)S.email=em.value.trim();V.auth=V.auth==='in'?'up':'in';render();const f=$(S.email?'#pw':'#em');if(f)f.focus();return}
