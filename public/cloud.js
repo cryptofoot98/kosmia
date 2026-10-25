@@ -1,8 +1,10 @@
-/* Kosmia cloud sync: Supabase auth (email magic link) and per-user storage.
+/* Kosmia cloud sync: Supabase auth (email + password) and per-user storage.
    When config.js has no Supabase keys the app runs local-only and every call here is a no-op. */
 (function(){
 'use strict';
 const cfg=window.KOSMIA_CONFIG||{}, lib=window.supabase;
+// Read before the client consumes the URL: a password-reset link lands with type=recovery in the hash.
+const recovering=/type=recovery/.test(location.hash);
 const sb=(cfg.supabaseUrl&&cfg.supabaseAnonKey&&lib&&lib.createClient)
  ?lib.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})
  :null;
@@ -14,7 +16,10 @@ const bg=p=>p.catch(fail);
 
 const Cloud={
  enabled:!!sb,
+ recovering,
  get user(){return user},
+ // True when a saved session is in this browser, so the app can open on home instead of onboarding.
+ hasStoredSession(){try{return !!sb&&Object.keys(localStorage).some(k=>/^sb-.+-auth-token$/.test(k))}catch(e){return false}},
  onAuth(fn){listeners.push(fn)},
  onError(fn){errListeners.push(fn)},
  async init(){
@@ -27,10 +32,13 @@ const Cloud={
   });
   return user;
  },
- async sendLink(email,sign){
-  if(!sb)return;
-  check(await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/',data:{sign}}}));
+ // Resolves to {user, session}; session is null when the project requires email confirmation.
+ async signUp(email,password,sign){
+  return check(await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin+'/',data:{sign}}}));
  },
+ async signIn(email,password){return check(await sb.auth.signInWithPassword({email,password}))},
+ async resetPassword(email){check(await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'}))},
+ async updatePassword(password){check(await sb.auth.updateUser({password}))},
  async signOut(){if(sb)await sb.auth.signOut();user=null},
  async pull(){
   const uid=user.id;

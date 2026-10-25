@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 const A = window.Astronomy;
-const C = window.KosmiaCloud||{enabled:false,user:null,onAuth(){},onError(){},init:async()=>null,saveProfile(){},saveFortune(){},saveMatch(){},saveReading:async()=>null,paint:async()=>{throw new Error('offline')},speak:async()=>{throw new Error('offline')},paintingUrl:async()=>null};
+const C = window.KosmiaCloud||{enabled:false,user:null,onAuth(){},onError(){},init:async()=>null,saveProfile(){},saveFortune(){},saveMatch(){},saveReading:async()=>null,paint:async()=>{throw new Error('offline')},speak:async()=>{throw new Error('offline')},paintingUrl:async()=>null,hasStoredSession:()=>false,recovering:false};
 const $ = (s,r=document)=>r.querySelector(s);
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* crafted art from scripts/craft-images.mjs; falls back to the SVG symbols when absent */
@@ -205,7 +205,7 @@ const FOOT={
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
 };
-const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},painting:false,say:null,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
+const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},painting:false,say:null,auth:'up',busy:false,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
 const tab=()=>V.tab[V.sec]||(FOOT[V.sec]?FOOT[V.sec][0][0]:'');
 function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
 const panel=(h,cls='')=>`<section class="panel ${cls}"><div class="in">${h}</div></section>`;
@@ -215,21 +215,32 @@ const needLib=()=>A?'':panel('<h3>Astronomy library unavailable</h3><p>The ephem
 /* ---------- views ---------- */
 const views={};
 /* Onboarding poster. art/onboarding.webp is 1024x1536 with the wheel centred at (512,803), radii 488x520.
-   The email field and button sit in the poster's two blank bands; the wheel's twelve panels pick the sign. */
+   It is shown in three slices: the title (rows 0-149), the blank band under it (rows 149-266, stretched
+   to hold the account form) and the wheel (rows 266-1536). The wheel's twelve panels pick the sign. */
 const WHEEL={cx:512,cy:803,rx:488,ry:520,inner:.37};
 function wedge(i){
  const {cx,cy,rx,ry,inner}=WHEEL,a0=(-105+30*i)*Math.PI/180,a1=a0+Math.PI/6;
  const p=(a,k)=>`${(cx+rx*k*Math.cos(a)).toFixed(1)} ${(cy+ry*k*Math.sin(a)).toFixed(1)}`;
  return `M${p(a0,1)}A${rx} ${ry} 0 0 1 ${p(a1,1)}L${p(a1,inner)}A${(rx*inner).toFixed(1)} ${(ry*inner).toFixed(1)} 0 0 0 ${p(a0,inner)}Z`;
 }
+const ART_SRC='/art/onboarding.webp';
 views.join=()=>{
- const pick=V.joinSign||'',s=pick&&sg(pick);
- return `<div class="stack"><div class="poster"><img src="/art/onboarding.webp" alt="Kosmia. The Universe Is With You. An engraved zodiac wheel with the sun at its centre and the twelve signs around it." width="1024" height="1536">
- <input id="em" class="poster-email" type="email" autocomplete="email" inputmode="email" placeholder="your@email.com" aria-label="Email address" value="${esc(S.email)}">
- <svg class="wheel${pick?' has-pick':''}" viewBox="0 0 1024 1536" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map((x,i)=>`<path d="${wedge(i)}" data-sign="${x.id}" role="radio" tabindex="${(pick?pick===x.id:i===0)?0:-1}" aria-checked="${pick===x.id}" aria-label="${x.name}, ${x.dates}"><title>${x.name}</title></path>`).join('')}</svg>
- <button class="poster-btn" id="joinBtn" disabled>${s?`Enter as <span class="glyph">${s.g}</span> ${s.name}`:'Choose your sign'}</button></div>
- ${C.enabled?'<p class="note">We will email you a sign-in link: open it to keep your universe in sync across devices. You can start straight away.</p>':'<p class="note">Local mode: nothing leaves your browser. Connect Supabase to enable accounts and sync.</p>'}</div>`;
+ const pick=V.joinSign||'',up=V.auth!=='in',acct=C.enabled&&!C.user;
+ const form=C.user?`<p class="auth-alt">Signed in as ${esc(C.user.email||'')}. Choose your sign below.</p>`
+  :`<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="your@email.com" aria-label="Email address" value="${esc(S.email)}" required>
+  ${acct?`<input id="pw" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'choose a password':'password'}" aria-label="Password" minlength="6" required>`:''}
+  <p class="auth-err" id="authErr" role="alert"></p>
+  ${acct?`<p class="auth-alt">${up?'Already have an account? <button type="button" class="link" data-act="authmode">Sign in</button>'
+   :'New to Kosmia? <button type="button" class="link" data-act="authmode">Create an account</button> · <button type="button" class="link" data-act="forgot">Forgot password?</button>'}</p>`:''}`;
+ return `<div class="stack"><div class="poster">
+ <div class="ps ps-top"><img src="${ART_SRC}" alt="Kosmia. The Universe Is With You."></div>
+ <form class="ps ps-band" id="authForm" novalidate><img src="${ART_SRC}" alt=""><div class="auth">${form}</div></form>
+ <div class="ps ps-wheel"><img src="${ART_SRC}" alt="An engraved zodiac wheel with the sun at its centre and the twelve signs around it.">
+ <svg class="wheel${pick?' has-pick':''}" viewBox="0 266 1024 1270" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map((x,i)=>`<path d="${wedge(i)}" data-sign="${x.id}" role="radio" tabindex="${(pick?pick===x.id:i===0)?0:-1}" aria-checked="${pick===x.id}" aria-label="${x.name}, ${x.dates}"><title>${x.name}</title></path>`).join('')}</svg>
+ <button class="poster-btn" id="joinBtn" type="submit" form="authForm" disabled></button></div>
+ </div></div>`;
 };
+views.reset=()=>`<div class="stack"><h1>Choose a new password</h1>${panel(`<div class="field"><label for="npw">New password</label><input id="npw" type="password" autocomplete="new-password" minlength="6"></div><button class="btn" data-act="setpw">Save password</button>`)}</div>`;
 views.welcome=views.join;
 views.home=()=>{
  const sign=sg(S.sign),now=new Date(),c=todayCard(),rev=!!S.revealed[dkey()];
@@ -339,7 +350,7 @@ views.universe=()=>{
  if(t==='settings'){
   const acct=!C.enabled?'<h3>Local mode</h3><p class="muted">Accounts and sync are not configured for this build, so everything stays in this browser.</p>'
    :C.user?`<h3>Signed in</h3><p class="muted">${esc(C.user.email||'')} · your universe is synced.</p>`
-   :`<h3>Not synced yet</h3><p class="muted">We will email ${esc(S.email||'you')} a sign-in link. Open it on any device to sync.</p><button class="btn" data-act="sendlink" ${S.email?'':'disabled'}>Email me a sign-in link</button>`;
+   :`<h3>Not signed in</h3><p class="muted">Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
   return `<div class="stack"><h1>Settings</h1>${panel(acct)}${panel(`<p class="muted">Timezone: ${tz}</p><button class="btn ghost" data-act="signout">Sign out${C.user?'':' and clear this device'}</button><p class="muted">Data export and account deletion are on the way.</p>`)}</div>`;
  }
  return `<div class="stack"><h1>My Universe</h1>${panel(`<h2>${esc(S.name||'Traveller')}</h2><p>${esc(S.email)}</p><p class="muted"><span class="glyph">${sg(S.sign).g}</span> ${sg(S.sign).name} · ${tz}</p>`)}${panel(`<div class="row" style="justify-content:space-around;text-align:center"><div><div class="score" style="font-size:2rem">${S.saved.length}</div><div class="muted">cards saved</div></div><div><div class="score" style="font-size:2rem">${S.readings.length}</div><div class="muted">readings</div></div><div><div class="score" style="font-size:2rem">${S.matches.length}</div><div class="muted">matches</div></div></div>`)}</div>`;
@@ -357,12 +368,41 @@ function render(){
  if(sec==='join'||sec==='welcome')bindJoin();
 }
 function go(sec,t){stopAudio();V.sec=sec;if(t)V.tab[sec]=t;$('#sheet').hidden=true;render();window.scrollTo(0,0)}
-function bindJoin(){
- const em=$('#em'),btn=$('#joinBtn'),chk=()=>{btn.disabled=!(/^\S+@\S+\.\S+$/.test(em.value.trim())&&V.joinSign)};
- em.addEventListener('input',chk);chk();
- btn.addEventListener('click',()=>{S.email=em.value.trim();S.sign=V.joinSign;save();go('home');
-  if(C.enabled)C.sendLink(S.email,S.sign).then(()=>toast('Check your email for a sign-in link'),()=>toast('Could not send the sign-in link'))});
+/* Onboarding: create an account (email, password, sign), sign in, or, in local mode, just enter. */
+function joinState(){
+ const up=V.auth!=='in',acct=C.enabled&&!C.user,s=V.joinSign&&sg(V.joinSign),em=$('#em'),pw=$('#pw');
+ const ok=(!em||/^\S+@\S+\.\S+$/.test(em.value.trim()))&&(!pw||pw.value.length>=6)&&((acct&&!up)||!!s);
+ const label=acct&&!up?'Sign in':s?`${acct?'Begin':'Enter'} as <span class="glyph">${s.g}</span> ${s.name}`:'Choose your sign below';
+ return {ok,label};
 }
+function syncJoin(){const b=$('#joinBtn');if(!b)return;const j=joinState();b.innerHTML=V.busy?'One moment…':j.label;b.disabled=!j.ok||V.busy}
+function pickSign(id){
+ V.joinSign=id;$('.wheel').classList.add('has-pick');
+ document.querySelectorAll('.wheel [data-sign]').forEach(p=>{const on=p.dataset.sign===id;p.setAttribute('aria-checked',on);p.tabIndex=on?0:-1;if(on)p.focus({preventScroll:true})});
+ syncJoin();
+}
+const authMsg=x=>{const m=(x&&x.message)||'';
+ if(/invalid login/i.test(m))return 'That email and password don’t match.';
+ if(/already (registered|exists)/i.test(m))return 'An account already exists for this email. Sign in instead.';
+ if(/not confirmed/i.test(m))return 'Please confirm your email first, then sign in.';
+ if(/rate limit|too many/i.test(m))return 'Too many attempts. Please wait a minute and try again.';
+ return m||'Something went wrong. Please try again.'};
+async function submitJoin(e){
+ e.preventDefault();if($('#joinBtn').disabled)return;
+ const em=$('#em'),pw=$('#pw'),email=em?em.value.trim():S.email,err=$('#authErr');
+ if(!C.enabled||C.user){S.email=email;if(V.joinSign)S.sign=V.joinSign;save();if(C.user)syncProfile();return go('home')}
+ V.busy=true;syncJoin();if(err)err.textContent='';
+ try{
+  if(V.auth!=='in'){
+   const r=await C.signUp(email,pw.value,V.joinSign);
+   if(!r.session){V.busy=false;V.auth='in';S.email=email;render();return toast('Check your email to confirm your account, then sign in.')}
+   S.sign=V.joinSign;
+  }else await C.signIn(email,pw.value);
+  S.email=email;save();V.busy=false;
+  // the auth listener now runs pullMerge, which opens home once the profile has a sign
+ }catch(x){V.busy=false;syncJoin();if(err)err.textContent=authMsg(x)}
+}
+function bindJoin(){const f=$('#authForm');f.addEventListener('input',syncJoin);f.addEventListener('submit',submitJoin);syncJoin()}
 function reveal(){
  const k=dkey();if(S.revealed[k])return;
  const sc=$('.scene');if(sc)sc.classList.add('rise');
@@ -381,7 +421,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.sign2){V.love.b=t.dataset.sign2;V.love.done=false;return render()}
  if(t.dataset.sign){
   const id=t.dataset.sign;
-  if(V.sec==='join'||V.sec==='welcome'){V.joinSign=id;const v=$('#em').value;S.email=v;render();$('#em').value=v;const w=$(`.wheel [data-sign="${id}"]`);if(w)w.focus({preventScroll:true});return}
+  if(V.sec==='join'||V.sec==='welcome')return pickSign(id);
   if(V.sec==='horoscopes'&&!t.dataset.act){V.exploreSign=id;return render()}
   if(V.sec==='love'){V.love.a=id;V.love.done=false;return render()}
   if(V.sec==='universe'&&!t.dataset.act){S.sign=id;save();syncProfile();toast('Your sign is now '+sg(id).name);return render()}
@@ -396,7 +436,7 @@ document.addEventListener('click',e=>{
  if(a==='savecard'){const k=dkey(),c=todayCard();if(!S.saved.some(x=>x.date===k)){S.saved.push({id:c.id,date:k});save();syncFortune(k);toast('Saved to My Collection')}return render()}
  if(a==='savenote'){const k=dkey();S.notes[k]=$('#note').value;if(!S.saved.some(x=>x.date===k))S.saved.push({id:todayCard().id,date:k});save();syncFortune(k);return toast('Reflection saved')}
  if(a==='savename'){S.name=$('#nm').value.trim();save();syncProfile();return toast('Saved')}
- if(a==='signout'){Promise.resolve(C.user&&C.signOut()).catch(()=>{});try{localStorage.removeItem(KEY)}catch(x){}S=fresh();V.joinSign='';V.paint={};return go('welcome')}
+ if(a==='signout'){Promise.resolve(C.user&&C.signOut()).catch(()=>{});try{localStorage.removeItem(KEY)}catch(x){}S=fresh();V.joinSign='';V.paint={};V.auth='in';return go('welcome')}
  if(a==='paint'){const k=dkey(),c=todayCard();V.painting=true;render();
   C.paint(k,c.id,S.sign).then(d=>{V.paint[k]=d.image},e=>toast(e.message||'Could not paint your card')).then(()=>{V.painting=false;render()});return}
  if(a==='listen'){const txt=t.dataset.say;
@@ -406,7 +446,13 @@ document.addEventListener('click',e=>{
    .then(u=>{if(V.say!==txt)return;player=new Audio(u);player.onended=()=>{player=null;V.say=null;render()};return player.play()})
    .catch(e=>{if(V.say===txt){V.say=null;render()}toast(e.message||'Could not play the reading')});
   return}
- if(a==='sendlink'){t.disabled=true;C.sendLink(S.email,S.sign).then(()=>toast('Sign-in link sent. Check your email.'),()=>{t.disabled=false;toast('Could not send the sign-in link')});return}
+ if(a==='toauth'){V.auth=S.email?'in':'up';return go('welcome')}
+ if(a==='authmode'){const em=$('#em');if(em)S.email=em.value.trim();V.auth=V.auth==='in'?'up':'in';render();const f=$(S.email?'#pw':'#em');if(f)f.focus();return}
+ if(a==='forgot'){const em=$('#em'),email=em?em.value.trim():'';
+  if(!/^\S+@\S+\.\S+$/.test(email)){toast('Enter your email first');if(em)em.focus();return}
+  C.resetPassword(email).then(()=>toast('If an account exists for that email, a reset link is on its way.'),x=>toast(authMsg(x)));return}
+ if(a==='setpw'){const v=$('#npw').value;if(v.length<6)return toast('Use at least 6 characters');
+  t.disabled=true;C.updatePassword(v).then(()=>{toast('Password updated');go(S.sign?'home':'welcome')},x=>{t.disabled=false;toast(authMsg(x))});return}
  const T=V.tarot;
  if(a==='usespread'){T.spread=t.dataset.k;T.stage='setup';V.tab.tarot='new';return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value;T.spread=($('#sp')||{value:T.spread}).value;T.deck=shuffle(DECK);T.picks=[];T.stage='pick';return render()}
@@ -428,9 +474,13 @@ document.addEventListener('change',e=>{
 });
 $('#fab').addEventListener('click',()=>{$('#sheet').hidden=false});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#sheet').hidden=true});
-V.sec=S.sign?'home':'welcome';
+// With accounts enabled, only a saved session opens straight onto home; everyone else starts at onboarding.
+V.sec=S.sign&&(!C.enabled||C.hasStoredSession())?'home':'welcome';
 render();
 C.onError(()=>toast('Could not sync. Your changes are kept on this device.'));
 C.onAuth(u=>{if(u)pullMerge();else render()});
-C.init().then(u=>{if(u)return pullMerge()}).catch(e=>console.error(e));
+C.init().then(u=>{
+ if(u){if(C.recovering)go('reset');return pullMerge()}
+ if(C.enabled&&V.sec!=='welcome')go('welcome');
+}).catch(e=>console.error(e));
 })();
