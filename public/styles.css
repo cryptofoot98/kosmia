@@ -183,11 +183,7 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .kept{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .kept+.kept{margin-top:14px}
 .kept-note{max-width:300px;display:flex;flex-direction:column;gap:6px}
-/* dashboard: behind Cosmic Energy Today, a sepia starfield (art/cosmos.webp) as a faint watermark fading at both ends */
 .cosmos{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:18px}
-.cosmos .panel{background:rgba(250,243,228,.14)}
-.cosmos::before{content:"";position:absolute;inset:0 -10px -60px;z-index:-1;background:url(/art/cosmos.webp) center/cover no-repeat;mix-blend-mode:multiply;opacity:.9;
-  -webkit-mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(transparent,#000 16%,#000 84%,transparent);pointer-events:none}
 /* belt and braces for Safari: each face is hidden outright while turned away, switching at the flip's midpoint (1.1s) */
 .scene:not(.flat) .face.front{transition:visibility 0s .55s}
 .scene:not(.flat):not(.flipped) .face.front{visibility:hidden}
@@ -255,3 +251,15 @@ body.has-nav #app{padding-top:var(--navh,70px)}
 .pop-box{position:relative;width:100%;max-width:460px;max-height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:22px 20px calc(24px + env(safe-area-inset-bottom,0px));background:var(--parchment) url(/art/frame-paper.webp) center top/100% auto;border:1px solid var(--gold);box-shadow:inset 0 0 0 4px var(--parchment),inset 0 0 0 5px var(--gold);border-radius:6px 6px 0 0}
 .pop-box .scene{width:min(260px,70vw);margin:4px auto 8px}
 .pop-x{position:absolute;top:8px;right:10px;width:40px;height:40px;border:0;background:none;font-size:1.8rem;line-height:1;color:var(--plum);cursor:pointer}
+/* horoscope page: the sign's scene sits small on the left, the reading on the right; the text may overlap the art's faded edge,
+   so it carries a soft parchment halo to stay readable */
+.today.side{display:grid;grid-template-columns:42% 1fr;align-items:start;margin:0 -6px;text-align:left}
+.today.side .today-art{grid-area:1/1;width:100%;-webkit-mask-image:linear-gradient(to right,#000 55%,transparent 98%),linear-gradient(to bottom,transparent,#000 8%,#000 80%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,#000 55%,transparent 98%),linear-gradient(to bottom,transparent,#000 8%,#000 80%,transparent);mask-composite:intersect}
+.today.side .today-in{grid-area:1/2;margin:0 0 0 -14px;padding:14px 4px 6px 0;align-items:flex-start;gap:8px;text-shadow:0 0 6px #EFE3CE,0 0 12px #EFE3CE,0 0 2px #EFE3CE}
+.today.side .today-art+.today-in{margin-top:0}
+.today.side .today-in p{font-size:1rem}
+.today.side .btn{text-shadow:none}
+/* tarot reading types: a sliding row like the sign picker */
+.spread-row .chip{width:84px}
+.spread-row .sign-ico{width:64px;height:64px}
+.spread-row .sign-nm{white-space:normal;text-align:center;font-size:.74rem;line-height:1.2}

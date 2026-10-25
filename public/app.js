@@ -265,7 +265,7 @@ views.horoscopes=()=>{
  return `<div class="stack"><h1>Horoscopes</h1>
  <div class="row sign-row" role="radiogroup" aria-label="Explore a sign">${SIGNS.map(x=>`<button class="chip" style="flex:0 0 auto" role="radio" aria-checked="${x.id===ex}" data-sign="${x.id}" aria-label="${x.name}">${pic('icons',x.id,'sign-ico')||`<span class="glyph">${x.g}</span>`}<span class="sign-nm">${x.name}</span></button>`).join('')}</div>
  <div class="seg" role="tablist">${['daily','monthly','annual'].map(p=>`<button role="tab" aria-selected="${V.period===p}" data-period="${p}">${cap(p)}</button>`).join('')}</div>
- <section class="today">${pic('scenes',s.id,'today-art')}<div class="today-in"><div class="label">${CATS[cat]} · ${head}</div><p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p><p>${h.body}</p><div class="label">Theme</div><p>${h.theme}</p>${cat==='finance'?'<p class="muted">Reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">Reflection only. This is not medical advice.</p>':''}${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as My Sign</button>`:''}</div></section></div>`;
+ <section class="today side">${pic('scenes',s.id,'today-art')}<div class="today-in"><div class="label">${CATS[cat]} · ${head}</div><p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p><p>${h.body}</p><div class="label">Theme</div><p>${h.theme}</p>${cat==='finance'?'<p class="muted">Reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">Reflection only. This is not medical advice.</p>':''}${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as My Sign</button>`:''}</div></section></div>`;
 };
 views.love=()=>{
  const a=V.love.a||S.sign,b=V.love.b;
@@ -288,7 +288,7 @@ views.tarot=()=>{
  if(t==='history')return `<div class="stack"><h1>Reading History</h1>${S.readings.length?S.readings.map(r=>panel(`<h3>${esc(SPREADS[r.spread].n)}</h3><p class="muted">${r.date}${r.q?' · “'+esc(r.q)+'”':''}</p>${r.cards.map(c=>`<p>${esc(c.pos)}: ${esc(c.name)}${c.rev?' (reversed)':''}</p>`).join('')}`)).join(''):panel('<h3>Your reading history is waiting for its first story</h3><p>Complete a reading and save it to find it here.</p>')}</div>`;
  const sp=SPREADS[T.spread];
  // 1. the question and the reading type, chosen like a sign; choosing one shuffles the deck
- if(T.stage==='setup')return `<div class="stack"><h1>What Is Yet to Be Revealed?</h1><p class="quote" style="text-align:center">A question, a choice, a turn of a card. What might you discover?</p><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="What should I focus on?"></div><div class="label">Choose your reading</div><div class="signs sign-grid spread-grid" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="chip" role="radio" aria-checked="false" data-act="shuffle" data-k="${k}">${pic('spreads',k,'sign-ico')||'<span class="glyph">✦</span>'}<span class="sign-nm">${x.s}</span><span class="spread-n">${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div></div>`;
+ if(T.stage==='setup')return `<div class="stack"><h1>What Is Yet to Be Revealed?</h1><p class="quote" style="text-align:center">A question, a choice, a turn of a card. What might you discover?</p><div class="label">Choose your reading</div><div class="row sign-row spread-row" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="chip" role="radio" aria-checked="${T.spread===k}" data-act="tspread" data-k="${k}">${pic('spreads',k,'sign-ico')||'<span class="glyph">✦</span>'}<span class="sign-nm">${x.s}</span><span class="spread-n">${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything, or a topic: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
  // 2. pick face-down cards; the reveal opens by itself once enough are chosen
  if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted" style="text-align:center">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
@@ -369,7 +369,7 @@ function render(){
  $('#navin').innerHTML=NAV.map(([k,l,g])=>`<button data-nav="${k}" ${sec===k?'aria-current="page"':''}>${pic('nav',k,'nav-ico')||`<span class="glyph">${g}</span>`}<span>${l}</span></button>`).join('');
  navH();
  // keep the chosen sign in the middle of the horoscope picker
- const pk=$('.sign-row [aria-checked=true]');if(pk){const row=pk.parentElement,rb=row.getBoundingClientRect(),cb=pk.getBoundingClientRect();row.scrollLeft+=cb.left+cb.width/2-(rb.left+rb.width/2)}
+ document.querySelectorAll('.sign-row [aria-checked=true]').forEach(pk=>{const row=pk.parentElement,rb=row.getBoundingClientRect(),cb=pk.getBoundingClientRect();row.scrollLeft+=cb.left+cb.width/2-(rb.left+rb.width/2)})
  if(sec==='join'||sec==='welcome')bindJoin();
 }
 /* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign with its
@@ -480,7 +480,8 @@ document.addEventListener('click',e=>{
  if(a==='setpw'){const v=$('#npw').value;if(v.length<6)return toast('Use at least 6 characters');
   t.disabled=true;C.updatePassword(v).then(()=>{toast('Password updated');go(S.sign?'home':'welcome')},x=>{t.disabled=false;toast(authMsg(x))});return}
  const T=V.tarot;
- if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.spread=t.dataset.k;T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
+ if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
+ if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
  if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const r={spread:T.spread,q:T.q,date:dkey(),cards:T.drawn.map(c=>({pos:c.pos,name:c.name,rev:c.rv}))};S.readings.push(r);save();C.saveReading(r).then(id=>{if(id){r.rid=id;save()}});toast('Reading saved');return}
