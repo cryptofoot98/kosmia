@@ -20,20 +20,8 @@ const SIGNS=[
 ].map(a=>({id:a[0],name:a[1],g:a[2],el:a[3],mod:a[4],ruler:a[5],dates:a[6]}));
 const sg=id=>SIGNS.find(s=>s.id===id)||SIGNS[0];
 
-const ORACLE=[
- ['open-path','The Open Path','path','Not every delay is a denial. Sometimes the space between where you are and where you wish to be is where your greatest transformation happens.','What could this moment be teaching you?'],
- ['quiet-moon','The Quiet Moon','moon','Rest is not the opposite of progress. The moon does not apologise for her dark phase, and neither should you.','Where am I asking myself for more than I can give?'],
- ['rising-sun','The Rising Sun','sun','You do not need to see the whole road to take the first step. Light arrives one morning at a time.','What one small step can I take today?'],
- ['steady-star','The Steady Star','star','You cannot command the stars, but you can choose how you navigate beneath them.','What is within my control today?'],
- ['inner-key','The Inner Key','key','The answer you are waiting for may already be in your hands. Stillness often shows us what noise hides.','What do I already know but have not yet admitted?'],
- ['late-bloom','The Late Bloom','flower','Some things flower in their own season. Comparing your pace to another’s garden only hides your own growth.','What in me is quietly growing?'],
- ['watchful-eye','The Watchful Eye','eye','Attention is a form of care. Notice what repeats, and ask gently what it is trying to say.','What pattern keeps asking for my attention?'],
- ['distant-ship','The Distant Ship','ship','Not everything that sails away is lost. Some departures carry you toward the harbour you are meant to find.','What am I ready to let travel on without me?'],
- ['old-tree','The Old Tree','tree','Roots grow in the dark long before branches are seen. Trust the slow work nobody applauds.','What am I building that takes time?'],
- ['turning-wheel','The Turning Wheel','wheel','Seasons turn whether we are ready or not. What you do inside each one is the part that belongs to you.','Which season am I in right now?'],
- ['white-lily','The White Lily','lily','Gentleness is not weakness. Speak to yourself today the way you would to someone you love.','What would kindness look like right now?'],
- ['clear-crystal','The Clear Crystal','crystal','Clarity rarely arrives all at once. It forms, layer by layer, whenever you stay honest with yourself.','What feels clearer than it did a week ago?']
-].map(a=>({id:a[0],title:a[1],sym:a[2],msg:a[3],ref:a[4]}));
+/* the 55 whispers (daily cards) live in whispers.js, shared with the server */
+const ORACLE=(window.KOSMIA_WHISPERS||[]).map(a=>({id:a[0],title:a[1],sym:a[2],msg:a[3],ref:a[4]}));
 const THOUGHTS=['You cannot command the stars, but you can choose how you navigate beneath them.','Even the night sky is mostly space. Leave room in your day.','What you pay attention to becomes the shape of your life.','Be curious about your feelings before you judge them.','Small, kind choices repeated are their own kind of constellation.','The present moment is the only place a new beginning can start.','You are allowed to grow quietly.'];
 
 /* gold line-art symbols (original, drawn in code) */
@@ -193,17 +181,17 @@ const SPREADS={
 function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRandomValues(r);for(let i=a.length-1;i>0;i--){const j=r[i]%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ---------- ui state ---------- */
-const NAV=[['home','Home','☉︎'],['horoscopes','Horoscopes','♎︎'],['love','Love Match','♡'],['fortune','Daily Fortune','✦'],['tarot','Tarot','☽︎'],['chart','Birth Chart','⊕'],['calendar','Cosmic Calendar','☾'],['universe','My Universe','✧']];
+const NAV=[['home','Home','☉︎'],['horoscopes','Horoscopes','♎︎'],['love','Love Match','♡'],['fortune','Whispers','✦'],['tarot','Tarot','☽︎'],['chart','Birth Chart','⊕'],['calendar','Cosmic Calendar','☾'],['universe','My Universe','✧']];
 const FOOT={
  horoscopes:[['general','Overview'],['career','Career'],['finance','Finance'],['love','Love'],['health','Health']],
  love:[['match','Compatibility'],['saved','Saved Matches']],
- fortune:[['today','Today’s Card'],['collection','My Collection'],['reflections','Reflections']],
+ fortune:[['today','Today’s Whisper'],['collection','My Collection'],['reflections','Reflections']],
  tarot:[['new','New Reading'],['spreads','Spreads'],['history','History']],
  chart:[['chart','Chart'],['planets','Planets'],['aspects','Aspects']],
  calendar:[['upcoming','Upcoming'],['moon','Moon'],['planetary','Planetary']],
  universe:[['profile','Profile'],['prefs','Preferences'],['notifications','Notifications'],['settings','Settings']]
 };
-const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},cardArt:{},painting:false,say:null,auth:'up',busy:false,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
+const V={sec:'welcome',tab:{},period:'daily',exploreSign:null,love:{a:'',b:'',done:false},tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null,flipped:0},chartSel:null,paint:{},painting:false,say:null,auth:'up',busy:false,birth:{date:'1990-06-15',time:'12:00',unk:false,off:0,lat:'',lon:''}};
 const tab=()=>V.tab[V.sec]||(FOOT[V.sec]?FOOT[V.sec][0][0]:'');
 function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
 const panel=(h,cls='')=>`<section class="panel ${cls}"><div class="in">${h}</div></section>`;
@@ -247,31 +235,14 @@ views.home=()=>{
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
  <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-go="horoscopes">More</button></div></section>
- <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?'':`<button class="btn" data-act="reveal">Reveal My Fortune</button>`}</section>
+ <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?'':`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
  ${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}
  <div class="stack" style="gap:10px"><h2>Upcoming Cosmic Events</h2><div class="scroller" tabindex="0" aria-label="Upcoming events">${ev.map(e=>panel(`<h3>${e.name}</h3><p class="muted">${evt(e.date)}</p><p style="font-size:.88rem">${e.a}</p><p style="font-size:.88rem;font-style:italic">${e.s}</p><p class="muted">“${e.r}”</p>`)).join('')}</div></div>
  </div>`;
 };
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
- return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Daily fortune card, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${flipped?`<img class="day-art" data-day="${dkey()}" data-card="${c.id}" alt="">`:''}<div class="ph">${pic('oracle',c.id)||symbol(c.sym)}${flipped&&C.user?'<p class="ph-note">The cosmos is painting today’s card…</p>':''}</div><div class="card-banner"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div></div>${sp}</div>`;
-}
-/* Daily card artwork from /api/card-art: painted once per day and card, shared by everyone. A missing image
-   asks the server to paint it (signed-in only), then polls while another visitor's request is painting. */
-const artSrc=(day,card,v)=>`/api/card-art?day=${day}&card=${encodeURIComponent(card)}${v?'&v='+v:''}`;
-function wireDayArt(){
- document.querySelectorAll('img.day-art').forEach(img=>{
-  const {day,card}=img.dataset,k=day+'/'+card,st=V.cardArt[k]||(V.cardArt[k]={});
-  img.onload=()=>img.closest('.face').classList.add('has-art');
-  img.onerror=()=>{if(!st.asked&&C.user){st.asked=true;paintDayArt(day,card,st,0)}};
-  img.src=artSrc(day,card,st.v);
- });
-}
-function paintDayArt(day,card,st,tries){
- C.cardArt(day,card).then(r=>{
-  if(r.ready){st.v=Date.now();document.querySelectorAll(`img.day-art[data-card="${card}"]`).forEach(i=>{i.src=artSrc(day,card,st.v)});return}
-  if(r.pending&&tries<24)setTimeout(()=>paintDayArt(day,card,st,tries+1),6000);
- },e=>{st.asked=false;console.warn('card art',e.message)});
+ return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${pic('whispers',c.id,'day-art')||`<div class="ph">${symbol(c.sym)}</div>`}<div class="card-banner"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div></div>${sp}</div>`;
 }
 /* ---------- AI: painted cards (OpenAI) and read-aloud (ElevenLabs), signed-in only ---------- */
 const AUDIO=new Map();let player=null;
@@ -304,10 +275,10 @@ views.love=()=>{
 };
 views.fortune=()=>{
  const c=todayCard(),rev=!!S.revealed[dkey()],t=tab();
- if(t==='collection')return `<div class="stack"><h1>My Collection</h1>${S.saved.length?S.saved.slice().reverse().map(x=>{const o=ORACLE.find(c=>c.id===x.id);return o?panel(`<h3>${o.title}</h3><p class="muted">${x.date}</p><p class="quote" style="font-size:1.1rem">${o.msg}</p>${S.notes[x.date]?`<p class="muted">Your note: ${esc(S.notes[x.date])}</p>`:''}`):''}).join(''):panel('<h3>No cards saved yet</h3><p>Your cosmic collection begins with today’s fortune.</p>')}</div>`;
+ if(t==='collection')return `<div class="stack"><h1>My Collection</h1>${S.saved.length?S.saved.slice().reverse().map(x=>{const o=ORACLE.find(c=>c.id===x.id);return o?panel(`<h3>${o.title}</h3><p class="muted">${x.date}</p><p class="quote" style="font-size:1.1rem">${o.msg}</p>${S.notes[x.date]?`<p class="muted">Your note: ${esc(S.notes[x.date])}</p>`:''}`):''}).join(''):panel('<h3>No cards saved yet</h3><p>Your cosmic collection begins with today’s whisper.</p>')}</div>`;
  if(t==='reflections')return `<div class="stack"><h1>Reflections</h1>${rev?panel(`<div class="label">${c.title}</div><p class="quote" style="font-size:1.1rem">${c.ref}</p><label class="label" for="note">Private reflection</label><textarea id="note" placeholder="What does this message mean to me today?">${esc(S.notes[dkey()]||'')}</textarea><button class="btn" data-act="savenote">Save reflection</button><p class="muted">${C.user?'Synced to your account and private to you.':'Stored in this browser. Sign in from Settings to keep it private in your account.'}</p>`):panel('<h3>Reveal today’s card first</h3><p>Your reflection space opens once you have received today’s message.</p>')}</div>`;
  const sv=S.saved.some(x=>x.date===dkey());
- return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Your Daily Fortune</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`${listenBtn(c.title+'. '+c.msg)}<div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save My Fortune'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
+ return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Whispers</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`${listenBtn(c.title+'. '+c.msg)}<div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save This Whisper'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
@@ -380,7 +351,6 @@ function render(){
  if(authed&&f)$('#footin').innerHTML=f.map(([k,l])=>`<button role="tab" aria-selected="${tab()===k}" data-tab="${k}">${l}</button>`).join('');
  $('#tiles').innerHTML=NAV.map(([k,l,g])=>`<button class="tile" data-nav="${k}" ${sec===k?'aria-current="page"':''}><span class="g glyph">${g}</span>${l}</button>`).join('');
  if(sec==='join'||sec==='welcome')bindJoin();
- wireDayArt();
 }
 /* Page frame (art/frame.webp, 1024x1536): the view's first <h1> moves onto the banner. Home shows the user's sign with its
    element and ruler; Horoscopes shows the sign being read and its dates. */

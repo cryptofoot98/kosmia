@@ -4,7 +4,7 @@
 //   the app which images exist. Runs locally; the key never leaves this machine.
 //
 //   node scripts/craft-images.mjs                  # make whatever is missing
-//   node scripts/craft-images.mjs --only oracle    # one folder (oracle|tarot|signs|scenes)
+//   node scripts/craft-images.mjs --only oracle    # one folder (oracle|tarot|signs|scenes|cards|whispers)
 //   node scripts/craft-images.mjs --ids leo,virgo  # only these ids
 //   node scripts/craft-images.mjs --force          # regenerate even if present
 //   node scripts/craft-images.mjs --quality medium # cheaper drafts (default high)
@@ -61,7 +61,7 @@ await Promise.all(Array.from({ length: 3 }, async () => {
 }));
 
 const manifest = {};
-for (const dir of ['oracle', 'tarot', 'signs', 'scenes', 'cards']) {
+for (const dir of ['oracle', 'tarot', 'signs', 'scenes', 'cards', 'whispers']) {
   const p = join(out, dir);
   if (existsSync(p)) manifest[dir] = readdirSync(p).filter(f => f.endsWith('.webp')).map(f => f.slice(0, -5)).sort();
 }

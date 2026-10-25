@@ -1,8 +1,0 @@
-{
-  "name": "kosmia",
-  "private": true,
-  "description": "Kosmia static site and Netlify functions",
-  "dependencies": {
-    "@netlify/blobs": "11.1.4"
-  }
-}
