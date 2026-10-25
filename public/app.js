@@ -235,14 +235,14 @@ views.home=()=>{
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
  <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><h2>${long(now)}</h2><p>${h.body}</p><button class="btn" data-go="horoscopes">More</button></div></section>
- <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?'':`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
+ <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<button class="btn" data-act="toreflect">Your Reflection</button>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
  ${panel(`<h2>Cosmic Energy Today</h2><div class="label">Astronomy</div><p>The Moon is ${m.name.toLowerCase()}, about ${Math.round(m.ill*100)}% illuminated. The Sun is in ${ss.name}.</p><div class="rule"></div><div class="label">Astrological interpretation</div><p>${moonRef(m)}</p>`)}
  <div class="stack" style="gap:10px"><h2>Upcoming Cosmic Events</h2><div class="scroller" tabindex="0" aria-label="Upcoming events">${ev.map(e=>panel(`<h3>${e.name}</h3><p class="muted">${evt(e.date)}</p><p style="font-size:.88rem">${e.a}</p><p style="font-size:.88rem;font-style:italic">${e.s}</p><p class="muted">“${e.r}”</p>`)).join('')}</div></div>
  </div>`;
 };
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
- return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${pic('whispers',c.id,'day-art')||`<div class="ph">${symbol(c.sym)}</div>`}<div class="card-banner"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div></div>${sp}</div>`;
+ return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${pic('whispers',c.id,'day-art')||`<div class="ph">${symbol(c.sym)}</div>`}<div class="card-banner"><div class="cb-in"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div></div></div>${sp}</div>`;
 }
 /* ---------- AI: painted cards (OpenAI) and read-aloud (ElevenLabs), signed-in only ---------- */
 const AUDIO=new Map();let player=null;
@@ -276,9 +276,9 @@ views.love=()=>{
 views.fortune=()=>{
  const c=todayCard(),rev=!!S.revealed[dkey()],t=tab();
  if(t==='collection')return `<div class="stack"><h1>My Collection</h1>${S.saved.length?S.saved.slice().reverse().map(x=>{const o=ORACLE.find(c=>c.id===x.id);return o?panel(`<h3>${o.title}</h3><p class="muted">${x.date}</p><p class="quote" style="font-size:1.1rem">${o.msg}</p>${S.notes[x.date]?`<p class="muted">Your note: ${esc(S.notes[x.date])}</p>`:''}`):''}).join(''):panel('<h3>No cards saved yet</h3><p>Your cosmic collection begins with today’s whisper.</p>')}</div>`;
- if(t==='reflections')return `<div class="stack"><h1>Reflections</h1>${rev?panel(`<div class="label">${c.title}</div><p class="quote" style="font-size:1.1rem">${c.ref}</p><label class="label" for="note">Private reflection</label><textarea id="note" placeholder="What does this message mean to me today?">${esc(S.notes[dkey()]||'')}</textarea><button class="btn" data-act="savenote">Save reflection</button><p class="muted">${C.user?'Synced to your account and private to you.':'Stored in this browser. Sign in from Settings to keep it private in your account.'}</p>`):panel('<h3>Reveal today’s card first</h3><p>Your reflection space opens once you have received today’s message.</p>')}</div>`;
+ if(t==='reflections')return `<div class="stack"><h1>Reflections</h1>${rev?panel(`<div class="label">Today’s whisper · ${c.title}</div><p class="quote reflect-msg">“${c.msg}”</p><div class="rule"></div><div class="label">Sit with it</div><p class="reflect-q">${c.ref}</p><label class="label" for="note">Your reflection</label><textarea id="note" placeholder="Take your time. Write whatever rises.">${esc(S.notes[dkey()]||'')}</textarea><button class="btn" data-act="savenote">Save reflection</button><p class="muted">${C.user?'Synced to your account and private to you.':'Stored in this browser. Sign in from Settings to keep it private in your account.'}</p>`):panel('<h3>Reveal today’s card first</h3><p>Your reflection space opens once you have received today’s message.</p>')}</div>`;
  const sv=S.saved.some(x=>x.date===dkey());
- return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Whispers</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`${listenBtn(c.title+'. '+c.msg)}<div class="label">Reflection</div><p>${c.ref}</p><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save This Whisper'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
+ return `<div class="stack" style="align-items:stretch"><h1 style="text-align:center">Whispers</h1><p class="quote" style="text-align:center">The universe has a message waiting for you.</p>${cardScene(c,rev,'fortuneCard')}${rev?panel(`${listenBtn(c.title+'. '+c.msg)}<button class="btn" data-act="toreflect">Your Reflection</button><button class="btn ghost" data-act="savecard" ${sv?'disabled':''}>${sv?'Saved to My Collection':'Save This Whisper'}</button>`)+paintPanel(c):`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Card</button>`}<p class="muted" style="text-align:center">One card per day. It stays the same until your local date changes.</p></div>`;
 };
 views.tarot=()=>{
  const t=tab(),T=V.tarot;
@@ -444,6 +444,7 @@ document.addEventListener('click',e=>{
    .then(u=>{if(V.say!==txt)return;player=new Audio(u);player.onended=()=>{player=null;V.say=null;render()};return player.play()})
    .catch(e=>{if(V.say===txt){V.say=null;render()}toast(e.message||'Could not play the reading')});
   return}
+ if(a==='toreflect')return go('fortune','reflections');
  if(a==='toauth'){V.auth=S.email?'in':'up';return go('welcome')}
  if(a==='authmode'){const em=$('#em');if(em)S.email=em.value.trim();V.auth=V.auth==='in'?'up':'in';render();const f=$(S.email?'#pw':'#em');if(f)f.focus();return}
  if(a==='forgot'){const em=$('#em'),email=em?em.value.trim():'';

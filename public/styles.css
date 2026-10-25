@@ -166,15 +166,20 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 /* thin sepia scrollbars on sideways rows (sign picker, events) instead of the stark default */
 *{scrollbar-width:thin;scrollbar-color:rgba(139,106,62,.55) transparent}
 /* whisper card: lunar-chart back (art/cards/back.webp); the front is that whisper's artwork (art/whispers) with its
-   message on the gilded plaque (art/cards/plaque.webp, 2.21:1, cream panel inset 11.5% sides, 10% top, 4% bottom) */
+   message on an engraved sepia plaque (art/cards/plaque.webp, 1400x591: inner rule x 54-1347, y 87-565) */
 .face.front.daily{padding:0;justify-content:flex-end;background:#F2E7D0 url(/art/frame-paper.webp) center/200% auto}
 .day-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ph{position:absolute;inset:0 0 34%;display:flex;align-items:center;justify-content:center;padding:18px}
 .ph svg{width:58%;height:auto}
-.card-banner{position:relative;z-index:1;margin:0 3% 4%;aspect-ratio:2.213;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:9.5% 12% 4.5%;background:url(/art/cards/plaque.webp) center/100% 100% no-repeat;filter:drop-shadow(0 5px 9px rgba(20,14,8,.55));text-align:center;color:#3A2A1A}
+.card-banner{position:relative;z-index:1;align-self:stretch;margin:0 3% 4%;aspect-ratio:1400/591;background:url(/art/cards/plaque.webp) center/100% 100% no-repeat;filter:drop-shadow(0 4px 10px rgba(20,14,8,.45));color:var(--plum)}
+/* text box = the inner rule inset by an equal margin on every side (and clear of the corner vines), so it stays centred in the border */
+.cb-in{position:absolute;left:12%;right:12%;top:calc(14.7% + 5%);bottom:calc(4.4% + 5%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
 /* plaque text scales with the card (container units) so the longest whisper fits on a 320px phone */
 .cb-title{font-family:var(--serif);font-weight:700;font-size:clamp(8px,3.9cqw,12px);letter-spacing:.16em;text-transform:uppercase}
 .card-banner p{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(9px,4.3cqw,13.5px);line-height:1.2}
 /* dashboard: the card sits straight on the page, no box */
 .whisper{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
 .whisper h2{font-size:1.5rem}
+/* reflections: the day's message, then the question to sit with */
+.reflect-msg{font-size:1.08rem;color:var(--mauve)}
+.reflect-q{font-family:var(--serif);font-weight:600;font-size:1.35rem;line-height:1.3}
