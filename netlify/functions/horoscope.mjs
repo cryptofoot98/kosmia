@@ -1,11 +1,12 @@
 // GET /api/horoscope?sign=leo&cat=love&period=weekly&key=2026-W44 -> {body, focus, reflection, start, end, sky, written}
 // One reading per sign, category and period, written once by OpenAI from that period's real sky (lib: public/sky.js)
 // and kept in Netlify Blobs, so every reader of that sign sees the same text and it never changes mid-period.
-import * as Astronomy from 'astronomy-engine';
+import { createRequire } from 'node:module';
 import { getStore } from '@netlify/blobs';
 import { authUser, fail } from '../../lib/supa.mjs';
 import '../../public/sky.js'; // reads globalThis.Astronomy only when called
-globalThis.Astronomy = Astronomy;
+// astronomy-engine's ESM build is not marked as a module, so load its CommonJS build
+globalThis.Astronomy = createRequire(import.meta.url)('astronomy-engine');
 const K = globalThis.KosmiaSky;
 
 const SIGNS = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];

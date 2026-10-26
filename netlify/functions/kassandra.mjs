@@ -1,10 +1,11 @@
 // POST /api/kassandra {messages:[{role,content}], context:{section, view, reading?, personal?}} -> {reply}
 // Kassandra, Kosmia's fortune teller. The sky for this week is calculated here (public/sky.js), so what she says about
 // real celestial events is never guessed. Personal details only arrive when the reader has switched that on.
-import * as Astronomy from 'astronomy-engine';
+import { createRequire } from 'node:module';
 import { authUser, claim, fail, limit } from '../../lib/supa.mjs';
 import '../../public/sky.js'; // reads globalThis.Astronomy only when called
-globalThis.Astronomy = Astronomy;
+// astronomy-engine's ESM build is not marked as a module, so load its CommonJS build
+globalThis.Astronomy = createRequire(import.meta.url)('astronomy-engine');
 const K = globalThis.KosmiaSky;
 
 const clip = (s, n) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);

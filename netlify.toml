@@ -2,9 +2,9 @@
   publish = "public"
   command = "sh scripts/build-config.sh"
 
-# Functions are bundled into single files (astronomy-engine ships an ESM build that must be inlined).
+# astronomy-engine is loaded with require() in the functions, so its CommonJS build ships alongside them.
 [functions]
-  node_bundler = "esbuild"
+  included_files = ["node_modules/astronomy-engine/astronomy.js", "node_modules/astronomy-engine/package.json"]
 
 # Earlier addresses and names (Daily Fortune, Love Match, Name Match, Birth/Name Numerology, Cosmic Calendar,
 # My Universe) move permanently to their places in the six sections.
