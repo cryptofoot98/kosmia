@@ -1,8 +1,8 @@
-/* Writing fields and action buttons shaped like an antique label: a peak at the top and bottom centre, notched corners and rounded sides, drawn as a recess pressed into the page (no outline). Each field gets an SVG sized to it
+/* Writing fields shaped like an antique label: a peak at the top and bottom centre, notched corners and rounded sides, drawn as a recess pressed into the page (no outline). Each field gets an SVG sized to it
    exactly, so the corners never stretch; it is set as --plaque and used as the field's background in styles.css. */
 (function(){
 'use strict';
-const FIELDS='input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],input[type=number],input[type=search],textarea,select,.btn';
+const FIELDS='input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],input[type=number],input[type=search],textarea,select';
 const cache=new Map();
 const f=n=>Math.round(n*10)/10;
 function path(w,h){
@@ -29,7 +29,7 @@ function svg(w,h,deep){
  return cache.get(k);
 }
 function shape(el){
- const w=el.offsetWidth,h=el.offsetHeight,deep=el.classList.contains('btn')&&!el.classList.contains('ghost'),k=w+'x'+h+deep;
+ const w=el.offsetWidth,h=el.offsetHeight,deep=false,k=w+'x'+h;
  if(!w||!h||el._pq===k)return;
  el._pq=k;el.style.setProperty('--plaque',svg(w,h,deep));
 }

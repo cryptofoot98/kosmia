@@ -417,15 +417,16 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
  -webkit-mask-image:var(--fog);mask-image:var(--fog);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .plate.sm{max-width:300px;margin-inline:auto}
 
-/* Action buttons: sunk into the panel like the writing fields, in the same label shape (plaque.js), no outline.
-   Primary buttons sit deeper and darker; secondary ones match the fields. */
-.btn,.btn.ghost,.whisper-acts .btn,.whisper-acts .btn.ghost{border:0;border-radius:0;color:var(--plum);text-shadow:0 1px 0 rgba(255,250,238,.6);
- background:var(--plaque,none) center/100% 100% no-repeat;min-height:48px;padding:0 30px;transition:filter .15s,transform .15s}
-.btn.sm{min-height:40px;padding:0 24px}
+/* Action buttons: the same pressed-in tile as the selected Daily / Weekly / Monthly / Yearly tab, so they read as
+   buttons and stay distinct from the label-shaped writing fields; no outline */
+.btn,.btn.ghost,.whisper-acts .btn,.whisper-acts .btn.ghost{border:0;border-radius:10px;color:var(--plum);text-shadow:0 1px 0 rgba(255,250,238,.55);
+ background:linear-gradient(#D9C6A2,#E4D3B3);box-shadow:inset 0 3px 6px rgba(70,50,28,.45),inset 0 -1px 2px rgba(255,250,240,.6),0 1px 0 rgba(255,250,240,.7);
+ min-height:46px;padding:0 24px;transition:box-shadow .2s,filter .15s}
+.btn.sm{min-height:40px;padding:0 18px}
 .btn:not(.ghost){font-weight:700}
 .btn:hover:not([disabled]){filter:brightness(1.03)}
-.btn:active:not([disabled]){filter:brightness(.95);transform:translateY(1px)}
-.btn:focus-visible{outline:none;filter:drop-shadow(0 0 4px rgba(201,160,88,.8))}
+.btn:active:not([disabled]){box-shadow:inset 0 4px 9px rgba(70,50,28,.55),inset 0 -1px 2px rgba(255,250,240,.5),0 1px 0 rgba(255,250,240,.7)}
+.btn:focus-visible{outline:2px solid rgba(201,160,88,.8);outline-offset:2px}
 .btn.danger,.btn.danger-t{color:var(--danger)}
 
 /* Tonight's Sky: the painted phase of the Moon */
