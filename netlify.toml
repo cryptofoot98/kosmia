@@ -2,6 +2,77 @@
   publish = "public"
   command = "sh scripts/build-config.sh"
 
+# astronomy-engine is loaded with require() in the functions, so its CommonJS build ships alongside them.
+[functions]
+  included_files = ["node_modules/astronomy-engine/astronomy.js", "node_modules/astronomy-engine/package.json"]
+
+# Earlier addresses and names (Daily Fortune, Love Match, Name Match, Birth/Name Numerology, Cosmic Calendar,
+# My Universe) move permanently to their places in the six sections.
+[[redirects]]
+  from = "/fortune"
+  to = "/oracle/whispers"
+  status = 301
+
+[[redirects]]
+  from = "/whispers"
+  to = "/oracle/whispers"
+  status = 301
+
+[[redirects]]
+  from = "/daily-fortune"
+  to = "/oracle/whispers"
+  status = 301
+
+[[redirects]]
+  from = "/tarot"
+  to = "/oracle/tarot"
+  status = 301
+
+[[redirects]]
+  from = "/love"
+  to = "/affinity/zodiac-match"
+  status = 301
+
+[[redirects]]
+  from = "/love-match"
+  to = "/affinity/zodiac-match"
+  status = 301
+
+[[redirects]]
+  from = "/name-match"
+  to = "/affinity/soul-resonance"
+  status = 301
+
+[[redirects]]
+  from = "/chart"
+  to = "/blueprint/birth-chart"
+  status = 301
+
+[[redirects]]
+  from = "/birth-chart"
+  to = "/blueprint/birth-chart"
+  status = 301
+
+[[redirects]]
+  from = "/name-numerology"
+  to = "/blueprint/the-name-within"
+  status = 301
+
+[[redirects]]
+  from = "/birth-numerology"
+  to = "/blueprint/life-path"
+  status = 301
+
+[[redirects]]
+  from = "/calendar"
+  to = "/cosmos/calendar"
+  status = 301
+
+[[redirects]]
+  from = "/universe"
+  to = "/settings/account"
+  status = 301
+
 # Single-page app: every route serves index.html.
 [[redirects]]
   from = "/*"
