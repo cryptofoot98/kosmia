@@ -61,7 +61,7 @@ await Promise.all(Array.from({ length: 3 }, async () => {
 }));
 
 const manifest = {};
-for (const dir of ['oracle', 'tarot', 'signs', 'scenes', 'cards', 'whispers', 'icons', 'cats', 'nav', 'deck', 'spreads', 'plates']) {
+for (const dir of ['oracle', 'tarot', 'signs', 'scenes', 'cards', 'whispers', 'icons', 'cats', 'nav', 'deck', 'spreads', 'plates', 'moons']) {
   const p = join(out, dir);
   if (existsSync(p)) manifest[dir] = readdirSync(p).filter(f => f.endsWith('.webp')).map(f => f.slice(0, -5)).sort();
 }

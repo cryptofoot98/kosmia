@@ -416,3 +416,44 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
  --fog:radial-gradient(closest-side,#000 38%,rgba(0,0,0,.78) 58%,rgba(0,0,0,.35) 78%,rgba(0,0,0,.08) 92%,transparent 100%);
  -webkit-mask-image:var(--fog);mask-image:var(--fog);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .plate.sm{max-width:300px;margin-inline:auto}
+
+/* Action buttons: sunk into the panel like the writing fields, in the same label shape (plaque.js), no outline.
+   Primary buttons sit deeper and darker; secondary ones match the fields. */
+.btn,.btn.ghost,.whisper-acts .btn,.whisper-acts .btn.ghost{border:0;border-radius:0;color:var(--plum);text-shadow:0 1px 0 rgba(255,250,238,.6);
+ background:var(--plaque,none) center/100% 100% no-repeat;min-height:48px;padding:0 30px;transition:filter .15s,transform .15s}
+.btn.sm{min-height:40px;padding:0 24px}
+.btn:not(.ghost){font-weight:700}
+.btn:hover:not([disabled]){filter:brightness(1.03)}
+.btn:active:not([disabled]){filter:brightness(.95);transform:translateY(1px)}
+.btn:focus-visible{outline:none;filter:drop-shadow(0 0 4px rgba(201,160,88,.8))}
+.btn.danger,.btn.danger-t{color:var(--danger)}
+
+/* Tonight's Sky: the painted phase of the Moon */
+.moon-pic{width:88px;height:88px;flex:none;object-fit:contain}
+.moon-pic.big{display:block;width:150px;height:150px;margin:4px auto}
+
+/* Saved: each card carries its artwork as a faint watermark */
+.item.sv{position:relative;overflow:hidden;isolation:isolate}
+.wm{position:absolute;inset:0;z-index:-1;display:flex;justify-content:center;align-items:center;opacity:.24;pointer-events:none}
+.wm-i{height:115%;width:auto;max-width:60%;object-fit:cover;
+ -webkit-mask-image:radial-gradient(closest-side,#000 35%,rgba(0,0,0,.5) 70%,transparent 100%);mask-image:radial-gradient(closest-side,#000 35%,rgba(0,0,0,.5) 70%,transparent 100%)}
+.wm.pair .wm-i{max-width:50%}
+.wm-i.flip{transform:scaleX(-1)}
+.wm.fan .wm-i.card{height:92%;max-width:38%;object-fit:contain;margin:0 -2%;border-radius:6px;-webkit-mask-image:none;mask-image:none;opacity:.8}
+.wm.fan .wm-i.card:nth-child(1){transform:rotate(-8deg)} .wm.fan .wm-i.card:nth-child(3){transform:rotate(8deg)}
+.wm.fan .wm-i.card.rev:nth-child(1){transform:rotate(172deg)} .wm.fan .wm-i.card.rev:nth-child(2){transform:rotate(180deg)} .wm.fan .wm-i.card.rev:nth-child(3){transform:rotate(188deg)}
+.wm-i.round{height:90%;max-width:none;object-fit:contain;-webkit-mask-image:none;mask-image:none}
+.wm-i.wide{width:100%;height:100%;max-width:none}
+.sv-in{position:relative}
+.sv-pair{justify-content:center;gap:18px;align-items:flex-end}
+.sv-pair .amp{font-family:var(--serif);font-size:1.8rem;color:var(--gold);align-self:center}
+.sv-pair .num{margin:0 auto}
+.sv-pop{isolation:isolate}
+.pop-wm{position:absolute;left:0;right:0;top:0;height:360px;opacity:.12}
+.sv-card{width:min(64%,240px);margin:4px auto}
+.sv-tc{display:flex;gap:12px;align-items:flex-start;padding:6px 0}
+.sv-tarot{width:70px;flex:none;border-radius:6px;box-shadow:0 2px 8px rgba(58,48,38,.25)}
+.sv-tarot.rev{transform:rotate(180deg)}
+.pop-sec+.pop-sec{border-top:1px solid rgba(139,106,62,.25);padding-top:10px}
+.pop-sec{display:flex;flex-direction:column;gap:8px;padding:4px 0}
+.center-ico{display:block;margin:0 auto}
