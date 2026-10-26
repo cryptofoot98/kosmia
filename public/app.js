@@ -129,7 +129,6 @@ const cardFor=k=>oc(S.days[k])||oc((S.saved.find(x=>x.date===k)||{}).id)||oc(rot
 const todayCard=()=>cardFor(dkey());
 
 /* ---------- interpretation tables ---------- */
-const THEME={Fire:['momentum','courage','a spark worth following'],Earth:['steadiness','patience','what you are quietly building'],Air:['conversation','perspective','the ideas you keep circling'],Water:['feeling','intuition','what your heart keeps returning to']};
 const PM={Sun:'identity and vitality',Moon:'emotional needs and habits',Mercury:'thinking and communication',Venus:'love, values and pleasure',Mars:'drive and assertion',Jupiter:'growth and meaning',Saturn:'structure and responsibility',Uranus:'change and individuality',Neptune:'imagination and ideals',Pluto:'transformation and depth',Ascendant:'the way you meet the world',Midheaven:'vocation and public life'};
 const STYLE={aries:'directly, with courage and some impatience',taurus:'steadily, through the senses and with loyalty',gemini:'curiously, through words, wit and variety',cancer:'protectively, through feeling, memory and care',leo:'warmly, with pride, play and generosity',virgo:'carefully, through craft, service and detail',libra:'gracefully, seeking balance, fairness and partnership',scorpio:'intensely, through depth, privacy and loyalty',sagittarius:'expansively, through adventure, humour and belief',capricorn:'patiently, through ambition, structure and duty',aquarius:'independently, through ideas, friendship and reform',pisces:'gently, through empathy, imagination and devotion'};
 const HOUSE=['self, body and first impressions','money, possessions and self-worth','siblings, learning and everyday talk','home, family and roots','creativity, romance, children and play','work, health and daily routine','partnership and close one-to-one bonds','intimacy, shared resources and change','travel, study and belief','career, reputation and calling','friends, groups and hopes','solitude, the unconscious and retreat'];
@@ -142,30 +141,11 @@ const degTxt=(l)=>`${Math.floor(K.norm(l)%30)}° ${sIdx(K.signIdx(l)).name} ${St
 const HCATS=[['overview','Overview'],['love','Love'],['family','Family'],['health','Health'],['career','Career'],['money','Money']];
 const PERIODS=[['daily','Daily'],['weekly','Weekly'],['monthly','Monthly'],['yearly','Yearly']];
 const PWORD={daily:'day',weekly:'week',monthly:'month',yearly:'year'};
-const STEM={
- overview:['The {p} leans toward {t1}. Notice {t3} and give it a little room.','A gentle pull toward {t2} runs through the {p}. Small choices carry more weight than they seem to.','This {p} favours honest reflection on {t3}. You do not have to resolve it, only look at it clearly.','With {r} as your ruling planet, {t1} is your natural language. Use it kindly this {p}.'],
- love:['In close relationships, {t1} opens doors. Listen for what sits underneath the words.','Be honest about what you need, with {t2} rather than urgency.','Self-love starts small: give {t3} the same kindness you would offer a friend.','Attraction this {p} follows {t1}. Let someone see the part of you that is still unfinished.'],
- family:['At home, {t2} keeps the peace better than being right. Choose the conversation that matters most.','Family patterns surface this {p}. Notice which ones you keep from love and which from habit.','Your roots ask for attention: reach out to someone who knew you before you became who you are now.','The household benefits from {t1}. One small repair or a shared meal says more than a speech.'],
- health:['Rest and rhythm matter more than effort. Let {t1} guide when you slow down.','Notice how your body responds to stress, and meet it with {t2}.','A short walk, water and an earlier night support {t3}.','Energy this {p} follows attention: protect one quiet hour as you would an appointment.'],
- career:['At work, {t1} is your quiet advantage. Say one clear thing you have been holding back.','Progress comes through {t2}. Pick the task that matters and give it your first good hour.','Colleagues respond well to your {t1}. Ask a question before offering an answer.','Your sense of direction sharpens when you name {t3}. Write it down where you will see it.'],
- money:['A calm look at your habits serves you better than a bold move. Review one recurring cost with {t2}.','Money questions benefit from {t1}. Write down what you value before you decide what to spend.','Consider where {t3} meets your budget, and where generosity, including towards yourself, fits.','Security this {p} is built from small, repeated choices rather than one big one.']
-};
-const PEXT={daily:'',weekly:' As the week unfolds, expect {t1} to return in different forms; give the middle of the week to what matters most.',monthly:' Across the month, keep one practice that steadies you, and close it with a short note to yourself about what changed.',yearly:' Over the year, the larger arc is about {t2}. Expect seasons of effort and seasons of rest, and treat both as part of the same story.'};
-function sampleHoroscope(signId,cat,period,key){
- const s=sg(signId),th=THEME[s.el],pick=a=>a[hash(signId+cat+period+key)%a.length];
- const fill=t=>t.replace(/\{t1\}/g,th[0]).replace(/\{t2\}/g,th[1]).replace(/\{t3\}/g,th[2]).replace(/\{p\}/g,PWORD[period]).replace(/\{r\}/g,s.ruler);
- return {body:fill(pick(STEM[cat])+PEXT[period]),focus:cap(th[0]),reflection:'What would '+th[1]+' look like in practice this '+PWORD[period]+'?',sample:true};
-}
-// forecasts written on the server are kept here so a period's text never changes and is never fetched twice
-const HKEY='kosmia.h';
-let HC={};try{HC=JSON.parse(localStorage.getItem(HKEY)||'{}')}catch(e){}
-const HS={};
+// readings are written in the app from the period's real sky (forecast.js); the same sign, area and period always
+// read the same, and each new day, week, month or year brings a new one
 function horoscope(signId,cat,period){
- const per=K.period(period,TZ()),id=`${period}/${per.key}/${signId}/${cat}`;
- if(HC[id])return Object.assign({id,per},HC[id]);
- if(C.user&&!HS[id]){HS[id]='loading';
-  C.horoscope(signId,cat,period,per.key).then(r=>{HC[id]=r;const live=new Set(PERIODS.map(([p])=>K.period(p,TZ()).key));Object.keys(HC).forEach(k=>{if(!live.has(k.split('/')[1]))delete HC[k]});try{localStorage.setItem(HKEY,JSON.stringify(HC))}catch(e){}},e=>{HS[id]=e.status===401?'':'error'}).then(()=>render());}
- return Object.assign({id,per,state:HS[id]||''},sampleHoroscope(signId,cat,period,per.key));
+ const per=K.period(period,TZ());
+ return Object.assign({id:`${period}/${per.key}/${signId}/${cat}`,per},KosmiaForecast.write(K,signId,cat,period,per,TZ()));
 }
 const rangeTxt=per=>per.start===per.end?ymdLong(per.start):`${ymdLong(per.start,{day:'numeric',month:'long'})} – ${ymdLong(per.end,{day:'numeric',month:'long',year:'numeric'})}`;
 const periodHead=(period,per)=>period==='daily'?ymdLong(per.start):period==='weekly'?`Week of ${rangeTxt(per)}`:period==='monthly'?ymdLong(per.start,{month:'long',year:'numeric'}):'The year '+per.key;
@@ -327,7 +307,7 @@ views.home=()=>{
  const pd=hasBirthDate()?(()=>{const [y,mo,d]=dkey().split('-').map(Number);return N.personalDay(S.birth.date,y,mo,d).r.n})():null;
  return `<div class="stack">
  <p class="quote thought">“${THOUGHTS[Number(dkey().replace(/-/g,''))%THOUGHTS.length]}”</p>
- <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><div class="label">Your daily horoscope</div><h2>${long(now)}</h2>${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}<p>${esc(h.body)}</p>${h.sample&&h.state==='loading'?'<p class="muted prov">Reading today’s sky…</p>':''}<button class="btn" data-act="tohoroscope">Full forecast</button></div></section>
+ <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><div class="label">Your daily horoscope</div><h2>${long(now)}</h2>${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}<p>${esc(h.body)}</p><button class="btn" data-act="tohoroscope">Full forecast</button></div></section>
  <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<div class="row whisper-acts"><button class="btn" data-go="oracle" data-t="whispers">Reflect on it</button></div>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
  <div class="cosmos">${panel(`<h2>Tonight’s Sky</h2>${plate('sky')}<div class="sky-row">${moonPic(m)}<div><p><strong>${m.name}</strong>, about ${Math.round(m.ill*100)}% lit, in ${sIdx(m.sign).name}.</p><p class="muted">The Sun is in ${sIdx(K.signIdx(K.lon('Sun',now))).name}.</p></div></div>${ne?`<div class="rule"></div><div class="label">Next in the sky</div><p><strong>${esc(ne.name)}</strong> · ${ne.dateOnly?shortD(ne.date)+' (approximate)':evt(ne.date)}</p>`:''}<button class="btn ghost" data-go="cosmos" data-t="calendar">Cosmic calendar</button>`,'glass')}</div>
  ${panel(pd?`<h2>Your Number Today</h2>${plate('numbers')}<div class="num-line"><span class="num">${pd}</span><p>A personal day of ${N.CYCLE[pd].replace(/^a year of /,'')}.</p></div>${linkBtn('My cycles','blueprint','my-cycles')}`:`<h2>Your Number Today</h2>${plate('numbers')}<p>Add your birth date to see your personal day number and Life Path.</p>${linkBtn('Add my birth date','blueprint','birth-chart')}`,'glass')}
@@ -429,18 +409,15 @@ function playText(txt){
 
 /* ----- Horoscopes ----- */
 views.horoscopes=()=>{
- const cat=tab(),ex=V.exploreSign||S.sign,s=sg(ex),h=horoscope(ex,cat,V.period),catL=tabLabel('horoscopes',cat);
+ const cat=tab(),ex=V.exploreSign||S.sign,s=sg(ex),h=horoscope(ex,cat,V.period);
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref);
- const prov=h.sample?(h.state==='loading'?'<p class="muted prov">Reading the sky for this period…</p>':`<p class="muted prov">Sample reading from Kosmia’s templates${!C.user?'. Sign in for the full forecast written from this period’s real sky.':h.state==='error'?'. The full forecast could not be fetched just now; try again shortly.':'.'}</p>`)
-  :`<p class="muted prov">Written with AI for Kosmia from the real sky of this ${PWORD[V.period]}.</p><details class="sky-facts"><summary>The sky behind this reading</summary><p>${esc(h.sky||'').replace(/\n/g,'</p><p>')}</p></details>`;
  return `<div class="stack"><h1>Horoscopes</h1>
  <div class="row sign-row" role="radiogroup" aria-label="Choose a sign">${SIGNS.map(x=>`<button class="chip" style="flex:0 0 auto" role="radio" aria-checked="${x.id===ex}" data-sign="${x.id}" aria-label="${x.name}">${pic('icons',x.id,'sign-ico')||`<span class="glyph">${x.g}</span>`}<span class="sign-nm">${x.name}</span></button>`).join('')}</div>
  <div role="group" aria-label="Time period">${seg(PERIODS,V.period,'period')}</div>
- <section class="today side">${pic('scenes',s.id,'today-art')}<div class="today-in"><div class="label">${catL} · ${cap(V.period)}</div><h2 class="h-range">${periodHead(V.period,h.per)}</h2>${V.period==='monthly'||V.period==='yearly'?`<p class="muted">${rangeTxt(h.per)}</p>`:''}<p class="muted">${s.el} · ${s.mod} · ruled by ${s.ruler}</p>${h.focus?`<div class="label">Focus</div><p class="h-focus">${esc(h.focus)}</p>`:''}</div></section>
+ <section class="today side">${pic('scenes',s.id,'today-art')}<div class="today-in"><h2 class="h-range">${periodHead(V.period,h.per)}</h2>${V.period==='monthly'||V.period==='yearly'?`<p class="muted">${rangeTxt(h.per)}</p>`:''}<p class="h-sign"><strong>${s.name}</strong> · ${s.el} · ${s.mod} · ruled by ${s.ruler}</p><p class="muted h-trait">You meet the world ${STYLE[s.id]}.</p><div class="label">Focus</div><p class="h-focus">${esc(h.focus)}</p></div></section>
  <div class="h-body">${esc(h.body).split(/\n+/).map(p=>`<p>${p}</p>`).join('')}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
  ${cat==='money'?'<p class="muted">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted">For reflection only. This is not medical advice.</p>':''}
- ${prov}<div class="row"><button class="btn ghost sm" data-act="bookhoro" data-ref="${ref}">${saved?'Saved':'Save'}</button>${ex!==S.sign?`<button class="btn ghost sm" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}</div>
- <p class="muted small">Daily readings turn over at midnight in your time zone (${esc(TZ())}); weeks run Monday to Sunday; months and years follow the calendar.</p></div></div>`;
+ <div class="row h-acts"><button class="btn ghost sm" data-act="bookhoro" data-ref="${ref}">${saved?'Saved':'Save'}</button>${ex!==S.sign?`<button class="btn ghost sm" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}</div></div></div>`;
 };
 
 /* ----- Oracle ----- */
@@ -933,7 +910,7 @@ function exportData(){
  const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),account:S.email,profile:{sign:S.sign,name:S.name,fullName:S.fullName,altName:S.altName,birth:S.birth,birthConsent:S.birthConsent,settings:S.settings,notifications:S.notif},whispers:Object.keys(S.revealed).sort().map(d=>({day:d,card:cardFor(d).title,saved:S.saved.some(x=>x.date===d),note:S.notes[d]||''})),journal:S.journal,tarotReadings:S.readings,connections:S.conns,bookmarks:S.bookmarks},null,2)],{type:'application/json'});
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`kosmia-data-${dkey()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
 }
-function signOutLocal(){try{localStorage.removeItem(KEY);localStorage.removeItem(HKEY)}catch(x){}S=fresh();HC={};V.joinSign='';V.paint={};V.auth='in';KS.msgs=[];KS.open=false;V.sec='welcome';history.replaceState(null,'','/');render();window.scrollTo(0,0)}
+function signOutLocal(){try{localStorage.removeItem(KEY);localStorage.removeItem('kosmia.h')}catch(x){}S=fresh();V.joinSign='';V.paint={};V.auth='in';KS.msgs=[];KS.open=false;V.sec='welcome';history.replaceState(null,'','/');render();window.scrollTo(0,0)}
 
 document.addEventListener('submit',e=>{if(e.target.id==='kas-f'){e.preventDefault();const i=$('#kas-in');const v=i.value;i.value='';kasSend(v)}});
 document.addEventListener('click',e=>{
