@@ -330,7 +330,7 @@ views.home=()=>{
  <section class="today">${pic('scenes',sign.id,'today-art')}<div class="today-in"><div class="label">Your daily horoscope</div><h2>${long(now)}</h2>${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}<p>${esc(h.body)}</p>${h.sample&&h.state==='loading'?'<p class="muted prov">Reading today’s sky…</p>':''}<button class="btn" data-act="tohoroscope">Full forecast</button></div></section>
  <section class="whisper"><h2>A Whisper From the Cosmos</h2>${cardScene(c,rev,'homeCard')}${rev?`<div class="row whisper-acts"><button class="btn" data-go="oracle" data-t="whispers">Reflect on it</button></div>`:`<button class="btn" data-act="reveal">Reveal My Whisper</button>`}</section>
  <div class="cosmos">${panel(`<h2>Tonight’s Sky</h2>${plate('sky')}<div class="sky-row">${moonPic(m)}<div><p><strong>${m.name}</strong>, about ${Math.round(m.ill*100)}% lit, in ${sIdx(m.sign).name}.</p><p class="muted">The Sun is in ${sIdx(K.signIdx(K.lon('Sun',now))).name}.</p></div></div>${ne?`<div class="rule"></div><div class="label">Next in the sky</div><p><strong>${esc(ne.name)}</strong> · ${ne.dateOnly?shortD(ne.date)+' (approximate)':evt(ne.date)}</p>`:''}<button class="btn ghost" data-go="cosmos" data-t="calendar">Cosmic calendar</button>`,'glass')}</div>
- ${panel(pd?`<h2>Your Number Today</h2>${plate('numbers')}<div class="num-line"><span class="num">${pd}</span><p>A personal day of ${N.CYCLE[pd].replace(/^a year of /,'')}.</p></div>${linkBtn('My cycles','blueprint','my-cycles')}`:`<h2>Your Number Today</h2>${plate('numbers')}<p>Add your birth date to see your personal day number and Life Path.</p>${linkBtn('Add my birth date','blueprint','life-path')}`,'glass')}
+ ${panel(pd?`<h2>Your Number Today</h2>${plate('numbers')}<div class="num-line"><span class="num">${pd}</span><p>A personal day of ${N.CYCLE[pd].replace(/^a year of /,'')}.</p></div>${linkBtn('My cycles','blueprint','my-cycles')}`:`<h2>Your Number Today</h2>${plate('numbers')}<p>Add your birth date to see your personal day number and Life Path.</p>${linkBtn('Add my birth date','blueprint','birth-chart')}`,'glass')}
  </div>`;
 };
 function insights(){
@@ -381,11 +381,14 @@ function savedHead(i){
   return `<div class="row pair sv-pair">${n(c.data.a)}<span class="amp" aria-hidden="true">+</span>${n(c.data.b)}</div><p class="muted center">${KIND_LABEL[c.kind]}</p>`}
  return `<h3>${esc(i.title)}</h3><p class="muted">${KIND_LABEL[c.kind]}</p>`;
 }
+// Remove reuses each kind's own action, so the account copy is deleted too
+const removeBtn=i=>{const [act,attr]=i.kind==='whisper'?['unsave',`data-k="${esc(i.ref)}"`]:i.kind==='tarot'?['delread',`data-id="${esc(i.ref)}"`]:i.kind==='connection'?['delconn',`data-id="${esc(i.ref)}"`]:['unbook',`data-kind="${i.bk.kind}" data-ref="${esc(i.bk.ref)}"`];
+ return `<button class="btn ghost sm" data-act="${act}" ${attr}>Remove</button>`};
 function savedView(){
  const f=V.filter.saved||'all',all=savedItems(),items=all.filter(i=>f==='all'||i.kind===f);
  const opts=[['all','All'],['whisper','Whispers'],['tarot','Tarot'],['horoscope','Horoscopes'],['event','Events'],['connection','Connections']];
  const pop=V.spop&&all.find(i=>i.kind===V.spop.kind&&i.ref===V.spop.ref);
- return `<div class="stack"><h1>Saved</h1>${chips('Show',opts,f,'fsaved')}${items.length?items.map(i=>`<article class="item sv">${savedArt(i)}<div class="sv-in"><div class="item-h"><span class="badge">${(opts.find(o=>o[0]===i.kind)||['',''])[1].replace(/s$/,'')}</span><span class="muted">${i.date?ymdLong(i.date,{day:'numeric',month:'short',year:'numeric'}):''}</span></div>${savedHead(i)}<div class="row"><button class="btn ghost sm" data-act="sopen" data-kind="${i.kind}" data-ref="${esc(i.ref)}">Open</button>${i.bk?`<button class="btn ghost sm" data-act="unbook" data-kind="${i.bk.kind}" data-ref="${esc(i.bk.ref)}">Remove</button>`:''}</div></div></article>`).join(''):empty('Nothing saved here yet','Save a Whisper, a tarot reading, a forecast, a celestial event or a connection and it will gather here.')}${pop?savedPop(pop):''}</div>`;
+ return `<div class="stack"><h1>Saved</h1>${chips('Show',opts,f,'fsaved')}${items.length?items.map(i=>`<article class="item sv">${savedArt(i)}<div class="sv-in"><div class="item-h"><span class="badge">${(opts.find(o=>o[0]===i.kind)||['',''])[1].replace(/s$/,'')}</span><span class="muted">${i.date?ymdLong(i.date,{day:'numeric',month:'short',year:'numeric'}):''}</span></div>${savedHead(i)}<div class="row"><button class="btn ghost sm" data-act="sopen" data-kind="${i.kind}" data-ref="${esc(i.ref)}">Open</button>${removeBtn(i)}</div></div></article>`).join(''):empty('Nothing saved here yet','Save a Whisper, a tarot reading, a forecast, a celestial event or a connection and it will gather here.')}${pop?savedPop(pop):''}</div>`;
 }
 // the pop-up for a saved item: the reading, card, forecast, event or comparison in full
 function savedPop(i){
