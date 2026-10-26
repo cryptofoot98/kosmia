@@ -1,35 +1,32 @@
-/* Writing fields shaped like an antique label plaque: rounded corner lobes, pointed side tabs and a soft cusp at the
-   top and bottom centre, drawn as a recess pressed into the page (no outline). Each field gets an SVG sized to it
-   exactly, so the corners never stretch; it is set as --plaque and used as the field's background in styles.css. */
+/* Writing fields drawn as the title banner: a white ribbon with rolled ends, the crest above and the ornament below.
+   art/field/ holds the banner cut into a 5 x 3 grid (l, m, c, n, r columns; t, m, b rows). Only the plain runs between
+   the ornaments stretch, so the crest, the curls and the rolls keep their proportions at any field size. */
 (function(){
 'use strict';
 const FIELDS='input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],input[type=number],input[type=search],textarea,select';
-const cache=new Map();
-const f=n=>Math.round(n*10)/10;
-function path(w,h){
- const big=h>72,r=big?17:Math.min(13,h*.24),n=big?10:8,c=Math.min(big?54:42,w*.13),d=big?8:6,s=big?4:2.5;
- const m=w/2,L=n,R=w-n;
- return [`M${f(m)} ${d}`,
-  `C${f(m+c*.18)} ${f(d*.15)} ${f(m+c*.55)} 0 ${f(m+c)} 0`,`H${f(R-r)}`,`A${r} ${r} 0 0 1 ${f(R)} ${f(r)}`,          // top edge, top-right lobe
-  `Q${f(R)} ${f(r+n)} ${w} ${f(r+n)}`,`Q${f(w-s)} ${f(h/2)} ${w} ${f(h-r-n)}`,            // side tab, gently hollow side
-  `Q${f(R)} ${f(h-r-n)} ${f(R)} ${f(h-r)}`,`A${r} ${r} 0 0 1 ${f(R-r)} ${h}`,             // bottom-right lobe
-  `H${f(m+c)}`,`C${f(m+c*.55)} ${h} ${f(m+c*.18)} ${f(h-d*.15)} ${f(m)} ${f(h-d)}`,`C${f(m-c*.18)} ${f(h-d*.15)} ${f(m-c*.55)} ${h} ${f(m-c)} ${h}`, // bottom cusp
-  `H${f(L+r)}`,`A${r} ${r} 0 0 1 ${f(L)} ${f(h-r)}`,`Q${f(L)} ${f(h-r-n)} 0 ${f(h-r-n)}`,
-  `Q${s} ${f(h/2)} 0 ${f(r+n)}`,`Q${f(L)} ${f(r+n)} ${f(L)} ${f(r)}`,`A${r} ${r} 0 0 1 ${f(L+r)} 0`,
-  `H${f(m-c)}`,`C${f(m-c*.55)} 0 ${f(m-c*.18)} ${f(d*.15)} ${f(m)} ${d}Z`].join('');
-}
-function svg(w,h){
- const k=w+'x'+h;
- if(!cache.has(k)){
-  const p=path(w,h);
-  cache.set(k,`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6C29C"/><stop offset=".4" stop-color="#E6D7B8"/><stop offset="1" stop-color="#EEE3CB"/></linearGradient><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feFlood flood-color="#3E2C1A" flood-opacity=".62"/><feComposite in2="SourceAlpha" operator="out"/><feGaussianBlur stdDeviation="3.4"/><feOffset dy="2.6"/><feComposite in2="SourceAlpha" operator="in" result="sh"/><feFlood flood-color="#FFF9EC" flood-opacity=".85"/><feComposite in2="SourceAlpha" operator="out"/><feGaussianBlur stdDeviation="1.1"/><feOffset dy="-1.5"/><feComposite in2="SourceAlpha" operator="in" result="hi"/><feMerge><feMergeNode in="hi"/><feMergeNode in="sh"/></feMerge></filter></defs><path d="${p}" fill="url(#g)"/><path d="${p}" filter="url(#s)"/></svg>`)}")`);
+// piece sizes in the artwork (240 px tall), drawn at S so a single-line field is 84 px tall
+const P={L:61,C:216,T:92,B:74},S=84/240;
+const CHEVRON=`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%238B6A3E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")`;
+function layers(w,h,select){
+ const L=Math.round(P.L*S),C=Math.round(P.C*S),T=Math.round(P.T*S),B=Math.round(P.B*S);
+ const M=Math.max(0,(w-2*L-C)/2),mid=Math.max(0,h-T-B);
+ const cols=[['l',0,L],['m',L,M],['c',L+M,C],['n',L+M+C,M],['r',w-L,L]];
+ const rows=[['t',0,T],['m',T,mid],['b',h-B,B]];
+ const img=[],pos=[],size=[];
+ if(select){img.push(CHEVRON);pos.push(`${w-L-10}px 50%`);size.push('12px 8px')}
+ // each piece overlaps its neighbour by a pixel so no seam shows between them
+ for(const [c,x,cw] of cols)for(const [r,y,rh] of rows){
+  if(!cw||!rh)continue;
+  img.push(`url(/art/field/${c}${r}.webp)`);pos.push(`${Math.floor(x)}px ${Math.floor(y)}px`);size.push(`${Math.ceil(cw)+1}px ${Math.ceil(rh)+1}px`);
  }
- return cache.get(k);
+ return {img:img.join(','),pos:pos.join(','),size:size.join(',')};
 }
 function shape(el){
  const w=el.offsetWidth,h=el.offsetHeight;
  if(!w||!h||el._pq===w+'x'+h)return;
- el._pq=w+'x'+h;el.style.setProperty('--plaque',svg(w,h));
+ el._pq=w+'x'+h;
+ const l=layers(w,h,el.tagName==='SELECT');
+ el.style.backgroundImage=l.img;el.style.backgroundPosition=l.pos;el.style.backgroundSize=l.size;el.style.backgroundRepeat='no-repeat';
 }
 const ro=new ResizeObserver(es=>es.forEach(e=>shape(e.target)));
 const scan=()=>document.querySelectorAll(FIELDS).forEach(el=>{if(!el._pqo){el._pqo=1;ro.observe(el)}shape(el)});

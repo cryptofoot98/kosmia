@@ -398,18 +398,17 @@ body.reduce *,body.reduce *::before,body.reduce *::after{animation:none!importan
 .seg button{min-width:0;letter-spacing:.06em;font-size:clamp(.72rem,3.4vw,.85rem)}
 select,input,textarea{min-width:0;max-width:100%}
 
-/* Writing fields: shaped like an antique label plaque and sunk into the page, with no outline (plaque.js draws the
-   shape to each field's size as --plaque; the glow on focus follows the same silhouette) */
+/* Writing fields: drawn as the title banner, a white ribbon with rolled ends, crest and ornament (plaque.js lays the
+   banner pieces to each field's size); no box lines. The glow on focus follows the banner's silhouette. */
 input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],input[type=number],input[type=search],textarea,select{
- min-height:54px;padding:11px 28px;border:0;border-radius:0;outline:none;
- background:var(--plaque,none) center/100% 100% no-repeat;transition:filter .2s}
-input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[type=date]:focus,input[type=time]:focus,input[type=number]:focus,input[type=search]:focus,textarea:focus,select:focus{outline:none;filter:drop-shadow(0 0 4px rgba(201,160,88,.75)) drop-shadow(0 0 1px rgba(139,106,62,.5))}
+ min-height:84px;padding:14px 30px 8px;border:0;border-radius:0;outline:none;background-color:transparent;
+ transition:filter .2s}
+input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[type=date]:focus,input[type=time]:focus,input[type=number]:focus,input[type=search]:focus,textarea:focus,select:focus{outline:none;filter:drop-shadow(0 0 3px rgba(201,160,88,.8))}
 input[type=text],input[type=email],input[type=password],input[type=number],input[type=search],textarea,select{-webkit-appearance:none;appearance:none}
-textarea{min-height:124px;padding:20px 30px;line-height:1.5}
-select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
- background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%238B6A3E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") right 22px center/12px 8px no-repeat,var(--plaque,none) center/100% 100% no-repeat}
+textarea{min-height:160px;padding:26px 34px 32px;line-height:1.5}
+select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 ::placeholder{color:rgba(107,88,67,.62);font-style:italic}
-.kas-f input{min-height:46px}
+.kas-f input{min-height:70px;padding-top:12px;padding-bottom:6px}
 
 /* engraved plates: a vignette illustration that dissolves into its panel */
 .plate{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;margin:-4px 0 2px;mix-blend-mode:multiply;
