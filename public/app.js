@@ -1035,7 +1035,7 @@ document.addEventListener('change',e=>{
  if(map[id]){map[id]();save();syncProfile();toast('Saved');if(/^d_/.test(id))render()}
 });
 // With accounts enabled, only a saved session opens straight onto a page; everyone else starts at onboarding.
-document.body.insertAdjacentHTML('beforeend',`<button id="kas-btn" class="kas-btn" data-act="kasopen" aria-label="Talk with Kassandra, the fortune teller" hidden>${pic('cards','kassandra','kas-face')}<span>Kassandra</span></button>
+document.body.insertAdjacentHTML('beforeend',`<button id="kas-btn" class="kas-btn" data-act="kasopen" aria-label="Talk with Kassandra, the fortune teller" hidden>${pic('cards','kassandra-float','kas-float')||pic('cards','kassandra','kas-face')}</button>
 <section id="kas" class="kas" role="dialog" aria-modal="false" aria-labelledby="kas-title" hidden><header class="kas-h">${pic('cards','kassandra','kas-face')}<div><h2 id="kas-title">Kassandra</h2><p class="muted small">Kosmia’s fortune teller · symbols, not certainties</p></div><button class="pop-x" data-act="kasclose" aria-label="Close Kassandra">×</button></header><div id="kas-body" class="kas-body" aria-live="polite"></div><div id="kas-chips" class="kas-chips"></div><div id="kas-foot" class="kas-foot"></div></section>`);
 if(S.sign&&(!C.enabled||C.hasStoredSession())){applyLocation()}else V.sec='welcome';
 render();
