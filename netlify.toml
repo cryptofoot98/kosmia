@@ -2,6 +2,10 @@
   publish = "public"
   command = "sh scripts/build-config.sh"
 
+# Functions are bundled into single files (astronomy-engine ships an ESM build that must be inlined).
+[functions]
+  node_bundler = "esbuild"
+
 # Earlier addresses and names (Daily Fortune, Love Match, Name Match, Birth/Name Numerology, Cosmic Calendar,
 # My Universe) move permanently to their places in the six sections.
 [[redirects]]
