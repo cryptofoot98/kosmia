@@ -503,20 +503,25 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jp-back.endpaper{background:linear-gradient(to left,rgba(0,0,0,.35),transparent 12%),radial-gradient(circle at 30% 30%,rgba(139,106,62,.25) 0 2px,transparent 3px) 0 0/22px 22px,#6B3324;box-shadow:inset 0 0 0 10px #4A2318}
 /* a notebook page: the writing sits straight on the painted paper, on ruled lines that run to the foot of the page and
    scroll with the words; every line of the entry (date, title, prompt, the cards pasted in) keeps to the same rule */
-.jp-in{position:absolute;top:var(--t);right:var(--r);bottom:var(--b);left:var(--l);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;line-height:var(--lh);
- background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 -3px/100% var(--lh) local;
- -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 10px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 10px),transparent)}
+/* the writing box sits in the same place on the page, centred between its margins, below the date in the header; it
+   scrolls only up and down, never sideways, and its own thin bar at the right shows when the words run past the foot */
+.jp-front{container-type:inline-size}
+.jp-date{position:absolute;top:var(--t);left:max(10%,calc(var(--l) - 3%));right:max(10%,calc(var(--r) - 3%));height:var(--lh);margin:0;line-height:var(--lh);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Parisienne',cursive;font-size:clamp(.85rem,5.3cqw,1.2rem);color:var(--ink2)}
+.jp-in{position:absolute;top:calc(var(--t) + var(--lh) + 6px);right:var(--r);bottom:var(--b);left:var(--l);overflow-x:hidden;overflow-y:auto;overscroll-behavior:none;touch-action:pan-y;scrollbar-width:none;line-height:var(--lh);
+ background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 -3px/100% var(--lh) local}
 .jp-in::-webkit-scrollbar{display:none}
-.jp-in>*{margin:0;line-height:var(--lh)}
-.p-sleeping-moon{--t:24%;--r:23%;--b:31%;--l:13%}
-.p-sun-face{--t:23%;--r:12%;--b:34%;--l:11%}
-.p-pressed-roses{--t:20%;--r:17%;--b:32%;--l:23%}
-.p-compass-rose{--t:33%;--r:10%;--b:23%;--l:21%}
-.p-night-sky{--t:13%;--r:13%;--b:20%;--l:11%}
-.p-moon-phases{--t:21%;--r:14%;--b:15%;--l:14%}
+.jp-in>*{margin:0;line-height:var(--lh);max-width:100%}
+.jp-bar{position:absolute;display:none;top:calc(var(--t) + var(--lh) + 6px);bottom:var(--b);right:calc(var(--r) - 14px);width:12px;cursor:pointer;touch-action:none}
+.jp-bar.on{display:block}
+.jp-bar::before{content:'';position:absolute;top:0;bottom:0;left:5px;width:2px;border-radius:1px;background:var(--rule)}
+.jp-bar i{position:absolute;top:0;left:4px;width:4px;border-radius:2px;background:var(--ink2);opacity:.6}
+.p-sleeping-moon{--t:21%;--r:20%;--b:36%;--l:20%}
+.p-sun-face{--t:27%;--r:14%;--b:33%;--l:14%}
+.p-pressed-roses{--t:21%;--r:22%;--b:32%;--l:22%}
+.p-compass-rose{--t:34%;--r:20%;--b:22%;--l:20%}
+.p-night-sky{--t:14%;--r:13%;--b:20%;--l:13%}
+.p-moon-phases{--t:21%;--r:15%;--b:15%;--l:15%}
 .jp-num{position:absolute;bottom:4.5%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:.8rem;color:var(--ink2)}
-.jp-date{font-family:'Parisienne',cursive;font-size:1.12rem;color:var(--ink2)}
-.jp-kind-l{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
 .jp-title{font-family:var(--serif);font-weight:600;font-size:1.2rem;color:var(--ink)}
 .jp-prompt{font-style:italic;font-size:.92rem;color:var(--ink2)}
 /* the cards, pasted in like little prints: one sits to the right with the words beside it, a spread takes its own lines */
@@ -533,10 +538,7 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jpage .jp-tline{display:block;width:100%;height:var(--lh);border:0;border-radius:0;background:transparent;padding:0;line-height:var(--lh);box-shadow:none;outline:none;font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--ink);-webkit-appearance:none;appearance:none}
 .jpage textarea.jp-lines:focus,.jpage .jp-tline:focus{filter:none;box-shadow:none}
 .jpage ::placeholder{color:var(--ink2);opacity:.75}
-.jp-kinds{display:flex;flex-wrap:wrap;gap:0 12px}
-.jp-kind{background:none;border:0;padding:0;height:var(--lh);line-height:var(--lh);font:inherit;font-size:.82rem;color:var(--ink2);cursor:pointer}
-.jp-kind[aria-checked=true]{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:4px}
-.jp-acts{display:flex;justify-content:center;align-items:center;gap:18px;height:calc(var(--lh)*2);clear:both}
+.jacts{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 10px}
 .jp-front .link{color:var(--ink2)}
 /* the leather cover, its name tooled in gold within the oval */
 .jp-front.jp-leather{background:#4A2318 url(/art/pages/cover.webp) center/100% 100% no-repeat;border-radius:4px 10px 10px 4px;box-shadow:inset 6px 0 10px -6px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.3)}
@@ -555,7 +557,7 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jnav .btn{min-width:48px;font-size:1.3rem;line-height:1}
 .jnav .btn:disabled{opacity:.4;cursor:default}
 .jnav-n{font-family:var(--serif);color:var(--mauve);min-width:8em;text-align:center}
-@media (max-width:370px){.jp-date{font-size:.98rem}.jp-front,.jt-bk{--lh:25px}.jp-lines{font-size:.96rem}.jp-title{font-size:1.05rem}.jp-prompt{font-size:.84rem}.jp-kind{font-size:.76rem}.jc-name{font-size:1.7rem}.jc-l{font-size:.8rem}.jc-in{left:23%;right:23%}}
+@media (max-width:370px){.jp-front,.jt-bk{--lh:25px}.jp-lines{font-size:.96rem}.jp-title{font-size:1.05rem}.jp-prompt{font-size:.84rem}.jc-name{font-size:1.7rem}.jc-l{font-size:.8rem}.jc-in{left:23%;right:23%}}
 
 /* the book in depth: a block of page edges seen along the side and the foot of the open page, thicker while more pages remain,
    on a leather back board; the spine's leather shows at the left once the book is open */
