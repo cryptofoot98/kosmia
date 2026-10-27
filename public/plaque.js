@@ -34,7 +34,7 @@ function shape(el){
  el._pq=k;el.style.setProperty('--plaque',svg(w,h,deep));
 }
 const ro=new ResizeObserver(es=>es.forEach(e=>shape(e.target)));
-const scan=()=>document.querySelectorAll(FIELDS).forEach(el=>{if(!el._pqo){el._pqo=1;ro.observe(el)}shape(el)});
+const scan=()=>document.querySelectorAll(FIELDS).forEach(el=>{if(el.closest('.jpage'))return;if(!el._pqo){el._pqo=1;ro.observe(el)}shape(el)});
 new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});
 document.addEventListener('DOMContentLoaded',scan);
 })();

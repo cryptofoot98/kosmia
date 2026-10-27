@@ -180,9 +180,9 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 /* ---------- sections, routes and the contextual footers ---------- */
 // [route slug, label, footer icon (art/cats)]
 const SECTIONS={
- home:{label:'Home',icon:'home',tabs:[['today','Today','today'],['insights','My Insights','insights'],['saved','Saved','saved']]},
+ home:{label:'Home',icon:'home',tabs:[['today','Today','today'],['insights','My Insights','insights'],['saved','Saved','saved'],['journal','Journal','reflections']]},
  horoscopes:{label:'Horoscopes',icon:'horoscopes',tabs:[['overview','Overview','general'],['love','Love','love'],['family','Family','family'],['health','Health','health'],['career','Career','career'],['money','Money','finance']]},
- oracle:{label:'Oracle',icon:'tarot',tabs:[['whispers','Whispers','today'],['tarot','Tarot','deck'],['journal','Journal','reflections']]},
+ oracle:{label:'Oracle',icon:'tarot',tabs:[['whispers','Whispers','today'],['tarot','Tarot','deck']]},
  affinity:{label:'Affinity',icon:'love',tabs:[['zodiac-match','Zodiac Match','match'],['soul-resonance','Soul Resonance','resonance'],['synastry','Synastry','aspects'],['connections','Connections','connections']]},
  blueprint:{label:'Blueprint',icon:'chart',tabs:[['profile','My Profile','profile'],['birth-chart','Birth Chart','chart'],['life-path','Life Path','lifepath'],['the-name-within','The Name Within','namewithin'],['my-cycles','My Cycles','cycles']]},
  cosmos:{label:'Cosmos',icon:'universe',tabs:[['calendar','Calendar','calendar'],['moon','Moon','moon'],['planets','Planets','planets'],['celestial-events','Celestial Events','upcoming']]},
@@ -206,7 +206,7 @@ function applyLocation(){
  let path=location.pathname.replace(/\/+$/,'')||'/';
  const first=path.split('/')[1]||'';
  if(ALIAS[first]&&!SECTIONS[first]){path=ALIAS[first];history.replaceState(history.state,'',path+location.search)}
- if(/^\/oracle\/readings$/.test(path)){path='/home/saved';history.replaceState(history.state,'',path+location.search)}
+ if(/^\/oracle\/(readings|journal)$/.test(path)){path=path.endsWith('journal')?'/home/journal':'/home/saved';history.replaceState(history.state,'',path+location.search)}
  const [,sec='home',t='']=path.split('/'),q=Object.fromEntries(new URLSearchParams(location.search));
  if(!SECTIONS[sec]){V.sec='home';V.tab.home='today';return}
  V.sec=sec;let tt=(TAB_ALIAS[sec]||{})[t]||t;
@@ -224,7 +224,7 @@ function viewQuery(){
 const syncUrl=()=>{const u=pathFor(V.sec,tab(),viewQuery());if(u!==location.pathname+location.search)history.replaceState(history.state,'',u)};
 history.scrollRestoration='manual';
 function go(sec,t,opt={}){
- stopAudio();V.edit=null;V.tpop=null;V.spop=null;
+ stopAudio();V.edit=null;V.tpop=null;V.spop=null;V.jpage=null;
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  V.sec=sec;if(t)V.tab[sec]=t;
  if(SECTIONS[sec])history[opt.replace?'replaceState':'pushState']({scroll:0},'',pathFor(sec,tab(),viewQuery()));
@@ -302,6 +302,7 @@ views.home=()=>{
  const t=tab();
  if(t==='insights')return insights();
  if(t==='saved')return savedView();
+ if(t==='journal')return journalView();
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),rev=!!S.revealed[dkey()];
  const m=K.moon(now),h=horoscope(sign.id,'overview','daily'),ne=nextEvent(now);
@@ -322,7 +323,7 @@ function insights(){
  return `<div class="stack"><h1>My Insights</h1><p class="muted center">A summary of your readings. Each opens its full page.</p>
  ${panel(`<div class="label">Astrology</div>${plate('ins-astro')}${row('Chosen sign',sg(S.sign).name,'horoscopes','overview')}${row('Sun',ch?sIdx(ch.pl[0].sign).name:'','blueprint','birth-chart','Needs your birth date')}${row('Moon',moonV,'blueprint','birth-chart','Needs your birth date')}${row('Rising',ch&&ch.ang?sIdx(K.signIdx(ch.ang.asc)).name:'','blueprint','birth-chart',ch?'Needs birth time and place':'Needs birth date, time and place')}`)}
  ${panel(`<div class="label">Numerology</div>${plate('ins-numbers')}${row('Life Path',L?L.r.n+' · '+N.MEANING[L.r.n][0]:'','blueprint','life-path','Needs your birth date')}${row('Expression',nm?nm.expression.r.n+' · '+N.MEANING[nm.expression.r.n][0]:'','blueprint','the-name-within','Needs your full birth name')}${row('Soul Urge',nm&&nm.soul.r.n?nm.soul.r.n+' · '+N.MEANING[nm.soul.r.n][0]:'','blueprint','the-name-within','Needs your full birth name')}${row('Personal Year '+yr,hasBirthDate()?String(N.personalYear(S.birth.date,yr).r.n):'','blueprint','my-cycles','Needs your birth date')}`)}
- ${panel(`<div class="label">Oracle</div>${plate('ins-oracle')}${row('Today’s Whisper',rev?esc(c.title):'','oracle','whispers','Not revealed yet')}${row('Latest tarot reading',last?esc((SPREADS[last.spread]||{n:last.spread}).n)+' · '+ymdLong(last.date,{day:'numeric',month:'short'}):'','home','saved','No saved readings yet')}${row('Journal entries',String(S.journal.length+Object.values(S.notes).filter(Boolean).length),'oracle','journal')}`)}
+ ${panel(`<div class="label">Oracle</div>${plate('ins-oracle')}${row('Today’s Whisper',rev?esc(c.title):'','oracle','whispers','Not revealed yet')}${row('Latest tarot reading',last?esc((SPREADS[last.spread]||{n:last.spread}).n)+' · '+ymdLong(last.date,{day:'numeric',month:'short'}):'','home','saved','No saved readings yet')}${row('Journal entries',String(S.journal.length+Object.values(S.notes).filter(Boolean).length),'home','journal')}`)}
  </div>`;
 }
 // Saved: every kept item as a card with its own artwork behind it as a watermark; Open shows it in full in a pop-up
@@ -425,7 +426,6 @@ views.horoscopes=()=>{
 views.oracle=()=>{
  const t=tab();
  if(t==='tarot')return tarotView();
- if(t==='journal')return journalView();
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
  return `<div class="stack" style="align-items:stretch"><h1>Whispers</h1><p class="quote center">A whisper from the cosmos</p>${cardScene(c,rev,'fortuneCard')}
  ${rev?`<div class="row whisper-acts"><button class="btn" data-act="savecard" aria-pressed="${sv}">${sv?'♥ Saved':'♡ Save Whisper'}</button></div>
@@ -461,13 +461,67 @@ function noteBlock(kind,id,note){
  if(open)return `<div class="field"><label for="ed">Note</label><textarea id="ed">${esc(note||'')}</textarea></div><div class="row"><button class="btn sm" data-act="savenoteed" data-kind="${kind}" data-id="${esc(id)}">Save note</button><button class="btn ghost sm" data-act="canceledit">Cancel</button></div>`;
  return `${note?`<p class="item-note">“${esc(note)}”</p>`:''}<button class="link" data-act="editnote" data-kind="${kind}" data-id="${esc(id)}">${note?'Edit note':'Add a note'}</button>`;
 }
+/* ----- Journal: a paper notebook. Every entry is a page (journal pages, Whisper reflections and tarot notes), oldest first,
+   opening on a title page and ending on a blank page for a new entry. Pages turn with a 3D page-turn (jflip). ----- */
+const JPAPER=['sleeping-moon','sun-face','pressed-roses','compass-rose','night-sky','moon-phases'];
+const lastReading=()=>S.readings.slice().sort((a,b)=>(b.at||b.date)>(a.at||a.date)?1:-1)[0];
+function journalPages(){
+ const e=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),
+  ...Object.entries(S.notes).filter(([,n])=>n).map(([d,n])=>({t:'n',day:d,n,o:cardFor(d)})),
+  ...S.readings.filter(r=>r.note).map(r=>({t:'r',day:r.date,at:r.at,r}))]
+  .sort((a,b)=>a.day>b.day?1:a.day<b.day?-1:((a.at||'')>(b.at||'')?1:-1));
+ return [{t:'cover'},...e,{t:'new'}];
+}
+const jIdx=pages=>V.jpage==null||V.jpage>=pages.length?pages.length-1:Math.max(0,V.jpage);
+const jDate=d=>`<p class="jp-date">${ymdLong(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>`;
+const jEdit=(act,kind,id,label='Edit')=>`<button class="link" data-act="${act}" ${kind?`data-kind="${kind}" `:''}data-id="${esc(id)}">${label}</button>`;
+// the writing form: a title line and ruled paper; Whisper and tarot reflections are kept with the reading itself
+function jForm(d,edit){
+ const k=d.kind,today=dkey(),c=todayCard(),r=lastReading();
+ const kinds=[['reflection','A reflection'],['synchronicity','A synchronicity']];
+ if(!edit){if(S.revealed[today])kinds.push(['whisper','Today’s Whisper']);if(r)kinds.push(['tarot','My last reading'])}
+ const tabs=edit?'':`<div class="jp-kinds" role="radiogroup" aria-label="What are you writing?">${kinds.map(([v,l])=>`<button class="jp-kind" role="radio" aria-checked="${k===v}" data-act="jkind" data-k="${v}">${l}</button>`).join('')}</div>`;
+ if(k==='whisper')return `${tabs}<p class="jp-title">${esc(c.title)}</p><p class="jp-prompt">${c.ref}</p><label class="sr-only" for="ed">My reflection</label><textarea id="ed" class="jp-lines" placeholder="Take your time. Write whatever rises.">${esc(S.notes[today]||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="fortune" data-id="${today}">Write it in</button></div>`;
+ if(k==='tarot')return `${tabs}<p class="jp-title">${esc((SPREADS[r.spread]||{n:r.spread}).n)}</p><p class="jp-prompt">${r.q?'“'+esc(r.q)+'” · ':''}${r.cards.map(x=>esc(x.name)+(x.rev?' (reversed)':'')).join(', ')}</p><label class="sr-only" for="ed">My note on this reading</label><textarea id="ed" class="jp-lines" placeholder="What did the cards bring up for you?">${esc(r.note||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="reading" data-id="${r.id}">Write it in</button></div>`;
+ return `${tabs}${k==='synchronicity'?'<p class="jp-prompt">A meaningful coincidence: a repeated number, a song at the right moment, a chance meeting.</p>':''}<label class="sr-only" for="jt">Title</label><input type="text" id="jt" class="jp-tline" value="${esc(d.title)}" placeholder="A title, if you like"><label class="sr-only" for="jb">Entry</label><textarea id="jb" class="jp-lines" placeholder="What happened, and what did it stir in you?">${esc(d.body)}</textarea><div class="jp-acts"><button class="btn sm" data-act="savejournal">${edit?'Save changes':'Write it in'}</button>${edit?'<button class="link" data-act="canceljournal">Cancel</button>':''}</div>`;
+}
+function jPage(p,i,n){
+ const art=JPAPER[i%JPAPER.length];let h;
+ if(p.t==='cover')h=`<div class="jp-cover"><p class="jp-script">${S.name?esc(S.name.split(' ')[0])+'’s':'My'} Journal</p><p class="jp-prompt">Private to you. Your reflections on Whispers and tarot readings are kept in these pages too.</p><p class="jp-small">${n-2?`${n-2} ${n-2===1?'page':'pages'} written`:'Not a page written yet'}</p></div>`;
+ else if(p.t==='new')h=`${jDate(dkey())}${jForm(V.jdraft||{kind:'reflection',title:'',body:''})}`;
+ else if(p.t==='j'){const j=p.j;
+  h=V.jedit===j.id?`${jDate(j.day)}${jForm(V.jdraft||j,true)}`
+   :`${jDate(j.day)}<p class="jp-kind-l">${j.kind==='synchronicity'?'Synchronicity':'Reflection'}</p>${j.title?`<p class="jp-title">${esc(j.title)}</p>`:''}<p class="jp-lines jp-text">${esc(j.body)}</p><div class="jp-acts">${jEdit('editjournal','',j.id)}${jEdit('deljournal','',j.id,'Remove')}</div>`}
+ else{const w=p.t==='n',key=w?'fortune:'+p.day:'reading:'+p.r.id,note=w?p.n:p.r.note;
+  const head=w?`<p class="jp-kind-l">Whisper</p><p class="jp-title">${esc(p.o.title)}</p><p class="jp-prompt">${p.o.ref}</p>`
+   :`<p class="jp-kind-l">Tarot</p><p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${p.r.q?'“'+esc(p.r.q)+'” · ':''}${p.r.cards.map(x=>esc(x.name)+(x.rev?' (reversed)':'')).join(', ')}</p>`;
+  h=V.edit===key?`${jDate(p.day)}${head}<label class="sr-only" for="ed">Note</label><textarea id="ed" class="jp-lines">${esc(note||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="${w?'fortune':'reading'}" data-id="${esc(w?p.day:p.r.id)}">Save</button><button class="link" data-act="canceledit">Cancel</button></div>`
+   :`${jDate(p.day)}${head}<p class="jp-lines jp-text">${esc(note)}</p><div class="jp-acts">${jEdit('editnote',w?'fortune':'reading',w?p.day:p.r.id)}</div>`}
+ return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><div class="jp-in">${h}</div><span class="jp-num">${i?i:''}</span></div></div>`;
+}
 function journalView(){
- const entries=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),...Object.entries(S.notes).filter(([,n])=>n).map(([d,n])=>({t:'n',day:d,n,o:cardFor(d)}))].sort((a,b)=>b.day>a.day?1:b.day<a.day?-1:((b.at||'')>(a.at||'')?1:-1));
- const d=V.jdraft||{kind:'reflection',title:'',body:''};
- return `<div class="stack"><h1>Journal</h1><p class="muted center">Private to you. Reflections on your daily Whisper appear here too, without being stored twice.</p>
- ${panel(`${plate('journal')}<h3>${V.jedit?'Edit entry':'New entry'}</h3>${chips('Kind',[['reflection','Reflection'],['synchronicity','Synchronicity']],d.kind,'jkind')}${d.kind==='synchronicity'?'<p class="muted small">A meaningful coincidence: a repeated number, a song at the right moment, a chance meeting.</p>':''}<div class="field"><label for="jt">Title (optional)</label><input type="text" id="jt" value="${esc(d.title)}"></div><div class="field"><label for="jb">Entry</label><textarea id="jb" placeholder="What happened, and what did it stir in you?">${esc(d.body)}</textarea></div><div class="row"><button class="btn" data-act="savejournal">${V.jedit?'Save changes':'Add to journal'}</button>${V.jedit?'<button class="btn ghost" data-act="canceljournal">Cancel</button>':''}</div>`)}
- ${entries.length?entries.map(e=>e.t==='j'?`<article class="item"><div class="item-h"><span class="badge">${e.j.kind==='synchronicity'?'Synchronicity':'Reflection'}</span><span class="muted">${ymdLong(e.day,{day:'numeric',month:'short',year:'numeric'})}</span></div>${e.j.title?`<h3>${esc(e.j.title)}</h3>`:''}<p class="pre">${esc(e.j.body)}</p><div class="row"><button class="btn ghost sm" data-act="editjournal" data-id="${e.j.id}">Edit</button><button class="btn ghost sm" data-act="deljournal" data-id="${e.j.id}">Delete</button></div></article>`
-  :`<article class="item"><div class="item-h"><span class="badge">Whisper</span><span class="muted">${ymdLong(e.day,{day:'numeric',month:'short',year:'numeric'})}</span></div><h3>${esc(e.o.title)}</h3><p class="muted small">${esc(e.o.ref)}</p>${noteBlock('fortune',e.day,e.n)}</article>`).join(''):empty('Your journal is waiting','Write a first entry above, or reflect on today’s Whisper.')}</div>`;
+ const pages=journalPages(),i=jIdx(pages),n=pages.length;
+ return `<div class="stack"><h1>Journal</h1><div class="jbook" aria-label="Journal, page ${i+1} of ${n}">${jPage(pages[i],i,n)}</div>
+ <nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page"${i?'':' disabled'}>‹</button><span class="jnav-n">${i===n-1?'A new page':i?`Page ${i} of ${n-2}`:'Title page'}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>
+ ${i<n-1?'<div class="h-acts row"><button class="btn ghost sm" data-act="jflip" data-to="last">Write a new page</button></div>':''}</div>`;
+}
+// turn from the open page to page `to`: forward, the open leaf swings over to the left and reveals the next page;
+// back, the previous leaf swings in from the left over the open one. The view re-renders once the leaf has landed.
+function jflip(to){
+ const pages=journalPages(),from=jIdx(pages);to=Math.max(0,Math.min(pages.length-1,to));
+ const book=$('.jbook');if(to===from||!book||book.classList.contains('turning'))return;
+ // an unfinished new page is kept; an edit in progress is let go
+ if(V.jedit){V.jedit=null;V.jdraft=null}else if($('#jb'))V.jdraft=readJournalDraft();
+ V.edit=null;
+ const done=()=>{V.jpage=to;render()};
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return done();
+ const cur=book.querySelector('.jpage'),tmp=document.createElement('div');
+ tmp.innerHTML=jPage(pages[to],to,pages.length);const np=tmp.firstElementChild;
+ const leaf=to>from?cur:np,under=to>from?np:cur;
+ leaf.insertAdjacentHTML('beforeend','<div class="jp-back" aria-hidden="true"></div>');
+ if(to>from)book.insertBefore(np,cur);else book.appendChild(np);
+ np.classList.add('jp-abs');leaf.classList.add('leaf',to>from?'turn-fwd':'turn-back');under.classList.add('under');
+ book.classList.add('turning');setTimeout(done,760);
 }
 
 /* ----- Affinity ----- */
@@ -941,18 +995,19 @@ document.addEventListener('click',e=>{
  if(a==='savenoteed'){const v=$('#ed').value.trim(),id=t.dataset.id;
   if(t.dataset.kind==='fortune'){S.notes[id]=v;syncFortune(id)}
   else{const r=S.readings.find(x=>x.id===id);if(r){r.note=v;if(r.rid)C.updateReading&&C.updateReading(r.rid,v)}}
-  save();V.edit=null;toast('Note saved');return render()}
+  save();V.edit=null;if(V.sec==='home'&&tab()==='journal'){V.jdraft=null;const k=t.dataset.kind==='fortune';V.jpage=journalPages().findIndex(p=>k?p.t==='n'&&p.day===id:p.t==='r'&&p.r.id===id);if(V.jpage<0)V.jpage=null}toast(t.dataset.kind==='fortune'?'Reflection saved':'Note saved');return render()}
  if(a==='delread'){const r=S.readings.find(x=>x.id===t.dataset.id);if(r&&confirm('Delete this reading?')){S.readings=S.readings.filter(x=>x!==r);save();if(r.rid)C.deleteReading&&C.deleteReading(r.rid);toast('Reading deleted')}return render()}
  if(a==='fsaved'){V.filter.saved=t.dataset.k;return render()}
  if(a==='fevents'){V.filter.events=t.dataset.k;return render()}
- if(a==='jkind'){V.jdraft=Object.assign(readJournalDraft(),{kind:t.dataset.k});return render()}
+ if(a==='jkind'){V.jdraft=Object.assign($('#jb')?readJournalDraft():(V.jdraft||{title:'',body:''}),{kind:t.dataset.k});return render()}
+ if(a==='jflip'){const n=journalPages().length;return jflip(t.dataset.to==='last'?n-1:jIdx(journalPages())+(+t.dataset.d))}
  if(a==='savejournal'){const d=readJournalDraft();if(!d.body.trim())return toast('Write something first');
   if(V.jedit){const j=S.journal.find(x=>x.id===V.jedit);if(j){Object.assign(j,{kind:d.kind,title:d.title.trim(),body:d.body.trim()});C.saveJournal&&C.saveJournal(j)}}
   else{const j={id:uuid(),day:dkey(),kind:d.kind,title:d.title.trim(),body:d.body.trim(),at:new Date().toISOString()};S.journal.push(j);C.saveJournal&&C.saveJournal(j).then(()=>{j.sy=true;save()})}
-  V.jdraft=null;V.jedit=null;save();toast('Saved to your journal');return render()}
+  const jid=V.jedit;V.jdraft=null;V.jedit=null;save();if(!jid)V.jpage=journalPages().findIndex(p=>p.t==='j'&&p.j===S.journal[S.journal.length-1]);toast('Saved to your journal');return render()}
  if(a==='editjournal'){const j=S.journal.find(x=>x.id===t.dataset.id);if(j){V.jedit=j.id;V.jdraft={kind:j.kind,title:j.title,body:j.body};render();window.scrollTo(0,0)}return}
  if(a==='canceljournal'){V.jedit=null;V.jdraft=null;return render()}
- if(a==='deljournal'){const j=S.journal.find(x=>x.id===t.dataset.id);if(j&&confirm('Delete this journal entry?')){S.journal=S.journal.filter(x=>x!==j);save();C.deleteJournal&&C.deleteJournal(j.id);toast('Entry deleted')}return render()}
+ if(a==='deljournal'){const j=S.journal.find(x=>x.id===t.dataset.id);if(j&&confirm('Delete this journal entry?')){S.journal=S.journal.filter(x=>x!==j);save();C.deleteJournal&&C.deleteJournal(j.id);toast('Entry deleted')}if(V.jpage!=null)V.jpage=Math.max(1,V.jpage-1);return render()}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/'),h=horoscope(sign,cat,period);return bookmark('horoscope',t.dataset.ref,{sign,cat,period,key,start:h.per.start,end:h.per.end,body:h.body,focus:h.focus})}
  if(a==='bookev'){const e=upcoming().find(x=>evRef(x)===t.dataset.ref);if(e)bookmark('event',t.dataset.ref,{name:e.name,date:e.date.toISOString(),when:evWhen(e)});return}
  if(a==='unbook'){const i=S.bookmarks.findIndex(b=>b.kind===t.dataset.kind&&b.ref===t.dataset.ref);if(i>=0)bookmark(t.dataset.kind,t.dataset.ref);return}
@@ -994,11 +1049,16 @@ document.addEventListener('click',e=>{
  if(a==='tctx'){V.tctx=t.dataset.k;return render()}
  if(a==='newread'){T.stage='setup';T.q='';T.ai='';T.aiState='';T.savedId=null;V.tpop=null;render();return window.scrollTo(0,0)}
 });
-function readJournalDraft(){return {kind:(V.jdraft||{}).kind||'reflection',title:($('#jt')||{value:''}).value,body:($('#jb')||{value:''}).value}}
+function readJournalDraft(){const k=(V.jdraft||{}).kind;return {kind:k==='synchronicity'?k:'reflection',title:($('#jt')||{value:''}).value,body:($('#jb')||{value:''}).value}}
 function readSyn(){const Y=V.syn,g=id=>$('#'+id);if(g('sn'))Y.name=g('sn').value.trim();if(g('sd'))Y.date=g('sd').value;if(g('su'))Y.unk=g('su').checked;if(g('st'))Y.time=g('st').value}
 function readBirth(){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth)),g=id=>$('#'+id);if(g('bd'))b.date=g('bd').value;if(g('bu'))b.unk=g('bu').checked;if(g('bt'))b.time=g('bt').value}
 const tap=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+// swipe across the notebook to turn its pages (not while writing in it)
+let jtx=null;
+document.addEventListener('touchstart',e=>{jtx=e.target.closest('.jbook')&&!e.target.closest('input,textarea')?[e.touches[0].clientX,e.touches[0].clientY]:null},{passive:true});
+document.addEventListener('touchend',e=>{if(!jtx)return;const t=e.changedTouches[0],dx=t.clientX-jtx[0],dy=t.clientY-jtx[1];jtx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)jflip(jIdx(journalPages())+(dx<0?1:-1))},{passive:true});
 document.addEventListener('keydown',e=>{
+ if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&$('.jbook')&&!e.target.closest('input,textarea,select,.wheel')){e.preventDefault();return jflip(jIdx(journalPages())+(e.key==='ArrowRight'?1:-1))}
  if(e.key==='Escape'&&KS.open)return kasClose();
  if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}
  if(e.key==='Escape'&&V.spop){V.spop=null;return render()}
