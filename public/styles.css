@@ -521,10 +521,10 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jp-bar i{position:absolute;top:0;left:4px;width:4px;border-radius:2px;background:var(--ink2);opacity:.6}
 /* each paper: where its date sits in the header (--hy, --hl, --hr), and the writing box beneath, centred, running down
    towards the foot of the page */
-.p-sleeping-moon{--hy:5%;--hl:30%;--hr:20%;--t:22%;--r:20%;--b:13%;--l:20%}
-.p-sun-face{--hy:5%;--hl:10%;--hr:38%;--t:27%;--r:14%;--b:9%;--l:14%}
-.p-pressed-roses{--hy:13%;--hl:27%;--hr:20%;--t:25%;--r:22%;--b:10%;--l:22%}
-.p-compass-rose{--hy:7%;--hl:16%;--hr:42%;--t:34%;--r:20%;--b:9%;--l:20%}
+.p-sleeping-moon{--hy:5%;--hl:30%;--hr:30%;--t:22%;--r:20%;--b:13%;--l:20%}
+.p-sun-face{--hy:28%;--hl:18%;--hr:18%;--t:38%;--r:14%;--b:9%;--l:14%}
+.p-pressed-roses{--hy:13%;--hl:27%;--hr:27%;--t:25%;--r:22%;--b:10%;--l:22%}
+.p-compass-rose{--hy:34%;--hl:20%;--hr:20%;--t:44%;--r:20%;--b:9%;--l:20%}
 .p-night-sky{--hy:5%;--hl:22%;--hr:22%;--t:17%;--r:13%;--b:10%;--l:13%}
 .p-moon-phases{--hy:20%;--hl:15%;--hr:15%;--t:29%;--r:15%;--b:13%;--l:15%}
 .jp-num{position:absolute;bottom:4.5%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:.8rem;color:var(--ink2)}
@@ -547,6 +547,12 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jacts{display:flex;justify-content:center;flex-wrap:nowrap;gap:8px}
 .jacts .btn{white-space:nowrap}
 .jp-date.two{line-height:1.25}
+/* signs, moons and links pasted onto a kept page */
+.jp-sign{box-shadow:none;border-radius:50%}
+.jp-moon{box-shadow:none;border-radius:50%}
+.jp-pair{gap:10px}
+.jp-amp,.jp-glyph{font-family:var(--serif);font-size:1.6rem;color:var(--ink2)}
+.jp-open .link{color:var(--ink2);font-size:.92rem}
 .jhint{margin-top:-4px}
 .jnav-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:min(60vw,15em)}
 /* words written over the painting keep a soft halo of paper about them */

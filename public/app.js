@@ -180,10 +180,10 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 /* ---------- sections, routes and the contextual footers ---------- */
 // [route slug, label, footer icon (art/cats)]
 const SECTIONS={
- home:{label:'Home',icon:'home',tabs:[['today','Today','today'],['insights','My Insights','insights'],['saved','Saved','saved'],['journal','Journal','reflections']]},
+ home:{label:'Home',icon:'home',tabs:[['today','Today','today'],['insights','My Insights','insights'],['journal','Journal','reflections']]},
  horoscopes:{label:'Horoscopes',icon:'horoscopes',tabs:[['overview','Overview','general'],['love','Love','love'],['family','Family','family'],['health','Health','health'],['career','Career','career'],['money','Money','finance']]},
  oracle:{label:'Oracle',icon:'tarot',tabs:[['whispers','Whispers','today'],['tarot','Tarot','deck']]},
- affinity:{label:'Affinity',icon:'love',tabs:[['zodiac-match','Zodiac Match','match'],['soul-resonance','Soul Resonance','resonance'],['synastry','Synastry','aspects'],['connections','Connections','connections']]},
+ affinity:{label:'Affinity',icon:'love',tabs:[['zodiac-match','Zodiac Match','match'],['soul-resonance','Soul Resonance','resonance'],['synastry','Synastry','aspects']]},
  blueprint:{label:'Blueprint',icon:'chart',tabs:[['profile','My Profile','profile'],['birth-chart','Birth Chart','chart'],['life-path','Life Path','lifepath'],['the-name-within','The Name Within','namewithin'],['my-cycles','My Cycles','cycles']]},
  cosmos:{label:'Cosmos',icon:'universe',tabs:[['calendar','Calendar','calendar'],['moon','Moon','moon'],['planets','Planets','planets'],['celestial-events','Celestial Events','upcoming']]},
  settings:{label:'Settings',tabs:[['account','Account','settings'],['notifications','Notifications','notifications'],['privacy','Privacy','privacy'],['display','Display','prefs']]}
@@ -206,7 +206,7 @@ function applyLocation(){
  let path=location.pathname.replace(/\/+$/,'')||'/';
  const first=path.split('/')[1]||'';
  if(ALIAS[first]&&!SECTIONS[first]){path=ALIAS[first];history.replaceState(history.state,'',path+location.search)}
- if(/^\/oracle\/(readings|journal)$/.test(path)){path=path.endsWith('journal')?'/home/journal':'/home/saved';history.replaceState(history.state,'',path+location.search)}
+ if(/^\/(oracle\/(readings|journal)|home\/saved|affinity\/connections)$/.test(path)){path='/home/journal';history.replaceState(history.state,'',path+location.search)}
  const [,sec='home',t='']=path.split('/'),q=Object.fromEntries(new URLSearchParams(location.search));
  if(!SECTIONS[sec]){V.sec='home';V.tab.home='today';return}
  V.sec=sec;let tt=(TAB_ALIAS[sec]||{})[t]||t;
@@ -301,7 +301,6 @@ const nextEvent=now=>upcoming().find(e=>e.date>now);
 views.home=()=>{
  const t=tab();
  if(t==='insights')return insights();
- if(t==='saved')return savedView();
  if(t==='journal')return journalView();
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),rev=!!S.revealed[dkey()];
@@ -323,10 +322,9 @@ function insights(){
  return `<div class="stack"><h1>My Insights</h1><p class="muted center">A summary of your readings. Each opens its full page.</p>
  ${panel(`<div class="label">Astrology</div>${plate('ins-astro')}${row('Chosen sign',sg(S.sign).name,'horoscopes','overview')}${row('Sun',ch?sIdx(ch.pl[0].sign).name:'','blueprint','birth-chart','Needs your birth date')}${row('Moon',moonV,'blueprint','birth-chart','Needs your birth date')}${row('Rising',ch&&ch.ang?sIdx(K.signIdx(ch.ang.asc)).name:'','blueprint','birth-chart',ch?'Needs birth time and place':'Needs birth date, time and place')}`)}
  ${panel(`<div class="label">Numerology</div>${plate('ins-numbers')}${row('Life Path',L?L.r.n+' · '+N.MEANING[L.r.n][0]:'','blueprint','life-path','Needs your birth date')}${row('Expression',nm?nm.expression.r.n+' · '+N.MEANING[nm.expression.r.n][0]:'','blueprint','the-name-within','Needs your full birth name')}${row('Soul Urge',nm&&nm.soul.r.n?nm.soul.r.n+' · '+N.MEANING[nm.soul.r.n][0]:'','blueprint','the-name-within','Needs your full birth name')}${row('Personal Year '+yr,hasBirthDate()?String(N.personalYear(S.birth.date,yr).r.n):'','blueprint','my-cycles','Needs your birth date')}`)}
- ${panel(`<div class="label">Oracle</div>${plate('ins-oracle')}${row('Today’s Whisper',rev?esc(c.title):'','oracle','whispers','Not revealed yet')}${row('Latest tarot reading',last?esc((SPREADS[last.spread]||{n:last.spread}).n)+' · '+ymdLong(last.date,{day:'numeric',month:'short'}):'','home','saved','No saved readings yet')}${row('Journal entries',String(S.journal.length+Object.values(S.notes).filter(Boolean).length),'home','journal')}`)}
+ ${panel(`<div class="label">Oracle</div>${plate('ins-oracle')}${row('Today’s Whisper',rev?esc(c.title):'','oracle','whispers','Not revealed yet')}${row('Latest tarot reading',last?esc((SPREADS[last.spread]||{n:last.spread}).n)+' · '+ymdLong(last.date,{day:'numeric',month:'short'}):'','home','journal','No saved readings yet')}${row('Journal entries',String(S.journal.length+Object.values(S.notes).filter(Boolean).length),'home','journal')}`)}
  </div>`;
 }
-// Saved: every kept item as a card with its own artwork behind it as a watermark; Open shows it in full in a pop-up
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){
  if(c.kind==='zodiac')return [c.data.a,c.data.b];
@@ -336,60 +334,6 @@ function connSigns(c){
 function findEvent(ref,iso){if(!K||!iso)return null;const d=new Date(iso);return K.events(new Date(+d-2*DAY),new Date(+d+2*DAY)).find(e=>evRef(e)===ref)||null}
 // lunar events reuse the painted phases: "Full Moon", "First Quarter Moon", "Total Lunar Eclipse" (a full moon)
 const phaseSlug=n=>/^New Moon/.test(n)?'new-moon':/^Full Moon|Lunar Eclipse/.test(n)?'full-moon':/^First Quarter/.test(n)?'first-quarter':/^Last Quarter/.test(n)?'last-quarter':'';
-function savedItems(){
- const out=[];
- S.saved.forEach(x=>{const o=oc(x.id);if(o)out.push({kind:'whisper',date:x.date,title:o.title,sub:o.msg,ref:x.date,o})});
- S.readings.forEach(r=>out.push({kind:'tarot',date:r.date,title:(SPREADS[r.spread]||{n:r.spread}).n,sub:(r.q?'“'+r.q+'” · ':'')+r.cards.map(c=>c.name+(c.rev?' (reversed)':'')).join(', '),ref:r.id,r}));
- S.bookmarks.forEach(b=>{const d=b.data||{};if(b.kind==='horoscope')out.push({kind:'horoscope',date:d.start,title:`${sg(d.sign).name} · ${(HCATS.find(c=>c[0]===d.cat)||['',''])[1]} · ${cap(d.period||'')}`,sub:d.body,ref:b.ref,bk:b});else out.push({kind:'event',date:(d.date||'').slice(0,10),title:d.name,sub:d.when,ref:b.ref,bk:b})});
- S.conns.forEach(c=>out.push({kind:'connection',date:(c.at||'').slice(0,10),title:connTitle(c),sub:KIND_LABEL[c.kind],ref:c.id,c}));
- return out.sort((a,b)=>(b.date||'')>(a.date||'')?1:-1);
-}
-const wm=(imgs,cls='')=>(imgs=imgs.filter(Boolean)).length?`<div class="wm ${cls}" aria-hidden="true">${imgs.join('')}</div>`:'';
-function savedArt(i){
- if(i.kind==='whisper')return wm([pic('whispers',i.o.id,'wm-i')]);
- if(i.kind==='tarot')return wm(i.r.cards.slice(0,3).map(c=>pic('deck',c.id,'wm-i card'+(c.rev?' rev':''))),'fan');
- if(i.kind==='horoscope')return wm([pic('scenes',(i.bk.data||{}).sign,'wm-i')]);
- if(i.kind==='event'){const p=phaseSlug(i.title);return wm([p?pic('moons',p,'wm-i round'):pic('plates','events','wm-i wide')])}
- const two=connSigns(i.c);
- if(two.length===2)return wm([pic('scenes',two[0],'wm-i'),pic('scenes',two[1],'wm-i flip')],'pair');
- return wm([pic('plates','locket','wm-i wide')]);
-}
-const signFig=id=>`<span class="pair-s">${pic('icons',id,'sign-ico')||`<span class="g glyph">${sg(id).g}</span>`}<span class="sign-nm">${sg(id).name}</span></span>`;
-function savedHead(i){
- if(i.kind!=='connection')return `<h3>${esc(i.title)}</h3>${i.sub?`<p class="muted clamp">${esc(i.sub)}</p>`:''}`;
- const c=i.c,two=connSigns(c);
- if(two.length===2)return `${c.name?`<h3>${esc(c.name)}</h3>`:''}<div class="row pair sv-pair">${signFig(two[0])}<span class="amp" aria-hidden="true">+</span>${signFig(two[1])}</div><p class="muted center">${KIND_LABEL[c.kind]}</p>`;
- if(c.kind==='resonance'){const n=x=>{const r=N.clean(x)?N.name(x,S.settings.yMode).expression.r.n:0;return `<span class="pair-s"><span class="num">${r||'·'}</span><span class="sign-nm">${esc(String(x).split(' ')[0])}</span></span>`};
-  return `<div class="row pair sv-pair">${n(c.data.a)}<span class="amp" aria-hidden="true">+</span>${n(c.data.b)}</div><p class="muted center">${KIND_LABEL[c.kind]}</p>`}
- return `<h3>${esc(i.title)}</h3><p class="muted">${KIND_LABEL[c.kind]}</p>`;
-}
-// Remove reuses each kind's own action, so the account copy is deleted too
-const removeBtn=i=>{const [act,attr]=i.kind==='whisper'?['unsave',`data-k="${esc(i.ref)}"`]:i.kind==='tarot'?['delread',`data-id="${esc(i.ref)}"`]:i.kind==='connection'?['delconn',`data-id="${esc(i.ref)}"`]:['unbook',`data-kind="${i.bk.kind}" data-ref="${esc(i.bk.ref)}"`];
- return `<button class="btn ghost sm" data-act="${act}" ${attr}>Remove</button>`};
-function savedView(){
- const f=V.filter.saved||'all',all=savedItems(),items=all.filter(i=>f==='all'||i.kind===f);
- const opts=[['all','All'],['whisper','Whispers'],['tarot','Tarot'],['horoscope','Horoscopes'],['event','Events'],['connection','Connections']];
- const pop=V.spop&&all.find(i=>i.kind===V.spop.kind&&i.ref===V.spop.ref);
- return `<div class="stack"><h1>Saved</h1>${chips('Show',opts,f,'fsaved')}${items.length?items.map(i=>`<article class="item sv">${savedArt(i)}<div class="sv-in"><div class="item-h"><span class="badge">${(opts.find(o=>o[0]===i.kind)||['',''])[1].replace(/s$/,'')}</span><span class="muted">${i.date?ymdLong(i.date,{day:'numeric',month:'short',year:'numeric'}):''}</span></div>${savedHead(i)}<div class="row"><button class="btn ghost sm" data-act="sopen" data-kind="${i.kind}" data-ref="${esc(i.ref)}">Open</button>${removeBtn(i)}</div></div></article>`).join(''):empty('Nothing saved here yet','Save a Whisper, a tarot reading, a forecast, a celestial event or a connection and it will gather here.')}${pop?savedPop(pop):''}</div>`;
-}
-// the pop-up for a saved item: the reading, card, forecast, event or comparison in full
-function savedPop(i){
- const when=i.date?ymdLong(i.date,{day:'numeric',month:'long',year:'numeric'}):'';
- let h='';
- if(i.kind==='whisper'){const o=i.o,note=S.notes[i.date];
-  h=`<div class="label center">Whisper · ${when}</div><h2 class="center">${esc(o.title)}</h2><div class="sv-card"><div class="scene flat"><div class="face front daily">${whisperFace(o)}</div></div></div>${o.ref?`<div class="label">Sit with it</div><p class="quote sm-q">${o.ref}</p>`:''}<div class="label">My reflection</div>${note?`<p class="pre">${esc(note)}</p>`:'<p class="muted">No reflection written.</p>'}`}
- else if(i.kind==='tarot'){const r=i.r;
-  h=`<div class="label center">Tarot · ${when}</div><h2 class="center">${esc(i.title)}</h2>${r.q?`<p class="quote center sm-q">“${esc(r.q)}”</p>`:''}${r.cards.map(c=>{const d=DECK.find(x=>x.id===c.id)||{};return `<div class="sv-tc">${pic('deck',c.id,'sv-tarot'+(c.rev?' rev':''))}<div><div class="label">${esc(c.pos||'')}</div><h3>${esc(c.name)}${c.rev?' <em class="muted">reversed</em>':''}</h3><p class="small">${esc((c.rev?d.revm:d.upm)||'')}</p></div></div>`}).join('')}<div class="rule"></div><div class="label">My note</div>${r.note?`<p class="pre">${esc(r.note)}</p>`:'<p class="muted">No note kept with this reading.</p>'}`}
- else if(i.kind==='horoscope'){const d=i.bk.data||{};
-  h=`<div class="label center">${(HCATS.find(c=>c[0]===d.cat)||['',''])[1]} · ${cap(d.period||'')}</div><h2 class="center">${sg(d.sign).name}</h2>${pic('icons',d.sign,'sign-ico center-ico')}${d.start?`<p class="muted center">${ymdLong(d.start,{day:'numeric',month:'long'})}${d.end&&d.end!==d.start?' – '+ymdLong(d.end,{day:'numeric',month:'long',year:'numeric'}):''}</p>`:''}${d.focus?`<p class="h-focus">${esc(d.focus)}</p>`:''}<p>${esc(d.body||'')}</p>`}
- else if(i.kind==='event'){const d=i.bk.data||{},e=findEvent(i.ref,d.date),x=e?evInfo(e):null,p=phaseSlug(i.title);
-  h=`<div class="label center">Celestial event</div><h2 class="center">${esc(d.name||'')}</h2>${p?pic('moons',p,'moon-pic big'):''}<p class="muted center">${esc(d.when||'')}</p>${x?`<div class="label">Astronomy</div><p>${x.fact}</p><div class="label">Astrological symbolism</div><p>${x.sym}</p><div class="label">Reflection</div><p class="quote sm-q">${x.ref}</p>`:''}`}
- else{const c=i.c,sec=x=>`<section class="pop-sec">${x}</section>`;
-  h=`<div class="label center">${KIND_LABEL[c.kind]}</div><h2 class="center">${esc(connTitle(c))}</h2>`+(c.kind==='zodiac'?matchBody(c.data.a,c.data.b)
-   :c.kind==='resonance'?resonanceRows(c.data.a,c.data.b,sec)+resMethod()
-   :!A||!K||!hasBirthDate()?'<p class="muted">Add your birth details in Blueprint to see this comparison.</p>':synBody(Object.assign({},c.data.them)))+(c.note?`<div class="rule"></div><div class="label">My note</div><p class="pre">${esc(c.note)}</p>`:'')}
- return `<div class="pop" role="dialog" aria-modal="true" aria-label="${esc(i.title)}" data-act="spopclose"><div class="pop-box sv-pop">${savedArt(i).replace('class="wm','class="wm pop-wm')}<button class="pop-x" data-act="spopclose" aria-label="Close">×</button><div class="sv-in">${h}</div></div></div>`;
-}
 // a tarot card's face: its painted artwork (art/deck) and the numeral and title set by the app
 const tarotFace=c=>`${pic('deck',c.id,'tarot-art')}<div class="tf-num">${c.arcana==='major'?c.num:''}</div><div class="tf-plate"><span>${c.name}</span></div>`;
 function cardScene(c,flipped,id){
@@ -442,7 +386,7 @@ function tarotView(){
  const cards=T.drawn,done=cards.every(c=>c.shown);
  return `<div class="stack"><h1>${sp.n}</h1>${T.q?`<p class="quote center">“${esc(T.q)}”</p>`:''}<p class="muted center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p><div class="rd-grid${cards.length===1?' solo':''}">${cards.map((c,i)=>`<div class="rd-cell"><div class="label">${c.pos}</div><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face bare">${pic('deck',c.id,'tarot-art')}</div></div></div></div>`).join('')}</div>
  ${done?panel(`<h3>Interpretation</h3>${T.ai?`<div class="ai-read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<div class="label">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</div><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><div class="label">The reading as a whole</div>${T.ai.whole.split(/\n+/).map(x=>`<p>${esc(x)}</p>`).join('')}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}<p class="quote" style="font-size:1.1rem">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted">Symbols for reflection, not predictions.</p>
- ${T.savedId?`<p class="center"><strong>Saved to Readings.</strong></p>`:`<div class="field"><label for="tnote">A note to keep with this reading (optional)</label><textarea id="tnote" placeholder="What stood out to you?">${esc(T.note||'')}</textarea></div><button class="btn" data-act="saveread">Save reading</button>`}<button class="btn ghost" data-act="newread">New reading</button>`,'glass'):''}
+ ${T.savedId?`<p class="center"><strong>Saved to your journal.</strong></p>`:`<div class="field"><label for="tnote">A note to keep with this reading (optional)</label><textarea id="tnote" placeholder="What stood out to you?">${esc(T.note||'')}</textarea></div><button class="btn" data-act="saveread">Save reading</button>`}<button class="btn ghost" data-act="newread">New reading</button>`,'glass'):''}
  ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
 }
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
@@ -467,11 +411,32 @@ const JPAPER=['sleeping-moon','sun-face','pressed-roses','compass-rose','night-s
 // the journal's owner: a name given in the journal itself, or else the name from Birth Chart
 const journalName=()=>((S.settings||{}).jname||S.fullName||S.name||'').trim();
 function journalPages(){
+ // a Whisper is kept when it was saved or written about; horoscopes and events are the bookmarks; matches the connections
+ const wd=[...new Set([...S.saved.map(x=>x.date),...Object.keys(S.notes).filter(d=>S.notes[d])])];
  const e=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),
-  ...Object.entries(S.notes).filter(([,n])=>n).map(([d,n])=>({t:'n',day:d,n,o:cardFor(d)})),
-  ...S.readings.filter(r=>r.note).map(r=>({t:'r',day:r.date,at:r.at,r}))]
+  ...wd.map(d=>({t:'n',day:d,n:S.notes[d]||'',o:cardFor(d)})),
+  ...S.readings.map(r=>({t:'r',day:r.date,at:r.at,r})),
+  ...S.bookmarks.map(b=>{const d=b.data||{};return b.kind==='horoscope'?{t:'h',day:d.start||(b.at||'').slice(0,10),at:b.at,b}:{t:'e',day:(d.date||b.at||'').slice(0,10),at:b.at,b}}),
+  ...S.conns.map(c=>({t:'c',day:(c.at||'').slice(0,10),at:c.at,c}))]
   .sort((a,b)=>a.day>b.day?1:a.day<b.day?-1:((a.at||'')>(b.at||'')?1:-1));
  return [{t:'cover'},...e,{t:'new'}];
+}
+// the key under which a page's note is being edited, and the data-* that names its item for Edit and Delete
+const jKey=p=>p.t==='n'?'fortune:'+p.day:p.t==='r'?'reading:'+p.r.id:p.t==='c'?'conn:'+p.c.id:'';
+const jRef=p=>p.t==='n'?` data-kind="fortune" data-id="${esc(p.day)}"`:p.t==='r'?` data-kind="reading" data-id="${esc(p.r.id)}"`:p.t==='c'?` data-kind="conn" data-id="${esc(p.c.id)}"`
+ :` data-kind="bk" data-bk="${esc(p.b.kind)}" data-id="${esc(p.b.ref)}"`;
+// the two signs of a match, pasted in side by side
+const jPair=ids=>{const im=ids.map(id=>pic('icons',id,'jp-card jp-sign')||`<span class="jp-glyph">${sg(id).g}</span>`);return `<div class="jp-cards jp-pair">${im[0]}<span class="jp-amp">+</span>${im[1]}</div>`};
+// what each kind of page shows above its note: its cards, signs or moon, its name and a line about it
+function jHead(p){
+ if(p.t==='n')return `${jWhisperArt(p.o)}<p class="jp-title">${esc(p.o.title)}</p><p class="jp-prompt">${p.o.ref}</p>`;
+ if(p.t==='r')return `${jTarotArt(p.r)}<p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${jCardsLine(p.r)}</p>`;
+ if(p.t==='h'){const d=p.b.data||{},im=pic('icons',d.sign,'jp-card jp-sign');
+  return `${im?`<div class="jp-cards one">${im}</div>`:''}<p class="jp-title">${sg(d.sign).name}</p><p class="jp-prompt">${(HCATS.find(c=>c[0]===d.cat)||['',''])[1]} · ${cap(d.period||'')} horoscope</p>${d.focus?`<p class="jp-lines">${esc(d.focus)}</p>`:''}<p class="jp-lines jp-text">${esc(d.body||'')}</p>`}
+ if(p.t==='e'){const d=p.b.data||{},ph=phaseSlug(d.name||''),im=ph?pic('moons',ph,'jp-card jp-moon'):'',ev=findEvent(p.b.ref,d.date),x=ev?evInfo(ev):null;
+  return `${im?`<div class="jp-cards one">${im}</div>`:''}<p class="jp-title">${esc(d.name||'')}</p><p class="jp-prompt">${esc(d.when||'')}</p>${x?`<p class="jp-lines jp-text">${x.sym}</p>`:''}`}
+ const c=p.c,two=connSigns(c),nums=c.kind==='resonance'?[c.data.a,c.data.b].map(x=>N.clean(x)?N.name(x,S.settings.yMode).expression.r.n:'·'):null;
+ return `${two.length===2?jPair(two):''}<p class="jp-title">${esc(connTitle(c))}</p><p class="jp-prompt">${KIND_LABEL[c.kind]}${nums?` · Expression ${nums[0]} and ${nums[1]}`:''}</p><p class="jp-open"><button class="link" data-act="openconn" data-id="${esc(c.id)}">Read the full ${c.kind==='zodiac'?'match':'comparison'}</button></p>`;
 }
 const jIdx=pages=>V.jpage==null?0:Math.max(0,Math.min(pages.length-1,V.jpage));
 // the card a reflection was written about, pasted onto the page beside the words
@@ -496,11 +461,9 @@ function jPage(p,i,n){
  if(p.t==='new'){day=dkey();h=jForm(V.jdraft||{kind:'reflection',title:'',body:''})}
  else if(p.t==='j'){const j=p.j;day=j.day;
   h=V.jedit===j.id?jForm(V.jdraft||j):`${j.title?`<p class="jp-title">${esc(j.title)}</p>`:''}<p class="jp-lines jp-text">${esc(j.body)}</p>`}
- else{const w=p.t==='n',key=w?'fortune:'+p.day:'reading:'+p.r.id,note=w?p.n:p.r.note;day=p.day;
-  const head=w?`${jWhisperArt(p.o)}<p class="jp-title">${esc(p.o.title)}</p><p class="jp-prompt">${p.o.ref}</p>`
-   :`${jTarotArt(p.r)}<p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${jCardsLine(p.r)}</p>`;
-  h=V.edit===key?`${head}<label class="sr-only" for="ed">Note</label><textarea id="ed" class="jp-lines">${esc(note||'')}</textarea>`:`${head}<p class="jp-lines jp-text">${esc(note)}</p>`}
- return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><p class="jp-date" data-w="${ymdLong(day,{weekday:'long'})}" data-d="${ymdLong(day,{day:'numeric',month:'long',year:'numeric'})}">${ymdLong(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p><div class="jp-in">${h}</div><div class="jp-bar" aria-hidden="true"><i></i></div><span class="jp-num">${i}</span></div></div>`;
+ else{const key=jKey(p),note=p.t==='n'?p.n:p.t==='r'?p.r.note:p.t==='c'?p.c.note:'';day=p.day;
+  h=key&&V.edit===key?`${jHead(p)}<label class="sr-only" for="ed">My note</label><textarea id="ed" class="jp-lines" placeholder="What does it stir in you?">${esc(note||'')}</textarea>`:`${jHead(p)}${note?`<p class="jp-lines jp-text">${esc(note)}</p>`:''}`}
+ return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)">${day?`<p class="jp-date" data-w="${ymdLong(day,{weekday:'long'})}" data-d="${ymdLong(day,{day:'numeric',month:'long',year:'numeric'})}">${ymdLong(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>`:''}<div class="jp-in">${h}</div><div class="jp-bar" aria-hidden="true"><i></i></div><span class="jp-num">${i}</span></div></div>`;
 }
 // what can be done with the open page, set beneath the page count and arrows
 function jActs(p){
@@ -508,8 +471,9 @@ function jActs(p){
  if(p.t==='cover')return V.jnameEdit?b('jname','Save','','btn sm')+b('jnamecancel','Cancel'):b(journalName()?'jflip':'jname','Open',journalName()?' data-to="last"':'','btn sm');
  if(p.t==='new')return b('savejournal','Save','','btn sm');
  if(p.t==='j'){const id=` data-id="${esc(p.j.id)}"`;return V.jedit===p.j.id?b('savejournal','Save changes','','btn sm')+b('canceljournal','Cancel'):b('editjournal','Edit',id)+b('deljournal','Delete',id)+more}
- const w=p.t==='n',x=` data-kind="${w?'fortune':'reading'}" data-id="${esc(w?p.day:p.r.id)}"`;
- return V.edit===(w?'fortune:'+p.day:'reading:'+p.r.id)?b('savenoteed','Save',x,'btn sm')+b('canceledit','Cancel'):b('editnote','Edit',x)+b('deljnote','Delete',x)+more;
+ const k=jKey(p),x=jRef(p);
+ if(k&&V.edit===k)return b('savenoteed','Save',x,'btn sm')+b('canceledit','Cancel');
+ return (k?b('editnote','Edit',x):'')+b('deljpage','Delete',x)+more;
 }
 // the date is written as large as its header allows, on one line
 function jfitDate(el){
@@ -523,7 +487,10 @@ function jName(p,i,n){
  if(p.t==='new')return 'A new page';
  if(p.t==='j')return p.j.title?esc(p.j.title):`Page ${i} of ${n-2}`;
  if(p.t==='n')return esc(p.o.title);
- return p.r.cards.map(x=>esc(x.name)).join(', ');
+ if(p.t==='r')return p.r.cards.map(x=>esc(x.name)).join(', ');
+ if(p.t==='h'){const d=p.b.data||{};return `${sg(d.sign).name} · ${(HCATS.find(c=>c[0]===d.cat)||['',''])[1]}`}
+ if(p.t==='e')return esc((p.b.data||{}).name||'');
+ return esc(connTitle(p.c));
 }
 // a page's textarea grows by whole lines, so the page scrolls (not the box) and the words keep to the page's rules
 function jfit(el){el.style.height='auto';const lh=parseFloat(getComputedStyle(el).lineHeight)||28;el.style.height=Math.max(4,Math.ceil((el.scrollHeight-1)/lh))*lh+'px';jbar(el.closest('.jp-front'))}
@@ -715,7 +682,6 @@ views.affinity=()=>{
  const t=tab();
  if(t==='soul-resonance')return resonanceView();
  if(t==='synastry')return synastryView();
- if(t==='connections')return connectionsView();
  const a=V.love.a||S.sign,b=V.love.b;let res='';
  if(V.love.done&&a&&b){const saved=S.conns.some(c=>c.kind==='zodiac'&&c.data.a===a&&c.data.b===b);
   res=panel(`${plate('sunmoon')}${matchBody(a,b)}<div class="row"><button class="btn ghost sm" data-act="saveconn" data-kind="zodiac">${saved?'Saved':'Save connection'}</button><button class="btn ghost sm" data-act="kasask" data-q="What do ${sg(a).name} and ${sg(b).name} traditionally bring out in each other?">Ask Kassandra</button></div>`);}
@@ -770,12 +736,6 @@ function synastryView(){
   out=panel(synBody(Y)+`<div class="row"><button class="btn ghost sm" data-act="saveconn" data-kind="synastry">${saved?'Saved':'Save connection'}</button></div>`);
  }
  return `<div class="stack"><h1>Synastry</h1><p class="muted center">How two birth charts speak to each other.</p>${form}${out}</div>`;
-}
-function connectionsView(){
- return `<div class="stack"><h1>Connections</h1><p class="muted center">Your saved comparisons. They are private: only you can see them.</p>${plate('connections')}${S.conns.length?S.conns.map(c=>{const open=V.edit==='conn:'+c.id;
-  return `<article class="item"><div class="item-h"><span class="badge">${KIND_LABEL[c.kind]}</span>${c.at?`<span class="muted">${shortD(new Date(c.at))}</span>`:''}</div>${open?`<div class="field"><label for="cn">Name</label><input type="text" id="cn" value="${esc(c.name)}" placeholder="${esc(connTitle(Object.assign({},c,{name:''})))}"></div><div class="field"><label for="cnote">Note</label><textarea id="cnote">${esc(c.note||'')}</textarea></div><div class="row"><button class="btn sm" data-act="saveconnedit" data-id="${c.id}">Save</button><button class="btn ghost sm" data-act="canceledit">Cancel</button></div>`
-   :`<h3>${esc(connTitle(c))}</h3>${c.name&&c.kind==='zodiac'?`<p class="muted">${sg(c.data.a).name} + ${sg(c.data.b).name}</p>`:''}${c.note?`<p class="item-note">“${esc(c.note)}”</p>`:''}<div class="row"><button class="btn ghost sm" data-act="openconn" data-id="${c.id}">Open</button><button class="btn ghost sm" data-act="editconn" data-id="${c.id}">Edit</button><button class="btn ghost sm" data-act="delconn" data-id="${c.id}">Delete</button></div>`}</article>`}).join('')
-  :empty('No connections yet','Compare two signs, two names or two charts, then save it to keep it here.')}</div>`;
 }
 
 /* ----- Blueprint ----- */
@@ -1102,7 +1062,7 @@ function reveal(){
 }
 function bookmark(kind,ref,data){
  const i=S.bookmarks.findIndex(b=>b.kind===kind&&b.ref===ref);
- if(i>=0){S.bookmarks.splice(i,1);C.deleteBookmark&&C.deleteBookmark(kind,ref);toast('Removed from Saved')}
+ if(i>=0){S.bookmarks.splice(i,1);C.deleteBookmark&&C.deleteBookmark(kind,ref);toast('Removed from your journal')}
  else{const b={id:uuid(),kind,ref,data,at:new Date().toISOString()};S.bookmarks.push(b);C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()});toast('Saved')}
  save();render();
 }
@@ -1124,11 +1084,11 @@ function saveConn(kind){
  if(kind==='zodiac'){const a=V.love.a||S.sign,b=V.love.b;data={a,b};dupe=S.conns.find(c=>c.kind==='zodiac'&&c.data.a===a&&c.data.b===b)}
  else if(kind==='resonance'){data={a:V.res.a||S.fullName||S.name,b:V.res.b};dupe=S.conns.find(c=>c.kind==='resonance'&&c.data.a===data.a&&c.data.b===data.b)}
  else{const Y=V.syn;data={them:{name:Y.name,date:Y.date,time:Y.unk?'':Y.time,unk:!!Y.unk||!Y.time,place:Y.place,lat:Y.lat,lon:Y.lon,tz:Y.tz}};dupe=S.conns.find(c=>c.kind==='synastry'&&(c.data.them||{}).date===Y.date&&(c.data.them||{}).name===Y.name)}
- if(dupe)return toast('Already in Connections');
+ if(dupe)return toast('Already in your journal');
  const c={id:uuid(),kind,name:kind==='synastry'?(V.syn.name||''):'',data,note:'',at:new Date().toISOString()};
  S.conns.push(c);save();C.saveConnection&&C.saveConnection(c).then(()=>{c.sy=true;save()});
  if(kind==='zodiac'&&C.saveMatch)C.saveMatch(data.a,data.b);
- toast('Saved to Connections');render();
+ toast('Saved to your journal');render();
 }
 function exportData(){
  const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),account:S.email,profile:{sign:S.sign,name:S.name,fullName:S.fullName,altName:S.altName,birth:S.birth,birthConsent:S.birthConsent,settings:S.settings,notifications:S.notif},whispers:Object.keys(S.revealed).sort().map(d=>({day:d,card:cardFor(d).title,saved:S.saved.some(x=>x.date===d),note:S.notes[d]||''})),journal:S.journal,tarotReadings:S.readings,connections:S.conns,bookmarks:S.bookmarks},null,2)],{type:'application/json'});
@@ -1170,17 +1130,17 @@ document.addEventListener('click',e=>{
  if(a==='editconn'){V.edit='conn:'+t.dataset.id;return render()}
  if(a==='saveconnedit'){const c=S.conns.find(x=>x.id===t.dataset.id);if(c){c.name=$('#cn').value.trim();c.note=$('#cnote').value.trim();save();C.saveConnection&&C.saveConnection(c)}V.edit=null;toast('Saved');return render()}
  if(a==='delconn'){const c=S.conns.find(x=>x.id===t.dataset.id);if(c&&confirm('Delete this connection?')){S.conns=S.conns.filter(x=>x!==c);save();C.deleteConnection&&C.deleteConnection(c.id);if(c.kind==='zodiac'&&C.deleteMatch)C.deleteMatch(c.data.a,c.data.b);toast('Deleted')}return render()}
- if(a==='savecard'){const k=dkey(),c=todayCard(),i=S.saved.findIndex(x=>x.date===k);if(i>=0){S.saved.splice(i,1);toast('Removed from saved')}else{S.saved.push({id:c.id,date:k});toast('Saved to Readings')}save();syncFortune(k);return render()}
+ if(a==='savecard'){const k=dkey(),c=todayCard(),i=S.saved.findIndex(x=>x.date===k);if(i>=0){S.saved.splice(i,1);toast('Removed from your journal')}else{S.saved.push({id:c.id,date:k});toast('Saved to your journal')}save();syncFortune(k);return render()}
  if(a==='unsave'){const k=t.dataset.k;S.saved=S.saved.filter(x=>x.date!==k);save();syncFortune(k);return render()}
  if(a==='savenote'){const k=dkey();S.notes[k]=$('#note').value;save();syncFortune(k);return toast('Reflection saved')}
  if(a==='editnote'){V.edit=t.dataset.kind+':'+t.dataset.id;render();const x=$('#ed');if(x)x.focus();return}
  if(a==='canceledit'){V.edit=null;return render()}
  if(a==='savenoteed'){const v=$('#ed').value.trim(),id=t.dataset.id;
   if(t.dataset.kind==='fortune'){S.notes[id]=v;syncFortune(id)}
+  else if(t.dataset.kind==='conn'){const c=S.conns.find(x=>x.id===id);if(c){c.note=v;C.saveConnection&&C.saveConnection(c)}}
   else{const r=S.readings.find(x=>x.id===id);if(r){r.note=v;if(r.rid)C.updateReading&&C.updateReading(r.rid,v)}}
-  save();V.edit=null;if(V.sec==='home'&&tab()==='journal'){V.jdraft=null;const k=t.dataset.kind==='fortune';V.jpage=journalPages().findIndex(p=>k?p.t==='n'&&p.day===id:p.t==='r'&&p.r.id===id);if(V.jpage<0)V.jpage=null}toast(t.dataset.kind==='fortune'?'Reflection saved':'Note saved');return render()}
+  save();V.edit=null;if(V.sec==='home'&&tab()==='journal'){V.jdraft=null;const key=(t.dataset.kind==='conn'?'conn:':t.dataset.kind==='fortune'?'fortune:':'reading:')+id;V.jpage=journalPages().findIndex(p=>jKey(p)===key);if(V.jpage<0)V.jpage=null}toast(t.dataset.kind==='fortune'?'Reflection saved':'Note saved');return render()}
  if(a==='delread'){const r=S.readings.find(x=>x.id===t.dataset.id);if(r&&confirm('Delete this reading?')){S.readings=S.readings.filter(x=>x!==r);save();if(r.rid)C.deleteReading&&C.deleteReading(r.rid);toast('Reading deleted')}return render()}
- if(a==='fsaved'){V.filter.saved=t.dataset.k;return render()}
  if(a==='fevents'){V.filter.events=t.dataset.k;return render()}
  if(a==='jname'){const v=$('#jn').value.trim();if(!v)return toast('Write your name first');const opening=!V.jnameEdit;S.settings.jname=v;if(!S.fullName)S.fullName=v;V.jnameEdit=false;save();syncProfile();render();if(opening)jflip(journalPages().length-1);return}
  if(a==='jnameedit'){V.jnameEdit=true;render();const x=$('#jn');if(x){x.focus();x.select()}return}
@@ -1193,9 +1153,13 @@ document.addEventListener('click',e=>{
  if(a==='editjournal'){const j=S.journal.find(x=>x.id===t.dataset.id);if(j){V.jedit=j.id;V.jdraft={kind:j.kind,title:j.title,body:j.body};render();window.scrollTo(0,0)}return}
  if(a==='canceljournal'){V.jedit=null;V.jdraft=null;return render()}
  if(a==='deljournal'){const j=S.journal.find(x=>x.id===t.dataset.id);if(j&&confirm('Delete this journal entry?')){S.journal=S.journal.filter(x=>x!==j);save();C.deleteJournal&&C.deleteJournal(j.id);toast('Entry deleted');if(V.jpage!=null)V.jpage=Math.max(1,V.jpage-1)}return render()}
- if(a==='deljnote'){const id=t.dataset.id,f=t.dataset.kind==='fortune';if(!confirm(f?'Delete this reflection?':'Delete your note on this reading? The reading stays in Saved.'))return;
-  if(f){S.notes[id]='';syncFortune(id)}else{const r=S.readings.find(x=>x.id===id);if(r){r.note='';if(r.rid)C.updateReading&&C.updateReading(r.rid,'')}}
-  save();toast(f?'Reflection deleted':'Note deleted');if(V.jpage!=null)V.jpage=Math.max(1,V.jpage-1);return render()}
+ if(a==='deljpage'){const id=t.dataset.id,k=t.dataset.kind;
+  if(!confirm(k==='fortune'?'Remove this Whisper and your reflection from the journal?':k==='reading'?'Delete this reading and its note?':k==='conn'?'Delete this connection?':'Remove this from your journal?'))return;
+  if(k==='fortune'){S.saved=S.saved.filter(x=>x.date!==id);S.notes[id]='';syncFortune(id)}
+  else if(k==='reading'){const r=S.readings.find(x=>x.id===id);if(r){S.readings=S.readings.filter(x=>x!==r);if(r.rid)C.deleteReading&&C.deleteReading(r.rid)}}
+  else if(k==='conn'){const c=S.conns.find(x=>x.id===id);if(c){S.conns=S.conns.filter(x=>x!==c);C.deleteConnection&&C.deleteConnection(c.id);if(c.kind==='zodiac'&&C.deleteMatch)C.deleteMatch(c.data.a,c.data.b)}}
+  else{const i=S.bookmarks.findIndex(b=>b.kind===t.dataset.bk&&b.ref===id);if(i>=0){S.bookmarks.splice(i,1);C.deleteBookmark&&C.deleteBookmark(t.dataset.bk,id)}}
+  save();toast('Removed from your journal');if(V.jpage!=null)V.jpage=Math.max(1,V.jpage-1);return render()}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/'),h=horoscope(sign,cat,period);return bookmark('horoscope',t.dataset.ref,{sign,cat,period,key,start:h.per.start,end:h.per.end,body:h.body,focus:h.focus})}
  if(a==='bookev'){const e=upcoming().find(x=>evRef(x)===t.dataset.ref);if(e)bookmark('event',t.dataset.ref,{name:e.name,date:e.date.toISOString(),when:evWhen(e)});return}
  if(a==='unbook'){const i=S.bookmarks.findIndex(b=>b.kind===t.dataset.kind&&b.ref===t.dataset.ref);if(i>=0)bookmark(t.dataset.kind,t.dataset.ref);return}
@@ -1229,11 +1193,9 @@ document.addEventListener('click',e=>{
  if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
- if(a==='sopen'){V.spop={kind:t.dataset.kind,ref:t.dataset.ref};return render()}
- if(a==='spopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.spop=null;return render()}
  if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const note=($('#tnote')||{value:''}).value.trim(),r={id:uuid(),spread:T.spread,q:T.q,date:dkey(),at:new Date().toISOString(),note,cards:T.drawn.map(c=>({id:c.id,pos:c.pos,name:c.name,rev:c.rv}))};
-  S.readings.push(r);T.savedId=r.id;save();C.saveReading&&C.saveReading(r).then(id=>{if(id){r.rid=id;r.id=id;r.sy=true;T.savedId=id;save()}});toast('Saved to Readings');return render()}
+  S.readings.push(r);T.savedId=r.id;save();C.saveReading&&C.saveReading(r).then(id=>{if(id){r.rid=id;r.id=id;r.sy=true;T.savedId=id;save()}});toast('Saved to your journal');return render()}
  if(a==='tctx'){V.tctx=t.dataset.k;return render()}
  if(a==='newread'){T.stage='setup';T.q='';T.ai='';T.aiState='';T.savedId=null;V.tpop=null;render();return window.scrollTo(0,0)}
 });
@@ -1246,7 +1208,6 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Enter'&&e.target.id==='jn'){e.preventDefault();return tap($('[data-act=jname]'))}
  if(e.key==='Escape'&&KS.open)return kasClose();
  if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}
- if(e.key==='Escape'&&V.spop){V.spop=null;return render()}
  const w=e.target.closest&&e.target.closest('.wheel [data-sign]');
  if(w&&/^Arrow/.test(e.key)){e.preventDefault();const i=SIGNS.findIndex(s=>s.id===w.dataset.sign),d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:-1;return tap($(`.wheel [data-sign="${SIGNS[(i+d+12)%12].id}"]`))}
  if((e.key==='Enter'||e.key===' ')&&e.target.matches('.scene[data-act],[data-planet],.wheel [data-sign]')){e.preventDefault();tap(e.target)}
