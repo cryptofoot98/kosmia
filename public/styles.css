@@ -506,21 +506,23 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 /* the writing box sits in the same place on the page, centred between its margins, below the date in the header; it
    scrolls only up and down, never sideways, and its own thin bar at the right shows when the words run past the foot */
 .jp-front{container-type:inline-size}
-.jp-date{position:absolute;top:var(--t);left:max(10%,calc(var(--l) - 3%));right:max(10%,calc(var(--r) - 3%));height:var(--lh);margin:0;line-height:var(--lh);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Parisienne',cursive;font-size:clamp(.85rem,5.3cqw,1.2rem);color:var(--ink2)}
-.jp-in{position:absolute;top:calc(var(--t) + var(--lh) + 6px);right:var(--r);bottom:var(--b);left:var(--l);overflow-x:hidden;overflow-y:auto;overscroll-behavior:none;touch-action:pan-y;scrollbar-width:none;line-height:var(--lh);
+.jp-date{position:absolute;top:var(--hy);left:var(--hl);right:var(--hr);margin:0;line-height:1.5;text-align:center;white-space:nowrap;overflow:hidden;font-family:'Parisienne',cursive;font-size:clamp(1.1rem,7.4cqw,1.75rem);color:var(--ink)}
+.jp-in{position:absolute;top:var(--t);right:var(--r);bottom:var(--b);left:var(--l);overflow-x:hidden;overflow-y:auto;overscroll-behavior:none;touch-action:pan-y;scrollbar-width:none;line-height:var(--lh);
  background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 -3px/100% var(--lh) local}
 .jp-in::-webkit-scrollbar{display:none}
 .jp-in>*{margin:0;line-height:var(--lh);max-width:100%}
-.jp-bar{position:absolute;display:none;top:calc(var(--t) + var(--lh) + 6px);bottom:var(--b);right:calc(var(--r) - 14px);width:12px;cursor:pointer;touch-action:none}
+.jp-bar{position:absolute;display:none;top:var(--t);bottom:var(--b);right:calc(var(--r) - 14px);width:12px;cursor:pointer;touch-action:none}
 .jp-bar.on{display:block}
 .jp-bar::before{content:'';position:absolute;top:0;bottom:0;left:5px;width:2px;border-radius:1px;background:var(--rule)}
 .jp-bar i{position:absolute;top:0;left:4px;width:4px;border-radius:2px;background:var(--ink2);opacity:.6}
-.p-sleeping-moon{--t:21%;--r:20%;--b:36%;--l:20%}
-.p-sun-face{--t:27%;--r:14%;--b:33%;--l:14%}
-.p-pressed-roses{--t:21%;--r:22%;--b:32%;--l:22%}
-.p-compass-rose{--t:34%;--r:20%;--b:22%;--l:20%}
-.p-night-sky{--t:14%;--r:13%;--b:20%;--l:13%}
-.p-moon-phases{--t:21%;--r:15%;--b:15%;--l:15%}
+/* each paper: where its date sits in the header (--hy, --hl, --hr), and the writing box beneath, centred, running down
+   towards the foot of the page */
+.p-sleeping-moon{--hy:5%;--hl:30%;--hr:20%;--t:22%;--r:20%;--b:13%;--l:20%}
+.p-sun-face{--hy:5%;--hl:10%;--hr:38%;--t:27%;--r:14%;--b:9%;--l:14%}
+.p-pressed-roses{--hy:13%;--hl:27%;--hr:20%;--t:25%;--r:22%;--b:10%;--l:22%}
+.p-compass-rose{--hy:7%;--hl:16%;--hr:42%;--t:34%;--r:20%;--b:9%;--l:20%}
+.p-night-sky{--hy:5%;--hl:22%;--hr:22%;--t:17%;--r:13%;--b:10%;--l:13%}
+.p-moon-phases{--hy:20%;--hl:15%;--hr:15%;--t:29%;--r:15%;--b:13%;--l:15%}
 .jp-num{position:absolute;bottom:4.5%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:.8rem;color:var(--ink2)}
 .jp-title{font-family:var(--serif);font-weight:600;font-size:1.2rem;color:var(--ink)}
 .jp-prompt{font-style:italic;font-size:.92rem;color:var(--ink2)}
@@ -538,7 +540,14 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jpage .jp-tline{display:block;width:100%;height:var(--lh);border:0;border-radius:0;background:transparent;padding:0;line-height:var(--lh);box-shadow:none;outline:none;font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--ink);-webkit-appearance:none;appearance:none}
 .jpage textarea.jp-lines:focus,.jpage .jp-tline:focus{filter:none;box-shadow:none}
 .jpage ::placeholder{color:var(--ink2);opacity:.75}
-.jacts{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 10px}
+.jacts{display:flex;justify-content:center;flex-wrap:nowrap;gap:8px}
+.jacts .btn{white-space:nowrap}
+.jp-date.two{line-height:1.25}
+.jhint{margin-top:-4px}
+.jnav-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:min(60vw,15em)}
+/* words written over the painting keep a soft halo of paper about them */
+.jp-in{text-shadow:0 0 3px rgba(244,236,218,.95),0 0 6px rgba(244,236,218,.7)}
+.jp-front.dark .jp-in{text-shadow:0 0 3px rgba(22,27,42,.95),0 0 6px rgba(22,27,42,.7)}
 .jp-front .link{color:var(--ink2)}
 /* the leather cover, its name tooled in gold within the oval */
 .jp-front.jp-leather{background:#4A2318 url(/art/pages/cover.webp) center/100% 100% no-repeat;border-radius:4px 10px 10px 4px;box-shadow:inset 6px 0 10px -6px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.3)}

@@ -484,8 +484,8 @@ const jForm=d=>`<label class="sr-only" for="jt">Title</label><input type="text" 
 function jCover(){
  const nm=journalName(),ask=!nm||V.jnameEdit;
  return `<div class="jp-front jp-leather"><div class="jc-in"><p class="jc-l">This journal<br><span>belongs to</span></p>
- ${ask?`<label class="sr-only" for="jn">Your name for this journal</label><input type="text" id="jn" class="jc-name-in" value="${esc(nm)}" placeholder="Write your name" autocomplete="nickname" maxlength="40"><div class="jc-acts"><button class="jc-btn" data-act="jname">${nm?'Keep this name':'Open my journal'}</button>${V.jnameEdit?'<button class="jc-link" data-act="jnamecancel">Cancel</button>':''}</div>`
-  :`<p class="jc-name">${esc(nm)}</p><div class="jc-acts"><button class="jc-btn" data-act="jflip" data-to="last">Open my journal</button><button class="jc-link" data-act="jnameedit">Change name</button></div>`}
+ ${ask?`<label class="sr-only" for="jn">Your name for this journal</label><input type="text" id="jn" class="jc-name-in" value="${esc(nm)}" placeholder="Write your name" autocomplete="nickname" maxlength="40">`
+  :`<p class="jc-name">${esc(nm)}</p><div class="jc-acts"><button class="jc-link" data-act="jnameedit">Change name</button></div>`}
  </div></div>`;
 }
 // a page: its date in the header, then the entry on ruled lines in a box centred on the page, with a scroll bar at its
@@ -500,16 +500,30 @@ function jPage(p,i,n){
   const head=w?`${jWhisperArt(p.o)}<p class="jp-title">${esc(p.o.title)}</p><p class="jp-prompt">${p.o.ref}</p>`
    :`${jTarotArt(p.r)}<p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${jCardsLine(p.r)}</p>`;
   h=V.edit===key?`${head}<label class="sr-only" for="ed">Note</label><textarea id="ed" class="jp-lines">${esc(note||'')}</textarea>`:`${head}<p class="jp-lines jp-text">${esc(note)}</p>`}
- return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><p class="jp-date">${ymdLong(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p><div class="jp-in">${h}</div><div class="jp-bar" aria-hidden="true"><i></i></div><span class="jp-num">${i}</span></div></div>`;
+ return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><p class="jp-date" data-w="${ymdLong(day,{weekday:'long'})}" data-d="${ymdLong(day,{day:'numeric',month:'long',year:'numeric'})}">${ymdLong(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p><div class="jp-in">${h}</div><div class="jp-bar" aria-hidden="true"><i></i></div><span class="jp-num">${i}</span></div></div>`;
 }
 // what can be done with the open page, set beneath the page count and arrows
 function jActs(p){
- const b=(act,l,x='',cls='btn ghost sm')=>`<button class="${cls}" data-act="${act}"${x}>${l}</button>`,more=b('jflip','Write a new page',' data-to="last"');
- if(p.t==='cover')return '';
- if(p.t==='new')return b('savejournal','Write it in','','btn sm');
+ const b=(act,l,x='',cls='btn ghost sm')=>`<button class="${cls}" data-act="${act}"${x}>${l}</button>`,more=b('jflip','New page',' data-to="last"');
+ if(p.t==='cover')return V.jnameEdit?b('jname','Save','','btn sm')+b('jnamecancel','Cancel'):b(journalName()?'jflip':'jname','Open',journalName()?' data-to="last"':'','btn sm');
+ if(p.t==='new')return b('savejournal','Save','','btn sm');
  if(p.t==='j'){const id=` data-id="${esc(p.j.id)}"`;return V.jedit===p.j.id?b('savejournal','Save changes','','btn sm')+b('canceljournal','Cancel'):b('editjournal','Edit',id)+b('deljournal','Delete',id)+more}
  const w=p.t==='n',x=` data-kind="${w?'fortune':'reading'}" data-id="${esc(w?p.day:p.r.id)}"`;
  return V.edit===(w?'fortune:'+p.day:'reading:'+p.r.id)?b('savenoteed','Save',x,'btn sm')+b('canceledit','Cancel'):b('editnote','Edit',x)+b('deljnote','Delete',x)+more;
+}
+// the date is written as large as its header allows, on one line
+function jfitDate(el){
+ if(el.classList.contains('two')){el.textContent=`${el.dataset.w}, ${el.dataset.d}`;el.classList.remove('two')}
+ const fit=min=>{el.style.fontSize='';let f=parseFloat(getComputedStyle(el).fontSize);while(el.scrollWidth>el.clientWidth+1&&f>min){f-=1;el.style.fontSize=f+'px'}return el.scrollWidth<=el.clientWidth+1};
+ // too long for a generous size: the weekday goes above the date, each as large as fits
+ if(!fit(19)&&el.dataset.w){el.innerHTML=`${el.dataset.w}<br>${el.dataset.d}`;el.classList.add('two');fit(14)}
+}
+// what the open page is, named beneath it: its title, or the card it was written about
+function jName(p,i,n){
+ if(p.t==='new')return 'A new page';
+ if(p.t==='j')return p.j.title?esc(p.j.title):`Page ${i} of ${n-2}`;
+ if(p.t==='n')return esc(p.o.title);
+ return p.r.cards.map(x=>esc(x.name)).join(', ');
 }
 // a page's textarea grows by whole lines, so the page scrolls (not the box) and the words keep to the page's rules
 function jfit(el){el.style.height='auto';const lh=parseFloat(getComputedStyle(el).lineHeight)||28;el.style.height=Math.max(4,Math.ceil((el.scrollHeight-1)/lh))*lh+'px';jbar(el.closest('.jp-front'))}
@@ -523,7 +537,7 @@ function jbar(f){
  th.style.height=h+'px';th.style.transform=`translateY(${((H-h)*s.scrollTop/(s.scrollHeight-s.clientHeight)).toFixed(1)}px)`;
 }
 document.addEventListener('input',e=>{if(e.target.matches&&e.target.matches('.jpage textarea'))jfit(e.target)});
-addEventListener('resize',()=>document.querySelectorAll('.jpage .jp-front').forEach(f=>{const s=f.querySelector('.jp-in'),b=f.querySelector('.jp-bar');if(!s)return;delete s.dataset.snap;s.style.height=s.style.bottom=b.style.height=b.style.bottom='';jbar(f)}));
+addEventListener('resize',()=>document.querySelectorAll('.jpage .jp-front').forEach(f=>{f.querySelectorAll('.jp-date').forEach(jfitDate);const s=f.querySelector('.jp-in'),b=f.querySelector('.jp-bar');if(!s)return;delete s.dataset.snap;s.style.height=s.style.bottom=b.style.height=b.style.bottom='';jbar(f)}));
 document.addEventListener('scroll',e=>{if(e.target.classList&&e.target.classList.contains('jp-in'))jbar(e.target.closest('.jp-front'))},true);
 // the bar can be dragged, or tapped to jump there
 let JB=null;
@@ -539,8 +553,9 @@ function journalView(){
  const pages=journalPages(),i=jIdx(pages),n=pages.length;
  if(!jPre){jPre=true;['cover','edge-h','edge-v',...JPAPER].forEach(a=>{const im=new Image();im.src=`/art/pages/${a}.webp`;im.decode&&im.decode().catch(()=>{})})}
  return `<div class="stack"><h1>Journal</h1><div class="jbook${i?' open':' closed'}" style="--T:${jDepth(n-1-i)}px" aria-label="${i?`Journal, page ${i} of ${n-1}`:'Journal cover'}"><div class="jboard" aria-hidden="true"></div><div class="jblock" aria-hidden="true"></div>${jPage(pages[i],i,n)}</div>
- <nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page"${i?'':' disabled'}>‹</button><span class="jnav-n">${!i?'The cover':i===n-1?'A new page':`Page ${i} of ${n-2}`}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>
- ${(a=>a?`<div class="jacts">${a}</div>`:'')(jActs(pages[i]))}<p class="muted small center">Drag a page’s edge, or use the arrows, to turn the pages.</p></div>`;
+ <p class="muted small center jhint">Drag a page’s edge, or use the arrows, to turn the pages.</p>
+ ${i?`<nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page">‹</button><span class="jnav-n">${jName(pages[i],i,n)}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>`:''}
+ <div class="jacts">${jActs(pages[i])}</div></div>`;
 }
 /* Turning a page. A paper page is flexible: pulled by its corner P, it lifts from the page along a line across it and rolls
    over on itself, like a sheet bent around a soft cylinder, its back lying over the page once past the roll. The leaf is
@@ -639,7 +654,7 @@ function jstart(to,grab){
  const fwd=to>from,cur=book.querySelector('.jpage'),tmp=document.createElement('div');
  tmp.innerHTML=jPage(pages[to],to,pages.length);const np=tmp.firstElementChild,leaf=fwd?cur:np,under=fwd?np:cur;
  np.classList.add('jp-abs');if(fwd)cur.before(np);else book.appendChild(np);
- np.querySelectorAll('textarea').forEach(jfit);
+ np.querySelectorAll('textarea').forEach(jfit);np.querySelectorAll('.jp-date').forEach(jfitDate);
  leaf.classList.add('leaf');under.classList.add('under');book.classList.add('turning');
  const r=cur.getBoundingClientRect(),W=r.width,H=r.height;
  if(Math.min(from,to)===0){
@@ -1005,7 +1020,7 @@ function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&!onboarding();
  const html=(views[sec]||views.home)();
  app.innerHTML=sec==='welcome'||sec==='join'?html:framed(sec,html);
- document.querySelectorAll('.jpage textarea').forEach(jfit);document.querySelectorAll('.jpage .jp-front').forEach(jbar);
+ document.querySelectorAll('.jpage textarea').forEach(jfit);document.querySelectorAll('.jpage .jp-front').forEach(jbar);document.querySelectorAll('.jpage .jp-date').forEach(jfitDate);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
  const f=authed&&SECTIONS[sec]?SECTIONS[sec].tabs:null,foot=$('#foot');
  foot.hidden=!f;document.body.classList.toggle('has-footer',!!f);app.classList.toggle('has-footer',!!f);app.classList.toggle('foot-icons',!!f);
