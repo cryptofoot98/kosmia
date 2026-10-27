@@ -477,9 +477,9 @@ function journalPages(){
 const jIdx=pages=>V.jpage==null?0:Math.max(0,Math.min(pages.length-1,V.jpage));
 const jDate=d=>`<p class="jp-date">${ymdLong(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>`;
 const jEdit=(act,kind,id,label='Edit')=>`<button class="link" data-act="${act}" ${kind?`data-kind="${kind}" `:''}data-id="${esc(id)}">${label}</button>`;
-// the card a reflection was written about, laid on the page above the writing
-const jWhisperArt=o=>{const p=pic('whispers',o.id,'jp-card');return p?`<div class="jp-cards">${p}</div>`:''};
-const jTarotArt=r=>{const c=r.cards.slice(0,5).map(x=>pic('deck',x.id,'jp-card'+(x.rev?' rev':''))).filter(Boolean);return c.length?`<div class="jp-cards${c.length>3?' many':''}">${c.join('')}</div>`:''};
+// the card a reflection was written about, pasted onto the page beside the words
+const jWhisperArt=o=>{const p=pic('whispers',o.id,'jp-card');return p?`<div class="jp-cards one">${p}</div>`:''};
+const jTarotArt=r=>{const c=r.cards.slice(0,5).map(x=>pic('deck',x.id,'jp-card'+(x.rev?' rev':''))).filter(Boolean);return c.length?`<div class="jp-cards${c.length<2?' one':c.length>2?' many':''}">${c.join('')}</div>`:''};
 const jCardsLine=r=>`${r.q?'“'+esc(r.q)+'” · ':''}${r.cards.map(x=>esc(x.name)+(x.rev?' (reversed)':'')).join(', ')}`;
 // the writing form: a title line and ruled paper; Whisper and tarot reflections are kept with the reading itself
 function jForm(d,edit){
@@ -511,8 +511,11 @@ function jPage(p,i,n){
    :`<p class="jp-kind-l">Tarot</p>${jTarotArt(p.r)}<p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${jCardsLine(p.r)}</p>`;
   h=V.edit===key?`${jDate(p.day)}${head}<label class="sr-only" for="ed">Note</label><textarea id="ed" class="jp-lines">${esc(note||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="${w?'fortune':'reading'}" data-id="${esc(w?p.day:p.r.id)}">Save</button><button class="link" data-act="canceledit">Cancel</button></div>`
    :`${jDate(p.day)}${head}<p class="jp-lines jp-text">${esc(note)}</p><div class="jp-acts">${jEdit('editnote',w?'fortune':'reading',w?p.day:p.r.id)}</div>`}
- return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><div class="jp-wash" aria-hidden="true"></div><div class="jp-in">${h}</div><span class="jp-num">${i}</span></div></div>`;
+ return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><div class="jp-in">${h}</div><span class="jp-num">${i}</span></div></div>`;
 }
+// a page's textarea grows by whole lines, so the page scrolls (not the box) and the words keep to the page's rules
+function jfit(el){el.style.height='auto';const lh=parseFloat(getComputedStyle(el).lineHeight)||28;el.style.height=Math.max(4,Math.ceil((el.scrollHeight-1)/lh))*lh+'px'}
+document.addEventListener('input',e=>{if(e.target.matches&&e.target.matches('.jpage textarea'))jfit(e.target)});
 // how thick the block of pages still to come looks beneath the open one
 const jDepth=left=>Math.round(Math.max(12,Math.min(26,11+left*1.8)));
 let jPre=false;
@@ -523,10 +526,12 @@ function journalView(){
  <nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page"${i?'':' disabled'}>‹</button><span class="jnav-n">${!i?'The cover':i===n-1?'A new page':`Page ${i} of ${n-2}`}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>
  ${i&&i<n-1?'<div class="h-acts row"><button class="btn ghost sm" data-act="jflip" data-to="last">Write a new page</button></div>':''}<p class="muted small center">Drag a page’s edge, or use the arrows, to turn the pages.</p></div>`;
 }
-/* Turning a page. Paper pages fold softly: the turning corner P is pulled toward the spine, the page creases along the line
-   halfway between P and the corner's resting place, and the folded part shows the back of the paper, reflected over the crease,
-   with light along the bend and a shadow falling on the page beneath. The leather cover is a stiff board and swings on its
-   hinge instead. Forward, the open leaf turns away to the left; back, the previous leaf comes in from the left over the open one. */
+/* Turning a page. A paper page is flexible: pulled by its corner P, it lifts from the page along a line across it and rolls
+   over on itself, like a sheet bent around a soft cylinder, its back lying over the page once past the roll. The leaf is
+   drawn in narrow strips across that line, each placed in 3D at its angle in the roll and lit by how it faces the light;
+   the sheet is never quite flat, so faint ripples run through it. The line is chosen so the corner lands under the finger.
+   The leather cover is a stiff board and swings on its hinge instead. Forward, the open leaf turns away to the left; back,
+   the previous leaf comes in from the left over the open one. */
 let JT=null;
 const jlerp=(a,b,k)=>a+(b-a)*k,jease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
 // keep the polygon's part on the side of the line through M (normal n) where sign*(X-M)·n >= 0
@@ -535,8 +540,37 @@ function jclip(poly,M,n,sign){const out=[],s=p=>sign*((p.x-M.x)*n.x+(p.y-M.y)*n.
   if((sa>=0)!==(sb>=0)){const k=sa/(sa-sb);out.push({x:a.x+(b.x-a.x)*k,y:a.y+(b.y-a.y)*k})}}
  return out}
 const jpoly=pts=>pts.length>2?`polygon(${pts.map(p=>`${p.x.toFixed(1)}px ${p.y.toFixed(1)}px`).join(',')})`:'polygon(0 0,0 0,0 0)';
-// a gradient band laid along the crease, reaching `w` px in direction u from it
+// a gradient band laid along the line, reaching `w` px in direction u from it
 const jband=(el,M,u,w,D)=>{el.style.width=Math.max(1,w).toFixed(1)+'px';el.style.height=2*D+'px';el.style.transform=`translate(${M.x.toFixed(1)}px,${M.y.toFixed(1)}px) rotate(${Math.atan2(u.y,u.x)}rad) translateY(${-D}px)`};
+// the sheet's shape past the line where it leaves the page, 1px at a time: its angle F rises smoothly through the roll to
+// lie back over itself (a little short of flat while the page is in the air), with ripples; X and Z are where it has got to
+function jshape(t,R,air,N){
+ const F=new Float32Array(N+1),X=new Float32Array(N+1),Z=new Float32Array(N+1),L=Math.PI*R,rp=t.rip;
+ for(let s=0;s<=N;s++){const k=Math.min(1,s/L),w=Math.min(1,s/24);
+  F[s]=Math.PI*k*k*(3-2*k)-air*k+w*air*(.8*Math.sin(s/rp[0]+rp[1])+.35*Math.sin(s/rp[2]+rp[3]));
+  if(s){const f=(F[s]+F[s-1])/2;X[s]=X[s-1]+Math.cos(f);Z[s]=Z[s-1]+Math.sin(f)}}
+ return {F,X,Z,N}}
+// how much a strip facing along normal N is lightened (+) or shaded (-), for light from the upper left, in front
+const JL=(()=>{const l=[-.55,-.45,.7],m=Math.hypot(...l);return l.map(c=>c/m)})();
+function jlight(n,f,back){const s=back?-1:1,N=[-Math.sin(f)*n.x*s,-Math.sin(f)*n.y*s,Math.cos(f)*s];
+ const d=N[0]*JL[0]+N[1]*JL[1]+N[2]*JL[2]-JL[2],h=Math.pow(Math.max(0,(N[0]*JL[0]+N[1]*JL[1]+N[2]*(JL[2]+1))/Math.hypot(JL[0],JL[1],JL[2]+1)),60);
+ return d+(h-JH0)*.35}
+const JH0=Math.pow((JL[2]+1)/Math.hypot(JL[0],JL[1],JL[2]+1),60);
+const jtone=v=>v>=0?`rgba(255,250,236,${Math.min(.6,v*1.1).toFixed(3)})`:`rgba(40,24,12,${Math.min(.55,-v*.75).toFixed(3)})`;
+function jstrip(t,i){
+ let e=t.pool[i];if(e)return e;
+ const el=document.createElement('div');el.className='jt-s';el.innerHTML='<i></i>';t.els.strips.appendChild(el);
+ e=t.pool[i]={el,sh:el.firstChild,front:null,back:null};return e}
+function jface(t,e,back){
+ const k=back?'back':'front';if(!e[k]){
+  if(back){e.back=document.createElement('div');e.back.className='jt-bk '+t.paperCls;e.back.setAttribute('style',t.paperStyle)}
+  else{const o=t.leaf.querySelector('.jp-front'),c=o.cloneNode(true),src=o.querySelectorAll('textarea,input'),dst=c.querySelectorAll('textarea,input');
+   dst.forEach((d,j)=>{d.value=src[j].value});c.querySelectorAll('[id]').forEach(d=>d.removeAttribute('id'));
+   c.style.width=t.W+'px';c.style.height=t.H+'px';e.front=c}
+  const f=e[k];e.el.insertBefore(f,e.sh);
+  if(!back){const a=t.leaf.querySelector('.jp-in'),b=f.querySelector('.jp-in');if(a&&b)b.scrollTop=a.scrollTop}}
+ if(e.front)e.front.style.display=back?'none':'';if(e.back)e.back.style.display=back?'':'none';
+ return e[k]}
 function jsoft(t,P){
  const {W,H,cy}=t,C={x:W,y:cy},A={x:0,y:cy},B={x:0,y:H-cy},D=Math.hypot(W,H);
  // the corner stays bound to the spine, as a real leaf is
@@ -544,20 +578,35 @@ function jsoft(t,P){
  v={x:P.x-B.x,y:P.y-B.y};L=Math.hypot(v.x,v.y);if(L>D)P={x:B.x+v.x*D/L,y:B.y+v.y*D/L};
  t.P=P;t.p=Math.max(0,Math.min(1,(W-P.x)/(2*W)));
  const d=Math.hypot(C.x-P.x,C.y-P.y),rect=[{x:0,y:0},{x:W,y:0},{x:W,y:H},{x:0,y:H}],e=t.els;
- if(d<.5){t.leaf.style.clipPath='none';e.wrap.style.visibility='hidden';return}
+ if(d<.5){t.leaf.style.clipPath=t.leaf.style.webkitClipPath='none';e.wrap.style.visibility='hidden';return}
  e.wrap.style.visibility='visible';
- const M={x:(C.x+P.x)/2,y:(C.y+P.y)/2},n={x:(C.x-P.x)/d,y:(C.y-P.y)/d},m={x:-n.x,y:-n.y};
- const kept=jclip(rect,M,n,-1),folded=jclip(rect,M,n,1);
- // reflection across the crease, as a CSS matrix
- const dx=-n.y,dy=n.x,a=2*dx*dx-1,b=2*dx*dy,c=b,dd=2*dy*dy-1,ex=M.x-(a*M.x+c*M.y),fy=M.y-(b*M.x+dd*M.y);
- const refl=folded.map(q=>({x:a*q.x+c*q.y+ex,y:b*q.x+dd*q.y+fy}));
- t.leaf.style.clipPath=t.leaf.style.webkitClipPath=jpoly(kept);
- e.flap.style.clipPath=e.flap.style.webkitClipPath=jpoly(folded);e.flap.style.transform=`matrix(${a},${b},${c},${dd},${ex},${fy})`;
- const s=Math.sin(Math.PI*Math.min(1,t.p*1.15)),w=d/2;
- e.cast.style.clipPath=e.cast.style.webkitClipPath=jpoly(folded);jband(e.castg,M,n,Math.min(W*.35,20+w*.6),D);e.castg.style.opacity=(.25+.6*s).toFixed(3);
- e.bend.style.clipPath=e.bend.style.webkitClipPath=jpoly(kept);jband(e.bendg,M,m,Math.min(46,10+w*.3),D);e.bendg.style.opacity=(.5+.5*s).toFixed(3);
- e.shade.style.clipPath=e.shade.style.webkitClipPath=jpoly(refl);jband(e.shadeg,M,m,w,D);
- e.flapw.style.filter=`drop-shadow(${(m.x*4).toFixed(1)}px ${(m.y*4).toFixed(1)}px 5px rgba(40,24,12,${(.18+.22*s).toFixed(2)}))`;
+ // the roll is widest mid-turn and tightens as the page settles at either end
+ const lift=Math.sin(Math.PI*t.p),R=2+W*.17*Math.pow(lift,.6),air=.16*lift;
+ const n={x:(C.x-P.x)/d,y:(C.y-P.y)/d},tv={x:-n.y,y:n.x},N=Math.ceil(d+2*D+Math.PI*R+8),sh=jshape(t,R,air,N);
+ // place the line so the corner, carried over the roll, comes down under P
+ let lo=0,hi=N;for(let k=0;k<26;k++){const s=(lo+hi)/2,j=Math.floor(s),f=sh.X[j]+(s-j)*Math.cos(sh.F[j])-s+d;f>0?lo=s:hi=s}
+ const sC=(lo+hi)/2,M={x:C.x-n.x*sC,y:C.y-n.y*sC},th=Math.atan2(n.y,n.x);
+ t.leaf.style.clipPath=t.leaf.style.webkitClipPath=jpoly(jclip(rect,M,n,-1));
+ const folded=jclip(rect,M,n,1),um=Math.min(N,Math.ceil(Math.max(0,...folded.map(q=>(q.x-M.x)*n.x+(q.y-M.y)*n.y)))),inv=`rotate(${-th}rad) translate(${-M.x}px,${-M.y}px)`;
+ let i=0,s0=0,xmax=0;
+ while(s0<um&&i<60){
+  let s1=s0+1;const fr=sh.F[s0]<1.4;while(s1<um&&s1-s0<(fr?44:30)&&Math.abs(sh.F[s1]-sh.F[s0])<(fr?.3:.17))s1++;
+  const band=jclip(jclip(rect,{x:M.x+n.x*s0,y:M.y+n.y*s0},n,1),{x:M.x+n.x*(s1+3),y:M.y+n.y*(s1+3)},n,-1);
+  if(band.length>2){
+   const vs=band.map(q=>(q.x-M.x)*tv.x+(q.y-M.y)*tv.y),v0=Math.min(...vs),v1=Math.max(...vs),f=(sh.F[s0]+sh.F[s1])/2,back=Math.cos(f)<0;
+   const st=jstrip(t,i),el=st.el;el.style.display='';el.style.width=(s1-s0+3).toFixed(1)+'px';el.style.height=(v1-v0).toFixed(1)+'px';
+   // the strip is cut to the page's own outline, and a hair wider than its share so no seam opens in the roll
+   const wide=jclip(jclip(rect,{x:M.x+n.x*s0,y:M.y+n.y*s0},n,1),{x:M.x+n.x*(s1+3),y:M.y+n.y*(s1+3)},n,-1);
+   el.style.clipPath=el.style.webkitClipPath=jpoly(wide.map(q=>({x:(q.x-M.x)*n.x+(q.y-M.y)*n.y-s0,y:(q.x-M.x)*tv.x+(q.y-M.y)*tv.y-v0})));
+   el.style.transform=`translate(${M.x.toFixed(2)}px,${M.y.toFixed(2)}px) rotate(${th}rad) translate3d(${sh.X[s0].toFixed(2)}px,${v0.toFixed(2)}px,${sh.Z[s0].toFixed(2)}px) rotateY(${-f}rad)`;
+   jface(t,st,back).style.transform=`translate(${-s0}px,${(-v0).toFixed(2)}px) ${inv}`;
+   st.sh.style.background=`linear-gradient(to right,${jtone(jlight(n,sh.F[s0],back))},${jtone(jlight(n,sh.F[s1],back))})`;
+   xmax=Math.max(xmax,sh.X[s1]);i++}
+  s0=s1}
+ for(let k=i;k<t.pool.length;k++)t.pool[k].el.style.display='none';
+ // the roll's shadow on the page beneath, deepest close under it
+ e.cast.style.clipPath=e.cast.style.webkitClipPath=jpoly(folded);
+ jband(e.castg,{x:M.x+n.x*xmax*.92,y:M.y+n.y*xmax*.92},n,Math.min(W*.4,18+R*1.6),D);e.castg.style.opacity=(.45+.55*lift).toFixed(3);
 }
 function jhard(t,p){
  t.p=p=Math.max(0,Math.min(1,p));const q=t.fwd?p:1-p,leaf=t.leaf;
@@ -574,6 +623,7 @@ function jstart(to,grab){
  const fwd=to>from,cur=book.querySelector('.jpage'),tmp=document.createElement('div');
  tmp.innerHTML=jPage(pages[to],to,pages.length);const np=tmp.firstElementChild,leaf=fwd?cur:np,under=fwd?np:cur;
  np.classList.add('jp-abs');if(fwd)cur.before(np);else book.appendChild(np);
+ np.querySelectorAll('textarea').forEach(jfit);
  leaf.classList.add('leaf');under.classList.add('under');book.classList.add('turning');
  const r=cur.getBoundingClientRect(),W=r.width,H=r.height;
  if(Math.min(from,to)===0){
@@ -581,11 +631,13 @@ function jstart(to,grab){
   JT={hard:true,to,fwd,leaf,under,p:0};jhard(JT,0);return JT;
  }
  // the leaf's paper, seen from behind: its own painting showing faintly through, under the ruled lines
- const paper=(leaf.querySelector('.jp-front').getAttribute('style')||'').replace(/"/g,"'");
- book.insertAdjacentHTML('beforeend',`<div class="jturn" aria-hidden="true"><div class="jt-cast"><i class="jt-castg"></i></div><div class="jt-bend"><i class="jt-bendg"></i></div><div class="jt-flapw"><div class="jt-flap" style="${paper}"></div></div><div class="jt-shade"><i class="jt-shadeg"></i></div></div>`);
+ const fr=leaf.querySelector('.jp-front');
+ book.insertAdjacentHTML('beforeend','<div class="jturn" aria-hidden="true"><div class="jt-cast"><i class="jt-castg"></i></div><div class="jt-strips"></div></div>');
  const wrap=book.querySelector('.jturn'),q=s=>wrap.querySelector(s);
- const cy=grab&&grab.y<H/2?0:H;
- JT={soft:true,to,fwd,leaf,under,W,H,cy,p:0,els:{wrap,cast:q('.jt-cast'),castg:q('.jt-castg'),bend:q('.jt-bend'),bendg:q('.jt-bendg'),flapw:q('.jt-flapw'),flap:q('.jt-flap'),shade:q('.jt-shade'),shadeg:q('.jt-shadeg')}};
+ const cy=grab&&grab.y<H/2?0:H,rnd=Math.random;
+ JT={soft:true,to,fwd,leaf,under,W,H,cy,p:0,pool:[],rip:[5.5+rnd()*1.5,rnd()*6,2.2+rnd(),rnd()*6],
+  paperCls:[...fr.classList].filter(c=>c.startsWith('p-')||c==='dark').join(' '),paperStyle:(fr.getAttribute('style')||'')+`;width:${W}px;height:${H}px`,
+  els:{wrap,cast:q('.jt-cast'),castg:q('.jt-castg'),strips:q('.jt-strips')}};
  jsoft(JT,fwd?{x:W,y:cy}:{x:-W,y:cy});return JT;
 }
 // carry a turn on to its end (land) or back to where it began; a soft page's corner travels in a gentle arc
@@ -937,6 +989,7 @@ function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&!onboarding();
  const html=(views[sec]||views.home)();
  app.innerHTML=sec==='welcome'||sec==='join'?html:framed(sec,html);
+ document.querySelectorAll('.jpage textarea').forEach(jfit);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
  const f=authed&&SECTIONS[sec]?SECTIONS[sec].tabs:null,foot=$('#foot');
  foot.hidden=!f;document.body.classList.toggle('has-footer',!!f);app.classList.toggle('has-footer',!!f);app.classList.toggle('foot-icons',!!f);
