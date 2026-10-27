@@ -406,6 +406,10 @@ input[type=text],input[type=email],input[type=password],input[type=date],input[t
 input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[type=date]:focus,input[type=time]:focus,input[type=number]:focus,input[type=search]:focus,textarea:focus,select:focus{outline:none;filter:drop-shadow(0 0 4px rgba(201,160,88,.75)) drop-shadow(0 0 1px rgba(139,106,62,.5))}
 input[type=text],input[type=email],input[type=password],input[type=number],input[type=search],textarea,select{-webkit-appearance:none;appearance:none}
 textarea{min-height:128px;padding:22px 34px;line-height:1.5}
+/* date and time fields keep to the frame on phones: without this iOS gives them their own width, past the page */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box;text-align:left;font:inherit;color:inherit}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;margin:0}
+.field{min-width:0;max-width:100%}
 select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%238B6A3E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") right 22px center/12px 8px no-repeat,var(--plaque,none) center/100% 100% no-repeat}
 ::placeholder{color:rgba(107,88,67,.62);font-style:italic}

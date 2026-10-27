@@ -810,7 +810,9 @@ function chartView(){
  const wheel=`<svg viewBox="0 0 300 300" width="100%" role="img" aria-label="Natal chart wheel"><circle cx="${CX}" cy="${CX}" r="${R}" fill="#F7EEDD" stroke="#8B6A3E" stroke-width="1.2"/><circle cx="${CX}" cy="${CX}" r="${R-26}" fill="none" stroke="#8B6A3E" stroke-width=".7"/><circle cx="${CX}" cy="${CX}" r="${R-72}" fill="none" stroke="#8B6A3E" stroke-width=".5"/>${SIGNS.map((s,i)=>{const [x1,y1]=pt(i*30,R),[x2,y2]=pt(i*30,R-26),[gx,gy]=pt(i*30+15,R-13);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8B6A3E" stroke-width=".7"/><text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#3A3026" font-family="Noto Sans Symbols,Segoe UI Symbol,serif">${s.g}</text>`}).join('')}${c.ang?(()=>{const [a1,b1]=pt(c.ang.asc,R-26),[a2,b2]=pt(c.ang.asc+180,R-26),[m1,n1]=pt(c.ang.mc,R-26),[m2,n2]=pt(c.ang.mc+180,R-26);return `<line x1="${a1}" y1="${b1}" x2="${a2}" y2="${b2}" stroke="#4A3B2A" stroke-width="1"/><line x1="${m1}" y1="${n1}" x2="${m2}" y2="${n2}" stroke="#4A3B2A" stroke-width=".8" stroke-dasharray="3 3"/>`})():''}${c.asp.filter(a=>a.n!=='conjunction'&&a.a.g&&a.b.g&&a.a.n!=='Ascendant'&&a.b.n!=='Ascendant'&&a.a.n!=='Midheaven'&&a.b.n!=='Midheaven').map(a=>{const [x1,y1]=pt(a.a.lon,R-72),[x2,y2]=pt(a.b.lon,R-72);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8B6A3E" stroke-width=".6" opacity=".7"/>`}).join('')}${c.pl.map(p=>{const [x,y]=pt(p.lon,R-48);const sel=V.chartSel===p.n;return `<g data-planet="${p.n}" tabindex="0" role="button" aria-label="${p.n} in ${sIdx(p.sign).name}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="11" fill="${sel?'#D8C29A':'#E7D6B6'}" stroke="#8B6A3E"/><text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#3A3026" font-family="Noto Sans Symbols,Segoe UI Symbol,serif">${p.g}</text></g>`}).join('')}</svg>`;
  const sel=c.pl.find(p=>p.n===V.chartSel);
  const b=S.birth;
- const note=!c.known?`<p class="note">${b.unk||!b.time||!b.tz?'Without a birth time and place, planets are taken at noon on your birth date. ':''}${!hasPlace(b)?'Add your birth place to calculate the Ascendant, Midheaven and houses. ':''}${c.moonRange?`The Moon moves from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} during your birth day, so its sign depends on your birth time.`:''}</p>`:'';
+ // the caveat about noon positions is only for a chart without a birth time; with a time but no place, just ask for the place
+ const note=b.unk||!b.time?`<p class="note">Without a birth time, planets are taken at noon on your birth date. ${!hasPlace(b)?'Add your birth place to calculate the Ascendant, Midheaven and houses. ':''}${c.moonRange?`The Moon moves from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} during your birth day, so its sign depends on your birth time.`:''}</p>`
+  :!hasPlace(b)?'<p class="note">Add your birth place so your birth time can be used for the Ascendant, Midheaven and houses.</p>':'';
  return `<div class="stack"><h1>Birth Chart</h1>
  <p class="muted center">${ymdLong(b.date)}${b.unk||!b.time?'':' · '+esc(b.time)}${b.place?' · '+esc(b.place):''}</p>${note}
  ${panel(wheel+(sel?`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${sIdx(sel.sign).name}</h3><p>${placement(sel)}</p>`:'<p class="muted center">Tap a planet to read it.</p>'))}
@@ -820,7 +822,7 @@ function chartView(){
  ${panel(`<h3>Aspects</h3>${c.asp.slice(0,16).map(a=>`<div class="asp"><div><strong>${a.a.n}</strong> <span class="glyph">${a.g}</span> <strong>${a.b.n}</strong> <span class="muted small">${a.n}, orb ${a.orb.toFixed(1)}°</span></div><p class="small">Your ${PM[a.a.n]} and ${PM[a.b.n]} ${ASPT[a.n]}.</p></div>`).join('')||'<p class="muted">No major aspects within the orbs used.</p>'}`)}
  <p class="muted small">Method: tropical zodiac, geocentric positions on the true ecliptic of date from the Astronomy Engine ephemeris. Your local birth time is converted to UTC with the historical rules for ${esc(b.tz||TZ())}. Houses are whole-sign; aspect orbs are 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p>
  <button class="btn ghost" data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest.">Ask Kassandra about my chart</button>
- <details class="edit-birth"><summary>Edit birth details</summary>${form}</details></div>`;
+ <details class="edit-birth"${V.birthDraft?' open':''}><summary>Edit birth details</summary>${form}</details></div>`;
 }
 function lifePathView(){
  if(!hasBirthDate())return `<div class="stack"><h1>Life Path</h1>${empty('Your birth date','Your Life Path number comes from your date of birth.',linkBtn('Add my birth date','blueprint','birth-chart','btn'))}</div>`;
@@ -1200,7 +1202,7 @@ document.addEventListener('click',e=>{
  if(a==='evtoggle'){V.evOpen=V.evOpen===t.dataset.ref?null:t.dataset.ref;if(V.sec==='cosmos'&&tab()==='calendar'&&V.cal.view==='month'&&V.evOpen){const e=upcoming().find(x=>evRef(x)===V.evOpen);if(e)V.cal.day=e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date)}return render()}
  if(a==='calmonth'){V.cal.month=t.dataset.k;V.cal.day='';return render()}
  if(a==='calday'){V.cal.day=t.dataset.k;return render()}
- if(a==='placesearch')return placeSearch(t.dataset.id);
+ if(a==='placesearch'){if(t.dataset.id==='syn')readSyn();else readBirth();return placeSearch(t.dataset.id)}
  if(a==='placepick'){const P=V.places[t.dataset.id],r=P.results[+t.dataset.i],obj=t.dataset.id==='syn'?V.syn:V.birthDraft;
   if(t.dataset.id==='syn')readSyn();else readBirth();
   Object.assign(obj,{place:[r.name,r.admin1,r.country].filter(Boolean).join(', '),lat:r.latitude,lon:r.longitude,tz:r.timezone});V.places[t.dataset.id]={};return render()}
