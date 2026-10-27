@@ -62,10 +62,10 @@ textarea{min-height:110px;resize:vertical}
 .err{color:var(--danger)}
 /* menu */
 /* footer */
-#foot{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--parchment) url(/art/frame-paper.webp) center/100% auto;border-top:3px double var(--gold);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));display:flex;justify-content:center;box-shadow:0 -4px 14px rgba(58,48,38,.18)}
+#foot{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--parchment) url(/art/frame-paper.webp) center/100% auto;border-top:3px double var(--gold);padding:2px max(8px,env(safe-area-inset-right,0px)) calc(2px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));display:flex;justify-content:center;box-shadow:0 -4px 14px rgba(58,48,38,.18)}
 #foot[hidden]{display:none!important}
 #foot .in{display:flex;max-width:480px;width:100%;justify-content:space-around}
-#foot button{min-height:44px;min-width:56px;border:0;background:transparent;cursor:pointer;color:var(--mauve);font-family:var(--serif);font-weight:600;font-size:.86rem;letter-spacing:.06em;border-bottom:2px solid transparent;padding:0 6px}
+#foot button{min-height:40px;min-width:56px;border:0;background:transparent;cursor:pointer;color:var(--mauve);font-family:var(--serif);font-weight:600;font-size:.86rem;letter-spacing:.06em;border-bottom:2px solid transparent;padding:0 6px}
 #foot button[aria-selected=true]{color:var(--plum);border-bottom-color:var(--gold)}
 /* cards */
 .scene{perspective:1000px;width:min(300px,80vw);aspect-ratio:2/3;margin:0 auto;position:relative;container-type:inline-size}
@@ -100,7 +100,7 @@ textarea{min-height:110px;resize:vertical}
 table{border-collapse:collapse;width:100%;font-size:.88rem}
 td,th{padding:6px 8px;border-bottom:1px solid rgba(139,106,62,.35);text-align:left;white-space:nowrap}
 .note{background:rgba(231,214,182,.6);border:1px dashed var(--gold);border-radius:3px;padding:10px 12px;font-size:.88rem;color:var(--mauve)}
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--plum);color:#F6EAE2;border:1px solid #D8B98A;padding:10px 18px;border-radius:3px;z-index:60;font-size:.95rem}
+.toast{position:fixed;left:50%;bottom:calc(var(--footh,0px) + 14px);transform:translateX(-50%);background:var(--plum);color:#F6EAE2;border:1px solid #D8B98A;padding:10px 18px;border-radius:3px;z-index:60;font-size:.95rem}
 .toast[hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.card3d{transition:none}.scene.rise,.scene.rise .spark{animation:none}}
 [hidden]{display:none!important}
@@ -205,23 +205,23 @@ body.onboarding::after{content:"";position:fixed;inset:-60px;z-index:-1;backgrou
 .sign-ico{width:60px;height:60px;object-fit:contain}
 .today-in .label{margin-top:4px}
 /* horoscope footer: an illustrated icon (art/cats) above each category name */
-#foot button:has(.foot-ico){display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:2px}
-.foot-ico{width:34px;height:34px;object-fit:contain}
+#foot button:has(.foot-ico){display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding-top:1px}
+.foot-ico{width:23px;height:23px;object-fit:contain}
 /* the chosen footer and menu icons light up like a picked sign; the others rest slightly muted */
 .foot-ico,.nav-ico{transition:filter .25s,transform .25s}
 #foot button:not([aria-selected=true]) .foot-ico,#nav .in:has([aria-current=page]) button:not([aria-current=page]) .nav-ico{filter:saturate(.75) brightness(.96) opacity(.8)}
 #foot button[aria-selected=true] .foot-ico{filter:brightness(1.18) saturate(1.3) drop-shadow(0 0 7px rgba(214,170,90,.85));transform:scale(1.08)}
-#app.has-footer.foot-icons{padding-bottom:86px}
+#app.has-footer.foot-icons{padding-bottom:calc(var(--footh,52px) + 8px)}
 /* main menu: fixed bar at the top of every page, one engraved icon (art/nav) per section, all eight across; two-word names wrap */
 #nav{position:fixed;top:0;left:0;right:0;z-index:30;background:var(--parchment) url(/art/frame-paper.webp) center/100% auto;border-bottom:3px double var(--gold);box-shadow:0 4px 14px rgba(58,48,38,.18);padding-top:env(safe-area-inset-top,0px)}
-#nav .in{display:flex;gap:3px;max-width:480px;margin:0 auto;overflow-x:auto;scrollbar-width:none;padding:4px 4px 3px}
+#nav .in{display:flex;gap:3px;max-width:480px;margin:0 auto;overflow-x:auto;scrollbar-width:none;padding:2px 4px 1px}
 #nav .in::-webkit-scrollbar{display:none}
-#nav button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;border:0;background:none;cursor:pointer;padding:2px 1px;color:var(--mauve);font-family:var(--serif);font-weight:600;font-size:clamp(8.5px,2.6vw,11px);line-height:1.05;letter-spacing:0;text-align:center;border-bottom:2px solid transparent}
-#nav button span:last-child{min-height:2.1em;display:flex;align-items:flex-start;justify-content:center}
+#nav button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;border:0;background:none;cursor:pointer;padding:1px;color:var(--mauve);font-family:var(--serif);font-weight:600;font-size:clamp(8px,2.4vw,10px);line-height:1.05;letter-spacing:0;text-align:center;border-bottom:2px solid transparent}
+#nav button span:last-child{display:flex;align-items:flex-start;justify-content:center;white-space:nowrap}
 #nav button[aria-current=page]{color:var(--plum);border-bottom-color:var(--gold)}
 #nav button[aria-current=page] .nav-ico{filter:brightness(1.18) saturate(1.3) drop-shadow(0 0 7px rgba(214,170,90,.85));transform:scale(1.08)}
-.nav-ico{width:min(32px,8.4vw);height:min(32px,8.4vw);object-fit:contain}
-#nav .glyph{font-size:1.4rem;line-height:32px}
+.nav-ico{width:min(23px,6.2vw);height:min(23px,6.2vw);object-fit:contain}
+#nav .glyph{font-size:1.1rem;line-height:23px}
 body.has-nav #app{padding-top:var(--navh,70px)}
 /* Affinity and Preferences sign grids: same boxless illustrated signs, four per row */
 .signs.sign-grid{grid-template-columns:repeat(4,1fr);gap:10px 2px;justify-items:center}
@@ -358,12 +358,12 @@ td.wrap{white-space:normal}
 /* footer: up to six subsections; names wrap onto two lines, and the strip scrolls sideways rather than squeezing */
 #foot .in{overflow-x:auto;scrollbar-width:none;justify-content:space-between;gap:2px;min-width:0}
 #foot .in::-webkit-scrollbar{display:none}
-#foot button{flex:1 0 auto;min-width:58px;max-width:96px;font-size:.78rem;letter-spacing:.02em;line-height:1.1}
-#foot button span{display:block;white-space:normal;text-align:center;min-height:2.2em}
-#foot.many button{min-width:54px;font-size:.72rem}
+#foot button{flex:1 0 auto;min-width:58px;max-width:96px;font-size:.7rem;letter-spacing:.02em;line-height:1.1}
+#foot button span{display:block;white-space:normal;text-align:center}
+#foot.many button{min-width:54px;font-size:.66rem}
 /* menu: six sections, plus a small settings key at the end that is not a section */
 #nav .nav-set{flex:0 0 auto;width:30px;justify-content:center;opacity:.85}
-#nav .nav-set .nav-ico{width:22px;height:22px}
+#nav .nav-set .nav-ico{width:18px;height:18px}
 /* Kassandra: a floating cameo above the footer, and her conversation panel */
 .kas-face{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none}
 .kas-btn{position:fixed;z-index:40;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(var(--footh,0px) + 12px);display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 4px 3px;border:1.5px solid var(--gold);border-radius:40px;background:var(--parchment) url(/art/frame-paper.webp) center/200% auto;box-shadow:0 6px 18px rgba(58,48,38,.35),inset 0 0 0 3px var(--parchment),inset 0 0 0 4px rgba(139,106,62,.5);cursor:pointer;font-family:var(--serif);font-weight:700;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--plum)}
@@ -510,23 +510,26 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 /* the writing box sits in the same place on the page, centred between its margins, below the date in the header; it
    scrolls only up and down, never sideways, and its own thin bar at the right shows when the words run past the foot */
 .jp-front{container-type:inline-size}
-.jp-date{position:absolute;top:var(--hy);left:var(--hl);right:var(--hr);margin:0;line-height:1.5;text-align:center;white-space:nowrap;overflow:hidden;font-family:'Parisienne',cursive;font-size:clamp(1.1rem,7.4cqw,1.75rem);color:var(--ink)}
+.jp-date{position:absolute;top:var(--hy);left:var(--hl);right:var(--hr);margin:0;line-height:1.5;text-align:center;white-space:nowrap;overflow:hidden;font-family:'Parisienne',cursive;font-size:clamp(1.1rem,8cqw,1.9rem);line-height:1.3;color:var(--ink)}
 .jp-in{position:absolute;top:var(--t);right:var(--r);bottom:var(--b);left:var(--l);overflow-x:hidden;overflow-y:auto;overscroll-behavior:none;touch-action:pan-y;scrollbar-width:none;line-height:var(--lh);
  background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 -3px/100% var(--lh) local}
 .jp-in::-webkit-scrollbar{display:none}
 .jp-in>*{margin:0;line-height:var(--lh);max-width:100%}
-.jp-bar{position:absolute;display:none;top:var(--t);bottom:var(--b);right:calc(var(--r) - 14px);width:12px;cursor:pointer;touch-action:none}
-.jp-bar.on{display:block}
+.jp-bar{position:absolute;display:block;top:var(--t);bottom:var(--b);right:calc(var(--r) - 14px);width:12px;cursor:pointer;touch-action:none}
+.jp-bar:not(.on) i{display:none}
 .jp-bar::before{content:'';position:absolute;top:0;bottom:0;left:5px;width:2px;border-radius:1px;background:var(--rule)}
 .jp-bar i{position:absolute;top:0;left:4px;width:4px;border-radius:2px;background:var(--ink2);opacity:.6}
-/* each paper: where its date sits in the header (--hy, --hl, --hr), and the writing box beneath, centred, running down
-   towards the foot of the page */
-.p-sleeping-moon{--hy:5%;--hl:30%;--hr:30%;--t:22%;--r:20%;--b:13%;--l:20%}
-.p-sun-face{--hy:28%;--hl:18%;--hr:18%;--t:38%;--r:14%;--b:9%;--l:14%}
-.p-pressed-roses{--hy:13%;--hl:27%;--hr:27%;--t:25%;--r:22%;--b:10%;--l:22%}
-.p-compass-rose{--hy:34%;--hl:20%;--hr:20%;--t:44%;--r:20%;--b:9%;--l:20%}
-.p-night-sky{--hy:5%;--hl:22%;--hr:22%;--t:17%;--r:13%;--b:10%;--l:13%}
-.p-moon-phases{--hy:20%;--hl:15%;--hr:15%;--t:29%;--r:15%;--b:13%;--l:15%}
+/* every page alike: the date centred in its header, the title beneath, then ruled lines to the foot of the page (the
+   moon-phase paper's row of moons sits a little lower, so its lines begin below them) */
+.jp-front,.jt-bk{--hy:4.5%;--hl:15%;--hr:15%;--t:15%;--r:13%;--b:9%;--l:13%}
+.p-sleeping-moon{--t:21%}
+.p-sun-face{--t:24%}
+.p-pressed-roses{--t:21%;--l:19%;--r:16%}
+.p-compass-rose{--t:26%;--l:17%}
+.p-moon-phases{--hy:3%;--t:20%}
+/* the date keeps a soft halo of paper, so it reads even where it crosses a painted moon or sun */
+.jp-date{text-shadow:0 0 3px rgba(244,236,218,.95),0 0 7px rgba(244,236,218,.8)}
+.jp-front.dark .jp-date{text-shadow:0 0 3px rgba(22,27,42,.95),0 0 7px rgba(22,27,42,.8)}
 .jp-num{position:absolute;bottom:4.5%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:.8rem;color:var(--ink2)}
 .jp-title{font-family:var(--serif);font-weight:600;font-size:1.2rem;color:var(--ink)}
 .jp-prompt{font-style:italic;font-size:.92rem;color:var(--ink2)}
@@ -544,8 +547,6 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jpage .jp-tline{display:block;width:100%;height:var(--lh);border:0;border-radius:0;background:transparent;padding:0;line-height:var(--lh);box-shadow:none;outline:none;font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--ink);-webkit-appearance:none;appearance:none}
 .jpage textarea.jp-lines:focus,.jpage .jp-tline:focus{filter:none;box-shadow:none}
 .jpage ::placeholder{color:var(--ink2);opacity:.75}
-.jacts{display:flex;justify-content:center;flex-wrap:nowrap;gap:8px}
-.jacts .btn{white-space:nowrap}
 .jp-date.two{line-height:1.25}
 /* signs, moons and links pasted onto a kept page */
 .jp-sign{box-shadow:none;border-radius:50%}
@@ -553,8 +554,6 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jp-pair{gap:10px}
 .jp-amp,.jp-glyph{font-family:var(--serif);font-size:1.6rem;color:var(--ink2)}
 .jp-open .link{color:var(--ink2);font-size:.92rem}
-.jhint{margin-top:-4px}
-.jnav-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:min(60vw,15em)}
 /* words written over the painting keep a soft halo of paper about them */
 .jp-in{text-shadow:0 0 3px rgba(244,236,218,.95),0 0 6px rgba(244,236,218,.7)}
 .jp-front.dark .jp-in{text-shadow:0 0 3px rgba(22,27,42,.95),0 0 6px rgba(22,27,42,.7)}
@@ -572,15 +571,11 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jc-btn{background:linear-gradient(#5A2C1E,#3E1C13);border:1px solid rgba(226,194,126,.65);border-radius:8px;padding:8px 14px;font-family:var(--serif);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;cursor:pointer;box-shadow:inset 0 2px 4px rgba(0,0,0,.5),0 1px 0 rgba(255,220,150,.15)}
 .jc-btn:hover,.jc-btn:focus-visible{border-color:#F0D492;color:#F6DFA4}
 .jc-link{background:none;border:0;font:inherit;font-size:.78rem;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-.jnav{display:flex;align-items:center;justify-content:center;gap:18px}
-.jnav .btn{min-width:48px;font-size:1.3rem;line-height:1}
-.jnav .btn:disabled{opacity:.4;cursor:default}
-.jnav-n{font-family:var(--serif);color:var(--mauve);min-width:8em;text-align:center}
 @media (max-width:370px){.jp-front,.jt-bk{--lh:25px}.jp-lines{font-size:.96rem}.jp-title{font-size:1.05rem}.jp-prompt{font-size:.84rem}.jc-name{font-size:1.7rem}.jc-l{font-size:.8rem}.jc-in{left:23%;right:23%}}
 
 /* the book in depth: a block of page edges seen along the side and the foot of the open page, thicker while more pages remain,
    on a leather back board; the spine's leather shows at the left once the book is open */
-.jbook{--T:12px;--B:calc(var(--T)*1.5);position:relative;left:calc((var(--T) + 2px)/-2);width:calc(100% - var(--T) - 16px);max-width:420px;margin:0 auto calc(var(--B) + 16px);perspective:1700px;-webkit-perspective:1700px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.jbook{--T:12px;--B:calc(var(--T)*1.5);position:relative;left:calc((var(--T) + 2px)/-2);width:min(calc(100% - var(--T) - 16px),calc((100svh - var(--navh,56px) - var(--footh,0px) - var(--B) - 80px)/1.5));max-width:420px;margin:0 auto calc(var(--B) + 62px);perspective:1700px;-webkit-perspective:1700px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .jboard{position:absolute;top:-4px;left:-5px;right:calc(-1*var(--T) - 7px);bottom:calc(-1*var(--B) - 8px);border-radius:5px 12px 12px 5px;background:linear-gradient(135deg,#62301F,#3A1A11 70%);box-shadow:0 18px 30px -12px rgba(40,22,12,.65),0 3px 6px rgba(40,22,12,.35),inset 0 0 0 1px rgba(0,0,0,.25)}
 .jblock::before,.jblock::after{content:'';position:absolute;pointer-events:none}
 /* the fore-edge and foot of the block: many fine, uneven leaves, shaded as they recede; the foot shows deeper, as a book
@@ -607,3 +602,43 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jt-bk.dark{background:linear-gradient(rgba(30,35,52,.86),rgba(30,35,52,.86)),var(--paper) center/100% 100% no-repeat,#1E2334}
 .jt-bk::after{content:'';position:absolute;top:var(--t);right:var(--r);bottom:var(--b);left:var(--l);opacity:.55;background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 -3px/100% var(--lh)}
 .jpage.leaf:not(.hard){will-change:clip-path}
+/* what a kept item brings to its page (its spread, its forecast, the moon's meaning), in plain ink above the reflection */
+.jp-info{font-family:var(--serif);font-size:.96rem;color:var(--ink2);white-space:pre-wrap;overflow-wrap:anywhere}
+.jp-in>.jp-title{white-space:normal;overflow-wrap:anywhere}
+/* the cover: the owner's name, written in gold, is itself the way to change it; a line at the foot says how to open it */
+button.jc-name{border:0;cursor:pointer;-webkit-appearance:none;appearance:none}
+.jc-hint{position:absolute;left:0;right:0;bottom:8.5%;margin:0;text-align:center;color:#E2C27E;font-family:var(--serif);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;opacity:.75;text-shadow:0 1px 0 rgba(0,0,0,.55);pointer-events:none}
+/* silk ribbon bookmarks, stitched in gold, hanging from between the pages over the foot of the block: Edit (the blue of
+   the painted clouds), Enlarge (old gold) and Delete (a wax-seal red). The open page lies over their tops */
+.jribs{position:absolute;left:0;right:0;top:calc(100% - 14px);height:0;z-index:1}
+.jrib{position:absolute;top:0;width:54px;height:calc(var(--B) + 74px);border:0;margin:0;padding:0 0 19px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;cursor:pointer;
+ color:#FBF1DC;font-family:var(--serif);font-weight:600;font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;text-shadow:0 1px 1px rgba(0,0,0,.5);
+ clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 13px),0 100%);-webkit-clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 13px),0 100%);
+ background:linear-gradient(to bottom,transparent 14px,rgba(20,10,4,.45) 14px,rgba(20,10,4,0) 30px),linear-gradient(90deg,rgba(0,0,0,.3),rgba(255,255,255,.22) 32%,rgba(255,255,255,0) 58%,rgba(0,0,0,.28)),var(--rc);
+ transition:transform .25s ease;-webkit-tap-highlight-color:transparent}
+.jrib::before{content:'';position:absolute;top:0;bottom:0;left:4px;right:4px;border-left:1px dashed rgba(240,212,146,.75);border-right:1px dashed rgba(240,212,146,.75);pointer-events:none}
+.jrib svg{width:15px;height:15px;flex:none}
+.jrib:active{transform:translateY(3px)}
+.jrib.on{transform:translateY(7px)}
+.jrib:focus-visible{outline:none;filter:brightness(1.2)}
+/* set a little left of centre, clear of Kassandra at the foot of the screen */
+.r-edit{left:7%;--rc:#2E5378}
+.r-grow{left:calc(37% - 27px);--rc:#B4852F}
+.r-del{left:calc(67% - 54px);--rc:#8E2C3A}
+.jbook.turning .jribs,.jbook.ripping .jribs{opacity:0;pointer-events:none;transition:opacity .15s}
+/* a page torn out: the leaf and the stub left at the spine, each with the pale fibres of torn paper along the tear */
+.jrip{position:absolute;inset:0;z-index:6;pointer-events:none}
+.jr-piece,.jr-stub{position:absolute;inset:0}
+.jr-piece{transform-origin:5% 100%;filter:drop-shadow(5px 9px 10px rgba(40,24,12,.45))}
+.jr-piece>i,.jr-stub>i{position:absolute;inset:0;display:block;background:#F3EAD5}
+.jr-piece>.jp-front,.jr-stub>.jp-front{position:absolute;inset:0;margin:0}
+/* the page enlarged: the book alone over a dim backdrop, as large as the screen allows, with a way to close it */
+body.jx-on{overflow:hidden}
+.jx{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:calc(48px + env(safe-area-inset-top,0px)) 0 calc(12px + env(safe-area-inset-bottom,0px));background:radial-gradient(ellipse at 50% 42%,rgba(74,48,30,.82),rgba(22,13,8,.95));overscroll-behavior:contain}
+.jx .jbook{width:min(calc(100vw - var(--T) - 22px),calc((100svh - 70px - var(--B) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))/1.5));max-width:none;margin:0 auto var(--B)}
+.jx .jp-front,.jx .jt-bk{--lh:31px}
+.jx .jp-lines{font-size:1.16rem}
+.jx .jp-title{font-size:1.3rem}
+.jx-x{position:absolute;top:calc(6px + env(safe-area-inset-top,0px));right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--gold);background:var(--parchment);color:var(--plum);font-size:1.6rem;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.jbook-ph{aspect-ratio:2/3;width:min(100%,420px);margin:0 auto}
+.toast-a{margin-left:10px;background:none;border:0;border-bottom:1px solid #E9CB86;color:#F3DC9E;font:inherit;font-weight:600;cursor:pointer;padding:0}
