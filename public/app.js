@@ -182,7 +182,7 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 const SECTIONS={
  home:{label:'Home',icon:'home',tabs:[['today','Today','today'],['insights','My Insights','insights'],['saved','Saved','saved']]},
  horoscopes:{label:'Horoscopes',icon:'horoscopes',tabs:[['overview','Overview','general'],['love','Love','love'],['family','Family','family'],['health','Health','health'],['career','Career','career'],['money','Money','finance']]},
- oracle:{label:'Oracle',icon:'tarot',tabs:[['whispers','Whispers','today'],['tarot','Tarot','deck'],['readings','Readings','history'],['journal','Journal','reflections']]},
+ oracle:{label:'Oracle',icon:'tarot',tabs:[['whispers','Whispers','today'],['tarot','Tarot','deck'],['journal','Journal','reflections']]},
  affinity:{label:'Affinity',icon:'love',tabs:[['zodiac-match','Zodiac Match','match'],['soul-resonance','Soul Resonance','resonance'],['synastry','Synastry','aspects'],['connections','Connections','connections']]},
  blueprint:{label:'Blueprint',icon:'chart',tabs:[['profile','My Profile','profile'],['birth-chart','Birth Chart','chart'],['life-path','Life Path','lifepath'],['the-name-within','The Name Within','namewithin'],['my-cycles','My Cycles','cycles']]},
  cosmos:{label:'Cosmos',icon:'universe',tabs:[['calendar','Calendar','calendar'],['moon','Moon','moon'],['planets','Planets','planets'],['celestial-events','Celestial Events','upcoming']]},
@@ -206,6 +206,7 @@ function applyLocation(){
  let path=location.pathname.replace(/\/+$/,'')||'/';
  const first=path.split('/')[1]||'';
  if(ALIAS[first]&&!SECTIONS[first]){path=ALIAS[first];history.replaceState(history.state,'',path+location.search)}
+ if(/^\/oracle\/readings$/.test(path)){path='/home/saved';history.replaceState(history.state,'',path+location.search)}
  const [,sec='home',t='']=path.split('/'),q=Object.fromEntries(new URLSearchParams(location.search));
  if(!SECTIONS[sec]){V.sec='home';V.tab.home='today';return}
  V.sec=sec;let tt=(TAB_ALIAS[sec]||{})[t]||t;
@@ -321,7 +322,7 @@ function insights(){
  return `<div class="stack"><h1>My Insights</h1><p class="muted center">A summary of your readings. Each opens its full page.</p>
  ${panel(`<div class="label">Astrology</div>${plate('ins-astro')}${row('Chosen sign',sg(S.sign).name,'horoscopes','overview')}${row('Sun',ch?sIdx(ch.pl[0].sign).name:'','blueprint','birth-chart','Needs your birth date')}${row('Moon',moonV,'blueprint','birth-chart','Needs your birth date')}${row('Rising',ch&&ch.ang?sIdx(K.signIdx(ch.ang.asc)).name:'','blueprint','birth-chart',ch?'Needs birth time and place':'Needs birth date, time and place')}`)}
  ${panel(`<div class="label">Numerology</div>${plate('ins-numbers')}${row('Life Path',L?L.r.n+' · '+N.MEANING[L.r.n][0]:'','blueprint','life-path','Needs your birth date')}${row('Expression',nm?nm.expression.r.n+' · '+N.MEANING[nm.expression.r.n][0]:'','blueprint','the-name-within','Needs your full birth name')}${row('Soul Urge',nm&&nm.soul.r.n?nm.soul.r.n+' · '+N.MEANING[nm.soul.r.n][0]:'','blueprint','the-name-within','Needs your full birth name')}${row('Personal Year '+yr,hasBirthDate()?String(N.personalYear(S.birth.date,yr).r.n):'','blueprint','my-cycles','Needs your birth date')}`)}
- ${panel(`<div class="label">Oracle</div>${plate('ins-oracle')}${row('Today’s Whisper',rev?esc(c.title):'','oracle','whispers','Not revealed yet')}${row('Latest tarot reading',last?esc((SPREADS[last.spread]||{n:last.spread}).n)+' · '+ymdLong(last.date,{day:'numeric',month:'short'}):'','oracle','readings','No saved readings yet')}${row('Journal entries',String(S.journal.length+Object.values(S.notes).filter(Boolean).length),'oracle','journal')}`)}
+ ${panel(`<div class="label">Oracle</div>${plate('ins-oracle')}${row('Today’s Whisper',rev?esc(c.title):'','oracle','whispers','Not revealed yet')}${row('Latest tarot reading',last?esc((SPREADS[last.spread]||{n:last.spread}).n)+' · '+ymdLong(last.date,{day:'numeric',month:'short'}):'','home','saved','No saved readings yet')}${row('Journal entries',String(S.journal.length+Object.values(S.notes).filter(Boolean).length),'oracle','journal')}`)}
  </div>`;
 }
 // Saved: every kept item as a card with its own artwork behind it as a watermark; Open shows it in full in a pop-up
@@ -424,18 +425,17 @@ views.horoscopes=()=>{
 views.oracle=()=>{
  const t=tab();
  if(t==='tarot')return tarotView();
- if(t==='readings')return readingsView();
  if(t==='journal')return journalView();
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
  return `<div class="stack" style="align-items:stretch"><h1>Whispers</h1><p class="quote center">A whisper from the cosmos</p>${cardScene(c,rev,'fortuneCard')}
  ${rev?`<div class="row whisper-acts"><button class="btn" data-act="savecard" aria-pressed="${sv}">${sv?'♥ Saved':'♡ Save Whisper'}</button></div>
- <div class="reflect"><div class="label">Sit with it</div><p class="reflect-q">${c.ref}</p><div class="field"><label class="label" for="note">My reflection</label><textarea id="note" placeholder="Take your time. Write whatever rises.">${esc(S.notes[k]||'')}</textarea></div><button class="btn" data-act="savenote">Save reflection</button><p class="muted small">Private to you${C.user?' and kept in your account':' and stored in this browser'}. Your reflections also appear in Journal.</p></div>`
+ <div class="reflect"><div class="label">Sit with it</div><p class="reflect-q">${c.ref}</p><div class="field"><label class="label" for="note">My reflection</label><textarea id="note" placeholder="Take your time. Write whatever rises.">${esc(S.notes[k]||'')}</textarea></div><div class="note-acts"><button class="btn" data-act="savenote">Save reflection</button></div><p class="muted small center note-priv">Private to you${C.user?' and kept in your account':' and stored in this browser'}.<br>Your reflections also appear in Journal.</p></div>`
  :`<button class="btn" data-act="reveal" style="align-self:center">Reveal My Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. You will not see the same card again until you have met them all.</p>`}</div>`;
 };
 function tarotView(){
  const T=V.tarot,sp=SPREADS[T.spread];
  // 1. the question and the reading type, chosen like a sign; Shuffle draws a fresh deck
- if(T.stage==='setup')return `<div class="stack"><h1>What Is Yet to Be Revealed?</h1><p class="quote center">A question, a choice, a turn of a card. What might you discover?</p>${plate('oracle')}<div class="label">Choose your reading</div><div class="row sign-row spread-row" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="chip" role="radio" aria-checked="${T.spread===k}" data-act="tspread" data-k="${k}">${pic('spreads',k,'sign-ico')||'<span class="glyph">✦</span>'}<span class="sign-nm">${x.s}</span><span class="spread-n">${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything, or a topic: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button><p class="muted center small">The full deck of 78: 22 Major and 56 Minor Arcana, each upright or reversed.</p></div>`;
+ if(T.stage==='setup')return `<div class="stack"><h1>What Is Yet to Be Revealed?</h1><p class="quote center">A question, a choice, a turn of a card. What might you discover?</p><div class="label">Choose your reading</div><div class="row sign-row spread-row" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="chip" role="radio" aria-checked="${T.spread===k}" data-act="tspread" data-k="${k}">${pic('spreads',k,'sign-ico')||'<span class="glyph">✦</span>'}<span class="sign-nm">${x.s}</span><span class="spread-n">${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div><div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything, or a topic: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
  // 2. pick face-down cards; the reveal opens by itself once enough are chosen
  if(T.stage==='pick')return `<div class="stack"><h1>Choose ${sp.p.length} card${sp.p.length>1?'s':''}</h1><p class="muted center">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
@@ -456,19 +456,6 @@ function tarotPop(c){const k=V.tctx||'love';
 // once every card is face up, ask the server for a personal interpretation (signed-in only)
 function interpret(){const T=V.tarot;if(!C.user||T.aiState)return;T.aiState='loading';
  C.interpret(T.spread,T.q,T.drawn.map(c=>({id:c.id,reversed:c.rv}))).then(r=>{if(V.tarot===T&&(r.cards||r.whole)){T.ai=r}},e=>toast(e.message||'Could not interpret the reading')).then(()=>{T.aiState='done';render()})}
-function readingsView(){
- const f=V.filter.readings||'all',q=(V.search||'').toLowerCase().trim();
- const items=[];
- S.readings.forEach(r=>items.push({kind:'tarot',date:r.date,at:r.at,r,text:[(SPREADS[r.spread]||{}).n,r.q,r.note,...r.cards.map(c=>c.name)].join(' ')}));
- S.saved.forEach(x=>{const o=oc(x.id);if(o)items.push({kind:'whisper',date:x.date,o,text:[o.title,o.msg,S.notes[x.date]].join(' ')})});
- const list=items.filter(i=>(f==='all'||i.kind===f)&&(!q||i.text.toLowerCase().includes(q))).sort((a,b)=>(b.at||b.date)>(a.at||a.date)?1:-1);
- const when=i=>i.at?evt(new Date(i.at)):ymdLong(i.date,{day:'numeric',month:'short',year:'numeric'});
- return `<div class="stack"><h1>Readings</h1>${plate('readings')}<div class="field"><label for="rsearch">Search your readings</label><input type="search" id="rsearch" value="${esc(V.search)}" placeholder="A card, a question, a word from a note…"></div>${chips('Show',[['all','All'],['tarot','Tarot'],['whisper','Whispers']],f,'freadings')}
- ${list.length?list.map(i=>i.kind==='tarot'?`<article class="item"><div class="item-h"><span class="badge">Tarot</span><span class="muted">${when(i)}</span></div><h3>${esc((SPREADS[i.r.spread]||{n:i.r.spread}).n)}</h3>${i.r.q?`<p class="quote sm-q">“${esc(i.r.q)}”</p>`:''}<ul class="card-list">${i.r.cards.map(c=>`<li><span class="muted">${esc(c.pos)}</span> ${esc(c.name)}${c.rev?' <em>(reversed)</em>':''}</li>`).join('')}</ul>${noteBlock('reading',i.r.id,i.r.note)}<div class="row"><button class="btn ghost sm" data-act="delread" data-id="${i.r.id}">Delete</button></div></article>`
-  :`<article class="item"><div class="item-h"><span class="badge">Whisper</span><span class="muted">${when(i)}</span></div><h3>${esc(i.o.title)}</h3><p class="muted">${esc(i.o.msg)}</p>${noteBlock('fortune',i.date,S.notes[i.date])}<div class="row"><button class="btn ghost sm" data-act="unsave" data-k="${i.date}">Remove from saved</button></div></article>`).join('')
-  :q?empty('No readings match','Try another word, or clear the search.'):empty('No saved readings yet','Save a tarot reading or a Whisper and it will be kept here, with your notes.')}</div>`;
-}
-// an editable note under a saved item; one note at a time is open for editing
 function noteBlock(kind,id,note){
  const open=V.edit===kind+':'+id;
  if(open)return `<div class="field"><label for="ed">Note</label><textarea id="ed">${esc(note||'')}</textarea></div><div class="row"><button class="btn sm" data-act="savenoteed" data-kind="${kind}" data-id="${esc(id)}">Save note</button><button class="btn ghost sm" data-act="canceledit">Cancel</button></div>`;
@@ -956,7 +943,6 @@ document.addEventListener('click',e=>{
   else{const r=S.readings.find(x=>x.id===id);if(r){r.note=v;if(r.rid)C.updateReading&&C.updateReading(r.rid,v)}}
   save();V.edit=null;toast('Note saved');return render()}
  if(a==='delread'){const r=S.readings.find(x=>x.id===t.dataset.id);if(r&&confirm('Delete this reading?')){S.readings=S.readings.filter(x=>x!==r);save();if(r.rid)C.deleteReading&&C.deleteReading(r.rid);toast('Reading deleted')}return render()}
- if(a==='freadings'){V.filter.readings=t.dataset.k;return render()}
  if(a==='fsaved'){V.filter.saved=t.dataset.k;return render()}
  if(a==='fevents'){V.filter.events=t.dataset.k;return render()}
  if(a==='jkind'){V.jdraft=Object.assign(readJournalDraft(),{kind:t.dataset.k});return render()}
@@ -1021,7 +1007,6 @@ document.addEventListener('keydown',e=>{
  if((e.key==='Enter'||e.key===' ')&&e.target.matches('.scene[data-act],[data-planet],.wheel [data-sign]')){e.preventDefault();tap(e.target)}
  if(e.key==='Enter'&&e.target.matches('input[id$="-q"]')){e.preventDefault();placeSearch(e.target.id.slice(0,-2))}
 });
-document.addEventListener('input',e=>{if(e.target.id==='rsearch'){V.search=e.target.value;const pos=e.target.selectionStart;render();const i=$('#rsearch');if(i){i.focus();i.setSelectionRange(pos,pos)}}});
 document.addEventListener('change',e=>{
  const i=e.target,id=i.id;
  if(id==='bu'){readBirth();render()}

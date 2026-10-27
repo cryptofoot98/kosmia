@@ -478,3 +478,6 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .kas-float{display:block;width:74px;height:auto;filter:drop-shadow(0 4px 6px rgba(58,38,24,.45)) drop-shadow(0 0 1px rgba(58,38,24,.3));transition:transform .2s,filter .2s}
 .kas-btn:hover .kas-float,.kas-btn:focus-visible .kas-float{transform:translateY(-2px) scale(1.04);filter:drop-shadow(0 6px 10px rgba(58,38,24,.5)) drop-shadow(0 0 8px rgba(214,170,90,.7))}
 .kas-btn:focus-visible{outline:none}
+/* Whispers: Save reflection sits centred below the writing field with breathing room */
+.reflect .note-acts{display:flex;justify-content:center;margin-top:22px}
+.reflect .note-priv{margin-top:12px;line-height:1.5}
