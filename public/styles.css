@@ -483,26 +483,54 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .reflect .note-priv{margin-top:12px;line-height:1.5}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-/* Journal: a paper notebook, one painted page at a time, turned like a real leaf */
-.jbook{position:relative;width:100%;max-width:440px;margin:0 auto;perspective:2200px;-webkit-perspective:2200px}
-.jpage{position:relative;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transform-origin:left center}
+/* Journal: a leather-bound notebook, one painted page at a time, its pages turned like real leaves */
+.jbook{position:relative;width:calc(100% - 14px);max-width:430px;margin:0 auto 8px;perspective:1700px;-webkit-perspective:1700px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+/* the back board, a little larger than the pages, and the edges of the pages still to come */
+.jboard{position:absolute;inset:3px -9px -9px -3px;border-radius:4px 10px 10px 4px;background:linear-gradient(135deg,#5A2C1E,#3A1A11);box-shadow:0 14px 26px -10px rgba(40,22,12,.6),0 2px 4px rgba(40,22,12,.35)}
+.jstack{position:absolute;inset:0;border-radius:3px 7px 7px 3px;background:#E9DCC1}
+.jbook.open::before{content:'';position:absolute;z-index:5;left:-7px;top:-3px;bottom:-9px;width:9px;border-radius:5px 0 0 5px;background:linear-gradient(to right,#3A1A11,#6A3524 70%,#4A2318);pointer-events:none}
+.jbook.closed .jstack{box-shadow:none!important}
+.jpage{position:relative;z-index:2;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transform-origin:left center;--lit:0;--dim:0;--cast:0}
 .jpage.jp-abs{position:absolute;inset:0}
-.jp-front{position:relative;aspect-ratio:2/3;background:#EFE3CE var(--paper) center/100% 100% no-repeat;border-radius:3px 8px 8px 3px;
- box-shadow:0 1px 2px rgba(58,38,24,.25),0 10px 24px -8px rgba(58,38,24,.45),inset 7px 0 10px -6px rgba(58,38,24,.35);
- backface-visibility:hidden;-webkit-backface-visibility:hidden;--ink:#3B2A1A;--ink2:#6B5843;--rule:rgba(110,84,50,.26);color:var(--ink)}
-.jp-front.dark{--ink:#EADBB4;--ink2:#C9B27E;--rule:rgba(214,186,120,.28)}
-.jp-in{position:absolute;inset:15% 15% 13% 15%;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin}
-.jp-num{position:absolute;bottom:4.2%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:.8rem;color:var(--ink2)}
-.jp-date{margin:0;font-family:'Parisienne',cursive;font-size:1.12rem;white-space:nowrap;line-height:1.2;color:var(--ink2)}
+.jpage.leaf{z-index:4;will-change:transform}
+.jpage.under{z-index:2}
+.jp-front{position:relative;aspect-ratio:2/3;background:#EFE3CE var(--paper) center/100% 100% no-repeat;border-radius:3px 7px 7px 3px;
+ box-shadow:inset 8px 0 12px -8px rgba(58,38,24,.4),0 1px 2px rgba(58,38,24,.2);backface-visibility:hidden;-webkit-backface-visibility:hidden;
+ --ink:#3B2A1A;--ink2:#5E4C38;--rule:rgba(110,84,50,.28);--wash:rgba(242,233,214,.86);color:var(--ink);
+ --t:18%;--r:15%;--b:15%;--l:15%}
+.jp-front.dark{--ink:#EFE2BF;--ink2:#D4BE8A;--rule:rgba(214,186,120,.3);--wash:rgba(27,32,47,.84)}
+/* light across the lifting leaf, shade on its far half, and the leaf's shadow falling on the page beneath */
+.jp-front::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0}
+.jpage.leaf>.jp-front::after{opacity:1;background:linear-gradient(to left,rgba(255,250,236,calc(var(--lit)*.6)),rgba(255,250,236,0) 35%),linear-gradient(to right,rgba(40,24,12,0) 30%,rgba(40,24,12,var(--dim)))}
+.jpage.under>.jp-front::after{opacity:1;background:linear-gradient(to right,rgba(40,24,12,var(--cast)),rgba(40,24,12,0) 70%)}
+.jp-back{position:absolute;inset:0;border-radius:7px 3px 3px 7px;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;
+ background:linear-gradient(to left,rgba(58,38,24,.3),transparent 16%),linear-gradient(to right,rgba(40,24,12,calc(var(--dim)*.6)),transparent),#E8DABF}
+.jp-back.endpaper{background:linear-gradient(to left,rgba(0,0,0,.35),transparent 12%),radial-gradient(circle at 30% 30%,rgba(139,106,62,.25) 0 2px,transparent 3px) 0 0/22px 22px,#6B3324;box-shadow:inset 0 0 0 10px #4A2318}
+/* text always sits on clear paper: a soft wash behind the writing area, feathered so it melts into the page */
+.jp-wash{position:absolute;top:calc(var(--t) - 3%);right:calc(var(--r) - 4%);bottom:calc(var(--b) - 3%);left:calc(var(--l) - 4%);background:var(--wash);border-radius:18px;
+ -webkit-mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 94%,transparent);-webkit-mask-composite:source-in;
+ mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 94%,transparent);mask-composite:intersect}
+.jp-in{position:absolute;top:var(--t);right:var(--r);bottom:var(--b);left:var(--l);overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin}
+.p-sleeping-moon{--t:28%;--r:17%;--b:22%;--l:15%}
+.p-sun-face{--t:22%;--r:16%;--b:24%;--l:14%}
+.p-pressed-roses{--t:21%;--r:17%;--b:21%;--l:26%}
+.p-compass-rose{--t:26%;--r:15%;--b:16%;--l:19%}
+.p-night-sky{--t:18%;--r:15%;--b:18%;--l:15%}
+.p-moon-phases{--t:20%;--r:18%;--b:19%;--l:18%}
+.jp-num{position:absolute;bottom:4.5%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:.8rem;color:var(--ink2)}
+.jp-date{margin:0;font-family:'Parisienne',cursive;font-size:1.12rem;line-height:1.25;color:var(--ink2)}
 .jp-kind-l{margin:0;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
 .jp-title{margin:0;font-family:var(--serif);font-weight:600;font-size:1.2rem;line-height:1.25;color:var(--ink)}
 .jp-prompt{margin:0;font-style:italic;font-size:.92rem;line-height:1.4;color:var(--ink2)}
-.jp-small{margin:0;font-size:.85rem;color:var(--ink2)}
+.jp-cards{display:flex;justify-content:center;gap:6px;margin:2px 0}
+.jp-card{height:92px;width:auto;border-radius:4px;box-shadow:0 2px 5px rgba(58,38,24,.35)}
+.jp-cards.many .jp-card{height:70px}
+.jp-card.rev{transform:rotate(180deg)}
 /* ruled paper: the text sits on the lines and the lines scroll with it */
 .jp-lines{--lh:28px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:1.06rem;line-height:var(--lh);color:var(--ink);
  background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 4px/100% var(--lh) local;white-space:pre-wrap;overflow-wrap:anywhere}
 .jp-text{flex:none}
-.jpage textarea.jp-lines{flex:1 1 auto;min-height:168px;width:100%;resize:none;border:0;border-radius:0;padding:4px 0 0;box-shadow:none;outline:none;-webkit-appearance:none;appearance:none}
+.jpage textarea.jp-lines{flex:1 1 auto;min-height:140px;width:100%;resize:none;border:0;border-radius:0;padding:4px 0 0;box-shadow:none;outline:none;-webkit-appearance:none;appearance:none}
 .jpage .jp-tline{width:100%;border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;padding:2px 0 4px;box-shadow:none;outline:none;font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--ink);-webkit-appearance:none;appearance:none}
 .jpage textarea.jp-lines:focus,.jpage .jp-tline:focus{filter:none;box-shadow:none}
 .jpage ::placeholder{color:var(--ink2);opacity:.75}
@@ -511,32 +539,21 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jp-kind[aria-checked=true]{color:var(--ink);font-weight:600;border-bottom-color:currentColor}
 .jp-acts{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:8px}
 .jp-front .link{color:var(--ink2)}
-.jp-cover{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:14px}
-.jp-script{margin:0;font-family:'Parisienne',cursive;font-size:2.4rem;line-height:1.1;color:var(--ink)}
+/* the leather cover, its name tooled in gold within the oval */
+.jp-front.jp-leather{background:#4A2318 url(/art/pages/cover.webp) center/100% 100% no-repeat;border-radius:4px 10px 10px 4px;box-shadow:inset 6px 0 10px -6px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.3)}
+.jc-in{position:absolute;top:27%;bottom:31%;left:25%;right:25%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
+.jc-l,.jc-name-in,.jc-btn,.jc-link{color:#E2C27E;text-shadow:0 1px 0 rgba(0,0,0,.55)}
+.jc-l{margin:0;font-family:var(--serif);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:.95rem;line-height:1.4}
+.jc-l span{font-size:.68rem;letter-spacing:.28em}
+.jc-name{margin:0;font-family:'Parisienne',cursive;font-size:2.1rem;line-height:1.2;padding:0 4px;overflow-wrap:anywhere;background:linear-gradient(180deg,#F3DC9E,#C39A4E 60%,#E9CB86);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))}
+.jpage .jc-name-in{width:100%;background:rgba(0,0,0,.18);border:0;border-bottom:1px solid rgba(226,194,126,.7);border-radius:4px 4px 0 0;padding:6px 4px;box-shadow:inset 0 2px 5px rgba(0,0,0,.45);font-family:'Parisienne',cursive;font-size:1.5rem;text-align:center;outline:none;-webkit-appearance:none;appearance:none}
+.jpage .jc-name-in::placeholder{color:#C9A869;opacity:.8}
+.jc-acts{display:flex;flex-direction:column;align-items:center;gap:8px}
+.jc-btn{background:linear-gradient(#5A2C1E,#3E1C13);border:1px solid rgba(226,194,126,.65);border-radius:8px;padding:8px 14px;font-family:var(--serif);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;cursor:pointer;box-shadow:inset 0 2px 4px rgba(0,0,0,.5),0 1px 0 rgba(255,220,150,.15)}
+.jc-btn:hover,.jc-btn:focus-visible{border-color:#F0D492;color:#F6DFA4}
+.jc-link{background:none;border:0;font:inherit;font-size:.78rem;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .jnav{display:flex;align-items:center;justify-content:center;gap:18px}
 .jnav .btn{min-width:48px;font-size:1.3rem;line-height:1}
 .jnav .btn:disabled{opacity:.4;cursor:default}
 .jnav-n{font-family:var(--serif);color:var(--mauve);min-width:8em;text-align:center}
-/* the turning leaf: its painted face, then the plain back of the paper as it swings past the spine */
-.jp-back{position:absolute;inset:0;border-radius:8px 3px 3px 8px;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;
- background:linear-gradient(to left,rgba(58,38,24,.28),transparent 18%),#E8DABF;box-shadow:inset -7px 0 10px -6px rgba(58,38,24,.35)}
-.jpage.leaf{z-index:2;will-change:transform}
-.jpage.under{z-index:1}
-.jpage.leaf .jp-front::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(to right,rgba(40,26,14,0),rgba(40,26,14,.45));opacity:0}
-.turn-fwd{animation:jturnF .75s cubic-bezier(.45,.05,.3,1) forwards}
-.turn-back{animation:jturnB .75s cubic-bezier(.45,.05,.3,1) forwards}
-.turn-fwd .jp-front::after{animation:jshade .75s ease-in forwards}
-.turn-back .jp-front::after{animation:jshade .75s ease-out reverse forwards}
-.jpage.under .jp-front{animation:jdim .75s ease-in-out}
-@keyframes jturnF{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
-@keyframes jturnB{from{transform:rotateY(-180deg)}to{transform:rotateY(0)}}
-@keyframes jshade{to{opacity:1}}
-@keyframes jdim{50%{filter:brightness(.88)}}
-/* each paper keeps its writing clear of its own painted corners */
-.p-sleeping-moon .jp-in{inset:29% 18% 25% 14%}
-.p-sun-face .jp-in{inset:23% 14% 19% 14%}
-.p-pressed-roses .jp-in{inset:16% 17% 17% 23%}
-.p-compass-rose .jp-in{inset:25% 14% 15% 19%}
-.p-night-sky .jp-in{inset:18% 15% 17% 15%}
-.p-moon-phases .jp-in{inset:21% 17% 18% 17%}
-@media (max-width:370px){.jp-date{font-size:.98rem}.jp-lines{--lh:25px;font-size:.96rem}.jp-title{font-size:1.05rem}.jp-prompt{font-size:.84rem}.jp-kind{font-size:.76rem}.jp-script{font-size:2rem}}
+@media (max-width:370px){.jp-date{font-size:.98rem}.jp-lines{--lh:25px;font-size:.96rem}.jp-title{font-size:1.05rem}.jp-prompt{font-size:.84rem}.jp-kind{font-size:.76rem}.jp-card{height:74px}.jp-cards.many .jp-card{height:56px}.jc-name{font-size:1.7rem}.jc-l{font-size:.8rem}.jc-in{left:23%;right:23%}}

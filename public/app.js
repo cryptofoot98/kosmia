@@ -461,9 +461,11 @@ function noteBlock(kind,id,note){
  if(open)return `<div class="field"><label for="ed">Note</label><textarea id="ed">${esc(note||'')}</textarea></div><div class="row"><button class="btn sm" data-act="savenoteed" data-kind="${kind}" data-id="${esc(id)}">Save note</button><button class="btn ghost sm" data-act="canceledit">Cancel</button></div>`;
  return `${note?`<p class="item-note">“${esc(note)}”</p>`:''}<button class="link" data-act="editnote" data-kind="${kind}" data-id="${esc(id)}">${note?'Edit note':'Add a note'}</button>`;
 }
-/* ----- Journal: a paper notebook. Every entry is a page (journal pages, Whisper reflections and tarot notes), oldest first,
-   opening on a title page and ending on a blank page for a new entry. Pages turn with a 3D page-turn (jflip). ----- */
+/* ----- Journal: a leather-bound notebook. The cover comes first, then every entry as a page (journal pages, Whisper
+   reflections and tarot notes), oldest first, ending on a blank page for a new entry. Pages turn by hand or by button. ----- */
 const JPAPER=['sleeping-moon','sun-face','pressed-roses','compass-rose','night-sky','moon-phases'];
+// the journal's owner: a name given in the journal itself, or else the name from Birth Chart
+const journalName=()=>((S.settings||{}).jname||S.fullName||S.name||'').trim();
 const lastReading=()=>S.readings.slice().sort((a,b)=>(b.at||b.date)>(a.at||a.date)?1:-1)[0];
 function journalPages(){
  const e=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),
@@ -472,57 +474,101 @@ function journalPages(){
   .sort((a,b)=>a.day>b.day?1:a.day<b.day?-1:((a.at||'')>(b.at||'')?1:-1));
  return [{t:'cover'},...e,{t:'new'}];
 }
-const jIdx=pages=>V.jpage==null||V.jpage>=pages.length?pages.length-1:Math.max(0,V.jpage);
+const jIdx=pages=>V.jpage==null?0:Math.max(0,Math.min(pages.length-1,V.jpage));
 const jDate=d=>`<p class="jp-date">${ymdLong(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>`;
 const jEdit=(act,kind,id,label='Edit')=>`<button class="link" data-act="${act}" ${kind?`data-kind="${kind}" `:''}data-id="${esc(id)}">${label}</button>`;
+// the card a reflection was written about, laid on the page above the writing
+const jWhisperArt=o=>{const p=pic('whispers',o.id,'jp-card');return p?`<div class="jp-cards">${p}</div>`:''};
+const jTarotArt=r=>{const c=r.cards.slice(0,5).map(x=>pic('deck',x.id,'jp-card'+(x.rev?' rev':''))).filter(Boolean);return c.length?`<div class="jp-cards${c.length>3?' many':''}">${c.join('')}</div>`:''};
+const jCardsLine=r=>`${r.q?'“'+esc(r.q)+'” · ':''}${r.cards.map(x=>esc(x.name)+(x.rev?' (reversed)':'')).join(', ')}`;
 // the writing form: a title line and ruled paper; Whisper and tarot reflections are kept with the reading itself
 function jForm(d,edit){
  const k=d.kind,today=dkey(),c=todayCard(),r=lastReading();
  const kinds=[['reflection','A reflection'],['synchronicity','A synchronicity']];
  if(!edit){if(S.revealed[today])kinds.push(['whisper','Today’s Whisper']);if(r)kinds.push(['tarot','My last reading'])}
  const tabs=edit?'':`<div class="jp-kinds" role="radiogroup" aria-label="What are you writing?">${kinds.map(([v,l])=>`<button class="jp-kind" role="radio" aria-checked="${k===v}" data-act="jkind" data-k="${v}">${l}</button>`).join('')}</div>`;
- if(k==='whisper')return `${tabs}<p class="jp-title">${esc(c.title)}</p><p class="jp-prompt">${c.ref}</p><label class="sr-only" for="ed">My reflection</label><textarea id="ed" class="jp-lines" placeholder="Take your time. Write whatever rises.">${esc(S.notes[today]||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="fortune" data-id="${today}">Write it in</button></div>`;
- if(k==='tarot')return `${tabs}<p class="jp-title">${esc((SPREADS[r.spread]||{n:r.spread}).n)}</p><p class="jp-prompt">${r.q?'“'+esc(r.q)+'” · ':''}${r.cards.map(x=>esc(x.name)+(x.rev?' (reversed)':'')).join(', ')}</p><label class="sr-only" for="ed">My note on this reading</label><textarea id="ed" class="jp-lines" placeholder="What did the cards bring up for you?">${esc(r.note||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="reading" data-id="${r.id}">Write it in</button></div>`;
+ if(k==='whisper'&&S.revealed[today])return `${tabs}${jWhisperArt(c)}<p class="jp-title">${esc(c.title)}</p><p class="jp-prompt">${c.ref}</p><label class="sr-only" for="ed">My reflection</label><textarea id="ed" class="jp-lines" placeholder="Take your time. Write whatever rises.">${esc(S.notes[today]||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="fortune" data-id="${today}">Write it in</button></div>`;
+ if(k==='tarot'&&r)return `${tabs}${jTarotArt(r)}<p class="jp-title">${esc((SPREADS[r.spread]||{n:r.spread}).n)}</p><p class="jp-prompt">${jCardsLine(r)}</p><label class="sr-only" for="ed">My note on this reading</label><textarea id="ed" class="jp-lines" placeholder="What did the cards bring up for you?">${esc(r.note||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="reading" data-id="${r.id}">Write it in</button></div>`;
  return `${tabs}${k==='synchronicity'?'<p class="jp-prompt">A meaningful coincidence: a repeated number, a song at the right moment, a chance meeting.</p>':''}<label class="sr-only" for="jt">Title</label><input type="text" id="jt" class="jp-tline" value="${esc(d.title)}" placeholder="A title, if you like"><label class="sr-only" for="jb">Entry</label><textarea id="jb" class="jp-lines" placeholder="What happened, and what did it stir in you?">${esc(d.body)}</textarea><div class="jp-acts"><button class="btn sm" data-act="savejournal">${edit?'Save changes':'Write it in'}</button>${edit?'<button class="link" data-act="canceljournal">Cancel</button>':''}</div>`;
 }
+// the leather front cover: "This journal belongs to", then the owner's name, or a place to write it
+function jCover(){
+ const nm=journalName(),ask=!nm||V.jnameEdit;
+ return `<div class="jp-front jp-leather"><div class="jc-in"><p class="jc-l">This journal<br><span>belongs to</span></p>
+ ${ask?`<label class="sr-only" for="jn">Your name for this journal</label><input type="text" id="jn" class="jc-name-in" value="${esc(nm)}" placeholder="Write your name" autocomplete="nickname" maxlength="40"><div class="jc-acts"><button class="jc-btn" data-act="jname">${nm?'Keep this name':'Open my journal'}</button>${V.jnameEdit?'<button class="jc-link" data-act="jnamecancel">Cancel</button>':''}</div>`
+  :`<p class="jc-name">${esc(nm)}</p><div class="jc-acts"><button class="jc-btn" data-act="jflip" data-to="last">Open my journal</button><button class="jc-link" data-act="jnameedit">Change name</button></div>`}
+ </div></div>`;
+}
 function jPage(p,i,n){
- const art=JPAPER[i%JPAPER.length];let h;
- if(p.t==='cover')h=`<div class="jp-cover"><p class="jp-script">${S.name?esc(S.name.split(' ')[0])+'’s':'My'} Journal</p><p class="jp-prompt">Private to you. Your reflections on Whispers and tarot readings are kept in these pages too.</p><p class="jp-small">${n-2?`${n-2} ${n-2===1?'page':'pages'} written`:'Not a page written yet'}</p></div>`;
- else if(p.t==='new')h=`${jDate(dkey())}${jForm(V.jdraft||{kind:'reflection',title:'',body:''})}`;
+ if(p.t==='cover')return `<div class="jpage is-cover">${jCover()}</div>`;
+ const art=JPAPER[(i-1)%JPAPER.length];let h;
+ if(p.t==='new')h=`${jDate(dkey())}${jForm(V.jdraft||{kind:'reflection',title:'',body:''})}`;
  else if(p.t==='j'){const j=p.j;
   h=V.jedit===j.id?`${jDate(j.day)}${jForm(V.jdraft||j,true)}`
    :`${jDate(j.day)}<p class="jp-kind-l">${j.kind==='synchronicity'?'Synchronicity':'Reflection'}</p>${j.title?`<p class="jp-title">${esc(j.title)}</p>`:''}<p class="jp-lines jp-text">${esc(j.body)}</p><div class="jp-acts">${jEdit('editjournal','',j.id)}${jEdit('deljournal','',j.id,'Remove')}</div>`}
  else{const w=p.t==='n',key=w?'fortune:'+p.day:'reading:'+p.r.id,note=w?p.n:p.r.note;
-  const head=w?`<p class="jp-kind-l">Whisper</p><p class="jp-title">${esc(p.o.title)}</p><p class="jp-prompt">${p.o.ref}</p>`
-   :`<p class="jp-kind-l">Tarot</p><p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${p.r.q?'“'+esc(p.r.q)+'” · ':''}${p.r.cards.map(x=>esc(x.name)+(x.rev?' (reversed)':'')).join(', ')}</p>`;
+  const head=w?`<p class="jp-kind-l">Whisper</p>${jWhisperArt(p.o)}<p class="jp-title">${esc(p.o.title)}</p><p class="jp-prompt">${p.o.ref}</p>`
+   :`<p class="jp-kind-l">Tarot</p>${jTarotArt(p.r)}<p class="jp-title">${esc((SPREADS[p.r.spread]||{n:p.r.spread}).n)}</p><p class="jp-prompt">${jCardsLine(p.r)}</p>`;
   h=V.edit===key?`${jDate(p.day)}${head}<label class="sr-only" for="ed">Note</label><textarea id="ed" class="jp-lines">${esc(note||'')}</textarea><div class="jp-acts"><button class="btn sm" data-act="savenoteed" data-kind="${w?'fortune':'reading'}" data-id="${esc(w?p.day:p.r.id)}">Save</button><button class="link" data-act="canceledit">Cancel</button></div>`
    :`${jDate(p.day)}${head}<p class="jp-lines jp-text">${esc(note)}</p><div class="jp-acts">${jEdit('editnote',w?'fortune':'reading',w?p.day:p.r.id)}</div>`}
- return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><div class="jp-in">${h}</div><span class="jp-num">${i?i:''}</span></div></div>`;
+ return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><div class="jp-wash" aria-hidden="true"></div><div class="jp-in">${h}</div><span class="jp-num">${i}</span></div></div>`;
 }
+// the edges of the pages still to come, stacked under the open one, and the back board beneath them
+const jStack=left=>{const k=Math.max(2,Math.min(9,Math.ceil(left*1.5)));return Array.from({length:k},(_,j)=>`${j+1}px ${j+1}px 0 ${j%2?'#D9C8A6':'#EFE3CC'}`).join(',')};
+let jPre=false;
 function journalView(){
  const pages=journalPages(),i=jIdx(pages),n=pages.length;
- return `<div class="stack"><h1>Journal</h1><div class="jbook" aria-label="Journal, page ${i+1} of ${n}">${jPage(pages[i],i,n)}</div>
- <nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page"${i?'':' disabled'}>‹</button><span class="jnav-n">${i===n-1?'A new page':i?`Page ${i} of ${n-2}`:'Title page'}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>
- ${i<n-1?'<div class="h-acts row"><button class="btn ghost sm" data-act="jflip" data-to="last">Write a new page</button></div>':''}</div>`;
+ if(!jPre){jPre=true;['cover',...JPAPER].forEach(a=>{const im=new Image();im.src=a==='cover'?'/art/pages/cover.webp':`/art/pages/${a}.webp`;im.decode&&im.decode().catch(()=>{})})}
+ return `<div class="stack"><h1>Journal</h1><div class="jbook${i?' open':' closed'}" aria-label="${i?`Journal, page ${i} of ${n-1}`:'Journal cover'}"><div class="jboard" aria-hidden="true"></div><div class="jstack" aria-hidden="true" style="box-shadow:${jStack(n-1-i)}"></div>${jPage(pages[i],i,n)}</div>
+ <nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page"${i?'':' disabled'}>‹</button><span class="jnav-n">${!i?'The cover':i===n-1?'A new page':`Page ${i} of ${n-2}`}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>
+ ${i&&i<n-1?'<div class="h-acts row"><button class="btn ghost sm" data-act="jflip" data-to="last">Write a new page</button></div>':''}<p class="muted small center">Drag a page’s edge, or use the arrows, to turn the pages.</p></div>`;
 }
-// turn from the open page to page `to`: forward, the open leaf swings over to the left and reveals the next page;
-// back, the previous leaf swings in from the left over the open one. The view re-renders once the leaf has landed.
-function jflip(to){
- const pages=journalPages(),from=jIdx(pages);to=Math.max(0,Math.min(pages.length-1,to));
- const book=$('.jbook');if(to===from||!book||book.classList.contains('turning'))return;
+/* Turning a page. Forward, the open leaf lifts from its right edge and swings over the spine to the left, uncovering the next
+   page; back, the previous leaf swings in from the left over the open one. JT.p runs from 0 to 1, by finger or by animation,
+   while light and shadow follow the leaf; when it lands the view settles on the new page. */
+let JT=null;
+function jstart(to){
+ const pages=journalPages(),from=jIdx(pages),book=$('.jbook');to=Math.max(0,Math.min(pages.length-1,to));
+ if(JT||to===from||!book)return null;
  // an unfinished new page is kept; an edit in progress is let go
  if(V.jedit){V.jedit=null;V.jdraft=null}else if($('#jb'))V.jdraft=readJournalDraft();
- V.edit=null;
- const done=()=>{V.jpage=to;render()};
- if(matchMedia('(prefers-reduced-motion: reduce)').matches)return done();
- const cur=book.querySelector('.jpage'),tmp=document.createElement('div');
- tmp.innerHTML=jPage(pages[to],to,pages.length);const np=tmp.firstElementChild;
- const leaf=to>from?cur:np,under=to>from?np:cur;
- leaf.insertAdjacentHTML('beforeend','<div class="jp-back" aria-hidden="true"></div>');
- if(to>from)book.insertBefore(np,cur);else book.appendChild(np);
- np.classList.add('jp-abs');leaf.classList.add('leaf',to>from?'turn-fwd':'turn-back');under.classList.add('under');
- book.classList.add('turning');setTimeout(done,760);
+ V.edit=null;V.jnameEdit=false;
+ const fwd=to>from,cur=book.querySelector('.jpage'),tmp=document.createElement('div');
+ tmp.innerHTML=jPage(pages[to],to,pages.length);const np=tmp.firstElementChild,leaf=fwd?cur:np,under=fwd?np:cur;
+ leaf.insertAdjacentHTML('beforeend',`<div class="jp-back${leaf.classList.contains('is-cover')?' endpaper':''}" aria-hidden="true"></div>`);
+ np.classList.add('jp-abs');if(fwd)cur.before(np);else book.appendChild(np);
+ leaf.classList.add('leaf');under.classList.add('under');book.classList.add('turning');
+ JT={to,fwd,leaf,under,p:0,set(p){this.p=p=Math.max(0,Math.min(1,p));const q=fwd?p:1-p,a=-180*q;
+  leaf.style.transform=`rotateY(${a}deg) translateZ(${(Math.sin(q*Math.PI)*14).toFixed(1)}px)`;
+  leaf.style.setProperty('--lit',(Math.min(q*2,1)*.55).toFixed(3));leaf.style.setProperty('--dim',(Math.max(0,1-q*2)*.4+Math.sin(q*Math.PI)*.25).toFixed(3));
+  under.style.setProperty('--cast',((1-q)*.5*(q>0?1:0)).toFixed(3))}};
+ JT.set(0);return JT;
 }
+// carry a turn on to `target` (1 lands it, 0 lets the leaf fall back) with an ease that slows as the page settles
+function jrun(target,ms=900){
+ const t=JT;if(!t)return;const p0=t.p,t0=performance.now(),dur=Math.max(180,ms*Math.abs(target-p0));
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return jland(target);
+ const step=now=>{const k=Math.min(1,(now-t0)/dur),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;t.set(p0+(target-p0)*e);k<1?requestAnimationFrame(step):jland(target)};
+ requestAnimationFrame(step);
+}
+function jland(target){const t=JT;JT=null;if(t&&target===1)V.jpage=t.to;render()}
+function jflip(to){if(jstart(to))jrun(1)}
+// turning by hand: drag across the page (not while writing in it) and the leaf follows; let go past a third to turn it
+let JD=null;
+document.addEventListener('pointerdown',e=>{
+ const book=e.target.closest&&e.target.closest('.jbook');
+ if(!book||JT||e.button>0||e.target.closest('input,textarea,select,button,a,label'))return;
+ JD={x:e.clientX,y:e.clientY,w:book.getBoundingClientRect().width,t:performance.now(),id:e.pointerId};
+});
+document.addEventListener('pointermove',e=>{
+ if(!JD||e.pointerId!==JD.id)return;const dx=e.clientX-JD.x,dy=e.clientY-JD.y;
+ if(!JT){if(Math.abs(dx)<10||Math.abs(dx)<Math.abs(dy)*1.2){if(Math.abs(dy)>14)JD=null;return}
+  if(!jstart(jIdx(journalPages())+(dx<0?1:-1))){JD=null;return}}
+ JT.set(JT.fwd?-dx/(JD.w*.85):dx/(JD.w*.85));
+});
+const jdrop=e=>{if(!JD||e.pointerId!==JD.id)return;const d=JD;JD=null;if(!JT)return;
+ const fast=Math.abs(e.clientX-d.x)/(performance.now()-d.t)>.5;jrun(JT.p>.33||fast?1:0,700)};
+document.addEventListener('pointerup',jdrop);document.addEventListener('pointercancel',jdrop);
 
 /* ----- Affinity ----- */
 const KIND_LABEL={zodiac:'Zodiac Match',resonance:'Soul Resonance',synastry:'Synastry'};
@@ -618,7 +664,7 @@ views.blueprint=()=>{
 };
 function birthForm(){
  const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth));
- return panel(`${plate('natal')}<h3>Your birth details</h3><div class="field"><label for="bd">Date of birth</label><input type="date" id="bd" value="${esc(b.date)}"></div><label class="row"><input type="checkbox" id="bu" ${b.unk?'checked':''} class="cb"> I don’t know my birth time</label>${b.unk?'':`<div class="field"><label for="bt">Time of birth (local time)</label><input type="time" id="bt" value="${esc(b.time)}"></div>`}${placeField('birth',b)}
+ return panel(`${plate('natal')}<h3>Your birth details</h3><div class="field"><label for="bn">Your name</label><input type="text" id="bn" value="${esc(b.name!=null?b.name:S.fullName)}" autocomplete="name" placeholder="Your full name"></div><div class="field"><label for="bd">Date of birth</label><input type="date" id="bd" value="${esc(b.date)}"></div><label class="row"><input type="checkbox" id="bu" ${b.unk?'checked':''} class="cb"> I don’t know my birth time</label>${b.unk?'':`<div class="field"><label for="bt">Time of birth (local time)</label><input type="time" id="bt" value="${esc(b.time)}"></div>`}${placeField('birth',b)}
  <label class="row consent"><input type="checkbox" id="bcons" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my Kosmia account so they sync across my devices. They are private to me and I can delete them in Settings.</span></label>
  <button class="btn" data-act="savebirth">Save and calculate</button><p class="muted small">Birth details are only needed for your chart, Life Path and cycles. Without a time and place, the Ascendant and houses are not calculated.</p>`);
 }
@@ -1000,6 +1046,9 @@ document.addEventListener('click',e=>{
  if(a==='fsaved'){V.filter.saved=t.dataset.k;return render()}
  if(a==='fevents'){V.filter.events=t.dataset.k;return render()}
  if(a==='jkind'){V.jdraft=Object.assign($('#jb')?readJournalDraft():(V.jdraft||{title:'',body:''}),{kind:t.dataset.k});return render()}
+ if(a==='jname'){const v=$('#jn').value.trim();if(!v)return toast('Write your name first');const opening=!V.jnameEdit;S.settings.jname=v;if(!S.fullName)S.fullName=v;V.jnameEdit=false;save();syncProfile();render();if(opening)jflip(journalPages().length-1);return}
+ if(a==='jnameedit'){V.jnameEdit=true;render();const x=$('#jn');if(x){x.focus();x.select()}return}
+ if(a==='jnamecancel'){V.jnameEdit=false;return render()}
  if(a==='jflip'){const n=journalPages().length;return jflip(t.dataset.to==='last'?n-1:jIdx(journalPages())+(+t.dataset.d))}
  if(a==='savejournal'){const d=readJournalDraft();if(!d.body.trim())return toast('Write something first');
   if(V.jedit){const j=S.journal.find(x=>x.id===V.jedit);if(j){Object.assign(j,{kind:d.kind,title:d.title.trim(),body:d.body.trim()});C.saveJournal&&C.saveJournal(j)}}
@@ -1019,7 +1068,7 @@ document.addEventListener('click',e=>{
   if(t.dataset.id==='syn')readSyn();else readBirth();
   Object.assign(obj,{place:[r.name,r.admin1,r.country].filter(Boolean).join(', '),lat:r.latitude,lon:r.longitude,tz:r.timezone});V.places[t.dataset.id]={};return render()}
  if(a==='savebirth'){readBirth();const b=V.birthDraft;if(!b.date)return toast('Add your date of birth');
-  S.birth=Object.assign({},b,{time:b.unk?'':b.time});S.birthConsent=$('#bcons').checked;V.birthDraft=null;save();syncProfile();toast(S.birthConsent?'Saved to your account':'Saved on this device');return render()}
+  if(b.name!=null)S.fullName=b.name.trim();S.birth=Object.assign({},b,{time:b.unk?'':b.time});delete S.birth.name;S.birthConsent=$('#bcons').checked;V.birthDraft=null;save();syncProfile();toast(S.birthConsent?'Saved to your account':'Saved on this device');return render()}
  if(a==='savenames'){S.fullName=$('#fn').value.trim();S.altName=$('#an').value.trim();S.settings.yMode=$('#ym').value;save();syncProfile();return render()}
  if(a==='tohoroscope'){V.exploreSign=null;V.period='daily';return go('horoscopes','overview')}
  if(a==='savename'){S.name=$('#nm').value.trim();save();syncProfile();return toast('Saved')}
@@ -1051,14 +1100,11 @@ document.addEventListener('click',e=>{
 });
 function readJournalDraft(){const k=(V.jdraft||{}).kind;return {kind:k==='synchronicity'?k:'reflection',title:($('#jt')||{value:''}).value,body:($('#jb')||{value:''}).value}}
 function readSyn(){const Y=V.syn,g=id=>$('#'+id);if(g('sn'))Y.name=g('sn').value.trim();if(g('sd'))Y.date=g('sd').value;if(g('su'))Y.unk=g('su').checked;if(g('st'))Y.time=g('st').value}
-function readBirth(){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth)),g=id=>$('#'+id);if(g('bd'))b.date=g('bd').value;if(g('bu'))b.unk=g('bu').checked;if(g('bt'))b.time=g('bt').value}
+function readBirth(){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth)),g=id=>$('#'+id);if(g('bn'))b.name=g('bn').value;if(g('bd'))b.date=g('bd').value;if(g('bu'))b.unk=g('bu').checked;if(g('bt'))b.time=g('bt').value}
 const tap=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));
-// swipe across the notebook to turn its pages (not while writing in it)
-let jtx=null;
-document.addEventListener('touchstart',e=>{jtx=e.target.closest('.jbook')&&!e.target.closest('input,textarea')?[e.touches[0].clientX,e.touches[0].clientY]:null},{passive:true});
-document.addEventListener('touchend',e=>{if(!jtx)return;const t=e.changedTouches[0],dx=t.clientX-jtx[0],dy=t.clientY-jtx[1];jtx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)jflip(jIdx(journalPages())+(dx<0?1:-1))},{passive:true});
 document.addEventListener('keydown',e=>{
  if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&$('.jbook')&&!e.target.closest('input,textarea,select,.wheel')){e.preventDefault();return jflip(jIdx(journalPages())+(e.key==='ArrowRight'?1:-1))}
+ if(e.key==='Enter'&&e.target.id==='jn'){e.preventDefault();return tap($('[data-act=jname]'))}
  if(e.key==='Escape'&&KS.open)return kasClose();
  if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}
  if(e.key==='Escape'&&V.spop){V.spop=null;return render()}
