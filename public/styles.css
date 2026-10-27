@@ -484,12 +484,7 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* Journal: a leather-bound notebook, one painted page at a time, its pages turned like real leaves */
-.jbook{position:relative;width:calc(100% - 14px);max-width:430px;margin:0 auto 8px;perspective:1700px;-webkit-perspective:1700px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 /* the back board, a little larger than the pages, and the edges of the pages still to come */
-.jboard{position:absolute;inset:3px -9px -9px -3px;border-radius:4px 10px 10px 4px;background:linear-gradient(135deg,#5A2C1E,#3A1A11);box-shadow:0 14px 26px -10px rgba(40,22,12,.6),0 2px 4px rgba(40,22,12,.35)}
-.jstack{position:absolute;inset:0;border-radius:3px 7px 7px 3px;background:#E9DCC1}
-.jbook.open::before{content:'';position:absolute;z-index:5;left:-7px;top:-3px;bottom:-9px;width:9px;border-radius:5px 0 0 5px;background:linear-gradient(to right,#3A1A11,#6A3524 70%,#4A2318);pointer-events:none}
-.jbook.closed .jstack{box-shadow:none!important}
 .jpage{position:relative;z-index:2;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transform-origin:left center;--lit:0;--dim:0;--cast:0}
 .jpage.jp-abs{position:absolute;inset:0}
 .jpage.leaf{z-index:4;will-change:transform}
@@ -529,7 +524,6 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 /* ruled paper: the text sits on the lines and the lines scroll with it */
 .jp-lines{--lh:28px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:1.06rem;line-height:var(--lh);color:var(--ink);
  background:repeating-linear-gradient(to bottom,transparent 0 calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px) var(--lh)) 0 4px/100% var(--lh) local;white-space:pre-wrap;overflow-wrap:anywhere}
-.jp-text{flex:none}
 .jpage textarea.jp-lines{flex:1 1 auto;min-height:140px;width:100%;resize:none;border:0;border-radius:0;padding:4px 0 0;box-shadow:none;outline:none;-webkit-appearance:none;appearance:none}
 .jpage .jp-tline{width:100%;border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;padding:2px 0 4px;box-shadow:none;outline:none;font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--ink);-webkit-appearance:none;appearance:none}
 .jpage textarea.jp-lines:focus,.jpage .jp-tline:focus{filter:none;box-shadow:none}
@@ -557,3 +551,31 @@ select{padding-right:44px;overflow:hidden;text-overflow:ellipsis;white-space:now
 .jnav .btn:disabled{opacity:.4;cursor:default}
 .jnav-n{font-family:var(--serif);color:var(--mauve);min-width:8em;text-align:center}
 @media (max-width:370px){.jp-date{font-size:.98rem}.jp-lines{--lh:25px;font-size:.96rem}.jp-title{font-size:1.05rem}.jp-prompt{font-size:.84rem}.jp-kind{font-size:.76rem}.jp-card{height:74px}.jp-cards.many .jp-card{height:56px}.jc-name{font-size:1.7rem}.jc-l{font-size:.8rem}.jc-in{left:23%;right:23%}}
+
+/* the book in depth: a block of page edges seen along the side and the foot of the open page, thicker while more pages remain,
+   on a leather back board; the spine's leather shows at the left once the book is open */
+.jbook{--T:12px;--B:calc(var(--T)*1.5);position:relative;left:calc((var(--T) + 2px)/-2);width:calc(100% - var(--T) - 16px);max-width:420px;margin:0 auto calc(var(--B) + 16px);perspective:1700px;-webkit-perspective:1700px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.jboard{position:absolute;top:-4px;left:-5px;right:calc(-1*var(--T) - 7px);bottom:calc(-1*var(--B) - 8px);border-radius:5px 12px 12px 5px;background:linear-gradient(135deg,#62301F,#3A1A11 70%);box-shadow:0 18px 30px -12px rgba(40,22,12,.65),0 3px 6px rgba(40,22,12,.35),inset 0 0 0 1px rgba(0,0,0,.25)}
+.jblock::before,.jblock::after{content:'';position:absolute;pointer-events:none}
+/* the fore-edge and foot of the block: many fine, uneven leaves, shaded as they recede; the foot shows deeper, as a book
+   seen from a little above shows more of its lower edge */
+.jblock::before{top:0;left:100%;width:var(--T);height:calc(100% + var(--B));clip-path:polygon(0 0,100% var(--T),100% 100%,0 calc(100% - var(--B)));
+ background:linear-gradient(to right,rgba(255,246,226,.25),rgba(70,44,22,.32)),url(/art/pages/edge-v.webp) 0 0/200px 300px,#E3D3B2;border-radius:0 6px 6px 0}
+.jblock::after{top:100%;left:0;height:var(--B);width:calc(100% + var(--T));clip-path:polygon(0 0,calc(100% - var(--T)) 0,100% 100%,calc(var(--B)*.4) 100%);
+ background:linear-gradient(to bottom,rgba(255,246,226,.18),rgba(70,44,22,.42)),url(/art/pages/edge-h.webp) 0 0/300px 200px,#E0CFAD;border-radius:0 0 6px 10px}
+.jbook.open::before{content:'';position:absolute;z-index:7;left:-8px;top:-4px;bottom:calc(-1*var(--B) - 8px);width:10px;border-radius:6px 0 0 6px;background:linear-gradient(to right,#33170F,#6E3726 65%,#4A2318);pointer-events:none}
+.jbook.open .jp-front{box-shadow:inset 14px 0 16px -12px rgba(58,38,24,.5),inset 2px 0 2px -1px rgba(58,38,24,.35),0 1px 2px rgba(58,38,24,.2)}
+/* every page is ruled to its foot, written on or not */
+.jp-text{flex:1 0 auto;min-height:84px}
+.jp-in>.jp-acts{margin-top:0}
+/* a soft leaf in mid-turn: the bend's shading on the page, the reflected back of the paper with light rolling along the
+   crease, and the shadow it casts on the page beneath; all clipped at the spine */
+.jturn{position:absolute;inset:0;z-index:6;pointer-events:none;clip-path:inset(-60% -60% -60% 0);-webkit-clip-path:inset(-60% -60% -60% 0)}
+.jturn>div,.jt-flap{position:absolute;inset:0}
+.jturn i{position:absolute;left:0;top:0;transform-origin:0 0;display:block}
+.jt-castg{background:linear-gradient(to right,rgba(40,24,12,.42),rgba(40,24,12,.12) 40%,rgba(40,24,12,0))}
+.jt-bendg{background:linear-gradient(to right,rgba(40,24,12,.2),rgba(40,24,12,.06) 45%,rgba(40,24,12,0))}
+.jt-flap{transform-origin:0 0;border-radius:3px 7px 7px 3px;background:linear-gradient(rgba(234,221,193,.8),rgba(234,221,193,.8)),var(--paper) center/100% 100% no-repeat,#EFE3CE}
+.jt-flap::after{content:'';position:absolute;inset:18% 15% 15%;background:repeating-linear-gradient(to bottom,transparent 0 27px,rgba(110,84,50,.16) 27px 28px)}
+.jt-shadeg{background:linear-gradient(to right,rgba(255,251,240,0),rgba(255,251,240,.6) 7%,rgba(255,251,240,.18) 30%,rgba(40,24,12,.06) 70%,rgba(40,24,12,.2))}
+.jpage.leaf:not(.hard){will-change:clip-path}

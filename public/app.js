@@ -513,21 +513,59 @@ function jPage(p,i,n){
    :`${jDate(p.day)}${head}<p class="jp-lines jp-text">${esc(note)}</p><div class="jp-acts">${jEdit('editnote',w?'fortune':'reading',w?p.day:p.r.id)}</div>`}
  return `<div class="jpage"><div class="jp-front p-${art}${art==='night-sky'?' dark':''}" style="--paper:url(/art/pages/${art}.webp)"><div class="jp-wash" aria-hidden="true"></div><div class="jp-in">${h}</div><span class="jp-num">${i}</span></div></div>`;
 }
-// the edges of the pages still to come, stacked under the open one, and the back board beneath them
-const jStack=left=>{const k=Math.max(2,Math.min(9,Math.ceil(left*1.5)));return Array.from({length:k},(_,j)=>`${j+1}px ${j+1}px 0 ${j%2?'#D9C8A6':'#EFE3CC'}`).join(',')};
+// how thick the block of pages still to come looks beneath the open one
+const jDepth=left=>Math.round(Math.max(12,Math.min(26,11+left*1.8)));
 let jPre=false;
 function journalView(){
  const pages=journalPages(),i=jIdx(pages),n=pages.length;
- if(!jPre){jPre=true;['cover',...JPAPER].forEach(a=>{const im=new Image();im.src=a==='cover'?'/art/pages/cover.webp':`/art/pages/${a}.webp`;im.decode&&im.decode().catch(()=>{})})}
- return `<div class="stack"><h1>Journal</h1><div class="jbook${i?' open':' closed'}" aria-label="${i?`Journal, page ${i} of ${n-1}`:'Journal cover'}"><div class="jboard" aria-hidden="true"></div><div class="jstack" aria-hidden="true" style="box-shadow:${jStack(n-1-i)}"></div>${jPage(pages[i],i,n)}</div>
+ if(!jPre){jPre=true;['cover','edge-h','edge-v',...JPAPER].forEach(a=>{const im=new Image();im.src=`/art/pages/${a}.webp`;im.decode&&im.decode().catch(()=>{})})}
+ return `<div class="stack"><h1>Journal</h1><div class="jbook${i?' open':' closed'}" style="--T:${jDepth(n-1-i)}px" aria-label="${i?`Journal, page ${i} of ${n-1}`:'Journal cover'}"><div class="jboard" aria-hidden="true"></div><div class="jblock" aria-hidden="true"></div>${jPage(pages[i],i,n)}</div>
  <nav class="jnav" aria-label="Turn the pages"><button class="btn sm" data-act="jflip" data-d="-1" aria-label="Previous page"${i?'':' disabled'}>‹</button><span class="jnav-n">${!i?'The cover':i===n-1?'A new page':`Page ${i} of ${n-2}`}</span><button class="btn sm" data-act="jflip" data-d="1" aria-label="Next page"${i<n-1?'':' disabled'}>›</button></nav>
  ${i&&i<n-1?'<div class="h-acts row"><button class="btn ghost sm" data-act="jflip" data-to="last">Write a new page</button></div>':''}<p class="muted small center">Drag a page’s edge, or use the arrows, to turn the pages.</p></div>`;
 }
-/* Turning a page. Forward, the open leaf lifts from its right edge and swings over the spine to the left, uncovering the next
-   page; back, the previous leaf swings in from the left over the open one. JT.p runs from 0 to 1, by finger or by animation,
-   while light and shadow follow the leaf; when it lands the view settles on the new page. */
+/* Turning a page. Paper pages fold softly: the turning corner P is pulled toward the spine, the page creases along the line
+   halfway between P and the corner's resting place, and the folded part shows the back of the paper, reflected over the crease,
+   with light along the bend and a shadow falling on the page beneath. The leather cover is a stiff board and swings on its
+   hinge instead. Forward, the open leaf turns away to the left; back, the previous leaf comes in from the left over the open one. */
 let JT=null;
-function jstart(to){
+const jlerp=(a,b,k)=>a+(b-a)*k,jease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+// keep the polygon's part on the side of the line through M (normal n) where sign*(X-M)·n >= 0
+function jclip(poly,M,n,sign){const out=[],s=p=>sign*((p.x-M.x)*n.x+(p.y-M.y)*n.y);
+ for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],sa=s(a),sb=s(b);if(sa>=0)out.push(a);
+  if((sa>=0)!==(sb>=0)){const k=sa/(sa-sb);out.push({x:a.x+(b.x-a.x)*k,y:a.y+(b.y-a.y)*k})}}
+ return out}
+const jpoly=pts=>pts.length>2?`polygon(${pts.map(p=>`${p.x.toFixed(1)}px ${p.y.toFixed(1)}px`).join(',')})`:'polygon(0 0,0 0,0 0)';
+// a gradient band laid along the crease, reaching `w` px in direction u from it
+const jband=(el,M,u,w,D)=>{el.style.width=Math.max(1,w).toFixed(1)+'px';el.style.height=2*D+'px';el.style.transform=`translate(${M.x.toFixed(1)}px,${M.y.toFixed(1)}px) rotate(${Math.atan2(u.y,u.x)}rad) translateY(${-D}px)`};
+function jsoft(t,P){
+ const {W,H,cy}=t,C={x:W,y:cy},A={x:0,y:cy},B={x:0,y:H-cy},D=Math.hypot(W,H);
+ // the corner stays bound to the spine, as a real leaf is
+ let v={x:P.x-A.x,y:P.y-A.y},L=Math.hypot(v.x,v.y);if(L>W)P={x:A.x+v.x*W/L,y:A.y+v.y*W/L};
+ v={x:P.x-B.x,y:P.y-B.y};L=Math.hypot(v.x,v.y);if(L>D)P={x:B.x+v.x*D/L,y:B.y+v.y*D/L};
+ t.P=P;t.p=Math.max(0,Math.min(1,(W-P.x)/(2*W)));
+ const d=Math.hypot(C.x-P.x,C.y-P.y),rect=[{x:0,y:0},{x:W,y:0},{x:W,y:H},{x:0,y:H}],e=t.els;
+ if(d<.5){t.leaf.style.clipPath='none';e.wrap.style.visibility='hidden';return}
+ e.wrap.style.visibility='visible';
+ const M={x:(C.x+P.x)/2,y:(C.y+P.y)/2},n={x:(C.x-P.x)/d,y:(C.y-P.y)/d},m={x:-n.x,y:-n.y};
+ const kept=jclip(rect,M,n,-1),folded=jclip(rect,M,n,1);
+ // reflection across the crease, as a CSS matrix
+ const dx=-n.y,dy=n.x,a=2*dx*dx-1,b=2*dx*dy,c=b,dd=2*dy*dy-1,ex=M.x-(a*M.x+c*M.y),fy=M.y-(b*M.x+dd*M.y);
+ const refl=folded.map(q=>({x:a*q.x+c*q.y+ex,y:b*q.x+dd*q.y+fy}));
+ t.leaf.style.clipPath=t.leaf.style.webkitClipPath=jpoly(kept);
+ e.flap.style.clipPath=e.flap.style.webkitClipPath=jpoly(folded);e.flap.style.transform=`matrix(${a},${b},${c},${dd},${ex},${fy})`;
+ const s=Math.sin(Math.PI*Math.min(1,t.p*1.15)),w=d/2;
+ e.cast.style.clipPath=e.cast.style.webkitClipPath=jpoly(folded);jband(e.castg,M,n,Math.min(W*.35,20+w*.6),D);e.castg.style.opacity=(.25+.6*s).toFixed(3);
+ e.bend.style.clipPath=e.bend.style.webkitClipPath=jpoly(kept);jband(e.bendg,M,m,Math.min(46,10+w*.3),D);e.bendg.style.opacity=(.5+.5*s).toFixed(3);
+ e.shade.style.clipPath=e.shade.style.webkitClipPath=jpoly(refl);jband(e.shadeg,M,m,w,D);
+ e.flapw.style.filter=`drop-shadow(${(m.x*4).toFixed(1)}px ${(m.y*4).toFixed(1)}px 5px rgba(40,24,12,${(.18+.22*s).toFixed(2)}))`;
+}
+function jhard(t,p){
+ t.p=p=Math.max(0,Math.min(1,p));const q=t.fwd?p:1-p,leaf=t.leaf;
+ leaf.style.transform=`rotateY(${-180*q}deg) translateZ(${(Math.sin(q*Math.PI)*10).toFixed(1)}px)`;
+ leaf.style.setProperty('--lit',(Math.min(q*2,1)*.55).toFixed(3));leaf.style.setProperty('--dim',(Math.max(0,1-q*2)*.4+Math.sin(q*Math.PI)*.25).toFixed(3));
+ t.under.style.setProperty('--cast',(q>0?(1-q)*.5:0).toFixed(3));
+}
+function jstart(to,grab){
  const pages=journalPages(),from=jIdx(pages),book=$('.jbook');to=Math.max(0,Math.min(pages.length-1,to));
  if(JT||to===from||!book)return null;
  // an unfinished new page is kept; an edit in progress is let go
@@ -535,39 +573,52 @@ function jstart(to){
  V.edit=null;V.jnameEdit=false;
  const fwd=to>from,cur=book.querySelector('.jpage'),tmp=document.createElement('div');
  tmp.innerHTML=jPage(pages[to],to,pages.length);const np=tmp.firstElementChild,leaf=fwd?cur:np,under=fwd?np:cur;
- leaf.insertAdjacentHTML('beforeend',`<div class="jp-back${leaf.classList.contains('is-cover')?' endpaper':''}" aria-hidden="true"></div>`);
  np.classList.add('jp-abs');if(fwd)cur.before(np);else book.appendChild(np);
  leaf.classList.add('leaf');under.classList.add('under');book.classList.add('turning');
- JT={to,fwd,leaf,under,p:0,set(p){this.p=p=Math.max(0,Math.min(1,p));const q=fwd?p:1-p,a=-180*q;
-  leaf.style.transform=`rotateY(${a}deg) translateZ(${(Math.sin(q*Math.PI)*14).toFixed(1)}px)`;
-  leaf.style.setProperty('--lit',(Math.min(q*2,1)*.55).toFixed(3));leaf.style.setProperty('--dim',(Math.max(0,1-q*2)*.4+Math.sin(q*Math.PI)*.25).toFixed(3));
-  under.style.setProperty('--cast',((1-q)*.5*(q>0?1:0)).toFixed(3))}};
- JT.set(0);return JT;
+ const r=cur.getBoundingClientRect(),W=r.width,H=r.height;
+ if(Math.min(from,to)===0){
+  leaf.insertAdjacentHTML('beforeend','<div class="jp-back endpaper" aria-hidden="true"></div>');leaf.classList.add('hard');
+  JT={hard:true,to,fwd,leaf,under,p:0};jhard(JT,0);return JT;
+ }
+ // the leaf's paper, seen from behind: its own painting showing faintly through, under the ruled lines
+ const paper=(leaf.querySelector('.jp-front').getAttribute('style')||'').replace(/"/g,"'");
+ book.insertAdjacentHTML('beforeend',`<div class="jturn" aria-hidden="true"><div class="jt-cast"><i class="jt-castg"></i></div><div class="jt-bend"><i class="jt-bendg"></i></div><div class="jt-flapw"><div class="jt-flap" style="${paper}"></div></div><div class="jt-shade"><i class="jt-shadeg"></i></div></div>`);
+ const wrap=book.querySelector('.jturn'),q=s=>wrap.querySelector(s);
+ const cy=grab&&grab.y<H/2?0:H;
+ JT={soft:true,to,fwd,leaf,under,W,H,cy,p:0,els:{wrap,cast:q('.jt-cast'),castg:q('.jt-castg'),bend:q('.jt-bend'),bendg:q('.jt-bendg'),flapw:q('.jt-flapw'),flap:q('.jt-flap'),shade:q('.jt-shade'),shadeg:q('.jt-shadeg')}};
+ jsoft(JT,fwd?{x:W,y:cy}:{x:-W,y:cy});return JT;
 }
-// carry a turn on to `target` (1 lands it, 0 lets the leaf fall back) with an ease that slows as the page settles
-function jrun(target,ms=900){
- const t=JT;if(!t)return;const p0=t.p,t0=performance.now(),dur=Math.max(180,ms*Math.abs(target-p0));
- if(matchMedia('(prefers-reduced-motion: reduce)').matches)return jland(target);
- const step=now=>{const k=Math.min(1,(now-t0)/dur),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;t.set(p0+(target-p0)*e);k<1?requestAnimationFrame(step):jland(target)};
+// carry a turn on to its end (land) or back to where it began; a soft page's corner travels in a gentle arc
+function jrun(land,ms=1000){
+ const t=JT;if(!t)return;
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return jland(land);
+ const t0=performance.now();let step;
+ if(t.hard){const p0=t.p,p1=land?1:0,dur=Math.max(200,ms*Math.abs(p1-p0));
+  step=now=>{const k=Math.min(1,(now-t0)/dur);jhard(t,p0+(p1-p0)*jease(k));k<1?requestAnimationFrame(step):jland(land)}}
+ else{const P0=t.P,end=(t.fwd===land)?-t.W:t.W,P1={x:end,y:t.cy},dur=Math.max(260,ms*Math.abs(P1.x-P0.x)/(2*t.W)),lift=t.H*.2*(t.cy?1:-1)*Math.min(1,Math.abs(P1.x-P0.x)/t.W);
+  step=now=>{const k=Math.min(1,(now-t0)/dur),e=jease(k);jsoft(t,{x:jlerp(P0.x,P1.x,e),y:jlerp(P0.y,P1.y,e)-lift*Math.sin(Math.PI*e)});k<1?requestAnimationFrame(step):jland(land)}}
  requestAnimationFrame(step);
 }
-function jland(target){const t=JT;JT=null;if(t&&target===1)V.jpage=t.to;render()}
-function jflip(to){if(jstart(to))jrun(1)}
-// turning by hand: drag across the page (not while writing in it) and the leaf follows; let go past a third to turn it
+function jland(land){const t=JT;JT=null;if(t&&land)V.jpage=t.to;render()}
+function jflip(to){if(jstart(to))jrun(true)}
+// turning by hand: drag across the page (not while writing in it) and the corner follows; let go past a third to turn it
 let JD=null;
 document.addEventListener('pointerdown',e=>{
  const book=e.target.closest&&e.target.closest('.jbook');
  if(!book||JT||e.button>0||e.target.closest('input,textarea,select,button,a,label'))return;
- JD={x:e.clientX,y:e.clientY,w:book.getBoundingClientRect().width,t:performance.now(),id:e.pointerId};
+ const r=book.querySelector('.jpage').getBoundingClientRect();
+ JD={x:e.clientX,y:e.clientY,g:{x:e.clientX-r.left,y:e.clientY-r.top},t:performance.now(),id:e.pointerId};
 });
 document.addEventListener('pointermove',e=>{
  if(!JD||e.pointerId!==JD.id)return;const dx=e.clientX-JD.x,dy=e.clientY-JD.y;
  if(!JT){if(Math.abs(dx)<10||Math.abs(dx)<Math.abs(dy)*1.2){if(Math.abs(dy)>14)JD=null;return}
-  if(!jstart(jIdx(journalPages())+(dx<0?1:-1))){JD=null;return}}
- JT.set(JT.fwd?-dx/(JD.w*.85):dx/(JD.w*.85));
+  if(!jstart(jIdx(journalPages())+(dx<0?1:-1),JD.g)){JD=null;return}}
+ const t=JT;
+ if(t.hard){const w=t.leaf.offsetWidth*.85;jhard(t,t.fwd?-dx/w:dx/w)}
+ else jsoft(t,t.fwd?{x:t.W+dx,y:t.cy+dy*.6}:{x:-t.W+2*dx,y:t.cy+dy*.6});
 });
 const jdrop=e=>{if(!JD||e.pointerId!==JD.id)return;const d=JD;JD=null;if(!JT)return;
- const fast=Math.abs(e.clientX-d.x)/(performance.now()-d.t)>.5;jrun(JT.p>.33||fast?1:0,700)};
+ const fast=Math.abs(e.clientX-d.x)/(performance.now()-d.t)>.5,p=JT.hard||JT.fwd?JT.p:1-JT.p;jrun(p>.33||fast,800)};
 document.addEventListener('pointerup',jdrop);document.addEventListener('pointercancel',jdrop);
 
 /* ----- Affinity ----- */
