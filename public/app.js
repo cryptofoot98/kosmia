@@ -259,8 +259,11 @@ function toast(t,act){const e=$('#toast');e.innerHTML=esc(t)+(act?` <button clas
 function jLeave(){jDone();jflushSave();V.jx=false;V.jpage=null}
 
 /* ---------- the parts every page is built from ---------- */
-// the artwork cut from the Kosmia mockups (art/ui)
-const ui=(id,cls='',alt='')=>`<img class="${cls}" src="/art/ui/${id}.webp" alt="${esc(alt)}" loading="lazy" decoding="async">`;
+// the atlas paintings (art/atlas, painted after the Kosmia mockups by scripts/craft-atlas.mjs); a few older names lead to them
+const ATLAS_AS={'ev-moon':'ev-full','d-chart':'hero-chart','d-affinity':'hero-affinity','d-resonance':'ex-resonance','d-name':'hero-name','d-lifepath':'hero-lifepath','d-dream':'hero-dream',
+ 'd-calendar':'banner-calendar','d-library':'banner-library','landscape2':'landscape','ne-tarot':'t-reading','ne-horoscope':'ico-overview','ne-event':'t-whisper'};
+const atlasId=id=>/^m-/.test(id)?'med-'+id.slice(2):/^sign-/.test(id)?'plate-'+id.slice(5):ATLAS_AS[id]||id;
+const ui=(id,cls='',alt='')=>`<img class="${cls}" src="/art/atlas/${atlasId(id)}.webp" alt="${esc(alt)}" loading="lazy" decoding="async">`;
 const panel=(h,cls='')=>`<section class="card ${cls}">${h}</section>`;
 // a page's own header on parchment: the back arrow, its title (and a line under it), and an action at the right
 const IC={
@@ -295,7 +298,7 @@ function hdr(title,o={}){
 }
 // a dark, illustrated hero at the head of a section, with stars that softly twinkle; its picture drifts as the page scrolls
 const STARS=`<i class="stars s1" aria-hidden="true"></i><i class="stars s2" aria-hidden="true"></i>`;
-const hero=(img,inner='',cls='')=>`<section class="hero ${cls}">${ui(img,'hero-img parallax')}${STARS}${inner}</section>`;
+const hero=(img,inner='',cls='',title='',sub='')=>`<section class="hero ${cls}">${ui(img,'hero-img parallax')}${STARS}${title?`<div class="hero-t"><h1 class="cz${title.length>12?' long':''}">${title}</h1>${sub?`<p>${sub}</p>`:''}</div>`:''}${inner}</section>`;
 // a heading with a small engraved star either side, like the mockups' section titles
 const orn=(t,more='')=>`<div class="orn"><h2>${IC.star}<span>${t}</span></h2>${more}</div>`;
 const seeAll=(sec,t,label='See all')=>`<button class="see" data-go="${sec}" data-t="${t}">${label} ${IC.chev}</button>`;
@@ -303,7 +306,7 @@ const seeAll=(sec,t,label='See all')=>`<button class="see" data-go="${sec}" data
 const lrow=(img,title,sub,attrs,more='')=>`<button class="lrow" ${attrs}>${img?`<span class="lr-i">${img}</span>`:''}<span class="lr-t"><strong>${title}</strong>${sub?`<span>${sub}</span>`:''}${more}</span><span class="lr-c">${IC.chev}</span></button>`;
 // an expandable reading: the summary row, and the reading beneath it when opened
 const acc=(img,title,sub,body,open=false)=>`<details class="acc"${open?' open':''}><summary>${img?`<span class="lr-i">${img}</span>`:''}<span class="lr-t"><strong>${title}</strong>${sub?`<span>${sub}</span>`:''}</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b">${body}</div></details>`;
-// a zodiac sign's illustrated medallion (art/ui/m-<sign>)
+// a zodiac sign's illustrated medallion (art/atlas/med-<sign>)
 const med=(id,cls='med')=>ui('m-'+id,cls,sg(id).name);
 const glyphMed=(id,cls='')=>`<span class="gmed ${cls}" aria-hidden="true"><span class="glyph">${sg(id).g}</span></span>`;
 const keys=a=>a.map(esc).join(' <i class="dot">•</i> ');
@@ -332,7 +335,7 @@ const THEME={overview:{same:'All eyes on you',ease:'Flow and ease',friction:'Gro
  career:{same:'Step into view',ease:'Progress through collaboration',friction:'Push with patience',mirror:'Listen, then lead',quiet:'Quiet, steady work'},
  money:{same:'Trust your judgement',ease:'Favourable for long-term plans',friction:'Review before you spend',mirror:'Clear shared terms',quiet:'Good time to plan and save'}};
 const CAT_INFO={overview:['Overall','Your big picture','general'],love:['Love','Relationships','love'],family:['Family','Home & loved ones','family'],health:['Health','Wellbeing','health'],career:['Career','Work & purpose','career'],money:['Money','Finances','finance']};
-const catIco=(cat,cls='cat-ico')=>pic('cats',CAT_INFO[cat][2],cls);
+const catIco=(cat,cls='cat-ico')=>ui('ico-'+cat,cls);
 // the whispers' symbols, each with three words to carry through the day
 const WKEYS={moon:['Intuition','Rest','Reflection'],sun:['Vitality','Joy','Clarity'],star:['Hope','Renewal','Guidance'],path:['Patience','Direction','Trust'],key:['Insight','Opportunity','Answers'],flower:['Growth','Beauty','Openness'],eye:['Awareness','Truth','Intuition'],ship:['Journey','Courage','Change'],tree:['Roots','Strength','Patience'],wheel:['Cycles','Change','Timing'],lily:['Peace','Grace','Healing'],crystal:['Clarity','Focus','Protection']};
 const wKeys=c=>WKEYS[c.sym]||WKEYS.star;
@@ -352,8 +355,8 @@ const evKeys=e=>e.k==='ingress'?`${SIGN_KEYS[sIdx(e.sign).id][2]} • ${SIGN_KEY
 function evArt(e,round){
  const ph=e.type==='moon'?phaseSlug(e.name):'';
  if(round&&ph)return pic('moons',ph,'ev-r');
- if(round)return ui(e.k==='lunar_eclipse'?'ev-eclipse':e.type==='season'||(e.k==='ingress'&&e.planet==='Sun')?'ex-chart':e.type==='meteor'?'ev-moon':'ev-planet','ev-r');
- return e.k==='lunar_eclipse'||e.k==='solar_eclipse'?ui('ev-eclipse','ev-img'):e.k==='full_moon'?ui('ev-moon','ev-img'):ph?`<span class="ev-img ev-dark">${pic('moons',ph,'ev-moon')}</span>`:ui(e.type==='meteor'?'ev-moon':'ev-planet','ev-img');
+ const id=/eclipse/.test(e.k)?'ev-eclipse':ph==='full-moon'?'ev-full':ph==='new-moon'?'ev-new':ph?'ev-quarter':e.type==='season'||(e.k==='ingress'&&e.planet==='Sun')?'ev-sun':e.type==='meteor'?'ev-meteor':'ev-planet';
+ return ui(id,round?'ev-r':'ev-img');
 }
 
 /* ---------- birth details and calculated profile ---------- */
@@ -408,13 +411,13 @@ views.welcome=()=>{
  if(st==='verify')return `<div class="ob ob-paper ob-form"><div class="ob-mail">${IC.mail}</div><h1>Check Your Inbox</h1><p class="ob-lead">We’ve sent a link to <strong>${esc(S.email)}</strong>. Open it to activate your account, then sign in here.</p>
   <button class="btn" data-act="obstep" data-to="signin">I’ve verified, sign in →</button><button class="btn ghost" data-act="resend">Send the link again</button><div class="ob-foot">${ui('landscape2','ob-land')}</div></div>`;
  if(st==='ready'&&S.sign){const r=sg(S.sign);return `<div class="ob ob-dark ob-ready">${STARS}<p class="ob-kick">Your cosmic profile is ready</p><div class="ob-art glow">${signArt(r.id)}</div><h1 class="cz">Welcome, ${r.name}</h1><p class="keys light">${keys(SIGN_KEYS[r.id])}</p><p class="ob-lead">${SIGN_DESC[r.id]} The universe is always speaking. Now, you can listen.</p><button class="btn gold" data-act="enter">Enter Kosmia →</button>${obDots('ready')}</div>`}
- return `<div class="ob ob-welcome">${ui('welcome','ob-bg')}<div class="ob-w-in"><p class="ob-tags">Astrology <i>•</i> Tarot <i>•</i> Guidance<br>Self discovery <i>•</i> Cosmic connection</p>
+ return `<div class="ob ob-welcome">${ui('welcome','ob-bg')}${STARS}<div class="ob-w-top"><h1 class="cz ob-logo">Kosmia</h1><p class="ob-tags">Astrology <i>•</i> Tarot <i>•</i> Guidance<br>A more aligned you</p></div><div class="ob-w-in"><p class="ob-tags">Self discovery <i>•</i> Cosmic connection</p>
   <button class="btn gold" data-act="obnext" data-to="sign">Begin Your Journey →</button>${C.enabled&&!C.user?'<p class="auth-alt light">Already have an account? <button class="link" data-act="obstep" data-to="signin">Sign in</button></p>':''}${obDots('welcome')}</div></div>`;
 };
 views.join=views.welcome;
 views.reset=()=>`<div class="ob ob-paper ob-form"><h1>Choose a New Password</h1>${pwField('npw','New password','At least 8 characters','new-password')}<button class="btn" data-act="setpw">Save password</button></div>`;
-// a sign's large illustration: the mockups' framed plates where they exist, otherwise its medallion over its painted scene
-const signArt=id=>id==='libra'||id==='capricorn'?ui('sign-'+id,'sign-plate',sg(id).name):`<span class="sign-frame">${pic('scenes',id,'sf-scene')}${med(id,'sf-med')}</span>`;
+// a sign's framed plate, its glyph set in a medallion at the foot of the arch
+const signArt=id=>`<span class="sp-plate">${ui('plate-'+id,'sign-plate',sg(id).name)}${glyphMed(id,'sp-gm')}</span>`;
 function obValid(){
  const em=$('#em'),pw=$('#pw'),pw2=$('#pw2'),up=V.ob==='account';
  const okEm=!!em&&/^\S+@\S+\.\S+$/.test(em.value.trim()),p=pw?pw.value:'';
@@ -465,8 +468,6 @@ const greet=()=>{const h=Number(fmt({hour:'numeric',hour12:false},new Date()));r
 const firstName=()=>(S.name||S.fullName||'').trim().split(/\s+/)[0]||'';
 // the reader's own medallion, at the top right of Home: their profile, birth details, notifications and plan
 const avatar=()=>`<button class="avatar" data-go="settings" data-t="account" aria-label="Your profile and settings">${med(S.sign||'aries','av-i')}</button>`;
-// the sign's picture on Home: the mockups' painted figure where there is one, otherwise its medallion under a golden moon
-const homeArt=id=>id==='libra'?ui('home-libra','hh-fig'):id==='capricorn'?ui('sign-capricorn','hh-fig framed'):`<span class="hh-moon">${med(id,'hh-med')}</span>`;
 views.home=()=>{
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
@@ -476,25 +477,24 @@ views.home=()=>{
  const evs=upcoming().filter(e=>['moon','eclipse','season','retrograde'].includes(e.type)||(e.k==='ingress'&&['Venus','Mars','Mercury','Jupiter'].includes(e.planet))).slice(0,6);
  const recent=journalItems().slice().sort((a,b)=>(b.at||b.day)>(a.at||a.day)?1:-1).slice(0,3);
  return `<div class="home"><div class="hbar"><span class="cz">Kosmia</span>${avatar()}</div>
- <section class="hhero">${STARS}
-  <div class="hh-top"><svg class="hh-cres" viewBox="0 0 40 40" aria-hidden="true"><mask id="hcm"><rect width="40" height="40" fill="#fff"/><circle cx="27" cy="15" r="13" fill="#000"/></mask><circle cx="19" cy="21" r="15" fill="#D9B66E" mask="url(#hcm)"/></svg><div class="brand"><span class="cz">Kosmia</span><small>The universe speaks. Are you listening?</small></div>
+ <section class="hhero">${ui('hero-'+sign.id,'hh-bg parallax',sign.name)}${STARS}
+  <div class="hh-top"><span></span><div class="brand"><span class="cz">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
    <button class="ibtn light" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
   <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-sub">Here’s your cosmic overview for today.</p>
-  <div class="hh-sign"><div class="hh-art parallax">${homeArt(sign.id)}</div>
-   <div class="hh-card"><div class="hh-name"><span class="glyph">${sign.g}</span><div><h2>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn sm" data-act="tohoroscope">Read Full Horoscope →</button></div></div>
+  <div class="hh-card"><div class="hh-name"><span class="glyph">${sign.g}</span><div><h2>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn sm" data-act="tohoroscope">Read Full Horoscope →</button></div>
  </section>
  <div class="hbody">
  <div class="qrow">${quick}</div>
  ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${pic('whispers',c.id,'mw-art')}<span class="mw-t">${esc(c.title)}</span></div></div></div>
-  <div class="dw-r">${rev?`<p class="dw-q">${IC.star}<span>${esc(c.msg)}</span></p>`:'<p class="dw-q muted"><span>A card, a message, a moment for you. Turn it over when you are ready.</span></p>'}${wbtn}</div></div>`,'ornate')}
- <button class="energy" data-go="discover" data-t="moon">${ui('landscape','en-bg')}<span class="en-in"><span class="orn-s">${IC.star} Today’s Cosmic Energy ${IC.star}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name} in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>
- ${orn('Upcoming Celestial Events',seeAll('discover','calendar'))}
- <div class="hscroll">${evs.map(e=>`<button class="evc" data-act="evgo" data-ref="${evRef(e)}">${evArt(e,false)}<strong>${esc(e.name)}</strong><span class="evc-d">${e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date)}</span><span class="evc-k">${esc(evKeys(e))}</span></button>`).join('')}</div>
- ${orn('Explore Kosmia',seeAll('discover','home'))}
- <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>
- ${orn('Recent Readings',seeAll('tarot','journal'))}
+  <div class="dw-r">${rev?`<p class="dw-q">${IC.star}<span>${esc(c.msg)}</span></p>`:'<p class="dw-q"><span>A card, a message, a moment for you. Turn it over when you are ready.</span></p>'}${wbtn}</div></div>`,'ornate')}
+ <button class="energy" data-go="discover" data-t="moon">${ui('landscape','en-bg')}<span class="en-in"><span class="orn-s">${IC.star} Today’s Cosmic Energy ${IC.star}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>
+ ${panel(`${orn('Upcoming Celestial Events',seeAll('discover','calendar'))}
+ <div class="evgrid">${evs.slice(0,3).map(e=>`<button class="evc" data-act="evgo" data-ref="${evRef(e)}">${evArt(e,false)}<strong>${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}</strong><span class="evc-d">${e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date)}</span><span class="evc-k">${esc(evKeys(e))}</span></button>`).join('')}</div>`,'home-p')}
+ ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
+ <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>`,'home-p')}
+ ${panel(`${orn('Recent Readings',seeAll('tarot','journal'))}
  <div class="list">${recent.length?recent.map(p=>{const n=jNote(p)||(p.t==='j'?p.j.body:'');return lrow(jThumb(p),JKIND[p.t][0],`<em>${jTitle(p)}</em>`,`data-act="jopen" data-k="${esc(jKey(p))}"`,`<span class="lr-m">${relDay(p.day)}${n?' • Reflection added':''}</span>`)}).join('')
-  :lrow(ui('t-whisper','th'),'Your readings will gather here','Reveal today’s Whisper or draw a tarot spread to begin.','data-go="tarot" data-t="whisper"')}</div>
+  :lrow(ui('t-whisper','th'),'Your readings will gather here','Reveal today’s Whisper or draw a tarot spread to begin.','data-go="tarot" data-t="whisper"')}</div>`,'home-p')}
  <button class="kban" data-go="kassandra">${ui('kassandra-banner','kb-i')}<span class="kb-t"><span class="cz">Talk to Kassandra</span><span>Your AI fortune teller</span><span class="btn ghost light sm">Start a conversation →</span></span></button>
  <div class="sunq">${ui('sun-panel','sq-i')}<p>Every day is a new page<br>in your cosmic story.</p></div>
  </div></div>`;
@@ -534,7 +534,7 @@ views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
  const sign=sg(S.sign),h=horoscope(sign.id,'overview',V.period),m=K.moon(new Date()),open=(h.body.match(/[^.!?]+[.!?]+/)||[h.body])[0];
- return `<div class="land">${hero('hero-horoscope','','tall')}<div class="sheet">
+ return `<div class="land">${hero('hero-horoscope','','tall','Horoscope','Guidance for every path you walk')}<div class="sheet">
  ${periodSeg()}
  ${panel(`<div class="ce"><span class="ce-art">${V.period==='daily'?moonPic(m,'ce-moon'):ui('ex-chart','ce-moon')}</span><div><p class="kick">${PLABEL[V.period][1]} cosmic energy</p><p class="ce-date">${periodHead(V.period,h.per)}</p><p>${esc(open)}${V.period==='daily'?' '+(MOON_LINE[m.name]||''):''}</p><button class="btn sm" data-act="tohoroscope" data-period="${V.period}">Read Full Forecast →</button></div></div>`,'ornate')}
  <div class="tiles6">${HCATS.map(([k])=>`<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${CAT_INFO[k][1]}</span></button>`).join('')}</div>
@@ -579,7 +579,7 @@ views.tarot=()=>{
  if(t==='calendar')return journalCal();
  if(t==='insights')return journalInsights();
  if(t==='notebook')return `<div class="sub">${hdr('Notebook',{sub:'Your journal as a book'})}${journalView()}</div>`;
- return `<div class="land">${hero('hero-tarot','','tall')}<div class="sheet ornate-sheet"><div class="list big">
+ return `<div class="land">${hero('hero-tarot','','tall','Tarot','Insights for a more aligned you')}<div class="sheet ornate-sheet"><div class="list big">
  ${lrow(ui('t-whisper','th oval'),'Daily Whisper','A card, a message, a moment for you, and a space to reflect.','data-go="tarot" data-t="whisper"')}
  ${lrow(ui('t-reading','th oval'),'Card Reading','Single card, three cards, love, career and the Celtic Cross.','data-go="tarot" data-t="reading"')}
  ${lrow(ui('t-journal','th oval'),'Your Journal','Reflections, insights and personal growth.','data-go="tarot" data-t="journal"')}
@@ -1140,15 +1140,15 @@ views.discover=()=>{
   calendar:calendarView,moon:()=>subPage(moonView(new Date())),planets:()=>subPage(planetsView(new Date())),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  const tile=(img,title,sub,t,cls='')=>`<button class="dtile ${cls}" data-go="discover" data-t="${t}">${ui(img,'dt-i')}<strong>${title}</strong><span>${sub}</span></button>`;
- return `<div class="land">${hero('hero-discover','','mid')}<div class="sheet">
+ return `<div class="land">${hero('hero-discover','','mid','Discover','Explore • Learn • Align')}<div class="sheet">
  ${orn('Dream Interpretation')}<button class="feature" data-go="discover" data-t="dreams">${ui('hero-dream','ft-i')}<span class="ft-t"><strong>Decode your dreams</strong><span>Describe a dream by text or voice and uncover its symbols, themes and guidance.</span><span class="btn sm">Interpret a Dream →</span></span></button>
  ${orn('Your Cosmic Blueprint')}<div class="dgrid">${tile('d-chart','Birth Chart','Your cosmic blueprint','birth-chart','wide')}${tile('ex-chart','Cosmic Profile','Your signs and numbers','profile')}${tile('m-'+S.sign,'My Cycles','Your personal year','cycles')}</div>
  ${orn('Cosmic Connections')}<div class="dgrid">${tile('d-affinity','Zodiac Affinity','Compatibility','affinity')}${tile('d-resonance','Soul Resonance','Name match','resonance')}</div>
  <div class="list">${lrow(ui('ex-compat','th round'),'Synastry','Compare two birth charts','data-go="discover" data-t="synastry"')}</div>
  ${orn('The Language of Numbers')}<div class="dgrid">${tile('d-lifepath','Life Path','Your soul’s journey','life-path')}${tile('d-name','The Name Within','Name numerology','name-within')}</div>
- ${orn('Celestial Calendar')}<button class="dbanner" data-go="discover" data-t="calendar">${ui('d-calendar','db-i')}<span class="sr-only">Cosmic Calendar: celestial events</span></button>
+ ${orn('Celestial Calendar')}<button class="dbanner" data-go="discover" data-t="calendar">${ui('d-calendar','db-i')}<span class="db-t"><strong>Cosmic Calendar</strong><span>Celestial events</span></span></button>
  <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteor showers','data-go="discover" data-t="events"')}</div>
- ${orn('Mystical Library')}<button class="dbanner" data-go="discover" data-t="library">${ui('d-library','db-i')}<span class="sr-only">Astrology Library</span></button>
+ ${orn('Mystical Library')}<button class="dbanner" data-go="discover" data-t="library">${ui('d-library','db-i')}<span class="db-t"><strong>Astrology Library</strong><span>Signs, planets, tarot and dreams</span></span></button>
  </div></div>`;
 };
 /* Birth Chart: the wheel in navy and gold with the reader's planets, then the planets, aspects and houses as their own tabs */
@@ -1161,7 +1161,7 @@ function chartWheel(c){
  const pls=c.pl.map(p=>{const [x,y]=pt(p.lon,(R2+R3)/2+(p.n==='Moon'?-6:0)),sel=V.chartSel===p.n;return `<g data-planet="${p.n}" tabindex="0" role="button" aria-label="${p.n} in ${sIdx(p.sign).name}"><circle cx="${x}" cy="${y}" r="11" class="pl${sel?' sel':''}"/><text x="${x}" y="${y}" class="pg">${p.g}</text></g>`}).join('');
  return `<svg class="wheel-c" viewBox="0 0 300 300" role="img" aria-label="Your natal chart wheel"><defs><clipPath id="sunc"><circle cx="${CX}" cy="${CX}" r="${R3-20}"/></clipPath></defs>
  <g class="zring"><circle cx="${CX}" cy="${CX}" r="${R}" fill="#18213B" stroke="#C9A45C" stroke-width="1.6"/><circle cx="${CX}" cy="${CX}" r="${R2}" fill="#F4E8CF" stroke="#C9A45C" stroke-width="1.2"/>${ring}</g>${ticks}
- <circle cx="${CX}" cy="${CX}" r="${R3}" fill="#EFE0C0" stroke="#B8924F" stroke-width=".8"/>${asp}<image href="/art/ui/ex-chart.webp" x="${CX-R3+20}" y="${CX-R3+20}" width="${2*(R3-20)}" height="${2*(R3-20)}" clip-path="url(#sunc)" opacity=".9"/>${axes}${pls}</svg>`;
+ <circle cx="${CX}" cy="${CX}" r="${R3}" fill="#EFE0C0" stroke="#B8924F" stroke-width=".8"/>${asp}<image href="/art/atlas/ex-chart.webp" x="${CX-R3+20}" y="${CX-R3+20}" width="${2*(R3-20)}" height="${2*(R3-20)}" clip-path="url(#sunc)" opacity=".9"/>${axes}${pls}</svg>`;
 }
 function chartView(){
  const c=myChart(),form=birthForm(),H=hdr('Birth Chart',{sub:'Your cosmic blueprint'});
@@ -1317,12 +1317,12 @@ const JFILT=[['all','All'],['tarot','Tarot'],['horoscope','Horoscope'],['dreams'
 function journalLib(){
  const f=V.jfilter,q=(V.jsearch||'').trim().toLowerCase();
  const items=journalItems().filter(p=>(f==='all'||JKIND[p.t][2]===f)&&(!q||plain(jHeading(p)+' '+jSub(p)+' '+jText(p)).toLowerCase().includes(q))).sort((a,b)=>(b.day+(b.at||''))>(a.day+(a.at||''))?1:-1);
- return `<div class="land jlib">${hero('hero-journal',`<div class="hero-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="fab" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>`,'mid')}
+ return `<div class="land jlib">${hero('hero-journal',`<div class="hero-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="fab" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>`,'mid','Journal','Your space to reflect, integrate and grow')}
  <div class="sheet">${V.jsearch!=null?`<div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>`:''}
  <div class="fscroll">${chips('Show',JFILT,f,'jfilter')}</div>
  <div class="tools">${[['cal','Calendar','calendar'],['chart','Insights','insights'],['book','Notebook','notebook']].map(([i,l,t])=>`<button data-go="tarot" data-t="${t}">${IC[i]}<span>${l}</span></button>`).join('')}</div>
  <div class="list jlist">${items.length?items.map(jrow).join(''):`<p class="muted center">${q||f!=='all'?'Nothing here yet.':'Your journal is waiting for its first page.'}</p>`}</div>
- <div class="jend">${ui('journal-end','je-i')}<button class="btn gold" data-act="sheet" data-k="new">New Entry</button></div>
+ <div class="jend">${ui('journal-end','je-i')}<p class="je-t">Every thought you write<br>is a star you place<br>in your own sky.</p><button class="btn gold" data-act="sheet" data-k="new">New Entry</button></div>
  </div></div>${sheetView()}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
@@ -1412,7 +1412,7 @@ function journalInsights(){
   <h3 class="sec-h">Symbols in your dreams</h3><div class="pills">${top(sym,([k,v])=>`<span class="pill">${esc(k)} <b>${v}</b></span>`)}</div>`;
  }else body=`<div class="stats">${[[it.length,'Entries'],[months,'Months'],[n('r'),'Tarot Readings'],[n('h'),'Horoscope Notes'],[n('e'),'Cosmic Events'],[n('j'),'Free Writes']].map(([v,l])=>`<div class="stat"><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>
   <h3 class="sec-h">Your most explored themes</h3>${score.length?`<div class="bars">${score.map(([l,ic,c],i)=>`<div class="tbar">${pic('cats',ic,'tb-i')}<span>${l}</span><i class="b${i}"><b style="width:${Math.round(c/tot*100)}%"></b></i><em>${Math.round(c/tot*100)}%</em></div>`).join('')}</div>`:'<p class="muted">Write a few reflections and the themes you return to will appear here.</p>'}`;
- return `<div class="land">${hero('hero-insights',iconBtn('back','data-act="back"','Back'),'short')}<div class="sheet">${seg([['insights','Insights'],['themes','Themes']],V.insTab,'ins')}${body}</div></div>`;
+ return `<div class="land">${hero('hero-insights',iconBtn('back','data-act="back"','Back'),'short','Your Journal','A journey of discovery')}<div class="sheet">${seg([['insights','Insights'],['themes','Themes']],V.insTab,'ins')}${body}</div></div>`;
 }
 /* ----- Dream Interpretation: describe a dream by text or voice, and its symbols, feelings and possible themes are read
    back, with Kassandra's personal reading when signed in and the dream dictionary otherwise. Every dream is kept in the
@@ -1489,7 +1489,7 @@ function dreamPatterns(list){
 }
 function dreamsView(){
  const list=dreams();
- return `<div class="land">${`<section class="hero dream-h">${ui('hero-dream','hero-img parallax')}${STARS}<div class="dh-t"><h1 class="cz">Dream Interpretation</h1><p class="kick">Unlock the messages within</p></div>${iconBtn('back','data-act="back"','Back')}</section>`}<div class="sheet">
+ return `<div class="land">${hero('hero-dream',iconBtn('back','data-act="back"','Back'),'mid','Dream Interpretation','Unlock the messages within')}<div class="sheet">
  <p class="lead center">Your dreams are a bridge between your conscious and subconscious mind. Discover their meaning, explore symbols and uncover the guidance your dreams are offering you.</p>
  <div class="two"><button class="btn" data-go="discover" data-t="new-dream">Interpret a Dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Dream Journal</button></div>
  ${orn('Common Symbols')}<div class="symrow">${['water','flying','snake','house','death'].map(id=>{const s=dsym(id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(s.name.replace(/^(The|A|An) /,''))}">${artOf(s.art,'sym-i')}<strong>${s.name.replace(/^The /,'')}</strong><span>${s.keys[0]}</span></button>`}).join('')}</div>

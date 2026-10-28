@@ -1,0 +1,139 @@
+#!/usr/bin/env node
+// Paints the illustrations of the celestial atlas design (public/art/atlas/) with OpenAI, each in the style of the matching
+// Kosmia mockup: the mockup crop is sent as a style reference (images/edits); without one, the prompt alone is used.
+// Runs locally; the key is read from .env and never leaves this machine.
+//
+//   node scripts/craft-atlas.mjs --refs <dir of mockup crops>          # make whatever is missing
+//   node scripts/craft-atlas.mjs --refs <dir> --ids hero-libra,med-leo  # only these
+//   node scripts/craft-atlas.mjs --refs <dir> --force                   # paint again even if present
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const out = join(root, 'public', 'art', 'atlas');
+try {
+  for (const line of readFileSync(join(root, '.env'), 'utf8').split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^(['"])(.*)\1$/, '$2');
+  }
+} catch {}
+const arg = n => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : undefined; };
+const refs = arg('--refs'), ids = arg('--ids')?.split(','), force = process.argv.includes('--force');
+const key = process.env.OPENAI_API_KEY, model = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2';
+if (!key) { console.error('craft-atlas: OPENAI_API_KEY is not set (add it to .env)'); process.exit(1); }
+
+const STYLE = 'Style: a richly illustrated vintage celestial tarot card crossed with an antique astronomical engraving and a Victorian fortune-telling poster. Deep midnight-navy night skies scattered with small gold stars, antique gold leaf, warm ivory and parchment, deep burgundy and crimson accents, botanical details (white lilies, daisies, roses, leafy vines). Confident ink outlines with fine engraved hatching and rich painterly colour, luminous, detailed and elegant. Absolutely no text, letters, words, numbers, captions, signatures or watermarks anywhere.';
+const REF = 'Match the style, palette, line work and finish of the reference image exactly, but paint an entirely new composition as described; do not copy any text or interface elements from it.';
+const FIG = {
+  aries: 'a bold young woman with a crown of curled golden ram horns and flowing auburn hair, a majestic white ram with spiral horns beside her',
+  taurus: 'a serene woman with a crown of roses and long dark curls, resting her hand on a strong white bull garlanded with flowers',
+  gemini: 'two graceful twin sisters with flowing hair, shoulder to shoulder, one looking left and one right, holding hands',
+  cancer: 'a gentle woman with silver-pearl jewellery and wavy dark hair holding a golden crab-shaped shell, moonlit waves behind her',
+  leo: 'a radiant woman with a great golden lion-mane of hair and a sun crown, a proud golden lion at her side',
+  virgo: 'a calm maiden with a braided crown of wheat and wildflowers holding a sheaf of golden wheat',
+  libra: 'a beautiful woman with long dark curly hair and a flower crown, eyes peacefully closed, holding delicate golden balance scales',
+  scorpio: 'a mysterious dark-haired woman in deep crimson with a golden scorpion coiled on her raised hand',
+  sagittarius: 'a fearless woman archer drawing a golden bow with a star-tipped arrow, a centaur silhouette among the stars behind her',
+  capricorn: 'a majestic mountain goat with great curved horns seated proudly on rocky crags, a sea-goat tail of scales curling around the rocks',
+  aquarius: 'a gentle youth with flowing blue-black hair pouring a stream of starry water from a golden urn',
+  pisces: 'a dreamy woman with long wavy hair beside two golden koi fish circling each other in shimmering water'
+};
+const SIGNS = Object.keys(FIG);
+const sq = '1024x1024', wide = '1536x1024', tall = '1024x1536';
+// the bar at the foot shows its icons at about 30px, so they are bold single objects with nothing around them
+const navIcon = 'A single bold, simple engraved icon in dark bronze with a little antique gold, centred with generous margin on a perfectly plain flat light ivory background (#F4EADA); no circle, no frame, no flowers, no scenery, no texture, no shadow; clearly recognisable when shown very small.';
+const round = 'A single circular medallion filling the square image edge to edge: a dark midnight-navy disc with a fine antique-gold rim, the subject engraved inside in gold, ivory and sepia with tiny gold stars; plain dark navy outside the circle.';
+// the image model paints no transparency, so icons sit on flat ivory, which scripts/key-ivory.py lifts out afterwards
+const icon = 'A single small illustrated icon, centred with generous margin, on a perfectly plain flat light ivory background (#F4EADA) with no texture, no frame and no shadow, hand-engraved vintage style with gold, sepia and soft colour.';
+const JOBS = [
+  ...SIGNS.map(s => [`hero-${s}`, tall, 'home', 'high', `Vertical poster illustration for the top of an app home screen. Upper third: deep midnight-navy night sky dense with tiny gold stars, a golden crescent moon at the upper left, a small engraved golden sun face at the upper right, delicate gold vines and leaves curling in from the top corners, and an empty dark area across the top centre. Lower two thirds: on the LEFT half, ${FIG[s]}, shown from the waist up and facing right, in front of a huge glowing antique-gold full moon, framed by white lilies, daisies and leaves; on the RIGHT half, a calmer darker starry sky over distant blue mountains and a coastal town at dusk, with flowers along the bottom edge.`]),
+  ...SIGNS.map(s => [`plate-${s}`, tall, 'plate', 'high', `A tall arched illustration in an ornate antique-gold art-nouveau frame with decorative corner flourishes on a parchment surround. Inside the arch: ${FIG[s]}, in front of a large golden full moon and a crescent moon in a starry navy sky, with mountains, a lake and a small coastal town behind and white daisies and lilies in the foreground. Keep a small plain area at the bottom centre of the arch.`]),
+  ...SIGNS.map(s => [`med-${s}`, sq, 'meds', 'medium', `${round} The subject: the zodiac sign ${s[0].toUpperCase() + s.slice(1)}, shown as ${FIG[s]}, simplified into a clear, instantly recognisable emblem.`]),
+  ['ico-overview', sq, 'icons', 'medium', `${icon} An antique brass compass rose with an eight-pointed star.`],
+  ['ico-love', sq, 'icons', 'medium', `${icon} A glossy crimson heart with a gold outline.`],
+  ['ico-family', sq, 'icons', 'medium', `${icon} A small cosy stone cottage with a warm lit doorway and a red roof.`],
+  ['ico-health', sq, 'icons', 'medium', `${icon} A sprig of green herb leaves.`],
+  ['ico-career', sq, 'icons', 'medium', `${icon} A tan leather briefcase with brass clasps.`],
+  ['ico-money', sq, 'icons', 'medium', `${icon} A neat stack of antique gold coins.`],
+  ['nav-home', sq, '', 'medium', `${navIcon} A sun with straight and wavy rays and a small face.`],
+  ['nav-horoscope', sq, '', 'medium', `${navIcon} A crescent moon.`],
+  ['nav-tarot', sq, '', 'medium', `${navIcon} Two overlapping tarot cards, the front one with an eye.`],
+  ['nav-discover', sq, '', 'medium', `${navIcon} An eight-pointed compass star.`],
+  ['nav-kassandra', sq, '', 'medium', `${navIcon} A circle containing a crescent moon with a serene face in profile.`],
+  ['ev-eclipse', wide, 'events', 'medium', 'A deep red blood moon (a total lunar eclipse) glowing in a dark navy starry sky with tiny gold stars, engraved style.'],
+  ['ev-planet', wide, 'events', 'medium', 'A banded ringed planet with gold and cream bands and engraved rings in a dark navy starry sky with tiny gold stars.'],
+  ['ev-full', wide, 'events', 'medium', 'A luminous full moon with engraved craters in a dark navy starry sky with tiny gold stars.'],
+  ['ev-new', wide, 'events', 'medium', 'A dark new moon, a faintly outlined dark disc with a thin golden rim of light, in a dark navy starry sky with tiny gold stars.'],
+  ['ev-quarter', wide, 'events', 'medium', 'A half-lit quarter moon with engraved craters in a dark navy starry sky with tiny gold stars.'],
+  ['ev-sun', wide, 'events', 'medium', 'A radiant engraved golden sun with a calm face and long rays in a dark navy starry sky.'],
+  ['ev-meteor', wide, 'events', 'medium', 'Golden shooting stars streaking across a dark navy starry sky over a faint mountain horizon.'],
+  ['ex-chart', sq, 'explore', 'medium', `${round} The subject: an engraved golden sun with a serene face and long straight and wavy rays.`],
+  ['ex-compat', sq, 'explore', 'medium', `${round} The subject: a woman and a man in profile facing each other, engraved in gold and sepia.`],
+  ['ex-resonance', sq, 'explore', 'medium', `${round} The subject: a radiant rose-gold heart with rays bursting around it.`],
+  ['ex-lifepath', sq, 'explore', 'medium', `${round} The subject: a small figure climbing a stone stairway towards a bright star, flowers at the foot.`],
+  ['ex-name', sq, 'explore', 'medium', `${round} The subject: a sacred-geometry triangle with an eye at its centre inside circles, engraved gold lines.`],
+  ['landscape', wide, 'landscape', 'high', 'A wide sunset landscape: a calm bay reflecting a peach and rose sky, purple mountains, a glittering coastal town, palm trees and tropical flowers in the foreground corners, soft warm light.'],
+  ['kassandra-banner', wide, 'kban', 'high', 'A wide dark midnight-navy starry banner: white lilies with gold leaves in the lower left corner, and on the right third the head and shoulders of Kassandra, a beautiful fortune teller with dark hair, a golden coin headdress and gold earrings, gazing at the viewer. The centre and left are empty dark starry sky.'],
+  ['kassandra', sq, 'kpor', 'high', 'Portrait of Kassandra, a beautiful fortune teller with dark kohl-lined eyes, a red veil and an ornate golden coin headdress, gold earrings and necklaces, against a dark navy sky with gold stars and a crescent moon, head and shoulders, centred.'],
+  ['sun-panel', wide, 'sun', 'medium', 'An engraved antique golden sun with a serene face and long rays on aged parchment, small gold stars around, an ornate gold frame line.'],
+  ['welcome', tall, 'welcome', 'high', 'A woman with long dark curly hair and a flower crown, eyes closed and face lifted to the sky, a crimson shawl embroidered with gold stars over her shoulders, in front of a huge golden full moon; deep navy starry sky with gold stars above her, mountains and cypress trees at the side. Leave the top quarter as open starry sky.'],
+  ['hero-horoscope', wide, 'horo', 'high', 'A celestial scene: an engraved golden sun face at the top centre between two crescent moons, gold stars in a navy sky, soft clouds, and below a coastal landscape at dusk with mountains, palm trees and a white town by the water. Leave open sky in the middle band.'],
+  ['hero-tarot', wide, 'tarot', 'high', 'A navy night scene framed by a gold arch of stars: a crescent moon and an eight-pointed star at the top, a golden tarot card leaning at the left, white lilies and red roses at the right and along the bottom. Leave the centre open.'],
+  ['hero-journal', wide, 'journal', 'high', 'A full moon over mountains reflected in a still lake at night, a navy starry sky, dark leafy vines and gold flowers framing the sides. Leave the lower centre open.'],
+  ['hero-discover', wide, 'discover', 'high', 'A navy night sky with a large golden crescent moon at the left and a bright eight-pointed star at the right, over a lake, pine trees and a hillside village with warm lit windows. Leave the upper centre open sky.'],
+  ['hero-dream', wide, 'dream', 'high', 'A woman with long dark hair sleeping peacefully on soft blue and gold clouds under a crescent moon and gold stars, flowers around her, navy night sky.'],
+  ['hero-insights', wide, 'insights', 'medium', 'A navy night sky with a golden sun-and-moon face at the upper right and dark leafy vines and gold flowers along the left edge, gold stars.'],
+  ['journal-end', tall, 'jend', 'high', 'A woman with long dark hair in a crimson shawl sitting on rocks seen from behind, looking across a bay to a lit coastal town and mountains at night, a crescent moon and gold stars above, flowers and vines framing the sides. Leave the upper third as open starry sky.'],
+  ['hero-chart', wide, 'chart', 'high', 'An engraved golden sun with a serene face at the centre of an antique zodiac ring of plain gold segments, over soft clouds, in a navy starry sky.'],
+  ['hero-affinity', wide, 'affinity', 'high', 'A golden sun with a woman’s face in profile on the left and a pale crescent moon with a man’s face in profile on the right, facing each other, among flowers and gold stars on navy.'],
+  ['hero-name', wide, 'name', 'high', 'A woman with long dark curly hair and flowers in her hair, in profile, in front of a large antique engraved astrolabe wheel, white lilies, navy sky with gold stars.'],
+  ['hero-lifepath', wide, 'lifepath', 'high', 'A woman in a red cloak walking along a winding stone path through a valley of flowers and pines towards distant mountains and a glowing golden sun.'],
+  ['owl', wide, 'owl', 'high', 'A white snowy owl perched on a branch in front of a large crescent moon, white lilies, navy starry sky.'],
+  ['banner-calendar', wide, 'calendar', 'medium', 'A dark navy starry banner with a row of moon phases from crescent to full to crescent across it in luminous gold and ivory, and a small ringed planet at one end.'],
+  ['banner-library', wide, 'library', 'medium', 'A stack of antique leather books with gold tooling, a brass telescope and a small celestial globe on a desk under a navy starry sky.'],
+  ['t-whisper', sq, 'tlist', 'medium', `${icon} A round bronze medallion with an eight-pointed star.`],
+  ['t-reading', sq, 'tlist', 'medium', `${icon} A round bronze medallion holding a small tarot card with a star.`],
+  ['t-journal', sq, 'tlist', 'medium', `${icon} A round bronze medallion holding a small tarot card with a figure.`],
+  ['t-history', sq, 'tlist', 'medium', `${icon} A round bronze medallion holding an open antique book.`],
+  ['ne-card', sq, 'newent', 'medium', `${icon} A small stack of two tarot cards with a gold diamond motif.`],
+  ['ne-free', sq, 'newent', 'medium', `${icon} A tarot card with a feather quill resting across it.`],
+  ['ds-water', sq, 'dsym', 'medium', `${round} The subject: calm blue water waves under a small golden pyramid-shaped wave crest.`],
+  ['ds-flying', sq, 'dsym', 'medium', `${round} The subject: a single golden feathered wing.`],
+  ['ds-snake', sq, 'dsym', 'medium', `${round} The subject: a coiled golden snake.`],
+  ['ds-house', sq, 'dsym', 'medium', `${round} The subject: a small cottage with a lit window.`],
+  ['ds-death', sq, 'dsym', 'medium', `${round} The subject: a white moth with open wings, a symbol of transformation.`]
+];
+
+async function paint([id, size, ref, quality, prompt, background]) {
+  const text = `${prompt}\n${STYLE}`;
+  const refPath = refs && ref && join(refs, ref + '.png');
+  const opts = { model, size, quality, output_format: 'webp', output_compression: '86', ...(background ? { background } : {}) };
+  let res;
+  if (refPath && existsSync(refPath)) {
+    const f = new FormData();
+    f.append('prompt', `${REF}\n${text}`);
+    for (const [k, v] of Object.entries(opts)) f.append(k, String(v));
+    f.append('image[]', new Blob([readFileSync(refPath)], { type: 'image/png' }), ref + '.png');
+    res = await fetch('https://api.openai.com/v1/images/edits', { method: 'POST', headers: { authorization: `Bearer ${key}` }, body: f });
+  } else {
+    res = await fetch('https://api.openai.com/v1/images/generations', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` }, body: JSON.stringify({ ...opts, output_compression: 86, prompt: text, n: 1 }) });
+  }
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error?.message || `HTTP ${res.status}`);
+  return Buffer.from(body.data[0].b64_json, 'base64');
+}
+
+mkdirSync(out, { recursive: true });
+const jobs = JOBS.filter(([id]) => (!ids || ids.includes(id)) && (force || !existsSync(join(out, id + '.webp'))));
+console.log(`craft-atlas: ${jobs.length} image(s) to paint with ${model}${refs ? ' (mockup references)' : ''}`);
+let failed = 0;
+const queue = [...jobs];
+await Promise.all(Array.from({ length: 6 }, async () => {
+  for (let job; (job = queue.shift());) {
+    try { writeFileSync(join(out, job[0] + '.webp'), await paint(job)); console.log(`  ✓ ${job[0]}`); }
+    catch (e) { failed++; console.error(`  ✗ ${job[0]}: ${e.message}`); }
+  }
+}));
+console.log(`craft-atlas: ${readdirSync(out).length} images in public/art/atlas${failed ? `, ${failed} failed (run again to retry)` : ''}`);
+process.exit(failed ? 1 : 0);
