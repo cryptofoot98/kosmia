@@ -690,51 +690,19 @@ td.wrap{white-space:normal}
 .auth-alt{font-style:italic;color:var(--ink2);font-size:.95rem}
 .auth-alt.light{color:#E2D2AE}.auth-alt.light .link{color:#F1D79A}
 .auth-err{margin:0;color:var(--danger);font-weight:600;font-size:.9rem}.auth-err:empty{display:none}
-.ob-dots{display:flex;gap:9px;justify-content:center;margin-top:6px}
-.ob-dots i{width:8px;height:8px;border-radius:50%;border:1px solid currentColor;opacity:.7}
-.ob-dots i.on{background:currentColor;opacity:1}
-.ob-sun{width:110px;margin-top:-6px}
-.ob-sun-i{width:100%;border-radius:50%;box-shadow:0 0 30px rgba(var(--k-gold-light-rgb),.5)}
-.zwheel{position:relative;width:min(100%,380px);aspect-ratio:1;margin:4px auto}
-.zw-ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 140s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.zw-s{position:absolute;width:21%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px;padding:0;border:0;background:none;cursor:pointer;color:#E9D9B4;font-family:var(--serif);font-weight:600;font-size:clamp(.62rem,2.6vw,.8rem);transition:transform .25s}
-.zw-m{width:100%;border-radius:50%;box-shadow:0 0 0 1.5px var(--gold),0 3px 8px rgba(0,0,0,.5);transition:box-shadow .25s,filter .25s}
-.zwheel.has .zw-s:not([aria-checked=true]) .zw-m{filter:saturate(.7) brightness(.8)}
-.zw-s[aria-checked=true]{transform:translate(-50%,-50%) scale(1.14);z-index:2;color:#FFE7A8}
-.zw-s[aria-checked=true] .zw-m{box-shadow:0 0 0 2px #FFE7A8,0 0 18px 6px rgba(255,214,130,.75)}
-.zw-c{position:absolute;left:50%;top:50%;width:34%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
- background:radial-gradient(circle,#24305A,var(--k-midnight) 75%);box-shadow:0 0 0 1.5px var(--gold),0 0 0 5px rgba(15,22,48,.9),0 0 0 6px rgba(var(--k-gold-light-rgb),.4);color:#F3E6C6}
-.zw-c .glyph{font-size:2rem;line-height:1;color:#F1D79A}
-.zw-c strong{font-family:var(--display);font-size:.9rem;letter-spacing:.08em}
-.zw-c span:last-child{font-size:.62rem;color:#D9C8A0}
-.zw-tap{font-style:italic;font-size:.9rem;color:#D9C8A0}
 .ob-bday{width:min(100%,320px);color:#E2D2AE}
 .ob-bday summary{color:#F1D79A!important}
 .ob-bday .field{margin-top:8px}.ob-bday label{color:#E2D2AE!important}
-.ob-dates{color:var(--muted);margin-top:-8px}
-.ob-art{display:flex;justify-content:center;width:100%}
-.ob-art .sign-plate{width:min(88%,320px)}
-.ob-art.glow{filter:drop-shadow(0 0 22px rgba(var(--k-gold-light-rgb),.45))}
-.ob-blurb{font-size:1rem;line-height:1.5;color:var(--ink2);max-width:360px}
-.ob-q{width:100%;max-width:380px;align-items:center;text-align:center}
-.ob-q .btn{width:100%}
 .ob-form{gap:12px}
 .ob-fields{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
 .ob-fields .btn{width:100%;margin-top:4px}
-.pw-meter{height:5px;border-radius:3px;background:rgba(var(--k-gold-rgb),.2);overflow:hidden}
-.pw-meter i{display:block;height:100%;width:0;background:#A0553A;transition:width .25s,background .25s}
-.pw-meter i.s2{background:#C9873B}.pw-meter i.s3{background:#5E7A4B}
 .pw-rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;text-align:left}
 .pw-rules li{display:flex;align-items:center;gap:9px;font-size:.92rem;color:var(--ink2)}
 .pw-rules li::before{content:'';width:16px;height:16px;border-radius:50%;border:1.5px solid var(--gold);flex:none}
 .pw-rules li.ok::before{background:#5E7A4B url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center/12px no-repeat;border-color:#5E7A4B}
-.ob-foot{margin-top:auto;width:calc(100% + 44px);margin-bottom:calc(-24px - env(safe-area-inset-bottom,0px))}
-.ob-land{display:block;width:100%;-webkit-mask-image:linear-gradient(transparent,#000 30%);mask-image:linear-gradient(transparent,#000 30%)}
 .ob-mail{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--navy);color:#F1D79A;margin-top:40px;box-shadow:0 0 0 3px var(--gold2)}
 .ob-mail svg{width:44px;height:44px}
-.ob-kick{font-family:var(--display);letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;color:#F1D79A;margin-top:20px}
-.ob-ready .sign-frame{width:min(80%,280px)}
 
 /* pop-ups: a parchment sheet rising from the foot of the screen */
 .pop{position:fixed;inset:0;z-index:var(--z-pop);background:rgba(18,14,10,.6);display:flex;align-items:flex-end;justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 24px)}
@@ -759,7 +727,6 @@ body.reduce *,body.reduce *::before,body.reduce *::after{animation:none!importan
 .sp-plate{position:relative;display:block;width:min(100%,340px);margin:0 auto}
 .sp-plate .sign-plate{width:100%}
 .sp-gm{position:absolute;left:50%;bottom:4.5%;transform:translateX(-50%);width:62px;height:62px;font-size:2rem}
-.ob-art .sp-plate{width:min(84%,300px)}
 .ob-w-top{position:absolute;z-index:2;top:calc(28px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center}
 .ob-logo{font-size:clamp(3rem,16vw,4.2rem);line-height:1;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent!important;filter:drop-shadow(0 3px 5px rgba(0,0,0,.7));text-transform:uppercase}
 .ob-w-top .ob-tags{margin-top:8px;text-shadow:0 1px 6px #000}
@@ -1228,54 +1195,11 @@ body.reduce .kscene .parallax{transform:none!important}
 .ob-w-top{top:calc(25% + env(safe-area-inset-top,0px))}
 .ob-w-top .ob-tags{font-size:.78rem;letter-spacing:.14em}
 .ob-w-in{padding-top:0}
-/* the introduction: the portrait, then the features as a quiet list */
-.ob-intro h1.cz{font-size:1.55rem;letter-spacing:.06em;text-transform:uppercase;text-align:center}
-.ob-intro .ob-lead{text-align:center}
-.obi-art{width:calc(100% + 44px);aspect-ratio:16/9;overflow:hidden;border-top:1px solid var(--k-gold);border-bottom:1px solid var(--k-gold)}
-.obi-i{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
-.obi-list{list-style:none;margin:0;padding:0;width:100%;max-width:380px;display:flex;flex-direction:column}
-.obi-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:center;padding:9px 2px;border-bottom:1px solid rgba(var(--k-gold-rgb),.3);font-size:.9rem;color:var(--k-ink-soft);line-height:1.3}
-.obi-list strong{font-family:var(--font-serif);font-size:1.05rem;color:var(--k-ink)}
-.obi-list .k-ico{--s:26px}
-.ob-intro .btn{width:min(100%,320px)}
-/* the sign: twelve medallions, three to a row */
-.zgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px;width:min(100%,340px);margin:4px auto}
-.zg-s{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;border:0;background:none;cursor:pointer;color:#E9D9B4;font-family:var(--font-serif);font-weight:600;font-size:.92rem}
-.zg-m{width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1.5px var(--k-gold),0 3px 8px rgba(0,0,0,.5);transition:box-shadow .25s,filter .25s,transform .25s}
-.zgrid.has .zg-s:not([aria-checked=true]) .zg-m{filter:saturate(.75) brightness(.78)}
-.zg-s[aria-checked=true]{color:#FFE7A8}
-.zg-s[aria-checked=true] .zg-m{transform:scale(1.06);box-shadow:0 0 0 2px #FFE7A8,0 0 18px 6px rgba(255,214,130,.7)}
-.ob-sign .ob-sun{width:84px}
-/* the details: the form on parchment, the landscape at its foot */
-.ob-opt{font-size:1.2rem;color:var(--k-ink-muted)}
-.ob-details h1{text-align:center}.ob-details .ob-lead{text-align:center}
-.ob-fields .link{align-self:center;padding:8px}
-/* notifications: switch rows on parchment */
-.obn-moon{width:110px}
-.obn-i{display:block;width:100%}
-.ob-notify h1,.ob-notify .ob-lead{text-align:center}
-.obn-list{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
-.obn-row{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid rgba(var(--k-gold-rgb),.6);border-radius:14px;cursor:pointer;
- background:linear-gradient(rgba(var(--k-surface-hi-rgb),.5),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.5);font-size:.86rem;color:var(--k-ink-muted);line-height:1.3}
-.obn-row strong{font-family:var(--font-serif);font-size:1.05rem;color:var(--k-ink)}
 .sw{appearance:none;-webkit-appearance:none;position:relative;width:46px;height:26px;margin:0;border-radius:99px;background:rgba(var(--k-gold-rgb),.3);border:1px solid rgba(var(--k-gold-rgb),.7);cursor:pointer;transition:background .2s}
 .sw::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--k-ivory);box-shadow:0 1px 3px rgba(0,0,0,.35);transition:transform .2s}
 .sw:checked{background:var(--k-btn-lo);border-color:var(--k-btn-lo)}
 .sw:checked::after{transform:translateX(20px);background:#E2BC80}
 .sw:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
-.ob-notify .btn{width:min(100%,320px)}
-/* the close: the night over the lake, the welcome over it */
-.ob-final{padding:0;justify-content:flex-start;background:var(--k-midnight);color:#F3E6C6}
-.obf-i{display:block;width:100%;height:58svh;object-fit:cover;object-position:30% 50%;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
-.obf-t{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:-26svh;padding:0 24px calc(28px + env(safe-area-inset-bottom,0px));text-align:center}
-.ob-final h1{font-family:var(--font-serif);font-weight:500;font-size:1.7rem;color:#F3E2B4;text-shadow:0 2px 10px #000}
-.ob-final h1 .cz{display:block;font-size:2.7rem;letter-spacing:.06em;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent}
-.ob-final .ob-lead{color:#E9D9B4;text-shadow:0 1px 6px #000}
-.obf-sign{display:flex;align-items:center;gap:12px;padding:8px 16px 8px 8px;border:1px solid rgba(var(--k-gold-light-rgb),.5);border-radius:99px;background:rgba(var(--k-night-rgb),.6);text-align:left;font-size:.78rem;color:#D9C8A0}
-.obf-sign strong{font-family:var(--font-display);font-size:.95rem;letter-spacing:.08em;color:#F1D79A}
-.obf-sign .dot{color:#E2BC80}
-.obf-m{width:52px;height:52px;border-radius:50%;box-shadow:0 0 0 1px var(--k-gold)}
-.ob-final .btn{width:min(100%,320px)}
 
 /* Kassandra: her portrait in an engraved celestial ring on parchment, the great microphone beneath */
 .kp-frame{position:relative;align-self:center;width:min(76vw,280px);aspect-ratio:1;padding:5%}
@@ -1300,11 +1224,6 @@ body.reduce .kscene .parallax{transform:none!important}
 .pf-meta{font-size:.84rem;color:var(--k-ink-soft)}
 .pf-fig .hh-fig{left:-52%;bottom:-18px;width:196%}
 .pf-fig .hh-halo{left:10%;top:2%;width:96%}
-.obi-i{object-position:50% 38%}
-.obi-list .k-ico{color:var(--k-gold-deep)}
-.ob-details .row.nowrap{display:flex;gap:8px}
-.ob-details .row.nowrap input{flex:1;min-width:0}
-.ob-details .row.nowrap .btn{flex:none;width:auto;margin:0}
 .pf-scene{grid-template-columns:46% 1fr;min-height:320px}
 .pf-fig .hh-fig{left:-22%;bottom:-18px;width:160%}
 .pf-fig .hh-halo{left:6%;top:0;width:92%}
@@ -1349,3 +1268,106 @@ body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:
  box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.55)}
 .dscenic .dft{box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.5)}
 @media (prefers-reduced-motion:reduce){.hbar,body.scrolled[data-sec=home] .hbar{transition:none}}
+
+/* ==========================================================================================================
+   Onboarding v2 (docs/mockups/ob2-*): four pages of one illustrated book. Each page paints its layers behind its
+   content (.obg, z-index -1 inside the page's own stacking context): the sky or the crown of night at the top, the
+   botanical night in the middle, the golden sunset rising from the foot. The art is the approved art (ob-welcome,
+   home-sky, home-vines, welcome, home-energy, the zm-* medallions); CSS only places, masks and frames it.
+   ========================================================================================================== */
+.ob{isolation:isolate}
+.obg{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.obl{position:absolute;left:0;display:block;width:100%;max-width:none;height:auto}
+/* the sunset: its sky dissolves into the page above it, never a picture with edges */
+.obl-foot{bottom:0;left:-12.5%;width:125%;-webkit-mask-image:linear-gradient(transparent,rgba(0,0,0,.35) 16%,#000 42%);mask-image:linear-gradient(transparent,rgba(0,0,0,.35) 16%,#000 42%)}
+.ob-dark .obl-foot{-webkit-mask-image:linear-gradient(transparent,rgba(0,0,0,.4) 12%,#000 30%);mask-image:linear-gradient(transparent,rgba(0,0,0,.4) 12%,#000 30%)}
+/* the crown of night over a parchment page: the sky and its crescent across the top, the flowers down the sides,
+   both melting into the paper */
+.obl-crown{top:0;
+ -webkit-mask-image:linear-gradient(#000 16%,transparent 36%),linear-gradient(90deg,#000,rgba(0,0,0,.85) 9%,transparent 24%,transparent 76%,rgba(0,0,0,.85) 91%,#000),linear-gradient(#000 30%,transparent 58%);
+ mask-image:linear-gradient(#000 16%,transparent 36%),linear-gradient(90deg,#000,rgba(0,0,0,.85) 9%,transparent 24%,transparent 76%,rgba(0,0,0,.85) 91%,#000),linear-gradient(#000 30%,transparent 58%);
+ -webkit-mask-composite:source-over,source-in;mask-composite:add,intersect}
+.ob-rule{display:flex;align-items:center;gap:10px;width:min(64%,250px);color:var(--k-gold);flex:none}
+.ob-rule::before,.ob-rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,currentColor)}
+.ob-rule::after{background:linear-gradient(90deg,currentColor,transparent)}
+.ob-rule svg{width:16px;height:16px}
+.ob-rule.lone{width:auto}.ob-rule.lone::before,.ob-rule.lone::after{display:none}.ob-rule.lone svg{width:30px;height:30px}
+.ob .link{color:var(--k-burgundy,#713B42);font-style:italic;text-decoration:underline;text-underline-offset:3px}
+.ob-dark .ob-panel .link{color:#713B42}
+
+/* 1. Ancient Wisdom: the title in a cloud of parchment among the night's corners, the woman before the moon in a
+   window with no edges, the six gifts as a quiet manuscript list, Let's Begin, the sunset */
+.ob-intro{gap:12px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + min(46vw,220px))}
+.ob-intro .obl-crown{-webkit-mask-image:radial-gradient(ellipse 64% 44% at 50% 17%,transparent 52%,rgba(0,0,0,.7) 74%,#000 90%),linear-gradient(#000 30%,transparent 52%);mask-image:radial-gradient(ellipse 64% 44% at 50% 17%,transparent 52%,rgba(0,0,0,.7) 74%,#000 90%),linear-gradient(#000 30%,transparent 52%);-webkit-mask-composite:source-in;mask-composite:intersect}
+.ob-intro h1.cz{margin-top:14px;font-family:var(--font-display);font-size:clamp(1.35rem,6.4vw,1.75rem);line-height:1.2;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--k-ink);text-shadow:0 0 12px rgba(var(--k-surface-hi-rgb),.9)}
+.ob-intro .ob-lead{max-width:320px;color:var(--k-ink-soft)}
+.obi-art{width:calc(100% + 44px);margin:-10px 0 -14px;aspect-ratio:390/380;overflow:hidden}
+.obi-i{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 52%;
+ -webkit-mask-image:linear-gradient(transparent,rgba(0,0,0,.7) 9%,#000 18%,#000 82%,rgba(0,0,0,.6) 92%,transparent);mask-image:linear-gradient(transparent,rgba(0,0,0,.7) 9%,#000 18%,#000 82%,rgba(0,0,0,.6) 92%,transparent)}
+.obi-list{list-style:none;margin:0;padding:0;width:100%;max-width:400px;display:flex;flex-direction:column;gap:7px}
+.obi-list li{display:grid;grid-template-columns:46px 1fr;gap:14px;align-items:center;padding:8px 14px 8px 8px;border:1px solid rgba(var(--k-gold-rgb),.45);border-radius:14px;background:rgba(var(--k-surface-hi-rgb),.38);text-align:left;line-height:1.25}
+.obi-list li>span:last-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.obi-list strong{font-family:var(--font-serif);font-weight:600;font-size:1.08rem;color:var(--k-ink)}
+.obi-list li>span:last-child>span{font-size:.92rem;color:var(--k-ink-soft)}
+.obi-med{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;overflow:hidden;color:#E9C88E;background:radial-gradient(circle at 50% 40%,#24305A,var(--k-midnight) 75%);box-shadow:0 0 0 1px var(--k-gold-deep),0 0 0 3px rgba(var(--k-surface-hi-rgb),.8),0 0 0 4px rgba(var(--k-gold-rgb),.55)}
+.obi-med .k-ico{--s:26px}
+.obi-k{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+.ob-intro .btn{width:min(100%,320px)}
+
+/* 2. The sign: the sun and the crescent above, the night with its flowers, the twelve medallions three to a row, the
+   sunset at the foot. A tap chooses and goes on */
+.ob-sign{gap:10px;padding-top:calc(env(safe-area-inset-top,0px) + min(33vw,158px));padding-bottom:calc(env(safe-area-inset-bottom,0px) + min(58vw,280px))}
+.ob-sign .obl-top{top:-5vw;-webkit-mask-image:linear-gradient(#000 26%,transparent 40%);mask-image:linear-gradient(#000 26%,transparent 40%)}
+.ob-sign .obl-mid{top:min(28vw,135px);-webkit-mask-image:linear-gradient(transparent,#000 16%,#000 80%,transparent);mask-image:linear-gradient(transparent,#000 16%,#000 80%,transparent)}
+.ob-sign h1{font-family:var(--font-display);font-weight:600;font-size:clamp(1.5rem,7.4vw,1.95rem);line-height:1.15;letter-spacing:.05em;text-transform:uppercase;color:#F3E2B4;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.ob-sign .ob-lead{max-width:300px;text-wrap:balance;font-size:.98rem;color:#E9D9B4;text-shadow:0 1px 6px #000}
+.zgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px clamp(14px,5vw,24px);width:min(86%,370px);margin:8px auto 0}
+.zg-s{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:0;border:0;background:none;cursor:pointer;color:#F1E2BC;font-family:var(--font-serif);font-weight:600;font-size:clamp(.92rem,4.2vw,1.05rem);text-shadow:0 1px 5px #000;-webkit-tap-highlight-color:transparent}
+.zg-m{display:block;width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1.5px var(--k-gold),0 0 0 3.5px rgba(var(--k-night-rgb),.85),0 0 0 4.5px rgba(var(--k-gold-rgb),.45),0 4px 10px rgba(0,0,0,.55);transition:box-shadow .25s,filter .25s,transform .25s}
+.zgrid.has .zg-s:not([aria-checked=true]) .zg-m{filter:saturate(.8) brightness(.8)}
+/* the chosen sign lit like an antique medallion: a champagne ring and glow, a little larger, its name underlined */
+.zg-s[aria-checked=true]{color:#FFE9B0}
+.zg-s[aria-checked=true] span{text-decoration:underline;text-decoration-color:#E9C88E;text-underline-offset:4px}
+.zg-s[aria-checked=true] .zg-m{transform:scale(1.05);box-shadow:0 0 0 2.5px #E9C88E,0 0 0 4.5px rgba(var(--k-night-rgb),.85),0 0 0 5.5px #E9C88E,0 0 20px 4px rgba(233,200,142,.55)}
+.zg-s:focus-visible{outline:none}.zg-s:focus-visible .zg-m{box-shadow:0 0 0 2.5px #FFE9B0,0 0 0 6px rgba(255,233,176,.5)}
+.ob-bday{width:min(100%,320px);color:#E2D2AE}
+.ob-bday summary{font-style:italic;color:#F1D79A!important;text-shadow:0 1px 5px #000}
+.ob-bday .field{margin-top:8px}.ob-bday label{color:#E2D2AE!important}
+.ob-hint{margin-top:8px;font-style:italic;color:#F1D79A}
+@media (prefers-reduced-motion:reduce){.zg-m{transition:none}}
+
+/* 3. The account: the night with the woman before her moon at the right, the title at the left, the parchment form
+   rising over her, the sunset beneath it */
+.ob-acct{gap:0;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + min(40vw,190px))}
+.ob-acct .obl-top{top:0;
+ -webkit-mask-image:linear-gradient(#000 70%,transparent),linear-gradient(90deg,transparent 4%,#000 28%),linear-gradient(transparent 40%,#000 58%);
+ mask-image:linear-gradient(#000 70%,transparent),linear-gradient(90deg,transparent 4%,#000 28%),linear-gradient(transparent 40%,#000 58%);
+ -webkit-mask-composite:source-in,source-over;mask-composite:intersect,add}
+.obl-woman{top:-12vw;left:auto;right:-10%;width:74%;
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 28%),linear-gradient(#000 64%,transparent 86%);mask-image:linear-gradient(90deg,transparent,#000 28%),linear-gradient(#000 64%,transparent 86%);-webkit-mask-composite:source-in;mask-composite:intersect}
+.oba-head{align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:10px;width:58%;margin:clamp(34px,12vw,56px) 0 0 2%;text-align:center}
+.ob-acct .oba-head h1{text-transform:none;letter-spacing:.01em;font-family:var(--font-serif);font-weight:600;font-size:clamp(1.7rem,8.6vw,2.3rem);line-height:1.04;color:#F3E2B4;text-shadow:0 2px 10px rgba(0,0,0,.85)}
+.oba-head .ob-rule{width:90%}
+.oba-head .ob-lead{font-size:clamp(.95rem,4.2vw,1.08rem);color:#F1E2BC;text-shadow:0 1px 6px #000}
+.ob-panel{position:relative;z-index:1;margin-top:clamp(14px,6vw,30px);padding:22px 20px 18px;max-width:440px;border:1px solid var(--k-gold);border-radius:18px;color:var(--k-ink);text-align:left;
+ background:var(--c-tl) 6px 6px/24px no-repeat,var(--c-tr) calc(100% - 6px) 6px/24px no-repeat,var(--c-bl) 6px calc(100% - 6px)/24px no-repeat,var(--c-br) calc(100% - 6px) calc(100% - 6px)/24px no-repeat,var(--k-parchment-light) var(--paper-img) center/cover;
+ box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 4px rgba(var(--k-gold-rgb),.4),0 10px 26px rgba(0,0,0,.45)}
+.ob-panel .ob-rule,.ob-signin .ob-fields .ob-rule{align-self:center;margin:4px 0 -2px}
+.ob-panel .auth-alt,.ob-signin .auth-alt{text-align:center}
+/* the dark button with its antique gold edge */
+.ob-panel .btn,.ob-signin .btn{box-shadow:inset 0 0 0 1px rgba(233,200,142,.55),0 0 0 1px var(--k-gold-deep),0 4px 12px rgba(var(--k-shadow-rgb),.3)}
+
+/* 4. Welcome Back: the crown of night with its crescent, the form on the open parchment, the sunset rising below */
+.ob-signin{gap:10px;padding-top:calc(env(safe-area-inset-top,0px) + min(38vw,180px));padding-bottom:calc(env(safe-area-inset-bottom,0px) + min(52vw,250px))}
+.ob-signin h1{font-family:var(--font-serif);font-weight:500;font-size:clamp(2.1rem,10vw,2.6rem);line-height:1.05;color:var(--k-ink)}
+.ob-signin .ob-lead{max-width:280px;color:var(--k-ink-soft)}
+.ob-signin .ob-rule.lone{margin-bottom:-4px}
+.ob-signin .ob-fields{text-align:left}
+.ob-signin .ob-mail{margin-top:0}
+.ob-intro>.ibtn,.ob-signin>.ibtn{color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
+.ob .ob-lead{text-wrap:balance}
+/* a soft pool of night behind the account title, so its letters never sit on a lily */
+.oba-head{position:relative}
+.oba-head::before{content:'';position:absolute;inset:-14% -12% -8%;z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(var(--k-night-rgb),.88),rgba(var(--k-night-rgb),.55) 60%,transparent)}
+.ob-acct{background:var(--k-midnight)}
+.ob-panel .field>label,.ob-signin .field>label{font-family:var(--font-serif);font-weight:700;font-size:1.02rem;color:var(--k-ink)}
