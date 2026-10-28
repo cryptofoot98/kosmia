@@ -41,8 +41,12 @@ const M = { home: 'home.webp', homeTop: 'home-top.webp', overview: 'overview.web
 
 // what each asset is, by its name: [test, purpose, mockup, screen, crop, needs alpha, target width at 2x (px)]
 const SPEC = [
-  [/^atlas\/hero-(aries|taurus|gemini|cancer|leo|virgo|libra|scorpio|sagittarius|capricorn|aquarius|pisces)$/, 'Home header: the sign figure before a gold moon, sky and flowers, painted as one scene', M.homeTop, 'Home', 'cover, anchored top', false, 960,
-    'The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing).'],
+  [/^atlas\/fg-/, 'The sign’s figure alone, cut out (scripts/cutout.py): stands before the halo and over the forecast card’s margin and foot', M.homeTop, 'Home header (foreground layer)', 'square box anchored to the card’s foot; clipped at the card’s text edge', true, 640],
+  [/^atlas\/home-sky$/, 'Home header background: night sky, crescent, sun face, vines, lilies and roses, no figure', M.homeTop, 'Home header (background layer)', 'cover, anchored top', false, 960],
+  [/^atlas\/home-halo$/, 'Golden full-moon halo behind the figure, cut to a circle', M.homeTop, 'Home header (behind the card)', 'contain, circle', true, 400],
+  [/^atlas\/home-vines$/, 'Night ground edged with lilies and roses, behind the Daily Whisper', M.homeTop, 'Home › Daily Whisper band', 'cover, anchored top', false, 720],
+  [/^atlas\/home-energy$/, 'Sunset lake, mountains and flowers, edge to edge', M.homeTop, 'Home › Today’s Cosmic Energy', 'cover, anchored lower middle', false, 960],
+  [/^atlas\/home-sun$/, 'Engraved sun on parchment for the closing banner', M.home, 'Home › closing banner', 'height-fit, anchored left, faded into the parchment', false, 640],
   [/^atlas\/plate-/, 'Framed arched portrait of the sign with the glyph roundel', M.horo, 'Horoscope › sign page', 'contain, whole frame visible', false, 780],
   [/^atlas\/med-/, 'Round medallion of the sign', M.onb, 'Onboarding sign wheel, sign grids, Explore every sign', 'contain, circle', false, 240],
   [/^atlas\/ico-/, 'Engraved, tinted area-of-life icon (keyed from ivory)', M.horo, 'Home quick tiles, Horoscope tiles, list rows', 'contain', true, 160],
@@ -56,10 +60,9 @@ const SPEC = [
   [/^atlas\/hero-(horoscope|tarot|journal|discover|dream|insights)$/, 'Section hero scene (title set as live text above it)', null, 'Section landing', 'cover, anchored top', false, 960],
   [/^atlas\/hero-(chart|affinity|name|lifepath)$/, 'Discover feature hero, framed', M.disc, 'Discover feature pages', 'cover', false, 780],
   [/^atlas\/banner-/, 'Wide dark banner for a Discover tile', M.disc, 'Discover grid (Cosmic Calendar, Astrology Library)', 'cover, anchored left', false, 420],
-  [/^atlas\/landscape$/, 'Sunset lake and mountains for Today’s Cosmic Energy', M.homeTop, 'Home › Today’s Cosmic Energy', 'cover, anchored bottom', false, 960],
+  [/^atlas\/landscape$/, 'Framed sunset lake and mountains', M.onb, 'Onboarding › account and details footers', 'cover, anchored bottom', false, 960],
   [/^atlas\/kassandra-banner$/, 'Kassandra with lilies on a starry banner', M.home, 'Home › Talk to Kassandra', 'cover, anchored right', false, 960],
   [/^atlas\/kassandra$/, 'Kassandra’s portrait', M.overview, 'Kassandra', 'contain, arch', false, 640],
-  [/^atlas\/sun-panel$/, 'Engraved sun face for the closing quote panel', M.home, 'Home › closing quote', 'contain, anchored left', false, 960],
   [/^atlas\/welcome$/, 'Splash scene: sun, crescent, coastal mountains, flowers', M.onb, 'Onboarding › welcome', 'cover', false, 960],
   [/^atlas\/journal-end$/, 'Woman on a rock under a crescent (closing page)', M.tarot, 'Journal › last page', 'cover', false, 960],
   [/^atlas\/owl$/, 'Snowy owl on a branch before a crescent', M.disc, 'Dream meaning', 'cover', false, 780],
@@ -80,9 +83,7 @@ const UNUSED = new Set(['nav', 'plates', 'scenes', 'frame', 'onboarding-paper', 
 
 // assets the mockups need that do not exist yet; they are made in the stage that rebuilds their screen
 const MISSING = [
-  ['scene-home-<sign> ×12', 'Home header background only: night sky, gold moon, crescent, sun face, lilies at the edges; no figure', M.homeTop, 'Home', 'opaque WebP, 1170×1560 or more', 'cover, anchored top'],
-  ['fg-<sign> ×12', 'The sign’s figure alone (Libra: woman with scales, lace gown, flowers in her hair), cut out', M.homeTop, 'Home', 'transparent WebP, 900 px wide or more', 'anchored left-bottom, overlaps the forecast card and tiles'],
-  ['fg-flowers-left, fg-flowers-right', 'Lily and wildflower sprays that overlap the parchment panels at the edges', M.homeTop, 'Home, Horoscope', 'transparent WebP, 600 px', 'anchored to the panel corners'],
+  ['fg-flowers-left, fg-flowers-right', 'Lily and wildflower sprays that overlap the parchment panels at the edges (optional on Home: the sky and vines carry them now)', M.horo, 'Horoscope', 'transparent WebP, 600 px', 'anchored to the panel corners'],
   ['tarot deck in the mockup style ×78', 'Each card on a navy starry ground with gold stars and flowers (The Star as in the mockups)', M.tarot, 'Daily Card, readings, journal', 'opaque WebP 2:3, 800×1200', 'cover'],
   ['whisper cards in the mockup style ×100', 'The Whisper paintings repainted in the same style as the deck', M.home, 'Daily Whisper', 'opaque WebP 2:3, 800×1200', 'cover'],
   ['onboarding scenes ×5', 'Ancient wisdom woman before the moon; account crescent over a lake; details flowers; notifications; welcome panorama', M.onb, 'Onboarding', 'opaque WebP, 1170 px wide', 'cover'],

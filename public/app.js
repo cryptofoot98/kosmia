@@ -337,6 +337,12 @@ const THEME={overview:{same:'All eyes on you',ease:'Flow and ease',friction:'Gro
  health:{same:'Energy runs high',ease:'Rest and recharge',friction:'Ease the pressure',mirror:'Balance give and take',quiet:'Small routines help'},
  career:{same:'Step into view',ease:'Progress through collaboration',friction:'Push with patience',mirror:'Listen, then lead',quiet:'Quiet, steady work'},
  money:{same:'Trust your judgement',ease:'Favourable for long-term plans',friction:'Review before you spend',mirror:'Clear shared terms',quiet:'Good time to plan and save'}};
+// the same, in two words for Home's five insight tiles (as the mockup words them: "Deeper connection", "Rest and recharge")
+const TILE={love:{same:'Magnetic and seen',ease:'Deeper connection',friction:'Honest words heal',mirror:'Meet halfway',quiet:'Gentle warmth'},
+ family:{same:'Your voice matters',ease:'Warm energy',friction:'Patience at home',mirror:'Make room',quiet:'Time together'},
+ health:{same:'Energy runs high',ease:'Rest and recharge',friction:'Ease the pressure',mirror:'Find balance',quiet:'Small routines'},
+ career:{same:'Step into view',ease:'Progress ahead',friction:'Push with patience',mirror:'Listen, then lead',quiet:'Steady work'},
+ money:{same:'Trust yourself',ease:'Favourable day',friction:'Review spending',mirror:'Clear terms',quiet:'Plan and save'}};
 const CAT_INFO={overview:['Overall','Your big picture','general'],love:['Love','Relationships','love'],family:['Family','Home & loved ones','family'],health:['Health','Wellbeing','health'],career:['Career','Work & purpose','career'],money:['Money','Finances','finance']};
 const catIco=(cat,cls='cat-ico')=>ui('ico-'+cat,cls);
 // the whispers' symbols, each with three words to carry through the day
@@ -471,34 +477,46 @@ const greet=()=>{const h=Number(fmt({hour:'numeric',hour12:false},new Date()));r
 const firstName=()=>(S.name||S.fullName||'').trim().split(/\s+/)[0]||'';
 // the reader's own medallion, at the top right of Home: their profile, birth details, notifications and plan
 const avatar=()=>`<button class="avatar" data-go="settings" data-t="account" aria-label="Your profile and settings">${med(S.sign||'aries','av-i')}</button>`;
+// a whisper's number in the deck of 100, as the numeral on its card
+const ROMAN=n=>[[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']].reduce((s,[v,r])=>{while(n>=v){s+=r;n-=v}return s},'');
+const wNum=c=>{const i=(globalThis.KOSMIA_WHISPERS||[]).findIndex(w=>w[0]===c.id);return i<0?'':ROMAN(i+1)};
+// the forecast on Home's card: whole sentences, as many as fit the card (about 150 letters), always at least one
+const hShort=t=>(t.match(/[^.!?]+[.!?]+/g)||[t]).reduce((o,x)=>!o||(o+x).trim().length<=150?(o+x):o,'').trim();
+/* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
+   forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
+   then the parchment sheet */
 views.home=()=>{
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
- const nm=firstName(),short=(h.body.match(/[^.!?]+[.!?]+/g)||[h.body]).slice(0,2).join('').trim();
- const quick=['love','health','career','money','family'].map(cat=>{const x=horoscope(sign.id,cat,'daily');return `<button class="qt" data-act="tohoroscope" data-cat="${cat}">${catIco(cat,'qt-i')}<strong>${CAT_INFO[cat][0]}</strong><span>${THEME[cat][x.rel]||''}</span></button>`}).join('');
+ const nm=firstName(),short=hShort(h.body),fig='atlas/fg-'+sign.id;
+ const quick=['love','health','career','money','family'].map(cat=>{const x=horoscope(sign.id,cat,'daily');return `<button class="qt" data-act="tohoroscope" data-cat="${cat}">${catIco(cat,'qt-i')}<strong>${CAT_INFO[cat][0]}</strong><span>${TILE[cat][x.rel]||''}</span></button>`}).join('');
  const note=S.notes[k],wbtn=!rev?`<button class="btn" data-act="reveal">Reveal Today’s Message</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Your Reflection':'Reflect in Your Journal'} →</button>`;
  const evs=upcoming().filter(e=>['moon','eclipse','season','retrograde'].includes(e.type)||(e.k==='ingress'&&['Venus','Mars','Mercury','Jupiter'].includes(e.planet))).slice(0,6);
  const recent=journalItems().slice().sort((a,b)=>(b.at||b.day)>(a.at||a.day)?1:-1).slice(0,3);
  return `<div class="home"><div class="hbar"><span class="cz">Kosmia</span>${avatar()}</div>
- ${Kit.scene({cls:'hhero',bg:'atlas/hero-'+sign.id,ratio:'1024/1380',imgCls:'hh-bg',bgAlt:sign.name,parallax:true,priority:true,stars:true,bare:true,content:`
-  <div class="hh-top"><span></span><div class="brand"><span class="cz">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
-   <button class="ibtn light" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
+ ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`
+  <div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
+   <div class="hh-acts"><button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div></div>
   <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-sub">Here’s your cosmic overview for today.</p>
-  <div class="hh-card"><div class="hh-name"><span class="glyph">${sign.g}</span><div><h2>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn sm" data-act="tohoroscope">Read Full Horoscope →</button></div>`})}
- <div class="hbody">
- <div class="qrow">${quick}</div>
- ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${pic('whispers',c.id,'mw-art')}<span class="mw-t">${esc(c.title)}</span></div></div></div>
-  <div class="dw-r">${rev?`<p class="dw-q">${IC.star}<span>${esc(c.msg)}</span></p>`:'<p class="dw-q"><span>A card, a message, a moment for you. Turn it over when you are ready.</span></p>'}${wbtn}</div></div>`,'ornate')}
- <button class="energy" data-go="discover" data-t="moon">${ui('landscape','en-bg')}<span class="en-in"><span class="orn-s">${IC.star} Today’s Cosmic Energy ${IC.star}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>
+  <div class="hh-stage s-${sign.id}">
+   <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
+   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
+  </div>
+  <div class="qrow">${quick}</div>`})}
+ ${Kit.scene({cls:'hband',bg:'atlas/home-vines',ratio:'auto',bgPos:'50% 0',content:`
+  ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+   <div class="dw-r">${rev?`<p class="dw-q">${Kit.icon('star')}${esc(c.msg)}${Kit.icon('star',{cls:'s2'})}</p>`:`<p class="dw-q">${Kit.icon('star')}A card, a message, a moment for you. Turn it over when you are ready.</p>`}${wbtn}</div></div>`,'gilt hwhisper')}
+  <button class="energy" data-go="discover" data-t="moon">${ui('home-energy','en-bg')}<span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>`})}
+ <div class="hsheet">
  ${panel(`${orn('Upcoming Celestial Events',seeAll('discover','calendar'))}
- <div class="evgrid">${evs.slice(0,3).map(e=>Kit.event({attrs:`data-act="evgo" data-ref="${evRef(e)}"`,art:evArt(e,false),title:`${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}`,date:e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date),note:evKeys(e)})).join('')}</div>`,'home-p')}
+ <div class="evgrid">${evs.slice(0,3).map(e=>Kit.event({attrs:`data-act="evgo" data-ref="${evRef(e)}"`,art:`<span class="evc-art">${evArt(e,false)}</span>`,title:`${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}`,date:e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date),note:evKeys(e)})).join('')}</div>`,'home-p')}
  ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
  <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>`,'home-p')}
  ${panel(`${orn('Recent Readings',seeAll('tarot','journal'))}
  <div class="list">${recent.length?recent.map(p=>{const n=jNote(p)||(p.t==='j'?p.j.body:'');return lrow(jThumb(p),JKIND[p.t][0],`<em>${jTitle(p)}</em>`,`data-act="jopen" data-k="${esc(jKey(p))}"`,`<span class="lr-m">${relDay(p.day)}${n?' • Reflection added':''}</span>`)}).join('')
   :lrow(ui('t-whisper','th'),'Your readings will gather here','Reveal today’s Whisper or draw a tarot spread to begin.','data-go="tarot" data-t="whisper"')}</div>`,'home-p')}
- <button class="kban" data-go="kassandra">${ui('kassandra-banner','kb-i')}<span class="kb-t"><span class="cz">Talk to Kassandra</span><span>Your AI fortune teller</span><span class="btn ghost light sm">Start a conversation →</span></span></button>
- <div class="sunq">${ui('sun-panel','sq-i')}<p>Every day is a new page<br>in your cosmic story.</p></div>
+ <button class="kban" data-go="kassandra">${ui('kassandra-banner','kb-i')}<span class="kb-t"><span class="cz">Talk to Kassandra</span><span>Your AI fortune teller</span><span class="btn ghost light">Start a conversation →</span></span></button>
+ <div class="sunq">${ui('home-sun','sq-i')}<p>Every day is a new page<br>in your cosmic story.</p></div>
  </div></div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};

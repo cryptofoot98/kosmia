@@ -7,10 +7,10 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 388 |
-| In use, provisional | 344 |
+| Images | 392 |
+| In use, provisional | 348 |
 | Unused | 44 |
-| Missing (listed below) | 12 groups |
+| Missing (listed below) | 10 groups |
 
 ## Wide dark banner for a Discover tile
 
@@ -75,6 +75,29 @@ their space before they load.
 | `public/art/atlas/ex-name.webp` | 560×560 | 1:1 | no | 96 | provisional |  |
 | `public/art/atlas/ex-resonance.webp` | 560×560 | 1:1 | no | 102 | provisional |  |
 
+## The sign’s figure alone, cut out (scripts/cutout.py): stands before the halo and over the forecast card’s margin and foot
+
+- Mockup: `docs/mockups/home-top.webp`
+- Screen: Home header (foreground layer)
+- Crop: square box anchored to the card’s foot; clipped at the card’s text edge
+- Background: transparent
+- Wanted width at 2×: 640 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/fg-aquarius.webp` | 900×900 | 1:1 | yes | 279 | provisional |  |
+| `public/art/atlas/fg-aries.webp` | 900×900 | 1:1 | yes | 248 | provisional |  |
+| `public/art/atlas/fg-cancer.webp` | 900×900 | 1:1 | yes | 245 | provisional |  |
+| `public/art/atlas/fg-capricorn.webp` | 900×900 | 1:1 | yes | 228 | provisional |  |
+| `public/art/atlas/fg-gemini.webp` | 900×900 | 1:1 | yes | 221 | provisional |  |
+| `public/art/atlas/fg-leo.webp` | 900×900 | 1:1 | yes | 279 | provisional |  |
+| `public/art/atlas/fg-libra.webp` | 900×900 | 1:1 | yes | 261 | provisional |  |
+| `public/art/atlas/fg-pisces.webp` | 900×900 | 1:1 | yes | 252 | provisional |  |
+| `public/art/atlas/fg-sagittarius.webp` | 900×900 | 1:1 | yes | 266 | provisional |  |
+| `public/art/atlas/fg-scorpio.webp` | 900×900 | 1:1 | yes | 194 | provisional |  |
+| `public/art/atlas/fg-taurus.webp` | 900×900 | 1:1 | yes | 230 | provisional |  |
+| `public/art/atlas/fg-virgo.webp` | 900×900 | 1:1 | yes | 260 | provisional |  |
+
 ## Discover feature hero, framed
 
 - Mockup: `docs/mockups/discover.webp`
@@ -89,29 +112,6 @@ their space before they load.
 | `public/art/atlas/hero-chart.webp` | 1100×733 | 1.50:1 | no | 334 | provisional |  |
 | `public/art/atlas/hero-lifepath.webp` | 1100×733 | 1.50:1 | no | 354 | provisional |  |
 | `public/art/atlas/hero-name.webp` | 1100×733 | 1.50:1 | no | 304 | provisional |  |
-
-## Home header: the sign figure before a gold moon, sky and flowers, painted as one scene
-
-- Mockup: `docs/mockups/home-top.webp`
-- Screen: Home
-- Crop: cover, anchored top
-- Background: opaque
-- Wanted width at 2×: 960 px
-
-| Asset | Size | Ratio | Alpha | KB | Status | Notes |
-|---|---|---|---|---|---|---|
-| `public/art/atlas/hero-aquarius.webp` | 640×960 | 2:3 | no | 178 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-aries.webp` | 640×960 | 2:3 | no | 202 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-cancer.webp` | 640×960 | 2:3 | no | 191 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-capricorn.webp` | 640×960 | 2:3 | no | 215 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-gemini.webp` | 640×960 | 2:3 | no | 211 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-leo.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-libra.webp` | 640×960 | 2:3 | no | 218 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-pisces.webp` | 640×960 | 2:3 | no | 200 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-sagittarius.webp` | 640×960 | 2:3 | no | 220 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-scorpio.webp` | 640×960 | 2:3 | no | 188 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-taurus.webp` | 640×960 | 2:3 | no | 212 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
-| `public/art/atlas/hero-virgo.webp` | 640×960 | 2:3 | no | 215 | provisional | below the 960 px it needs at 2×; The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing). |
 
 ## Section hero scene (title set as live text above it)
 
@@ -129,6 +129,66 @@ their space before they load.
 | `public/art/atlas/hero-insights.webp` | 1100×733 | 1.50:1 | no | 224 | provisional |  |
 | `public/art/atlas/hero-journal.webp` | 1100×733 | 1.50:1 | no | 267 | provisional |  |
 | `public/art/atlas/hero-tarot.webp` | 1100×733 | 1.50:1 | no | 228 | provisional |  |
+
+## Sunset lake, mountains and flowers, edge to edge
+
+- Mockup: `docs/mockups/home-top.webp`
+- Screen: Home › Today’s Cosmic Energy
+- Crop: cover, anchored lower middle
+- Background: opaque
+- Wanted width at 2×: 960 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/home-energy.webp` | 1200×800 | 3:2 | no | 335 | provisional |  |
+
+## Golden full-moon halo behind the figure, cut to a circle
+
+- Mockup: `docs/mockups/home-top.webp`
+- Screen: Home header (behind the card)
+- Crop: contain, circle
+- Background: transparent
+- Wanted width at 2×: 400 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/home-halo.webp` | 560×560 | 1:1 | yes | 99 | provisional |  |
+
+## Home header background: night sky, crescent, sun face, vines, lilies and roses, no figure
+
+- Mockup: `docs/mockups/home-top.webp`
+- Screen: Home header (background layer)
+- Crop: cover, anchored top
+- Background: opaque
+- Wanted width at 2×: 960 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/home-sky.webp` | 1024×1536 | 2:3 | no | 434 | provisional |  |
+
+## Engraved sun on parchment for the closing banner
+
+- Mockup: `docs/mockups/home.webp`
+- Screen: Home › closing banner
+- Crop: height-fit, anchored left, faded into the parchment
+- Background: opaque
+- Wanted width at 2×: 640 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/home-sun.webp` | 960×640 | 3:2 | no | 161 | provisional |  |
+
+## Night ground edged with lilies and roses, behind the Daily Whisper
+
+- Mockup: `docs/mockups/home-top.webp`
+- Screen: Home › Daily Whisper band
+- Crop: cover, anchored top
+- Background: opaque
+- Wanted width at 2×: 720 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/home-vines.webp` | 720×1080 | 2:3 | no | 198 | provisional |  |
 
 ## Engraved, tinted area-of-life icon (keyed from ivory)
 
@@ -183,10 +243,10 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/kassandra.webp` | 760×760 | 1:1 | no | 217 | provisional |  |
 
-## Sunset lake and mountains for Today’s Cosmic Energy
+## Framed sunset lake and mountains
 
-- Mockup: `docs/mockups/home-top.webp`
-- Screen: Home › Today’s Cosmic Energy
+- Mockup: `docs/mockups/onboarding.webp`
+- Screen: Onboarding › account and details footers
 - Crop: cover, anchored bottom
 - Background: opaque
 - Wanted width at 2×: 960 px
@@ -281,18 +341,6 @@ their space before they load.
 | `public/art/atlas/plate-scorpio.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-taurus.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 245 | provisional | below the 780 px it needs at 2× |
-
-## Engraved sun face for the closing quote panel
-
-- Mockup: `docs/mockups/home.webp`
-- Screen: Home › closing quote
-- Crop: contain, anchored left
-- Background: opaque
-- Wanted width at 2×: 960 px
-
-| Asset | Size | Ratio | Alpha | KB | Status | Notes |
-|---|---|---|---|---|---|---|
-| `public/art/atlas/sun-panel.webp` | 1100×733 | 1.50:1 | no | 317 | provisional |  |
 
 ## Tarot menu medallion (keyed from ivory)
 
@@ -731,9 +779,7 @@ text, buttons or controls: those are set live over the art.
 
 | Asset | Purpose | Mockup | Screen | Format | Crop |
 |---|---|---|---|---|---|
-| scene-home-<sign> ×12 | Home header background only: night sky, gold moon, crescent, sun face, lilies at the edges; no figure | `docs/mockups/home-top.webp` | Home | opaque WebP, 1170×1560 or more | cover, anchored top |
-| fg-<sign> ×12 | The sign’s figure alone (Libra: woman with scales, lace gown, flowers in her hair), cut out | `docs/mockups/home-top.webp` | Home | transparent WebP, 900 px wide or more | anchored left-bottom, overlaps the forecast card and tiles |
-| fg-flowers-left, fg-flowers-right | Lily and wildflower sprays that overlap the parchment panels at the edges | `docs/mockups/home-top.webp` | Home, Horoscope | transparent WebP, 600 px | anchored to the panel corners |
+| fg-flowers-left, fg-flowers-right | Lily and wildflower sprays that overlap the parchment panels at the edges (optional on Home: the sky and vines carry them now) | `docs/mockups/horoscope.webp` | Horoscope | transparent WebP, 600 px | anchored to the panel corners |
 | tarot deck in the mockup style ×78 | Each card on a navy starry ground with gold stars and flowers (The Star as in the mockups) | `docs/mockups/tarot-journal.webp` | Daily Card, readings, journal | opaque WebP 2:3, 800×1200 | cover |
 | whisper cards in the mockup style ×100 | The Whisper paintings repainted in the same style as the deck | `docs/mockups/home.webp` | Daily Whisper | opaque WebP 2:3, 800×1200 | cover |
 | onboarding scenes ×5 | Ancient wisdom woman before the moon; account crescent over a lake; details flowers; notifications; welcome panorama | `docs/mockups/onboarding.webp` | Onboarding | opaque WebP, 1170 px wide | cover |

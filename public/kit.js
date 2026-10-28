@@ -63,10 +63,12 @@ window.Kit=(()=>{
 
  // engraved icons: fine gold-and-ink linework drawn as SVG, coloured by the text colour
  const P={
-  sun:'<circle cx="12" cy="12" r="4.3"/><path d="M12 1.8v3.4M12 18.8v3.4M1.8 12h3.4M18.8 12h3.4M4.8 4.8l2.4 2.4M16.8 16.8l2.4 2.4M4.8 19.2l2.4-2.4M16.8 7.2l2.4-2.4" /><path d="M12 4.6l.7 1.6M12 4.6l-.7 1.6M12 19.4l.7-1.6M12 19.4l-.7-1.6M4.6 12l1.6.7M4.6 12l1.6-.7M19.4 12l-1.6.7M19.4 12l-1.6-.7" stroke-width=".7"/><path d="M10.4 11.2h.01M13.6 11.2h.01" stroke-width="1.4" stroke-linecap="round"/><path d="M10.6 13.7q1.4.8 2.8 0" stroke-width=".6"/>',
+ // the engraved sun: sixteen rays, long and short in turn, around a face
+ sun:(()=>{let r='';for(let i=0;i<16;i++){const a=i*Math.PI/8,l=i%2?7.6:10.4,f=(v,k)=>(12+Math.cos(a)*v).toFixed(2)+' '+(12+Math.sin(a)*v).toFixed(2);r+=`M${f(5.4)}L${f(l)}`}
+  return `<circle cx="12" cy="12" r="4.4" fill="currentColor" fill-opacity=".14"/><path d="${r}" stroke-width="1.1"/><path d="M10.3 11.3h.01M13.7 11.3h.01" stroke-width="1.3"/><path d="M10.7 13.6q1.3.8 2.6 0M12 11.4v1.2" stroke-width=".7"/>`})(),
   moon:'<path d="M15.6 3.2a8.8 8.8 0 1 0 5.2 15.1A7.2 7.2 0 0 1 15.6 3.2z"/><path d="M13.4 5.6a7 7 0 0 0 1.6 12" stroke-width=".6"/>',
   tarot:'<rect x="5.5" y="2.8" width="13" height="18.4" rx="1.6"/><rect x="7.6" y="4.9" width="8.8" height="14.2" rx=".7" stroke-width=".7"/><path d="M12 8.2l.9 2.9 2.9.9-2.9.9-.9 2.9-.9-2.9-2.9-.9 2.9-.9z" stroke-width=".9"/>',
-  compass:'<path d="M12 1.6l1.5 9 9 1.4-9 1.5-1.5 9-1.4-9-9-1.5 9-1.4z"/><path d="M12 6.8l3.6 1.6L17.2 12l-1.6 3.6L12 17.2l-3.6-1.6L6.8 12l1.6-3.6z" stroke-width=".6"/>',
+  compass:'<path d="M12 1.6l1.3 8 3.9-2.9-2.8 3.9 8 1.4-8 1.3 2.8 3.9-3.9-2.8-1.3 8-1.4-8-3.9 2.8 2.9-3.9-8-1.3 8-1.4-2.9-3.9 3.9 2.9z" fill="currentColor" fill-opacity=".14"/><circle cx="12" cy="12" r="1.3"/>',
   kassandra:'<circle cx="12" cy="12" r="9.2"/><path d="M12 2.8a9.2 9.2 0 0 1 0 18.4 3.6 9.2 0 0 1 0-18.4z" fill="currentColor" stroke="none"/><path d="M7.6 6.8l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z" fill="currentColor" stroke="none"/><path d="M5.6 13.6q1.6 1.4 3.4.4" stroke-width=".8"/>',
   star:'<path d="M12 3l1.4 7.6L21 12l-7.6 1.4L12 21l-1.4-7.6L3 12l7.6-1.4z" fill="currentColor" stroke="none"/>',
   arrow:'<path d="M4 12h15M14 7l5 5-5 5"/>',
