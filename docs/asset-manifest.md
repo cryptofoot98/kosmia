@@ -22,17 +22,17 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/banner-calendar.webp` | 1100×733 | 1.50:1 | no | 311 | provisional |  |
-| `public/art/atlas/banner-library.webp` | 1100×733 | 1.50:1 | no | 332 | provisional |  |
+| `public/art/atlas/banner-calendar.webp` | 760×506 | 1.50:1 | no | 129 | provisional |  |
+| `public/art/atlas/banner-library.webp` | 760×506 | 1.50:1 | no | 131 | provisional |  |
 
 ## Unclassified
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 289 | provisional |  |
+| `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 253 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
-| `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 347 | provisional |  |
-| `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 537 | provisional |  |
+| `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
+| `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
 | `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
 | `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
@@ -106,18 +106,18 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/fg-aquarius.webp` | 900×900 | 1:1 | yes | 279 | provisional |  |
-| `public/art/atlas/fg-aries.webp` | 900×900 | 1:1 | yes | 248 | provisional |  |
-| `public/art/atlas/fg-cancer.webp` | 900×900 | 1:1 | yes | 245 | provisional |  |
+| `public/art/atlas/fg-aquarius.webp` | 900×900 | 1:1 | yes | 238 | provisional |  |
+| `public/art/atlas/fg-aries.webp` | 900×900 | 1:1 | yes | 207 | provisional |  |
+| `public/art/atlas/fg-cancer.webp` | 900×900 | 1:1 | yes | 205 | provisional |  |
 | `public/art/atlas/fg-capricorn.webp` | 900×900 | 1:1 | yes | 228 | provisional |  |
 | `public/art/atlas/fg-gemini.webp` | 900×900 | 1:1 | yes | 221 | provisional |  |
-| `public/art/atlas/fg-leo.webp` | 900×900 | 1:1 | yes | 279 | provisional |  |
-| `public/art/atlas/fg-libra.webp` | 900×900 | 1:1 | yes | 261 | provisional |  |
-| `public/art/atlas/fg-pisces.webp` | 900×900 | 1:1 | yes | 252 | provisional |  |
-| `public/art/atlas/fg-sagittarius.webp` | 900×900 | 1:1 | yes | 266 | provisional |  |
+| `public/art/atlas/fg-leo.webp` | 900×900 | 1:1 | yes | 236 | provisional |  |
+| `public/art/atlas/fg-libra.webp` | 900×900 | 1:1 | yes | 217 | provisional |  |
+| `public/art/atlas/fg-pisces.webp` | 900×900 | 1:1 | yes | 209 | provisional |  |
+| `public/art/atlas/fg-sagittarius.webp` | 900×900 | 1:1 | yes | 224 | provisional |  |
 | `public/art/atlas/fg-scorpio.webp` | 900×900 | 1:1 | yes | 194 | provisional |  |
 | `public/art/atlas/fg-taurus.webp` | 900×900 | 1:1 | yes | 230 | provisional |  |
-| `public/art/atlas/fg-virgo.webp` | 900×900 | 1:1 | yes | 260 | provisional |  |
+| `public/art/atlas/fg-virgo.webp` | 900×900 | 1:1 | yes | 218 | provisional |  |
 
 ## Discover feature hero, framed
 
@@ -129,10 +129,10 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/hero-affinity.webp` | 1100×733 | 1.50:1 | no | 302 | provisional |  |
-| `public/art/atlas/hero-chart.webp` | 1100×733 | 1.50:1 | no | 334 | provisional |  |
-| `public/art/atlas/hero-lifepath.webp` | 1100×733 | 1.50:1 | no | 354 | provisional |  |
-| `public/art/atlas/hero-name.webp` | 1100×733 | 1.50:1 | no | 304 | provisional |  |
+| `public/art/atlas/hero-affinity.webp` | 1100×733 | 1.50:1 | no | 266 | provisional |  |
+| `public/art/atlas/hero-chart.webp` | 1100×733 | 1.50:1 | no | 293 | provisional |  |
+| `public/art/atlas/hero-lifepath.webp` | 1100×733 | 1.50:1 | no | 312 | provisional |  |
+| `public/art/atlas/hero-name.webp` | 1100×733 | 1.50:1 | no | 264 | provisional |  |
 
 ## Section hero scene (title set as live text above it)
 
@@ -144,12 +144,12 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/hero-discover.webp` | 1024×1024 | 1:1 | no | 352 | provisional |  |
-| `public/art/atlas/hero-dream.webp` | 1100×733 | 1.50:1 | no | 313 | provisional |  |
-| `public/art/atlas/hero-horoscope.webp` | 1024×1024 | 1:1 | no | 369 | provisional |  |
+| `public/art/atlas/hero-discover.webp` | 1024×1024 | 1:1 | no | 305 | provisional |  |
+| `public/art/atlas/hero-dream.webp` | 1100×733 | 1.50:1 | no | 275 | provisional |  |
+| `public/art/atlas/hero-horoscope.webp` | 1024×1024 | 1:1 | no | 319 | provisional |  |
 | `public/art/atlas/hero-insights.webp` | 1100×733 | 1.50:1 | no | 213 | provisional |  |
-| `public/art/atlas/hero-journal.webp` | 1024×1024 | 1:1 | no | 344 | provisional |  |
-| `public/art/atlas/hero-tarot.webp` | 1024×1024 | 1:1 | no | 325 | provisional |  |
+| `public/art/atlas/hero-journal.webp` | 1024×1024 | 1:1 | no | 302 | provisional |  |
+| `public/art/atlas/hero-tarot.webp` | 1024×1024 | 1:1 | no | 275 | provisional |  |
 
 ## Sunset lake, mountains and flowers, edge to edge
 
@@ -161,7 +161,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/home-energy.webp` | 1200×800 | 3:2 | no | 335 | provisional |  |
+| `public/art/atlas/home-energy.webp` | 1200×800 | 3:2 | no | 293 | provisional |  |
 
 ## Golden full-moon halo behind the figure, cut to a circle
 
@@ -185,7 +185,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/home-sky.webp` | 1024×1536 | 2:3 | no | 434 | provisional |  |
+| `public/art/atlas/home-sky.webp` | 1024×1536 | 2:3 | no | 384 | provisional |  |
 
 ## Engraved sun on parchment for the closing banner
 
@@ -274,7 +274,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/landscape.webp` | 1100×733 | 1.50:1 | no | 314 | provisional |  |
+| `public/art/atlas/landscape.webp` | 1100×733 | 1.50:1 | no | 271 | provisional |  |
 
 ## Round medallion of the sign
 
@@ -338,7 +338,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/owl.webp` | 1100×733 | 1.50:1 | no | 337 | provisional |  |
+| `public/art/atlas/owl.webp` | 1100×733 | 1.50:1 | no | 296 | provisional |  |
 
 ## Framed arched portrait of the sign with the glyph roundel
 
@@ -351,17 +351,17 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/plate-aquarius.webp` | 640×960 | 2:3 | no | 242 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-aries.webp` | 640×960 | 2:3 | no | 259 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-aries.webp` | 640×960 | 2:3 | no | 225 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-cancer.webp` | 640×960 | 2:3 | no | 242 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-capricorn.webp` | 640×960 | 2:3 | no | 251 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-capricorn.webp` | 640×960 | 2:3 | no | 218 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-gemini.webp` | 640×960 | 2:3 | no | 238 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-leo.webp` | 640×960 | 2:3 | no | 262 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-leo.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-libra.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-pisces.webp` | 640×960 | 2:3 | no | 248 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-pisces.webp` | 640×960 | 2:3 | no | 216 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-sagittarius.webp` | 640×960 | 2:3 | no | 234 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-scorpio.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-taurus.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 245 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 214 | provisional | below the 780 px it needs at 2× |
 
 ## Tarot menu medallion (keyed from ivory)
 
@@ -400,14 +400,14 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/cards/back.webp` | 1024×1536 | 2:3 | no | 566 | provisional | should be transparent |
+| `public/art/cards/back.webp` | 600×900 | 2:3 | no | 157 | provisional | should be transparent |
 | `public/art/cards/cartouche.webp` | 640×640 | 1:1 | yes | 92 | provisional |  |
 | `public/art/cards/crest.webp` | 144×67 | 2.15:1 | yes | 5 | provisional | below the 600 px it needs at 2× |
 | `public/art/cards/kassandra-float.webp` | 278×300 | 0.93:1 | yes | 42 | provisional | below the 600 px it needs at 2× |
 | `public/art/cards/kassandra.webp` | 480×480 | 1:1 | no | 86 | provisional | below the 600 px it needs at 2×; should be transparent |
 | `public/art/cards/ornament.webp` | 144×53 | 2.72:1 | yes | 4 | provisional | below the 600 px it needs at 2× |
 | `public/art/cards/plaque.webp` | 1024×432 | 2.37:1 | yes | 134 | provisional |  |
-| `public/art/cards/tarot-back.webp` | 1024×1536 | 2:3 | no | 336 | provisional | should be transparent |
+| `public/art/cards/tarot-back.webp` | 600×900 | 2:3 | no | 65 | provisional | should be transparent |
 
 ## Older category icon (settings and a few lists)
 
