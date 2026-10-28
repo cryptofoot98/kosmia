@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+// Kosmia's asset manifest. It reads every image under public/art and writes two files:
+//   public/art/sizes.js        each image's intrinsic width, height and alpha, so the app can reserve its space (no layout shift)
+//   docs/asset-manifest.md     what every asset is for, the mockup it follows, the screen it serves, its format, crop and
+//                              status, the assets the mockups still need, and the folders nothing uses any more
+//
+//   node scripts/asset-manifest.mjs
+//
+// Status: "approved" only once the owner signs an asset off against the mockups (APPROVED below); everything painted so
+// far is "provisional"; "missing" assets are needed for a faithful reconstruction and do not exist yet.
+import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const art = join(root, 'public', 'art');
+const APPROVED = new Set([]);
+
+// width, height and whether the image carries transparency, read from the file header
+function probe(file) {
+  const b = readFileSync(file);
+  if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+    const c = b.toString('ascii', 12, 16);
+    if (c === 'VP8X') return [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3), !!(b[20] & 0x10)];
+    if (c === 'VP8L') { const v = b.readUInt32LE(21); return [1 + (v & 0x3fff), 1 + ((v >> 14) & 0x3fff), !!((v >> 28) & 1)]; }
+    return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff, false];
+  }
+  if (b.readUInt32BE(0) === 0x89504e47) return [b.readUInt32BE(16), b.readUInt32BE(20), b[25] === 4 || b[25] === 6];
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    for (let i = 2; i < b.length;) {
+      const m = b[i + 1], len = b.readUInt16BE(i + 2);
+      if (m >= 0xc0 && m <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(m)) return [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5), false];
+      i += 2 + len;
+    }
+  }
+  return [0, 0, false];
+}
+
+// which mockup board each asset follows (docs/mockups)
+const M = { home: 'home.webp', homeTop: 'home-top.webp', overview: 'overview.webp', horo: 'horoscope.webp', onb: 'onboarding.webp', tarot: 'tarot-journal.webp', disc: 'discover.webp' };
+
+// what each asset is, by its name: [test, purpose, mockup, screen, crop, needs alpha, target width at 2x (px)]
+const SPEC = [
+  [/^atlas\/hero-(aries|taurus|gemini|cancer|leo|virgo|libra|scorpio|sagittarius|capricorn|aquarius|pisces)$/, 'Home header: the sign figure before a gold moon, sky and flowers, painted as one scene', M.homeTop, 'Home', 'cover, anchored top', false, 960,
+    'The figure is baked into the sky, so the card and tiles cannot overlap it the way the mockup does. Stage 2 needs the scene split into a background and a transparent figure (see Missing).'],
+  [/^atlas\/plate-/, 'Framed arched portrait of the sign with the glyph roundel', M.horo, 'Horoscope › sign page', 'contain, whole frame visible', false, 780],
+  [/^atlas\/med-/, 'Round medallion of the sign', M.onb, 'Onboarding sign wheel, sign grids, Explore every sign', 'contain, circle', false, 240],
+  [/^atlas\/ico-/, 'Engraved, tinted area-of-life icon (keyed from ivory)', M.horo, 'Home quick tiles, Horoscope tiles, list rows', 'contain', true, 160],
+  [/^atlas\/nav-/, 'Bottom navigation icon (raster, keyed from ivory)', M.home, 'Bottom navigation', 'contain', true, 64,
+    'Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved.'],
+  [/^atlas\/ev-/, 'Celestial event plate: planet or moon on a starry ground', M.home, 'Home events, Cosmic Calendar', 'cover', false, 360],
+  [/^atlas\/ex-/, 'Circular Explore medallion', M.home, 'Home › Explore Kosmia', 'contain, circle', false, 240],
+  [/^atlas\/ds-/, 'Dream symbol medallion', M.disc, 'Discover › Dream Interpretation, dream meaning', 'contain, circle', false, 200],
+  [/^atlas\/t-/, 'Tarot menu medallion (keyed from ivory)', M.tarot, 'Tarot landing rows', 'contain', true, 140],
+  [/^atlas\/ne-/, 'New-entry menu icon (keyed from ivory)', M.tarot, 'Journal › New Entry', 'contain', true, 140],
+  [/^atlas\/hero-(horoscope|tarot|journal|discover|dream|insights)$/, 'Section hero scene (title set as live text above it)', null, 'Section landing', 'cover, anchored top', false, 960],
+  [/^atlas\/hero-(chart|affinity|name|lifepath)$/, 'Discover feature hero, framed', M.disc, 'Discover feature pages', 'cover', false, 780],
+  [/^atlas\/banner-/, 'Wide dark banner for a Discover tile', M.disc, 'Discover grid (Cosmic Calendar, Astrology Library)', 'cover, anchored left', false, 420],
+  [/^atlas\/landscape$/, 'Sunset lake and mountains for Today’s Cosmic Energy', M.homeTop, 'Home › Today’s Cosmic Energy', 'cover, anchored bottom', false, 960],
+  [/^atlas\/kassandra-banner$/, 'Kassandra with lilies on a starry banner', M.home, 'Home › Talk to Kassandra', 'cover, anchored right', false, 960],
+  [/^atlas\/kassandra$/, 'Kassandra’s portrait', M.overview, 'Kassandra', 'contain, arch', false, 640],
+  [/^atlas\/sun-panel$/, 'Engraved sun face for the closing quote panel', M.home, 'Home › closing quote', 'contain, anchored left', false, 960],
+  [/^atlas\/welcome$/, 'Splash scene: sun, crescent, coastal mountains, flowers', M.onb, 'Onboarding › welcome', 'cover', false, 960],
+  [/^atlas\/journal-end$/, 'Woman on a rock under a crescent (closing page)', M.tarot, 'Journal › last page', 'cover', false, 960],
+  [/^atlas\/owl$/, 'Snowy owl on a branch before a crescent', M.disc, 'Dream meaning', 'cover', false, 780],
+  [/^deck\//, 'Tarot card painting (older pale watercolour style)', M.tarot, 'Tarot readings, Daily Card', 'cover, 2:3', false, 600,
+    'Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted.'],
+  [/^whispers\//, 'Whisper card painting (older pale watercolour style)', M.home, 'Daily Whisper', 'cover, 2:3', false, 600,
+    'Not yet in the mockup’s style: to be repainted.'],
+  [/^cards\//, 'Card furniture: backs, plaque, crest, ornament', M.home, 'Whisper and tarot cards', 'stretch to card', true, 600],
+  [/^pages\//, 'Journal paper, cover and page edges', M.tarot, 'Journal notebook', 'tile / stretch', false, 960],
+  [/^moons\//, 'Painted moon phase', M.disc, 'Moon phases, calendars, journal', 'contain, circle', false, 200],
+  [/^cats\//, 'Older category icon (settings and a few lists)', null, 'Settings, lists', 'contain', true, 140],
+  [/^icons\//, 'Older zodiac icon', null, 'Journal pages, compatibility', 'contain', true, 160],
+  [/^spreads\//, 'Tarot spread thumbnail', null, 'Tarot › Card Reading', 'contain', true, 140],
+  [/^(frame-paper|frame|onboarding-paper|onboarding|cosmos)$/, 'Paper texture or older ground', null, 'Global parchment', 'tile', false, 960],
+];
+// folders and files the app no longer references
+const UNUSED = new Set(['nav', 'plates', 'scenes', 'frame', 'onboarding-paper', 'onboarding', 'cosmos']);
+
+// assets the mockups need that do not exist yet; they are made in the stage that rebuilds their screen
+const MISSING = [
+  ['scene-home-<sign> ×12', 'Home header background only: night sky, gold moon, crescent, sun face, lilies at the edges; no figure', M.homeTop, 'Home', 'opaque WebP, 1170×1560 or more', 'cover, anchored top'],
+  ['fg-<sign> ×12', 'The sign’s figure alone (Libra: woman with scales, lace gown, flowers in her hair), cut out', M.homeTop, 'Home', 'transparent WebP, 900 px wide or more', 'anchored left-bottom, overlaps the forecast card and tiles'],
+  ['fg-flowers-left, fg-flowers-right', 'Lily and wildflower sprays that overlap the parchment panels at the edges', M.homeTop, 'Home, Horoscope', 'transparent WebP, 600 px', 'anchored to the panel corners'],
+  ['tarot deck in the mockup style ×78', 'Each card on a navy starry ground with gold stars and flowers (The Star as in the mockups)', M.tarot, 'Daily Card, readings, journal', 'opaque WebP 2:3, 800×1200', 'cover'],
+  ['whisper cards in the mockup style ×100', 'The Whisper paintings repainted in the same style as the deck', M.home, 'Daily Whisper', 'opaque WebP 2:3, 800×1200', 'cover'],
+  ['onboarding scenes ×5', 'Ancient wisdom woman before the moon; account crescent over a lake; details flowers; notifications; welcome panorama', M.onb, 'Onboarding', 'opaque WebP, 1170 px wide', 'cover'],
+  ['sign medallions in the creature style ×12', 'The sign wheel’s round, dark medallions (ram, bull, twins …) as in the onboarding board', M.onb, 'Onboarding sign wheel', 'opaque WebP 1:1, 400 px', 'contain'],
+  ['journal thumbnails', 'Small square paintings for journal list rows (star card, new moon, love heart, free write)', M.tarot, 'Journal library', 'opaque WebP 1:1, 200 px', 'cover'],
+  ['dream symbol thumbnails ×4+', 'Water, forest, moon, flying as square plates', M.disc, 'Dream meaning', 'opaque WebP 4:3, 300 px', 'cover'],
+  ['library thumbnails ×7', 'Small square plates for the Astrology Library guides', M.disc, 'Discover › Astrology Library', 'opaque WebP 1:1, 160 px', 'cover'],
+  ['avatar placeholder', 'Engraved round portrait frame shown until a photo is uploaded', M.homeTop, 'Home header', 'SVG', 'contain'],
+  ['high-density hero masters', 'The painted heroes are 640–1100 px; phones at 3× want 1170 px wide for full-bleed scenes', null, 'All heroes', 'opaque WebP / AVIF', 'cover'],
+];
+
+const rows = [], sizes = {};
+function walk(dir, rel = '') {
+  for (const f of readdirSync(dir).sort()) {
+    const p = join(dir, f), r = rel ? rel + '/' + f : f;
+    if (statSync(p).isDirectory()) walk(p, r);
+    else if (/\.(webp|png|jpe?g)$/i.test(f)) {
+      const id = r.replace(/\.\w+$/, ''), [w, h, alpha] = probe(p), kb = Math.round(statSync(p).size / 1024);
+      sizes[id] = [w, h, alpha ? 1 : 0];
+      rows.push({ id, file: 'public/art/' + r, w, h, alpha, kb });
+    }
+  }
+}
+walk(art);
+
+const ratio = (w, h) => { const g = (a, b) => b ? g(b, a % b) : a, d = g(w, h), x = w / d, y = h / d; return x <= 32 && y <= 32 ? `${x}:${y}` : (w / h).toFixed(2) + ':1'; };
+const folderOf = id => id.includes('/') ? id.split('/')[0] : id;
+const spec = id => SPEC.find(s => s[0].test(id));
+
+writeFileSync(join(art, 'sizes.js'), '/* generated by scripts/asset-manifest.mjs: [width, height, alpha] of every image under /art */\nwindow.KOSMIA_SIZES=' + JSON.stringify(sizes) + ';\n');
+
+const groups = new Map();
+for (const r of rows) {
+  const s = spec(r.id), unused = UNUSED.has(folderOf(r.id));
+  const status = unused ? 'unused' : APPROVED.has(r.id) ? 'approved' : 'provisional';
+  const notes = [];
+  if (s && r.w < s[6] && !unused) notes.push(`below the ${s[6]} px it needs at 2×`);
+  if (s && s[5] && !r.alpha) notes.push('should be transparent');
+  if (s && s[7]) notes.push(s[7]);
+  const key = unused ? 'Unused (safe to retire)' : (s ? s[1] : 'Unclassified');
+  if (!groups.has(key)) groups.set(key, { s, unused, items: [] });
+  groups.get(key).items.push({ ...r, status, notes });
+}
+
+let md = `# Kosmia asset manifest
+
+Generated by \`node scripts/asset-manifest.mjs\` from the files in \`public/art\`. The mockups are the approved specification
+(\`docs/mockups\`); nothing painted so far has been signed off against them, so every asset in use is **provisional** until
+it is. Sizes and transparency are read from the files; \`public/art/sizes.js\` carries them to the app so images reserve
+their space before they load.
+
+| | Count |
+|---|---|
+| Images | ${rows.length} |
+| In use, provisional | ${rows.filter(r => !UNUSED.has(folderOf(r.id))).length} |
+| Unused | ${rows.filter(r => UNUSED.has(folderOf(r.id))).length} |
+| Missing (listed below) | ${MISSING.length} groups |
+
+`;
+for (const [title, g] of groups) {
+  const it = g.items, s = g.s;
+  md += `## ${title}\n\n`;
+  if (s && !g.unused) md += `- Mockup: ${s[2] ? '`docs/mockups/' + s[2] + '`' : 'none (no board for this yet)'}\n- Screen: ${s[3]}\n- Crop: ${s[4]}\n- Background: ${s[5] ? 'transparent' : 'opaque'}\n- Wanted width at 2×: ${s[6]} px\n\n`;
+  md += `| Asset | Size | Ratio | Alpha | KB | Status | Notes |\n|---|---|---|---|---|---|---|\n`;
+  for (const r of it) md += `| \`${r.file}\` | ${r.w}×${r.h} | ${ratio(r.w, r.h)} | ${r.alpha ? 'yes' : 'no'} | ${r.kb} | ${r.status} | ${[...new Set(r.notes)].join('; ')} |\n`;
+  md += '\n';
+}
+md += `## Missing
+
+Needed for a faithful reconstruction and not yet made. Each is made in the stage that rebuilds its screen, and none carries
+text, buttons or controls: those are set live over the art.
+
+| Asset | Purpose | Mockup | Screen | Format | Crop |
+|---|---|---|---|---|---|
+${MISSING.map(m => `| ${m[0]} | ${m[1]} | ${m[2] ? '`docs/mockups/' + m[2] + '`' : '—'} | ${m[3]} | ${m[4]} | ${m[5]} |`).join('\n')}
+`;
+mkdirSync(join(root, 'docs'), { recursive: true });
+writeFileSync(join(root, 'docs', 'asset-manifest.md'), md);
+console.log(`${rows.length} images; sizes.js and docs/asset-manifest.md written`);

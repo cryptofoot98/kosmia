@@ -6,7 +6,7 @@ const $ = (s,r=document)=>r.querySelector(s);
 const esc = s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* crafted art from scripts/craft-images.mjs; falls back to the SVG symbols when absent */
 const ART=window.KOSMIA_ART||{};
-const pic=(kind,id,cls='art')=>(ART[kind]||[]).includes(id)?`<img class="${cls}" src="/art/${kind}/${id}.webp" alt="" loading="lazy">`:'';
+const pic=(kind,id,cls='art')=>(ART[kind]||[]).includes(id)?Kit.img(kind+'/'+id,{cls}):'';
 const DEVICE_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 const DAY=864e5;
 const uuid=()=>crypto.randomUUID?crypto.randomUUID():'10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
@@ -263,8 +263,9 @@ function jLeave(){jDone();jflushSave();V.jx=false;V.jpage=null}
 const ATLAS_AS={'ev-moon':'ev-full','d-chart':'hero-chart','d-affinity':'hero-affinity','d-resonance':'ex-resonance','d-name':'hero-name','d-lifepath':'hero-lifepath','d-dream':'hero-dream',
  'd-calendar':'banner-calendar','d-library':'banner-library','landscape2':'landscape','ne-tarot':'t-reading','ne-horoscope':'ico-overview','ne-event':'t-whisper'};
 const atlasId=id=>/^m-/.test(id)?'med-'+id.slice(2):/^sign-/.test(id)?'plate-'+id.slice(5):ATLAS_AS[id]||id;
-const ui=(id,cls='',alt='')=>`<img class="${cls}" src="/art/atlas/${atlasId(id)}.webp" alt="${esc(alt)}" loading="lazy" decoding="async">`;
-const panel=(h,cls='')=>`<section class="card ${cls}">${h}</section>`;
+// (the parts themselves, and the scene system they sit in, are in kit.js)
+const ui=(id,cls='',alt='',priority=false)=>Kit.img('atlas/'+atlasId(id),{cls,alt,priority});
+const panel=(h,cls='')=>Kit.panel(h,{cls});
 // a page's own header on parchment: the back arrow, its title (and a line under it), and an action at the right
 const IC={
  back:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -296,11 +297,13 @@ const iconBtn=(ic,attrs,label)=>`<button class="ibtn" ${attrs} aria-label="${esc
 function hdr(title,o={}){
  return `<header class="phd"><div class="ph-l">${o.back===false?'':iconBtn('back','data-act="back"','Back')}</div><div class="ph-t"><h1>${title}</h1>${o.sub?`<p class="ph-sub">${o.sub}</p>`:''}</div><div class="ph-r">${o.right||''}</div></header>`;
 }
-// a dark, illustrated hero at the head of a section, with stars that softly twinkle; its picture drifts as the page scrolls
-const STARS=`<i class="stars s1" aria-hidden="true"></i><i class="stars s2" aria-hidden="true"></i>`;
-const hero=(img,inner='',cls='',title='',sub='')=>`<section class="hero ${cls}">${ui(img,'hero-img parallax')}${STARS}${title?`<div class="hero-t"><h1 class="cz${title.length>12?' long':''}">${title}</h1>${sub?`<p>${sub}</p>`:''}</div>`:''}${inner}</section>`;
+// a dark, illustrated hero at the head of a section (a scene): stars that softly twinkle, a picture that drifts as the page
+// scrolls, and the title set over it in live type
+const STARS=Kit.STARS;
+const hero=(img,inner='',cls='',title='',sub='')=>Kit.scene({cls:'hero '+cls,bg:'atlas/'+atlasId(img),imgCls:'hero-img',parallax:true,priority:true,stars:true,bare:true,
+ content:`${title?`<div class="hero-t"><h1 class="cz${title.length>12?' long':''}">${title}</h1>${sub?`<p>${sub}</p>`:''}</div>`:''}${inner}`});
 // a heading with a small engraved star either side, like the mockups' section titles
-const orn=(t,more='')=>`<div class="orn"><h2>${IC.star}<span>${t}</span></h2>${more}</div>`;
+const orn=(t,more='')=>Kit.heading(t,more);
 const seeAll=(sec,t,label='See all')=>`<button class="see" data-go="${sec}" data-t="${t}">${label} ${IC.chev}</button>`;
 // one row of a list: a picture, a title and a line, and a chevron; it opens a page or acts
 const lrow=(img,title,sub,attrs,more='')=>`<button class="lrow" ${attrs}>${img?`<span class="lr-i">${img}</span>`:''}<span class="lr-t"><strong>${title}</strong>${sub?`<span>${sub}</span>`:''}${more}</span><span class="lr-c">${IC.chev}</span></button>`;
@@ -477,19 +480,18 @@ views.home=()=>{
  const evs=upcoming().filter(e=>['moon','eclipse','season','retrograde'].includes(e.type)||(e.k==='ingress'&&['Venus','Mars','Mercury','Jupiter'].includes(e.planet))).slice(0,6);
  const recent=journalItems().slice().sort((a,b)=>(b.at||b.day)>(a.at||a.day)?1:-1).slice(0,3);
  return `<div class="home"><div class="hbar"><span class="cz">Kosmia</span>${avatar()}</div>
- <section class="hhero">${ui('hero-'+sign.id,'hh-bg parallax',sign.name)}${STARS}
+ ${Kit.scene({cls:'hhero',bg:'atlas/hero-'+sign.id,ratio:'1024/1380',imgCls:'hh-bg',bgAlt:sign.name,parallax:true,priority:true,stars:true,bare:true,content:`
   <div class="hh-top"><span></span><div class="brand"><span class="cz">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
    <button class="ibtn light" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
   <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-sub">Here’s your cosmic overview for today.</p>
-  <div class="hh-card"><div class="hh-name"><span class="glyph">${sign.g}</span><div><h2>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn sm" data-act="tohoroscope">Read Full Horoscope →</button></div>
- </section>
+  <div class="hh-card"><div class="hh-name"><span class="glyph">${sign.g}</span><div><h2>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn sm" data-act="tohoroscope">Read Full Horoscope →</button></div>`})}
  <div class="hbody">
  <div class="qrow">${quick}</div>
  ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${pic('whispers',c.id,'mw-art')}<span class="mw-t">${esc(c.title)}</span></div></div></div>
   <div class="dw-r">${rev?`<p class="dw-q">${IC.star}<span>${esc(c.msg)}</span></p>`:'<p class="dw-q"><span>A card, a message, a moment for you. Turn it over when you are ready.</span></p>'}${wbtn}</div></div>`,'ornate')}
  <button class="energy" data-go="discover" data-t="moon">${ui('landscape','en-bg')}<span class="en-in"><span class="orn-s">${IC.star} Today’s Cosmic Energy ${IC.star}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>
  ${panel(`${orn('Upcoming Celestial Events',seeAll('discover','calendar'))}
- <div class="evgrid">${evs.slice(0,3).map(e=>`<button class="evc" data-act="evgo" data-ref="${evRef(e)}">${evArt(e,false)}<strong>${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}</strong><span class="evc-d">${e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date)}</span><span class="evc-k">${esc(evKeys(e))}</span></button>`).join('')}</div>`,'home-p')}
+ <div class="evgrid">${evs.slice(0,3).map(e=>Kit.event({attrs:`data-act="evgo" data-ref="${evRef(e)}"`,art:evArt(e,false),title:`${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}`,date:e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date),note:evKeys(e)})).join('')}</div>`,'home-p')}
  ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
  <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>`,'home-p')}
  ${panel(`${orn('Recent Readings',seeAll('tarot','journal'))}
@@ -1673,7 +1675,7 @@ function render(){
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
- if(authed)$('#navin').innerHTML=MAIN.map(k=>`<button data-nav="${k}" ${sec===k?'aria-current="page"':''}>${ui('nav-'+k,'nav-ico')}<span>${SECTIONS[k].label}</span></button>`).join('');
+ if(authed)$('#navin').innerHTML=Kit.nav(MAIN.map(k=>({key:k,label:SECTIONS[k].label})),sec);
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
