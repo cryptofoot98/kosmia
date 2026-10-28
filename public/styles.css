@@ -1175,3 +1175,43 @@ body.reduce .kscene .parallax{transform:none!important}
 .stat span{color:var(--k-ink)}
 .tbar{color:var(--k-ink)}
 .tb-i{border-radius:50%;box-shadow:0 0 0 1px rgba(var(--k-gold-rgb),.6);background:rgba(var(--k-surface-hi-rgb),.6)}
+
+/* ==========================================================================================================
+   Stage 4, after docs/mockups/discover and overview: Discover as an illustrated library
+   ========================================================================================================== */
+/* the scene: the title high in its open sky, a line beneath, the lake and the town below */
+.hero.hero-discover .hero-t{top:9%}
+.dl-intro{position:absolute;z-index:var(--zs-content);left:0;right:0;top:31%;text-align:center;font-family:var(--font-serif);font-weight:600;font-size:clamp(1rem,4.6vw,1.2rem);line-height:1.35;color:#F6E9CC;text-shadow:0 1px 8px rgba(0,0,0,.95)}
+/* the library of eight: parchment cards ruled in gold, each feature's own picture in its own shape */
+.dland{background:var(--k-midnight) url(/art/atlas/home-vines.webp) center top/cover}
+.dlib{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;margin-top:-12%;padding:0 2.6cqw 3cqw;container-type:inline-size}
+.dland{container-type:inline-size}
+.dft{display:flex;flex-direction:column;align-items:center;min-width:0;padding:2.4cqw 2cqw 3cqw;border:1px solid var(--k-gold);border-radius:3cqw;cursor:pointer;text-align:center;color:var(--k-ink);
+ background:linear-gradient(rgba(var(--k-surface-hi-rgb),.5),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1cqw 3cqw rgba(0,0,0,.35)}
+.dft-art{display:block;overflow:hidden}
+.dft-i{display:block;width:100%;height:100%;object-fit:cover}
+.dft.round .dft-art{width:68%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1px var(--k-gold-deep),0 1cqw 2.4cqw rgba(var(--k-night-rgb),.35)}
+.dft.arch .dft-art{width:92%;aspect-ratio:1.3;border-radius:50% 50% 2cqw 2cqw/60% 60% 2cqw 2cqw;box-shadow:0 0 0 1px var(--k-gold-deep)}
+.dft.arch .dft-i{transform:scale(1.14)}
+.dft-t{display:flex;flex-direction:column;gap:.4cqw;margin-top:2cqw}
+.dft-t strong{font-family:var(--font-serif);font-weight:600;font-size:max(15px,4.6cqw);line-height:1.1}
+.dft-t span{font-size:max(11.5px,3.2cqw);color:var(--k-ink-muted)}
+.dft.night{position:relative;flex-direction:row;justify-content:flex-end;min-height:24cqw;padding:0;overflow:hidden;background:var(--k-midnight);border-color:var(--k-gold);box-shadow:inset 0 0 0 .8cqw var(--k-midnight),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-light-rgb),.45),0 1cqw 3cqw rgba(0,0,0,.35)}
+.dft.night .dft-art{position:absolute;inset:0}
+.dft.night .dft-i{transform:scale(1.18)}
+.dft.night .dft-t{position:relative;margin:0;padding:2cqw 3cqw;align-self:center;text-align:right;background:radial-gradient(closest-side,rgba(var(--k-night-rgb),.8),rgba(var(--k-night-rgb),0))}
+.dft.night strong{color:#F1D79A;font-size:max(14px,4.2cqw);text-shadow:0 1px 6px #000}
+.dft.night span{color:#E9D9B4;text-shadow:0 1px 6px #000}
+.dmore{margin-top:0;border-radius:24px 24px 0 0}
+/* the feature pages: the framed plate, a lead, the main action, then the readings it holds */
+.dfeat .list{margin-top:4px}
+.list.dim .lrow{opacity:.62;cursor:default}
+.foot-scene{display:block;width:calc(100% + 32px);max-width:none;margin:6px -16px -10px;-webkit-mask-image:linear-gradient(transparent,#000 22%);mask-image:linear-gradient(transparent,#000 22%)}
+.kscene.ratio.hero-discover{aspect-ratio:1/.84}
+.hero-discover{--bg-pos:50% 25%}
+.hero.hero-discover .hero-t{top:8%}
+.hero.hero-discover .dl-intro{top:30%}
+.dft.round .dft-art{width:58%}
+.dft.arch .dft-art{width:86%;aspect-ratio:1.45}
+.dft{padding:2cqw 2cqw 2.4cqw}
+.dlib{margin-top:-9%}

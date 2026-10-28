@@ -250,7 +250,7 @@ function go(sec,t,opt={}){
  if(SECTIONS[sec])history[opt.replace?'replaceState':'pushState']({scroll:0},'',pathFor(sec,tab(),viewQuery()));
  render();window.scrollTo(0,0);
 }
-const goBack=()=>{const [s,t]=parentOf(V.sec,tab());go(s,t)};
+const goBack=()=>{if(V.sec==='discover'&&tab()==='birth-chart'&&V.chartOpen){V.chartOpen=false;V.chartInterp=false;return render()}const [s,t]=parentOf(V.sec,tab());go(s,t)};
 addEventListener('popstate',e=>{stopAudio();jLeave();jeLeave();V.tpop=null;V.edit=null;V.sheet=null;if(!S.sign)return;applyLocation();render();const y=(e.state&&e.state.scroll)||0;requestAnimationFrame(()=>window.scrollTo(0,y))});
 
 // a passing message, with an action (Undo) when there is one
@@ -1159,16 +1159,19 @@ views.discover=()=>{
  const map={'birth-chart':chartView,profile:()=>subPage(profileView()),affinity:affinityView,resonance:resonanceView,synastry:()=>subPage(synastryView()),'life-path':lifePathView,'name-within':nameView,cycles:()=>subPage(cyclesView()),
   calendar:calendarView,moon:()=>subPage(moonView(new Date())),planets:()=>subPage(planetsView(new Date())),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
- const tile=(img,title,sub,t,cls='')=>`<button class="dtile ${cls}" data-go="discover" data-t="${t}">${ui(img,'dt-i')}<strong>${title}</strong><span>${sub}</span></button>`;
- return `<div class="land">${hero('hero-discover','','mid','Discover','Explore • Learn • Align')}<div class="sheet">
- ${orn('Dream Interpretation')}<button class="feature" data-go="discover" data-t="dreams">${ui('hero-dream','ft-i')}<span class="ft-t"><strong>Decode your dreams</strong><span>Describe a dream by text or voice and uncover its symbols, themes and guidance.</span><span class="btn sm">Interpret a Dream →</span></span></button>
- ${orn('Your Cosmic Blueprint')}<div class="dgrid">${tile('d-chart','Birth Chart','Your cosmic blueprint','birth-chart','wide')}${tile('ex-chart','Cosmic Profile','Your signs and numbers','profile')}${tile('m-'+S.sign,'My Cycles','Your personal year','cycles')}</div>
- ${orn('Cosmic Connections')}<div class="dgrid">${tile('d-affinity','Zodiac Affinity','Compatibility','affinity')}${tile('d-resonance','Soul Resonance','Name match','resonance')}</div>
- <div class="list">${lrow(ui('ex-compat','th round'),'Synastry','Compare two birth charts','data-go="discover" data-t="synastry"')}</div>
- ${orn('The Language of Numbers')}<div class="dgrid">${tile('d-lifepath','Life Path','Your soul’s journey','life-path')}${tile('d-name','The Name Within','Name numerology','name-within')}</div>
- ${orn('Celestial Calendar')}<button class="dbanner" data-go="discover" data-t="calendar">${ui('d-calendar','db-i')}<span class="db-t"><strong>Cosmic Calendar</strong><span>Celestial events</span></span></button>
- <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteor showers','data-go="discover" data-t="events"')}</div>
- ${orn('Mystical Library')}<button class="dbanner" data-go="discover" data-t="library">${ui('d-library','db-i')}<span class="db-t"><strong>Astrology Library</strong><span>Signs, planets, tarot and dreams</span></span></button>
+ V.chartOpen=false;
+ // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners
+ const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
+ return `<div class="land dland">${hero('hero-discover','<p class="dl-intro">Deepen your connection<br>with the cosmos and yourself.</p>','tall','Discover','Explore • Learn • Align')}
+ <div class="dlib">
+  ${ft('ex-chart','Birth Chart','Your cosmic blueprint','birth-chart','round')}${ft('ex-compat','Zodiac Affinity','Compatibility','affinity','round')}
+  ${ft('ex-resonance','Soul Resonance','Name match','resonance','round')}${ft('ex-name','The Name Within','Name numerology','name-within','round')}
+  ${ft('hero-lifepath','Life Path','Your soul’s journey','life-path','arch')}${ft('hero-dream','Dream Interpretation','Decode your dreams','dreams','arch')}
+  ${ft('banner-calendar','Cosmic Calendar','Celestial events','calendar','night')}${ft('banner-library','Astrology Library','Learn & explore','library','night')}
+ </div>
+ <div class="sheet dmore">${Kit.divider('More of the sky')}
+ <div class="list">${lrow(ui('m-'+S.sign,'th round'),'Cosmic Profile','Your signs and numbers','data-go="discover" data-t="profile"')}${lrow(ui('ex-lifepath','th round'),'My Cycles','Your personal year','data-go="discover" data-t="cycles"')}${lrow(ui('ex-compat','th round'),'Synastry','Compare two birth charts','data-go="discover" data-t="synastry"')}
+ ${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteor showers','data-go="discover" data-t="events"')}</div>
  </div></div>`;
 };
 /* Birth Chart: the wheel in navy and gold with the reader's planets, then the planets, aspects and houses as their own tabs */
@@ -1183,10 +1186,13 @@ function chartWheel(c){
  <g class="zring"><circle cx="${CX}" cy="${CX}" r="${R}" fill="#18213B" stroke="#C9A45C" stroke-width="1.6"/><circle cx="${CX}" cy="${CX}" r="${R2}" fill="#F4E8CF" stroke="#C9A45C" stroke-width="1.2"/>${ring}</g>${ticks}
  <circle cx="${CX}" cy="${CX}" r="${R3}" fill="#EFE0C0" stroke="#B8924F" stroke-width=".8"/>${asp}<image href="/art/atlas/ex-chart.webp" x="${CX-R3+20}" y="${CX-R3+20}" width="${2*(R3-20)}" height="${2*(R3-20)}" clip-path="url(#sunc)" opacity=".9"/>${axes}${pls}</svg>`;
 }
+const CHART_ROWS=[['planets',()=>pic('cats','planets','acc-i'),'Planetary Positions','Where the planets were at your birth'],['houses',()=>ui('ico-family','acc-i'),'Houses','The 12 areas of your life'],['aspects',()=>pic('cats','aspects','acc-i'),'Aspects','The connections between planets'],['interp',()=>pic('cats','insights','acc-i'),'Full Interpretation','A complete analysis of your chart']];
 function chartView(){
- const c=myChart(),form=birthForm(),H=hdr('Birth Chart',{sub:'Your cosmic blueprint'});
+ const c=myChart(),form=birthForm(),H=hdr(c&&V.chartOpen?'Your Birth Chart':'Birth Chart',{sub:'Your cosmic blueprint'});
  const intro=`${ui('hero-chart','plate-img')}<p class="lead">A personalised map of the sky at the moment you were born. Discover your planetary placements, aspects and what they reveal about your unique path.</p>`;
- if(!c)return `<div class="sub">${H}${intro}${form}<div class="list dim">${[['Planetary Positions','Where the planets were at your birth'],['Houses','The 12 areas of your life'],['Aspects','The connections between planets'],['Full Interpretation','A complete analysis of your chart']].map(([a,b])=>lrow('',a,b,'disabled')).join('')}</div></div>`;
+ if(!c)return `<div class="sub">${H}${intro}${form}<div class="list dim">${CHART_ROWS.map(([,i,a,b])=>lrow(i(),a,b,'disabled')).join('')}</div></div>`;
+ if(!V.chartOpen)return `<div class="sub dfeat">${H}${intro}<button class="btn" data-act="chartopen" data-k="chart">View My Birth Chart →</button>
+ <div class="list">${CHART_ROWS.map(([k,i,a,b])=>lrow(i(),a,b,`data-act="chartopen" data-k="${k}"`)).join('')}</div></div>`;
  const b=S.birth,sel=c.pl.find(p=>p.n===V.chartSel),ct=V.chartTab;
  const note=b.unk||!b.time?`<p class="note">Without a birth time, planets are taken at noon on your birth date. ${!hasPlace(b)?'Add your birth place to calculate the Ascendant, Midheaven and houses. ':''}${c.moonRange?`The Moon moves from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} during your birth day, so its sign depends on your birth time.`:''}</p>`:!hasPlace(b)?'<p class="note">Add your birth place so your birth time can be used for the Ascendant, Midheaven and houses.</p>':'';
  const big=[['Sun',c.pl[0]],['Moon',c.pl[1]]].map(([n,p])=>`<div class="b3"><span class="glyph">${p.g}</span><span>${n}</span><span class="b3-s"><span class="glyph">${sIdx(p.sign).g}</span> ${n==='Moon'&&c.moonRange?'Uncertain':sIdx(p.sign).name}</span><span class="b3-d">${n==='Moon'&&c.moonRange?'':degTxt(p.lon).replace(/ \S+ /,'° ').replace('°°','°')}</span></div>`).join('')
@@ -1196,7 +1202,7 @@ function chartView(){
  else if(ct==='aspects')body=`<div class="list">${c.asp.slice(0,18).map(a=>acc(`<span class="glyph pgl">${a.g}</span>`,`${a.a.n} ${a.n} ${a.b.n}`,`orb ${a.orb.toFixed(1)}°`,`<p>Your ${PM[a.a.n]} and ${PM[a.b.n]} ${ASPT[a.n]}.</p>`)).join('')||'<p class="muted center">No major aspects within the orbs used.</p>'}</div>`;
  else if(ct==='houses')body=c.known?`<p class="muted small center">Whole-sign houses: each sign is one house, starting from the rising sign.</p><div class="list">${HOUSE.map((h,i)=>{const s=sIdx(K.signIdx(c.ang.asc)+i),inn=c.pl.filter(p=>p.house===i+1).map(p=>p.n);return acc(`<span class="hn">${i+1}</span>`,`${ORD(i+1)} house · ${s.name}`,h,`<p>The ${ORD(i+1)} house is the life area of ${h}. In your chart it falls in ${s.name}, so you tend to meet it ${STYLE[s.id]}.${inn.length?` ${inn.join(', ')} ${inn.length>1?'are':'is'} placed here, bringing ${inn.map(n=>PM[n]).join('; ')} into this area.`:''}</p>`)}).join('')}</div>`:empty('Houses need your birth time and place','Add them below to see the twelve houses of your chart.');
  else body=`<div class="wheel-wrap">${chartWheel(c)}</div>${sel?panel(`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${sIdx(sel.sign).name}</h3><p>${placement(sel)}</p>`):'<p class="muted center small">Tap a planet to read it.</p>'}<div class="big3">${big}</div>
-  ${acc('','Full Interpretation','A complete analysis of your chart',`<div class="read">${c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).map(p=>`<p><strong>${p.n} in ${sIdx(p.sign).name}.</strong> ${placement(p)}</p>`).join('')}${c.ang?`<p><strong>${sIdx(K.signIdx(c.ang.asc)).name} rising.</strong> You tend to meet the world ${STYLE[sIdx(K.signIdx(c.ang.asc)).id]}.</p>`:''}</div>`)}`;
+  ${acc('','Full Interpretation','A complete analysis of your chart',`<div class="read">${c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).map(p=>`<p><strong>${p.n} in ${sIdx(p.sign).name}.</strong> ${placement(p)}</p>`).join('')}${c.ang?`<p><strong>${sIdx(K.signIdx(c.ang.asc)).name} rising.</strong> You tend to meet the world ${STYLE[sIdx(K.signIdx(c.ang.asc)).id]}.</p>`:''}</div>`,!!V.chartInterp)}`;
  return `<div class="sub">${H}<p class="muted center">${ymdLong(b.date)}${b.unk||!b.time?'':' · '+esc(b.time)}${b.place?' · '+esc(b.place):''}</p>
  <div role="group" aria-label="Chart views">${seg([['chart','Chart'],['planets','Planets'],['aspects','Aspects'],['houses','Houses']],ct,'ctab')}</div>${note}${body}
  <p class="muted small">Method: tropical zodiac, geocentric positions on the true ecliptic of date from the Astronomy Engine ephemeris. Your local birth time is converted to UTC with the historical rules for ${esc(b.tz||TZ())}. Houses are whole-sign; aspect orbs are 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p>
@@ -1225,7 +1231,7 @@ function affinityView(){
   <div class="list">${acc(pic('cats','love','acc-i'),'Love Compatibility','Romance and emotional connection',`<p>${el[1][1]}</p><p>${r.angle[1]}</p>`)}${acc(pic('cats','connections','acc-i'),'Friendship Compatibility','Shared values and support',`<p>${el[0][1]}</p><p>${el[4][1]}</p>`)}${acc(pic('cats','career','acc-i'),'Work Compatibility','How you collaborate',`<p>${el[3][1]}</p>`)}${acc(pic('cats','moon','acc-i'),'Detailed Analysis','Strengths, challenges and advice',matchBody(a,b))}</div>
   <div class="acts"><button class="btn" data-act="saveconn" data-kind="zodiac">${saved?'Saved to your journal':'Save connection'}</button><button class="btn ghost" data-act="kasask" data-q="What do ${A1.name} and ${B1.name} traditionally bring out in each other?">Ask Kassandra</button><button class="btn ghost" data-go="discover" data-t="synastry">Compare birth charts</button></div></div>`}
  return `<div class="sub">${hdr('Zodiac Affinity',{sub:'Love • Friendship • Connection'})}${ui('hero-affinity','plate-img')}<p class="lead">Explore the natural flow between two signs and discover your strengths, challenges and unique connection.</p>
- <div class="two">${signSelect('za','Your sign',a)}${signSelect('zb','Their sign',b)}</div><button class="btn" data-act="domatch" ${b?'':'disabled'}>See Compatibility →</button>${res}</div>`;
+ <div class="two">${signSelect('za','Your sign',a)}${signSelect('zb','Their sign',b)}</div><button class="btn" data-act="domatch" ${b?'':'disabled'}>See Compatibility →</button>${res||`<div class="list dim">${[['love','love','Love Compatibility','Romance and emotional connection'],['connections','friend','Friendship Compatibility','Shared values and support'],['career','work','Work Compatibility','How you collaborate'],['moon','more','Detailed Analysis','Strengths, challenges and advice']].map(([i,,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div><p class="muted small center">Choose their sign to see your compatibility.</p>`}${res?ui('cal-scene','foot-scene'):''}</div>`;
 }
 // the three numerology comparisons for two names, each an expandable reading
 function resonanceView(){
@@ -1253,7 +1259,7 @@ function lifePathView(){
  const d=V.lpDate||S.birth.date,H=hdr('Life Path',{sub:'Your soul’s journey'});
  const form=`${ui('hero-lifepath','plate-img')}<p class="lead">Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.</p>
  <div class="field"><label for="lpd">Your date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd" value="${esc(d||'')}"></div></div><button class="btn" data-act="lpgo">Discover My Life Path →</button>`;
- if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return `<div class="sub">${H}${form}</div>`;
+ if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return `<div class="sub">${H}${form}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
  return `<div class="sub">${H}${form}
  ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">Your Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>`,'ornate')}
@@ -1277,7 +1283,7 @@ function nameView(){
  <div class="field"><label for="fn">Your full name at birth</label><div class="inp">${IC.star}<input type="text" id="fn" value="${esc(S.fullName)}" autocomplete="name" placeholder="Enter your full name"></div></div>
  <details class="more"><summary>More options</summary><div class="field"><label for="an">Name you use now (optional)</label><input type="text" id="an" value="${esc(S.altName)}" placeholder="A married name, a chosen name, a nickname"></div><div class="field"><label for="ym">The letter Y counts as</label><select id="ym"><option value="auto" ${S.settings.yMode==='auto'?'selected':''}>Vowel when no other vowel is beside it</option><option value="vowel" ${S.settings.yMode==='vowel'?'selected':''}>Always a vowel</option><option value="consonant" ${S.settings.yMode==='consonant'?'selected':''}>Always a consonant</option></select></div></details>
  <button class="btn" data-act="savenames">Reveal My Numbers →</button>
- ${nm?`<div class="list">${rows(nm)}</div>`:''}
+ ${nm?`<div class="list">${rows(nm)}</div>`:`<div class="list dim">${[['general','Expression Number','Your natural abilities'],['love','Soul Urge Number','Your inner desires'],['insights','Personality Number','How you show up to the world'],['lifepath','Destiny Number','Your life purpose']].map(([i,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div>`}
  ${alt?`<h3 class="sec-h">The name you use now</h3><div class="list">${rows(alt)}</div><p class="muted small">Your birth name is read as the blueprint you arrived with; the name you use now as the way you have chosen to express it.</p>`:''}
  ${acc('','The Pythagorean letter table','How each letter is counted',`${tbl}<p class="muted small">Accents are ignored (É counts as E), as are hyphens, apostrophes and spaces. Each word of a name is reduced on its own, then the words are added and reduced again, keeping master numbers 11, 22 and 33.</p>`)}</div>`;
 }
@@ -1298,7 +1304,7 @@ function calendarView(){
  return `<div class="sub">${hdr('Cosmic Calendar',{right:iconBtn('refresh','data-act="calmonth" data-k=""','Back to this month')})}
  <div class="mnav"><button class="ibtn" data-act="calmonth" data-k="${prev}" aria-label="Previous month">${IC.back}</button><h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="calmonth" data-k="${next}" aria-label="Next month">${IC.back}</button></div>
  ${seg([['list','List'],['month','Month']],V.cal.view,'calview')}${body}${weather}
- <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteors','data-go="discover" data-t="events"')}</div></div>`;
+ <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteors','data-go="discover" data-t="events"')}</div>${ui('cal-scene','foot-scene')}</div>`;
 }
 // one event in a list: its picture, date, name and words; opened, the astronomy, the symbolism and a question
 function evRow(e){
@@ -1810,6 +1816,7 @@ document.addEventListener('click',e=>{
  const a=t.dataset.act;if(!a)return;
  if(a==='jint')return;
  if(a==='back')return goBack();
+ if(a==='chartopen'){V.chartOpen=true;V.chartInterp=t.dataset.k==='interp';V.chartTab=V.chartInterp?'chart':t.dataset.k;render();return window.scrollTo(0,0)}
  if(a==='reveal')return reveal();
  // onboarding
  if(a==='obnext'||a==='obstep'){const to=t.dataset.to;if(to==='confirm'&&!V.joinSign)return;

@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 393 |
-| In use, provisional | 349 |
+| Images | 394 |
+| In use, provisional | 350 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -29,6 +29,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
+| `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 289 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
 
 ## Dream symbol medallion
@@ -129,7 +130,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/hero-discover.webp` | 1100×733 | 1.50:1 | no | 273 | provisional |  |
+| `public/art/atlas/hero-discover.webp` | 1024×1024 | 1:1 | no | 352 | provisional |  |
 | `public/art/atlas/hero-dream.webp` | 1100×733 | 1.50:1 | no | 313 | provisional |  |
 | `public/art/atlas/hero-horoscope.webp` | 1024×1024 | 1:1 | no | 369 | provisional |  |
 | `public/art/atlas/hero-insights.webp` | 1100×733 | 1.50:1 | no | 213 | provisional |  |
