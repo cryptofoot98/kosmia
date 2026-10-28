@@ -300,7 +300,7 @@ function hdr(title,o={}){
 // a dark, illustrated hero at the head of a section (a scene): stars that softly twinkle, a picture that drifts as the page
 // scrolls, and the title set over it in live type
 const STARS=Kit.STARS;
-const hero=(img,inner='',cls='',title='',sub='')=>Kit.scene({cls:'hero '+cls,bg:'atlas/'+atlasId(img),imgCls:'hero-img',parallax:true,priority:true,stars:true,bare:true,
+const hero=(img,inner='',cls='',title='',sub='')=>Kit.scene({cls:`hero ${cls} ${img}`,bg:'atlas/'+atlasId(img),imgCls:'hero-img',parallax:true,priority:true,stars:true,bare:true,
  content:`${title?`<div class="hero-t"><h1 class="cz${title.length>12?' long':''}">${title}</h1>${sub?`<p>${sub}</p>`:''}</div>`:''}${inner}`});
 // a heading with a small engraved star either side, like the mockups' section titles
 const orn=(t,more='')=>Kit.heading(t,more);
@@ -532,10 +532,10 @@ const phaseSlug=n=>/^New Moon/.test(n)?'new-moon':/^Full Moon|Lunar Eclipse/.tes
 const tarotFace=c=>`${pic('deck',c.id,'tarot-art')}<div class="tf-num">${c.arcana==='major'?c.num:''}</div><div class="tf-plate"><span>${c.name}</span></div>`;
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
- return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily">${whisperFace(c)}</div></div>${sp}</div>`;
+ return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily kt">${whisperFace(c)}</div></div>${sp}</div>`;
 }
 // a whisper's face: its artwork (art/whispers) and the engraved plaque with title and message
-const whisperFace=c=>`${pic('whispers',c.id,'day-art')||`<div class="ph">${symbol(c.sym)}</div>`}<div class="card-banner"><div class="cb-in"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div>`;
+const whisperFace=c=>(ART.whispers||[]).includes(c.id)?Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title}):`<div class="ph">${symbol(c.sym)}</div><div class="card-banner"><div class="cb-in"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div>`;
 
 /* ---------- AI read-aloud (ElevenLabs), signed-in only ---------- */
 const AUDIO=new Map();let player=null;
@@ -556,11 +556,11 @@ views.horoscope=()=>{
  const sign=sg(S.sign),h=horoscope(sign.id,'overview',V.period),m=K.moon(new Date()),open=(h.body.match(/[^.!?]+[.!?]+/)||[h.body])[0];
  return `<div class="land">${hero('hero-horoscope','','tall','Horoscope','Guidance for every path you walk')}<div class="sheet">
  ${periodSeg()}
- ${panel(`<div class="ce"><span class="ce-art">${V.period==='daily'?moonPic(m,'ce-moon'):ui('ex-chart','ce-moon')}</span><div><p class="kick">${PLABEL[V.period][1]} cosmic energy</p><p class="ce-date">${periodHead(V.period,h.per)}</p><p>${esc(open)}${V.period==='daily'?' '+(MOON_LINE[m.name]||''):''}</p><button class="btn sm" data-act="tohoroscope" data-period="${V.period}">Read Full Forecast →</button></div></div>`,'ornate')}
+ ${panel(`<div class="ce"><span class="ce-art">${ui('ce-vignette','ce-vig')}${V.period==='daily'?moonPic(m,'ce-moon'):ui('ex-chart','ce-moon')}</span><div><p class="kick">${PLABEL[V.period][1]} cosmic energy</p><p class="ce-date">${periodHead(V.period,h.per)}</p><p>${esc(open)}${V.period==='daily'?' '+(MOON_LINE[m.name]||''):''}</p><button class="btn sm" data-act="tohoroscope" data-period="${V.period}">Read Full Forecast →</button></div></div>`,'ornate')}
  <div class="tiles6">${HCATS.map(([k])=>`<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${CAT_INFO[k][1]}</span></button>`).join('')}</div>
- ${orn('Your Zodiac Sign')}
- <div class="list">${lrow(glyphMed(sign.id),`<span class="big">${sign.name}</span>`,sign.dates,'data-act="tohoroscope"',`<span class="lr-m">${keys(SIGN_KEYS[sign.id])}</span>`)}</div>
- ${orn('Explore Every Sign')}
+ ${Kit.divider('Your Zodiac Sign')}
+ <div class="list hsign">${lrow(glyphMed(sign.id),`<span class="big">${sign.name}</span>`,sign.dates,'data-act="tohoroscope"',`<span class="lr-m">${keys(SIGN_KEYS[sign.id])}</span>`)}</div>
+ ${Kit.divider('Explore Every Sign')}
  <div class="hscroll signs-row">${SIGNS.map(s=>`<button class="sgn" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.name}</span></button>`).join('')}</div>
  </div></div>`;
 };
@@ -568,15 +568,15 @@ function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
  const others=HCATS.map(c=>c[0]).filter(k=>k!==cat).map(k=>{const x=horoscope(ex,k,V.period);
-  return acc(catIco(k,'acc-i'),CAT_INFO[k][0],THEME[k][x.rel]||'',`<div class="read">${paras(x.body)}</div>${x.focus?`<p class="h-focus">${esc(x.focus)}</p>`:''}<button class="link" data-act="hcat" data-k="${k}">Make this the main reading</button>`)}).join('');
+  return `<details class="acc theme t-${k}"><summary><span class="lr-i">${catIco(k,'acc-i')}</span><strong class="th-l">${CAT_INFO[k][0]}</strong><span class="th-p">${THEME[k][x.rel]||''}</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><div class="read">${paras(x.body)}</div>${x.focus?`<p class="h-focus">${esc(x.focus)}</p>`:''}<button class="link" data-act="hcat" data-k="${k}">Make this the main reading</button></div></details>`}).join('');
  const playing=V.say===h.body;
  return `<div class="sub">${hdr(s.name,{sub:s.dates,right:`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`})}
  <div class="sp-art">${signArt(s.id)}</div><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="sp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p>
  ${periodSeg()}
  ${panel(`<div class="hd"><div><h2>${cat==='overview'?pl[1]+' Horoscope':`${CAT_INFO[cat][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<div class="rule"></div><p class="quote h-ref">${esc(h.reflection)}</p>`:''}
-  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate')}
- <h3 class="sec-h">Key Themes ${pl[0]}</h3><div class="list themes">${others}</div>
+  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}
+  <div class="rule" aria-hidden="true"></div><h3 class="th-h">Key Themes ${pl[0]}</h3><div class="list themes">${others}</div>`,'ornate hread')}
  <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">Ask Kassandra</button></div>
  </div>`;
 }
@@ -599,7 +599,7 @@ views.tarot=()=>{
  if(t==='calendar')return journalCal();
  if(t==='insights')return journalInsights();
  if(t==='notebook')return `<div class="sub">${hdr('Notebook',{sub:'Your journal as a book'})}${journalView()}</div>`;
- return `<div class="land">${hero('hero-tarot','','tall','Tarot','Insights for a more aligned you')}<div class="sheet ornate-sheet"><div class="list big">
+ return `<div class="land tland">${hero('hero-tarot','','tall','Tarot','Insights for a more aligned you')}<div class="tpanel card gilt"><div class="list big">
  ${lrow(ui('t-whisper','th oval'),'Daily Whisper','A card, a message, a moment for you, and a space to reflect.','data-go="tarot" data-t="whisper"')}
  ${lrow(ui('t-reading','th oval'),'Card Reading','Single card, three cards, love, career and the Celtic Cross.','data-go="tarot" data-t="reading"')}
  ${lrow(ui('t-journal','th oval'),'Your Journal','Reflections, insights and personal growth.','data-go="tarot" data-t="journal"')}
@@ -1379,7 +1379,7 @@ const grow=el=>{el.style.height='auto';el.style.height=Math.max(150,el.scrollHei
 const intents=key=>{const h=hash(key);return [0,1,2].map(i=>AFFIRM[(h+i*5)%AFFIRM.length])};
 function entryTop(p){
  const date=`<p class="et-date">${ymdLong(p.day,{day:'numeric',month:'long',year:'numeric'})}</p>`;
- if(p.t==='n')return `<div class="et"><div class="et-art card-art">${pic('whispers',p.o.id,'et-img')}<span class="et-plate">${esc(p.o.title)}</span></div><div>${date}<h2>${esc(p.o.title)}</h2><p class="et-keys">${keys(wKeys(p.o))}</p><p class="et-q">“${esc(p.o.msg)}”</p></div></div>`;
+ if(p.t==='n')return `<div class="et"><div class="et-art">${Kit.tarot({art:'whispers/'+p.o.id,num:wNum(p.o),name:p.o.title})}</div><div>${date}<h2>${esc(p.o.title)}</h2><p class="et-keys">${keys(wKeys(p.o))}</p><p class="et-q">“${esc(p.o.msg)}”</p></div></div>`;
  if(p.t==='r'){const r=p.r;return `<div class="et col">${date}<h2>${esc((SPREADS[r.spread]||{n:r.spread}).n)}</h2>${r.q?`<p class="et-q">“${esc(r.q)}”</p>`:''}<div class="et-cards">${r.cards.map(x=>`<figure>${pic('deck',x.id,'et-card'+(x.rev?' rev':''))}<figcaption><strong>${esc(x.pos||'')}</strong>${esc(x.name)}${x.rev?' (reversed)':''}</figcaption></figure>`).join('')}</div></div>`}
  if(p.t==='h'){const d=p.b.data||{};return `<div class="et">${med(d.sign,'et-med')}<div>${date}<h2>${jHeading(p)}</h2><p class="et-keys">${sg(d.sign).name} · ${d.start?rangeTxt({start:d.start,end:d.end}):''}</p>${d.focus?`<p class="et-q">${esc(d.focus)}</p>`:''}</div></div><details class="acc plain"><summary><span class="lr-t"><strong>The forecast</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b read">${paras(d.body)}</div></details>`}
  if(p.t==='e'){const d=p.b.data||{},ev=findEvent(p.b.ref,d.date),x=ev?evInfo(ev):null,ph=phaseSlug(d.name||'');return `<div class="et">${ph?pic('moons',ph,'et-med'):ui('ev-planet','et-med')}<div>${date}<h2>${esc(d.name||'')}</h2><p class="et-keys">${esc(d.when||'')}</p>${x?`<p class="et-q">${x.sym}</p>`:''}</div></div>${x?`<p class="muted small">${x.fact}</p>`:''}`}
@@ -1387,20 +1387,38 @@ function entryTop(p){
  if(p.t==='d'){const d=p.d,I=d.interp||{};return `<div class="et">${dreamArt(d,'et-med sq')}<div>${date}<h2>${esc(I.title||'A Dream')}</h2><p class="et-keys">${keys((I.keywords||[]).slice(0,3))}</p><button class="link" data-act="dreamopen" data-id="${esc(d.id)}">Open the full meaning</button></div></div><p class="et-q">“${esc((d.text||'').slice(0,240))}${(d.text||'').length>240?'…':''}”</p>`}
  return `<div class="et col">${date}<label class="sr-only" for="jet">Title</label><input id="jet" class="et-title" type="text" value="${esc(p.j.title)}" placeholder="Give this page a title" maxlength="80"></div>`;
 }
+// the writing tools: plain-text marks, so the reflection stays the plain text it has always been
+const JTOOLS=[['list','Start a list','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="6.5" r="1.3" fill="currentColor"/><circle cx="4.5" cy="12" r="1.3" fill="currentColor"/><circle cx="4.5" cy="17.5" r="1.3" fill="currentColor"/></svg>'],
+ ['quote','Quote','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17c0-4 1-7 5-9M14 17c0-4 1-7 5-9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'],
+ ['star','A line to remember','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 7.4L21 12l-7.4 1.6L12 21l-1.6-7.4L3 12l7.4-1.6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>'],
+ ['time','Note the time','<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'],
+ ['rule','A break between thoughts','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h7M14 12h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 10l2 2-2 2-2-2z" fill="currentColor"/></svg>']];
+function jfmt(k){
+ const x=$('#je');if(!x)return;const v=x.value,a=x.selectionStart,b=x.selectionEnd,ls=v.lastIndexOf('\n',a-1)+1;
+ let ins,pos;
+ if(k==='list'){const pre=v.slice(ls,a).startsWith('• ')?'':'• ';x.value=v.slice(0,ls)+pre+v.slice(ls);pos=b+pre.length}
+ else if(k==='quote'){ins=`“${v.slice(a,b)}”`;x.value=v.slice(0,a)+ins+v.slice(b);pos=a===b?a+1:a+ins.length}
+ else{ins=k==='star'?(a>ls?'\n':'')+'✦ ':k==='time'?(a>ls?' ':'')+fmt({hour:'2-digit',minute:'2-digit'},new Date())+' — ':(a>0?'\n':'')+'~ ✦ ~\n';x.value=v.slice(0,a)+ins+v.slice(b);pos=a+ins.length}
+ x.dispatchEvent(new Event('input',{bubbles:true}));x.focus();x.setSelectionRange(pos,pos);
+}
 function entryView(){
  const p=jFind(V.jkey);
  if(!p)return `<div class="sub">${hdr('Journal Entry')}${empty('This page is no longer in your journal','It may have been torn out on another device.',linkBtn('Back to the journal','tarot','journal','btn'))}</div>`;
  if(!JE||jKey(JE)!==jKey(p)){jeLeave();JE=p}
  const key=jKey(p),pr=PROMPTS[p.t]||PROMPTS.j,on=(S.intent||{})[key]||[],txt=jText(p);
- return `<div class="sub entry">${hdr('Journal Entry',{right:p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')})}
+ return `<div class="sub entry">${hdr('Journal Entry',{right:`<button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}`})}
  ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button><button data-act="jnotebook">${IC.book} Open in the notebook</button></div>`:''}
  ${entryTop(p)}<div class="divider" aria-hidden="true">${IC.star}</div>
  <h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>
- <label class="sr-only" for="je">My reflection</label><textarea id="je" class="je" placeholder="${esc(pr[0])}">${esc(txt)}</textarea>
+ <div class="je-box"><div class="je-tools" role="toolbar" aria-label="Writing tools">${JTOOLS.map(([k,l,g])=>`<button type="button" data-act="jfmt" data-k="${k}" aria-label="${l}" title="${l}">${g}</button>`).join('')}</div>
+ <label class="sr-only" for="je">My reflection</label><textarea id="je" class="je" placeholder="${esc(pr[0])}">${esc(txt)}</textarea></div>
  <div class="prompts"><p class="kick">Guiding prompts <span class="muted">(optional)</span></p>${pr.map((q,i)=>`<button class="pr" data-act="jprompt" data-i="${i}">${ui(['t-whisper','t-reading','t-journal'][i],'pr-i')}<span>${esc(q)}</span>${IC.chev}</button>`).join('')}</div>
  ${p.t!=='j'?`<div class="intent"><h3>Today I’m taking with me…</h3>${intents(key).map((x,i)=>`<label class="ck"><input type="checkbox" class="cb" data-act="jint" data-i="${i}" ${on[i]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`:''}
  <p class="muted small center">Private to you${C.user?' and kept in your account':' and kept in this browser'}. Everything is saved as you write.</p></div>`;
 }
+// a small engraved Moon for a calendar day: the lit part drawn from how much of the Moon is lit that night
+const phaseGlyph=d=>{const m=K.moon(d),o=((m.waxing?-1:1)*m.ill*2).toFixed(2),id='pg'+d.getTime();
+ return `<svg class="jc-ph" viewBox="-1.1 -1.1 2.2 2.2" aria-hidden="true"><defs><clipPath id="${id}"><circle r="1"/></clipPath></defs><g clip-path="url(#${id})"><circle r="1" fill="#EADCBC"/><circle cx="${o}" r="1" fill="#1E2740"/></g><circle r="1" fill="none" stroke="#8A6430" stroke-width=".12"/></svg>`};
 /* the calendar: each month with its Moon's phases, the days that hold entries, and those entries beneath */
 function journalCal(){
  const mk=V.jcal.month||dkey().slice(0,7),[y,mo]=mk.split('-').map(Number),first=Date.UTC(y,mo-1,1),days=new Date(Date.UTC(y,mo,0)).getUTCDate(),lead=(new Date(first).getUTCDay()+6)%7;
@@ -1411,7 +1429,7 @@ function journalCal(){
  return `<div class="sub">${hdr('Journal Calendar',{sub:'Find past entries by date'})}
  <div class="mnav"><button class="ibtn" data-act="jcalm" data-k="${prev}" aria-label="Previous month">${IC.back}</button><h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="jcalm" data-k="${next}" aria-label="Next month">${IC.back}</button></div>
  <div class="jcal" role="grid">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="jc-d" role="columnheader">${d}</div>`).join('')}${Array.from({length:lead},()=>'<div></div>').join('')}
- ${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,n=(byDay[k]||[]).length;return `<button class="jc-c${k===dkey()?' today':''}${k===sel?' sel':''}" data-act="jcald" data-k="${k}" aria-label="${ymdLong(k)}${n?', '+n+' entr'+(n>1?'ies':'y'):''}${ph[k]?', '+ph[k].replace('-',' '):''}"><span>${i+1}</span>${ph[k]?pic('moons',ph[k],'jc-moon'):n?'':'<i class="jc-sp"></i>'}${n?`<i class="jc-dot">${'•'.repeat(Math.min(3,n))}</i>`:''}</button>`}).join('')}</div>
+ ${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,n=(byDay[k]||[]).length;return `<button class="jc-c${k===dkey()?' today':''}${k===sel?' sel':''}" data-act="jcald" data-k="${k}" aria-label="${ymdLong(k)}${n?', '+n+' entr'+(n>1?'ies':'y'):''}${ph[k]?', '+ph[k].replace('-',' '):''}"><span>${i+1}</span>${ph[k]?pic('moons',ph[k],'jc-moon'):K?phaseGlyph(new Date(Date.UTC(y,mo-1,i+1,20))):'<i class="jc-sp"></i>'}${n?`<i class="jc-dot">${'•'.repeat(Math.min(3,n))}</i>`:''}</button>`}).join('')}</div>
  ${sel?`<h3 class="sec-h">Entries on ${ymdLong(sel,{day:'numeric',month:'long'})}</h3><div class="list">${(byDay[sel]||[]).map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]}${p.at?' • '+fmt({hour:'2-digit',minute:'2-digit'},new Date(p.at)):''}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')||'<p class="muted center">Nothing written on this day.</p>'}</div>`:''}</div>`;
 }
 /* insights: how much has been written, and the themes the reflections keep returning to */
@@ -1431,7 +1449,7 @@ function journalInsights(){
   <h3 class="sec-h">Signs you have read</h3><div class="pills">${top(signs,([k,v])=>`<span class="pill">${sg(k).name} <b>${v}</b></span>`)}</div>
   <h3 class="sec-h">Symbols in your dreams</h3><div class="pills">${top(sym,([k,v])=>`<span class="pill">${esc(k)} <b>${v}</b></span>`)}</div>`;
  }else body=`<div class="stats">${[[it.length,'Entries'],[months,'Months'],[n('r'),'Tarot Readings'],[n('h'),'Horoscope Notes'],[n('e'),'Cosmic Events'],[n('j'),'Free Writes']].map(([v,l])=>`<div class="stat"><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>
-  <h3 class="sec-h">Your most explored themes</h3>${score.length?`<div class="bars">${score.map(([l,ic,c],i)=>`<div class="tbar">${pic('cats',ic,'tb-i')}<span>${l}</span><i class="b${i}"><b style="width:${Math.round(c/tot*100)}%"></b></i><em>${Math.round(c/tot*100)}%</em></div>`).join('')}</div>`:'<p class="muted">Write a few reflections and the themes you return to will appear here.</p>'}`;
+  <h3 class="sec-h">Your most explored themes</h3>${score.length?`<div class="bars">${score.map(([l,ic,c],i)=>`<div class="tbar">${pic('cats',ic,'tb-i')}<span>${l}</span><i class="tb${i}"><b style="width:${Math.round(c/tot*100)}%"></b></i><em>${Math.round(c/tot*100)}%</em></div>`).join('')}</div>`:'<p class="muted">Write a few reflections and the themes you return to will appear here.</p>'}`;
  return `<div class="land">${hero('hero-insights',iconBtn('back','data-act="back"','Back'),'short','Your Journal','A journey of discovery')}<div class="sheet">${seg([['insights','Insights'],['themes','Themes']],V.insTab,'ins')}${body}</div></div>`;
 }
 /* ----- Dream Interpretation: describe a dream by text or voice, and its symbols, feelings and possible themes are read
@@ -1505,7 +1523,7 @@ function dreamPatterns(list){
  if(list.length<3)return '';
  const sym={},mood={};list.forEach(d=>{const I=d.interp||{};[I.art,...(I.symbols||[]).map(s=>s.id)].filter(Boolean).forEach(x=>sym[x]=(sym[x]||0)+1);if(d.mood)mood[d.mood]=(mood[d.mood]||0)+1});
  const top=Object.entries(sym).sort((a,b)=>b[1]-a[1]).slice(0,5),mx=top.length?top[0][1]:1;
- return panel(`<p class="kick">Dream patterns</p><h3>What keeps returning</h3>${top.length?`<div class="bars">${top.map(([k,v],i)=>`<div class="tbar">${artOf((dsym(k)||{}).art,'tb-i round')}<span>${esc((dsym(k)||{name:k}).name)}</span><i class="b${i}"><b style="width:${Math.round(v/mx*100)}%"></b></i><em>${v}×</em></div>`).join('')}</div>`:''}${Object.keys(mood).length?`<p class="muted small">Feelings you wake with: ${Object.entries(mood).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${MOODS.find(m=>m[0]===k)[1].toLowerCase()} (${v})`).join(', ')}.</p>`:''}`,'ornate');
+ return panel(`<p class="kick">Dream patterns</p><h3>What keeps returning</h3>${top.length?`<div class="bars">${top.map(([k,v],i)=>`<div class="tbar">${artOf((dsym(k)||{}).art,'tb-i round')}<span>${esc((dsym(k)||{name:k}).name)}</span><i class="tb${i}"><b style="width:${Math.round(v/mx*100)}%"></b></i><em>${v}×</em></div>`).join('')}</div>`:''}${Object.keys(mood).length?`<p class="muted small">Feelings you wake with: ${Object.entries(mood).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${MOODS.find(m=>m[0]===k)[1].toLowerCase()} (${v})`).join(', ')}.</p>`:''}`,'ornate');
 }
 function dreamsView(){
  const list=dreams();
@@ -1837,6 +1855,8 @@ document.addEventListener('click',e=>{
  if(a==='jmenu'){V.jmenu=!V.jmenu;return render()}
  if(a==='jdelentry'){const p=jFind(V.jkey);if(!p)return;if(JS&&JS.p===JE){clearTimeout(JS.t);JS=null}JE=null;V.jmenu=false;jRemove(p);go('tarot','journal');return toast('Page torn out','jundo')}
  if(a==='jnotebook'){const k=V.jkey;go('tarot','notebook');V.jpage=jAt(k,0);V.jfresh=false;return render()}
+ if(a==='jfmt')return jfmt(t.dataset.k);
+ if(a==='jsavenow'){if(JE&&JS&&JS.p===JE)jflushSave();save();const s=$('#jsaved');if(s)s.textContent='Saved';return toast('Saved to your journal')}
  if(a==='jprompt'){const x=$('#je');if(!x)return;const q=(PROMPTS[(JE||{}).t]||PROMPTS.j)[+t.dataset.i];x.value=(x.value.trim()?x.value.replace(/\s+$/,'')+'\n\n':'')+q+'\n';x.dispatchEvent(new Event('input',{bubbles:true}));x.focus();x.setSelectionRange(x.value.length,x.value.length);return}
  if(a==='jcalm'){V.jcal={month:t.dataset.k,day:''};return render()}
  if(a==='jcald'){V.jcal.day=t.dataset.k;return render()}

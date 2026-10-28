@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 392 |
-| In use, provisional | 348 |
+| Images | 393 |
+| In use, provisional | 349 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -24,6 +24,12 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/banner-calendar.webp` | 1100×733 | 1.50:1 | no | 311 | provisional |  |
 | `public/art/atlas/banner-library.webp` | 1100×733 | 1.50:1 | no | 332 | provisional |  |
+
+## Unclassified
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
 
 ## Dream symbol medallion
 
@@ -125,10 +131,10 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/hero-discover.webp` | 1100×733 | 1.50:1 | no | 273 | provisional |  |
 | `public/art/atlas/hero-dream.webp` | 1100×733 | 1.50:1 | no | 313 | provisional |  |
-| `public/art/atlas/hero-horoscope.webp` | 1100×733 | 1.50:1 | no | 318 | provisional |  |
-| `public/art/atlas/hero-insights.webp` | 1100×733 | 1.50:1 | no | 224 | provisional |  |
-| `public/art/atlas/hero-journal.webp` | 1100×733 | 1.50:1 | no | 267 | provisional |  |
-| `public/art/atlas/hero-tarot.webp` | 1100×733 | 1.50:1 | no | 228 | provisional |  |
+| `public/art/atlas/hero-horoscope.webp` | 1024×1024 | 1:1 | no | 369 | provisional |  |
+| `public/art/atlas/hero-insights.webp` | 1100×733 | 1.50:1 | no | 213 | provisional |  |
+| `public/art/atlas/hero-journal.webp` | 1024×1024 | 1:1 | no | 344 | provisional |  |
+| `public/art/atlas/hero-tarot.webp` | 1024×1024 | 1:1 | no | 325 | provisional |  |
 
 ## Sunset lake, mountains and flowers, edge to edge
 
@@ -491,84 +497,84 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/deck/c1.webp` | 768×1152 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c10.webp` | 768×1152 | 2:3 | no | 287 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c11.webp` | 768×1152 | 2:3 | no | 270 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c12.webp` | 768×1152 | 2:3 | no | 253 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c13.webp` | 768×1152 | 2:3 | no | 242 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c14.webp` | 768×1152 | 2:3 | no | 292 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c2.webp` | 768×1152 | 2:3 | no | 249 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c3.webp` | 768×1152 | 2:3 | no | 251 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c4.webp` | 768×1152 | 2:3 | no | 254 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c5.webp` | 768×1152 | 2:3 | no | 250 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c6.webp` | 768×1152 | 2:3 | no | 277 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c7.webp` | 768×1152 | 2:3 | no | 281 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c8.webp` | 768×1152 | 2:3 | no | 199 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/c9.webp` | 768×1152 | 2:3 | no | 289 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m0.webp` | 768×1152 | 2:3 | no | 244 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m1.webp` | 768×1152 | 2:3 | no | 218 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m10.webp` | 768×1152 | 2:3 | no | 246 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m11.webp` | 768×1152 | 2:3 | no | 221 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m12.webp` | 768×1152 | 2:3 | no | 224 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m13.webp` | 768×1152 | 2:3 | no | 213 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m14.webp` | 768×1152 | 2:3 | no | 234 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m15.webp` | 768×1152 | 2:3 | no | 204 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m16.webp` | 768×1152 | 2:3 | no | 214 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m17.webp` | 768×1152 | 2:3 | no | 239 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m18.webp` | 768×1152 | 2:3 | no | 261 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m19.webp` | 768×1152 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m2.webp` | 768×1152 | 2:3 | no | 197 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m20.webp` | 768×1152 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m21.webp` | 768×1152 | 2:3 | no | 245 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m3.webp` | 768×1152 | 2:3 | no | 249 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m4.webp` | 768×1152 | 2:3 | no | 221 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m5.webp` | 768×1152 | 2:3 | no | 227 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m6.webp` | 768×1152 | 2:3 | no | 235 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m7.webp` | 768×1152 | 2:3 | no | 246 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m8.webp` | 768×1152 | 2:3 | no | 240 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/m9.webp` | 768×1152 | 2:3 | no | 220 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p1.webp` | 768×1152 | 2:3 | no | 244 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p10.webp` | 768×1152 | 2:3 | no | 269 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p11.webp` | 768×1152 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p12.webp` | 768×1152 | 2:3 | no | 200 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p13.webp` | 768×1152 | 2:3 | no | 256 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p14.webp` | 768×1152 | 2:3 | no | 278 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p2.webp` | 768×1152 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p3.webp` | 768×1152 | 2:3 | no | 263 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p4.webp` | 768×1152 | 2:3 | no | 259 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p5.webp` | 768×1152 | 2:3 | no | 255 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p6.webp` | 768×1152 | 2:3 | no | 243 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p7.webp` | 768×1152 | 2:3 | no | 244 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p8.webp` | 768×1152 | 2:3 | no | 260 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/p9.webp` | 768×1152 | 2:3 | no | 239 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s1.webp` | 768×1152 | 2:3 | no | 229 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s10.webp` | 768×1152 | 2:3 | no | 260 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s11.webp` | 768×1152 | 2:3 | no | 257 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s12.webp` | 768×1152 | 2:3 | no | 251 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s13.webp` | 768×1152 | 2:3 | no | 237 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s14.webp` | 768×1152 | 2:3 | no | 255 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s2.webp` | 768×1152 | 2:3 | no | 200 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s3.webp` | 768×1152 | 2:3 | no | 251 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s4.webp` | 768×1152 | 2:3 | no | 222 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s5.webp` | 768×1152 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s6.webp` | 768×1152 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s7.webp` | 768×1152 | 2:3 | no | 186 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s8.webp` | 768×1152 | 2:3 | no | 241 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/s9.webp` | 768×1152 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w1.webp` | 768×1152 | 2:3 | no | 253 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w10.webp` | 768×1152 | 2:3 | no | 239 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w11.webp` | 768×1152 | 2:3 | no | 250 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w12.webp` | 768×1152 | 2:3 | no | 258 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w13.webp` | 768×1152 | 2:3 | no | 236 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w14.webp` | 768×1152 | 2:3 | no | 281 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w2.webp` | 768×1152 | 2:3 | no | 230 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w3.webp` | 768×1152 | 2:3 | no | 207 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w4.webp` | 768×1152 | 2:3 | no | 243 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w5.webp` | 768×1152 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w6.webp` | 768×1152 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w7.webp` | 768×1152 | 2:3 | no | 241 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w8.webp` | 768×1152 | 2:3 | no | 244 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
-| `public/art/deck/w9.webp` | 768×1152 | 2:3 | no | 222 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c1.webp` | 720×1080 | 2:3 | no | 226 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c10.webp` | 720×1080 | 2:3 | no | 278 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c11.webp` | 720×1080 | 2:3 | no | 260 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c12.webp` | 720×1080 | 2:3 | no | 244 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c13.webp` | 720×1080 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c14.webp` | 720×1080 | 2:3 | no | 274 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c2.webp` | 720×1080 | 2:3 | no | 239 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c3.webp` | 720×1080 | 2:3 | no | 242 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c4.webp` | 720×1080 | 2:3 | no | 245 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c5.webp` | 720×1080 | 2:3 | no | 239 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c6.webp` | 720×1080 | 2:3 | no | 268 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c7.webp` | 720×1080 | 2:3 | no | 268 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c8.webp` | 720×1080 | 2:3 | no | 194 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/c9.webp` | 720×1080 | 2:3 | no | 278 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m0.webp` | 720×1080 | 2:3 | no | 235 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m1.webp` | 720×1080 | 2:3 | no | 214 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m10.webp` | 720×1080 | 2:3 | no | 237 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m11.webp` | 720×1080 | 2:3 | no | 212 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m12.webp` | 720×1080 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m13.webp` | 720×1080 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m14.webp` | 720×1080 | 2:3 | no | 225 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m15.webp` | 720×1080 | 2:3 | no | 196 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m16.webp` | 720×1080 | 2:3 | no | 208 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m17.webp` | 720×1080 | 2:3 | no | 230 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m18.webp` | 720×1080 | 2:3 | no | 248 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m19.webp` | 720×1080 | 2:3 | no | 237 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m2.webp` | 720×1080 | 2:3 | no | 193 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m20.webp` | 720×1080 | 2:3 | no | 240 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m21.webp` | 720×1080 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m3.webp` | 720×1080 | 2:3 | no | 242 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m4.webp` | 720×1080 | 2:3 | no | 214 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m5.webp` | 720×1080 | 2:3 | no | 218 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m6.webp` | 720×1080 | 2:3 | no | 227 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m7.webp` | 720×1080 | 2:3 | no | 236 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m8.webp` | 720×1080 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/m9.webp` | 720×1080 | 2:3 | no | 212 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p1.webp` | 720×1080 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p10.webp` | 720×1080 | 2:3 | no | 258 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p11.webp` | 720×1080 | 2:3 | no | 224 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p12.webp` | 720×1080 | 2:3 | no | 195 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p13.webp` | 720×1080 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p14.webp` | 720×1080 | 2:3 | no | 270 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p2.webp` | 720×1080 | 2:3 | no | 240 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p3.webp` | 720×1080 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p4.webp` | 720×1080 | 2:3 | no | 249 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p5.webp` | 720×1080 | 2:3 | no | 246 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p6.webp` | 720×1080 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p7.webp` | 720×1080 | 2:3 | no | 236 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p8.webp` | 720×1080 | 2:3 | no | 249 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/p9.webp` | 720×1080 | 2:3 | no | 234 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s1.webp` | 720×1080 | 2:3 | no | 218 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s10.webp` | 720×1080 | 2:3 | no | 249 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s11.webp` | 720×1080 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s12.webp` | 720×1080 | 2:3 | no | 242 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s13.webp` | 720×1080 | 2:3 | no | 227 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s14.webp` | 720×1080 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s2.webp` | 720×1080 | 2:3 | no | 194 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s3.webp` | 720×1080 | 2:3 | no | 243 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s4.webp` | 720×1080 | 2:3 | no | 217 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s5.webp` | 720×1080 | 2:3 | no | 225 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s6.webp` | 720×1080 | 2:3 | no | 210 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s7.webp` | 720×1080 | 2:3 | no | 180 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s8.webp` | 720×1080 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/s9.webp` | 720×1080 | 2:3 | no | 209 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w1.webp` | 720×1080 | 2:3 | no | 239 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w10.webp` | 720×1080 | 2:3 | no | 233 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w11.webp` | 720×1080 | 2:3 | no | 236 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w12.webp` | 720×1080 | 2:3 | no | 248 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w13.webp` | 720×1080 | 2:3 | no | 229 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w14.webp` | 720×1080 | 2:3 | no | 269 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w2.webp` | 720×1080 | 2:3 | no | 222 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w3.webp` | 720×1080 | 2:3 | no | 202 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w4.webp` | 720×1080 | 2:3 | no | 236 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w5.webp` | 720×1080 | 2:3 | no | 242 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w6.webp` | 720×1080 | 2:3 | no | 222 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w7.webp` | 720×1080 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w8.webp` | 720×1080 | 2:3 | no | 234 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
+| `public/art/deck/w9.webp` | 720×1080 | 2:3 | no | 214 | provisional | Not yet in the mockup’s style (navy skies, gold stars, flowers): to be repainted. |
 
 ## Paper texture or older ground
 
@@ -671,106 +677,106 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/whispers/butterfly.webp` | 768×1152 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/clear-crystal.webp` | 768×1152 | 2:3 | no | 200 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/crossroads.webp` | 768×1152 | 2:3 | no | 243 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/daily-bread.webp` | 1024×1536 | 2:3 | no | 559 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/dawn-chorus.webp` | 768×1152 | 2:3 | no | 228 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/deep-roots.webp` | 768×1152 | 2:3 | no | 252 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/distant-ship.webp` | 768×1152 | 2:3 | no | 209 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/fairy-ring.webp` | 1024×1536 | 2:3 | no | 545 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/first-light.webp` | 768×1152 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/gentle-rain.webp` | 768×1152 | 2:3 | no | 224 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/golden-hour.webp` | 768×1152 | 2:3 | no | 185 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/golden-key.webp` | 768×1152 | 2:3 | no | 209 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/hidden-garden.webp` | 768×1152 | 2:3 | no | 221 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/inner-key.webp` | 768×1152 | 2:3 | no | 176 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/late-bloom.webp` | 768×1152 | 2:3 | no | 220 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/lighthouse.webp` | 768×1152 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/music-box.webp` | 1024×1536 | 2:3 | no | 477 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/nightingale.webp` | 768×1152 | 2:3 | no | 186 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/north-star.webp` | 768×1152 | 2:3 | no | 209 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/old-tree.webp` | 768×1152 | 2:3 | no | 285 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/open-door.webp` | 768×1152 | 2:3 | no | 205 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/open-path.webp` | 768×1152 | 2:3 | no | 220 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/quiet-harvest.webp` | 768×1152 | 2:3 | no | 216 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/quiet-moon.webp` | 768×1152 | 2:3 | no | 228 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/returning-tide.webp` | 768×1152 | 2:3 | no | 204 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/rising-sun.webp` | 768×1152 | 2:3 | no | 235 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/sacred-flame.webp` | 768×1152 | 2:3 | no | 213 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/sanctuary.webp` | 768×1152 | 2:3 | no | 198 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/sealed-letter.webp` | 1024×1536 | 2:3 | no | 518 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/silver-thread.webp` | 768×1152 | 2:3 | no | 187 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/snow-tracks.webp` | 1024×1536 | 2:3 | no | 467 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/stargazer.webp` | 768×1152 | 2:3 | no | 188 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/steady-star.webp` | 768×1152 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/stepping-stones.webp` | 1024×1536 | 2:3 | no | 549 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/still-water.webp` | 768×1152 | 2:3 | no | 199 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-anchor.webp` | 1024×1536 | 2:3 | no | 560 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-aurora.webp` | 1024×1536 | 2:3 | no | 501 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-balloon.webp` | 1024×1536 | 2:3 | no | 559 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-bell.webp` | 1024×1536 | 2:3 | no | 478 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-bench.webp` | 1024×1536 | 2:3 | no | 512 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-birdcage.webp` | 1024×1536 | 2:3 | no | 521 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-blossom.webp` | 768×1152 | 2:3 | no | 234 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-bridge.webp` | 768×1152 | 2:3 | no | 241 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-cairn.webp` | 1024×1536 | 2:3 | no | 520 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-chalice.webp` | 768×1152 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-comet.webp` | 1024×1536 | 2:3 | no | 533 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-compass.webp` | 768×1152 | 2:3 | no | 231 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-dandelion.webp` | 1024×1536 | 2:3 | no | 474 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-eclipse.webp` | 768×1152 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-ember.webp` | 768×1152 | 2:3 | no | 207 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-feather.webp` | 768×1152 | 2:3 | no | 186 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-fox.webp` | 768×1152 | 2:3 | no | 253 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-frost.webp` | 1024×1536 | 2:3 | no | 512 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-hare.webp` | 1024×1536 | 2:3 | no | 475 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-harp.webp` | 1024×1536 | 2:3 | no | 522 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-hearth.webp` | 768×1152 | 2:3 | no | 273 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-hedgerow.webp` | 1024×1536 | 2:3 | no | 499 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-heron.webp` | 1024×1536 | 2:3 | no | 516 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-hive.webp` | 1024×1536 | 2:3 | no | 505 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-hourglass.webp` | 1024×1536 | 2:3 | no | 492 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-kingfisher.webp` | 1024×1536 | 2:3 | no | 552 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-kite.webp` | 1024×1536 | 2:3 | no | 515 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-labyrinth.webp` | 1024×1536 | 2:3 | no | 496 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-lantern.webp` | 768×1152 | 2:3 | no | 212 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-lotus.webp` | 768×1152 | 2:3 | no | 254 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-mirror.webp` | 768×1152 | 2:3 | no | 237 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-moth.webp` | 1024×1536 | 2:3 | no | 475 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-mountain.webp` | 768×1152 | 2:3 | no | 217 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-nautilus.webp` | 1024×1536 | 2:3 | no | 435 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-nest.webp` | 1024×1536 | 2:3 | no | 532 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-orchard.webp` | 1024×1536 | 2:3 | no | 482 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-owl.webp` | 768×1152 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-phoenix.webp` | 768×1152 | 2:3 | no | 241 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-pinecone.webp` | 1024×1536 | 2:3 | no | 529 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-pomegranate.webp` | 1024×1536 | 2:3 | no | 476 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-river.webp` | 768×1152 | 2:3 | no | 247 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-scales.webp` | 1024×1536 | 2:3 | no | 530 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-seed.webp` | 768×1152 | 2:3 | no | 258 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-snail.webp` | 1024×1536 | 2:3 | no | 549 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-snowdrop.webp` | 1024×1536 | 2:3 | no | 504 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-spiral.webp` | 768×1152 | 2:3 | no | 207 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-stag.webp` | 1024×1536 | 2:3 | no | 479 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-stile.webp` | 1024×1536 | 2:3 | no | 493 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-sundial.webp` | 1024×1536 | 2:3 | no | 546 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-swan.webp` | 1024×1536 | 2:3 | no | 433 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-swing.webp` | 1024×1536 | 2:3 | no | 607 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-tapestry.webp` | 768×1152 | 2:3 | no | 221 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-waterfall.webp` | 1024×1536 | 2:3 | no | 499 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-weaver.webp` | 768×1152 | 2:3 | no | 243 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-web.webp` | 1024×1536 | 2:3 | no | 496 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-well.webp` | 1024×1536 | 2:3 | no | 523 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-whale.webp` | 1024×1536 | 2:3 | no | 509 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-willow.webp` | 1024×1536 | 2:3 | no | 494 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/the-wind.webp` | 768×1152 | 2:3 | no | 232 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/turning-wheel.webp` | 768×1152 | 2:3 | no | 242 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/two-moons.webp` | 768×1152 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/watchful-eye.webp` | 768×1152 | 2:3 | no | 262 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/white-lily.webp` | 768×1152 | 2:3 | no | 205 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/wild-geese.webp` | 1024×1536 | 2:3 | no | 560 | provisional | Not yet in the mockup’s style: to be repainted. |
-| `public/art/whispers/wild-horse.webp` | 768×1152 | 2:3 | no | 194 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/butterfly.webp` | 720×1080 | 2:3 | no | 205 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/clear-crystal.webp` | 720×1080 | 2:3 | no | 179 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/crossroads.webp` | 720×1080 | 2:3 | no | 217 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/daily-bread.webp` | 720×1080 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/dawn-chorus.webp` | 720×1080 | 2:3 | no | 205 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/deep-roots.webp` | 720×1080 | 2:3 | no | 228 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/distant-ship.webp` | 720×1080 | 2:3 | no | 187 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/fairy-ring.webp` | 720×1080 | 2:3 | no | 217 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/first-light.webp` | 720×1080 | 2:3 | no | 185 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/gentle-rain.webp` | 720×1080 | 2:3 | no | 200 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/golden-hour.webp` | 720×1080 | 2:3 | no | 167 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/golden-key.webp` | 720×1080 | 2:3 | no | 188 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/hidden-garden.webp` | 720×1080 | 2:3 | no | 197 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/inner-key.webp` | 720×1080 | 2:3 | no | 157 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/late-bloom.webp` | 720×1080 | 2:3 | no | 199 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/lighthouse.webp` | 720×1080 | 2:3 | no | 195 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/music-box.webp` | 720×1080 | 2:3 | no | 200 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/nightingale.webp` | 720×1080 | 2:3 | no | 162 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/north-star.webp` | 720×1080 | 2:3 | no | 189 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/old-tree.webp` | 720×1080 | 2:3 | no | 258 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/open-door.webp` | 720×1080 | 2:3 | no | 184 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/open-path.webp` | 720×1080 | 2:3 | no | 199 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/quiet-harvest.webp` | 720×1080 | 2:3 | no | 191 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/quiet-moon.webp` | 720×1080 | 2:3 | no | 203 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/returning-tide.webp` | 720×1080 | 2:3 | no | 183 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/rising-sun.webp` | 720×1080 | 2:3 | no | 212 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/sacred-flame.webp` | 720×1080 | 2:3 | no | 195 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/sanctuary.webp` | 720×1080 | 2:3 | no | 171 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/sealed-letter.webp` | 720×1080 | 2:3 | no | 205 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/silver-thread.webp` | 720×1080 | 2:3 | no | 166 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/snow-tracks.webp` | 720×1080 | 2:3 | no | 182 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/stargazer.webp` | 720×1080 | 2:3 | no | 170 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/steady-star.webp` | 720×1080 | 2:3 | no | 186 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/stepping-stones.webp` | 720×1080 | 2:3 | no | 226 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/still-water.webp` | 720×1080 | 2:3 | no | 179 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-anchor.webp` | 720×1080 | 2:3 | no | 228 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-aurora.webp` | 720×1080 | 2:3 | no | 192 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-balloon.webp` | 720×1080 | 2:3 | no | 227 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-bell.webp` | 720×1080 | 2:3 | no | 183 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-bench.webp` | 720×1080 | 2:3 | no | 204 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-birdcage.webp` | 720×1080 | 2:3 | no | 209 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-blossom.webp` | 720×1080 | 2:3 | no | 212 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-bridge.webp` | 720×1080 | 2:3 | no | 219 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-cairn.webp` | 720×1080 | 2:3 | no | 211 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-chalice.webp` | 720×1080 | 2:3 | no | 182 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-comet.webp` | 720×1080 | 2:3 | no | 206 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-compass.webp` | 720×1080 | 2:3 | no | 210 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-dandelion.webp` | 720×1080 | 2:3 | no | 182 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-eclipse.webp` | 720×1080 | 2:3 | no | 186 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-ember.webp` | 720×1080 | 2:3 | no | 187 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-feather.webp` | 720×1080 | 2:3 | no | 162 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-fox.webp` | 720×1080 | 2:3 | no | 226 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-frost.webp` | 720×1080 | 2:3 | no | 207 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-hare.webp` | 720×1080 | 2:3 | no | 177 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-harp.webp` | 720×1080 | 2:3 | no | 201 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-hearth.webp` | 720×1080 | 2:3 | no | 245 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-hedgerow.webp` | 720×1080 | 2:3 | no | 207 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-heron.webp` | 720×1080 | 2:3 | no | 204 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-hive.webp` | 720×1080 | 2:3 | no | 203 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-hourglass.webp` | 720×1080 | 2:3 | no | 194 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-kingfisher.webp` | 720×1080 | 2:3 | no | 213 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-kite.webp` | 720×1080 | 2:3 | no | 203 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-labyrinth.webp` | 720×1080 | 2:3 | no | 190 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-lantern.webp` | 720×1080 | 2:3 | no | 192 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-lotus.webp` | 720×1080 | 2:3 | no | 225 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-mirror.webp` | 720×1080 | 2:3 | no | 216 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-moth.webp` | 720×1080 | 2:3 | no | 184 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-mountain.webp` | 720×1080 | 2:3 | no | 197 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-nautilus.webp` | 720×1080 | 2:3 | no | 167 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-nest.webp` | 720×1080 | 2:3 | no | 222 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-orchard.webp` | 720×1080 | 2:3 | no | 191 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-owl.webp` | 720×1080 | 2:3 | no | 197 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-phoenix.webp` | 720×1080 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-pinecone.webp` | 720×1080 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-pomegranate.webp` | 720×1080 | 2:3 | no | 189 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-river.webp` | 720×1080 | 2:3 | no | 219 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-scales.webp` | 720×1080 | 2:3 | no | 210 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-seed.webp` | 720×1080 | 2:3 | no | 231 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-snail.webp` | 720×1080 | 2:3 | no | 217 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-snowdrop.webp` | 720×1080 | 2:3 | no | 196 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-spiral.webp` | 720×1080 | 2:3 | no | 189 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-stag.webp` | 720×1080 | 2:3 | no | 184 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-stile.webp` | 720×1080 | 2:3 | no | 195 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-sundial.webp` | 720×1080 | 2:3 | no | 216 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-swan.webp` | 720×1080 | 2:3 | no | 162 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-swing.webp` | 720×1080 | 2:3 | no | 252 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-tapestry.webp` | 720×1080 | 2:3 | no | 194 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-waterfall.webp` | 720×1080 | 2:3 | no | 194 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-weaver.webp` | 720×1080 | 2:3 | no | 215 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-web.webp` | 720×1080 | 2:3 | no | 199 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-well.webp` | 720×1080 | 2:3 | no | 203 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-whale.webp` | 720×1080 | 2:3 | no | 193 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-willow.webp` | 720×1080 | 2:3 | no | 198 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/the-wind.webp` | 720×1080 | 2:3 | no | 209 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/turning-wheel.webp` | 720×1080 | 2:3 | no | 218 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/two-moons.webp` | 720×1080 | 2:3 | no | 178 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/watchful-eye.webp` | 720×1080 | 2:3 | no | 234 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/white-lily.webp` | 720×1080 | 2:3 | no | 185 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/wild-geese.webp` | 720×1080 | 2:3 | no | 223 | provisional | Not yet in the mockup’s style: to be repainted. |
+| `public/art/whispers/wild-horse.webp` | 720×1080 | 2:3 | no | 176 | provisional | Not yet in the mockup’s style: to be repainted. |
 
 ## Missing
 

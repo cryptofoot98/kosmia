@@ -520,7 +520,7 @@ textarea.je{min-height:150px;font-style:italic;font-size:1.06rem;line-height:30p
 .tb-i{width:30px;height:30px;object-fit:contain}.tb-i.round{border-radius:50%;object-fit:cover}
 .tbar i{display:block;height:9px;border-radius:5px;background:rgba(var(--k-gold-rgb),.2);overflow:hidden}
 .tbar b{display:block;height:100%;border-radius:5px;background:#A86566}
-.tbar .b1 b{background:#6E7155}.tbar .b2 b{background:#9A3B42}.tbar .b3 b{background:#C9873B}.tbar .b4 b{background:#A0553A}
+.tbar .tb1 b{background:#6E7155}.tbar .tb2 b{background:#9A3B42}.tbar .tb3 b{background:#C9873B}.tbar .tb4 b{background:#A0553A}
 .tbar em{font-style:normal;font-size:.85rem;color:var(--ink2);text-align:right}
 
 /* Discover */
@@ -1069,3 +1069,109 @@ body.reduce .kscene .parallax{transform:none!important}
 .k-feat span{font-size:var(--fs-sm);color:var(--k-ink-muted)}
 .k-feat.dark{background:var(--k-midnight);color:var(--k-on-dark);border-color:var(--k-gold)}
 .k-feat.dark span{color:var(--k-on-dark-soft)}
+
+/* ==========================================================================================================
+   Stage 3, after docs/mockups/horoscope, tarot-journal and overview: Horoscope, a sign's page, Tarot, the Daily
+   Whisper and the Journal. The section scenes are painted edge to edge and square; each places its title where its
+   own sky is open.
+   ========================================================================================================== */
+.hero-t::before{background:radial-gradient(closest-side,rgba(var(--k-night-rgb),.5),rgba(var(--k-night-rgb),.22) 60%,transparent)}
+.hero.hero-horoscope .hero-t{top:39%}
+.kscene.ratio.hero-tarot{aspect-ratio:1/.9}
+.hero-tarot{--bg-pos:50% 30%}
+.hero.hero-tarot .hero-t{top:33%}
+.kscene.ratio.hero-journal{aspect-ratio:1/.9}
+.hero-journal{--bg-pos:50% 0}
+.hero.hero-journal .hero-t{top:auto;bottom:24%}
+.hero.hero-insights .hero-t{top:22%;padding-right:34%}
+.hero.hero-insights .hero-t h1{font-size:clamp(1.7rem,8.4vw,2.4rem)}
+
+/* Horoscope: the day's energy beside the Moon in its arch of roses */
+.ce{grid-template-columns:30% 1fr;gap:4cqw}
+.ce-art{position:relative;display:block;aspect-ratio:2/3;border:0;border-radius:0;background:none;box-shadow:none}
+.ce-vig{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 3px 6px rgba(var(--k-shadow-rgb),.3))}
+.ce-art .ce-moon{position:absolute;left:50%;top:37%;width:62%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 14px rgba(255,236,190,.35)}
+.ce .kick{font-size:.8rem;letter-spacing:.14em;color:var(--k-ink)}
+.tiles6{gap:2cqw}
+.tile{padding:14px 4px 12px;border-color:rgba(var(--k-gold-rgb),.7);background:linear-gradient(rgba(var(--k-surface-hi-rgb),.55),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.5),inset 0 0 0 4px rgba(var(--k-gold-rgb),.3),var(--sh-1)}
+.tile-i{width:60px;height:60px}
+.k-div span{font-size:.8rem;letter-spacing:.16em}
+.hsign .lrow{min-height:84px;padding:12px 14px}
+.hsign .gmed{width:62px;height:62px;font-size:2rem}
+.hsign .big{font-size:1.6rem}
+
+/* a sign's page: the reading, a rule, and its key themes as tinted rows inside the one panel */
+.hread .rule{margin:4px 0 0}
+.th-h{font-size:1.3rem}
+.themes{gap:7px}
+.themes .acc.theme>summary{grid-template-columns:30px 78px 1fr 16px;gap:8px;min-height:46px;padding:6px 10px;border-color:rgba(var(--k-gold-rgb),.38);box-shadow:none;background:var(--tint)}
+.themes .acc.theme[open]>summary{background:var(--tint)}
+.themes .acc-i{width:26px;height:26px}
+.th-l{font-family:var(--font-serif);font-weight:600;font-size:1.02rem}
+.th-p{font-size:.9rem;line-height:1.25;color:var(--k-ink-soft)}
+.themes .lr-c svg{width:14px;height:14px;opacity:.6}
+.t-overview{--tint:rgba(var(--k-gold-rgb),.14)}
+.t-love{--tint:rgba(184,101,90,.17)}
+.t-family{--tint:rgba(115,58,66,.10)}
+.t-health{--tint:rgba(102,112,91,.18)}
+.t-career{--tint:rgba(201,135,59,.17)}
+.t-money{--tint:rgba(150,140,104,.2)}
+
+/* Tarot: the four ways in, on one framed parchment panel risen over the scene, the scene showing at its sides */
+.tland{padding-bottom:6px}
+.tpanel{position:relative;z-index:2;margin:-21% 3.5% 0;padding:16px 12px}
+.tpanel .list.big{gap:10px}
+.tpanel .lrow{min-height:76px;background:rgba(var(--k-surface-hi-rgb),.55)}
+.tpanel .lr-i .th{width:56px;height:56px}
+.tpanel .lr-t strong{font-size:1.25rem}
+
+/* the Daily Whisper: the card in its gilt frame, numbered and named; the message set beneath it */
+.face.front.daily.kt{padding:0;background:none;border:0}
+.face.front.daily.kt::after{display:none}
+.face.front.kt .k-tarot{position:absolute;inset:0;width:100%;height:100%}
+.kt .k-tarot .kt-num{font-size:clamp(9px,6cqw,16px)}
+
+/* the entry: the card in its frame; Save at the top right; the writing in a bordered pane with its tools that, once
+   written and left, reads as a page of the journal */
+.entry .phd{grid-template-columns:92px 1fr 92px}
+.entry .ph-r{align-items:center}
+.hsave{min-height:44px;padding:0 6px;border:0;background:none;cursor:pointer;font-family:var(--font-serif);font-weight:700;font-size:1.05rem;color:var(--k-ink)}
+.entry .et-art .k-tarot{width:100%}
+.je-box{border:1px solid rgba(var(--k-gold-rgb),.55);border-radius:12px;background:rgba(var(--k-surface-hi-rgb),.6);overflow:hidden;transition:background .25s,border-color .25s}
+.je-tools{display:flex;gap:2px;padding:4px 6px;border-bottom:1px solid rgba(var(--k-gold-rgb),.35);background:rgba(var(--k-surface-rgb),.7)}
+.je-tools button{display:flex;width:40px;height:38px;align-items:center;justify-content:center;padding:0;border:0;border-radius:8px;background:none;color:var(--k-ink-soft);cursor:pointer}
+.je-tools button:hover{background:rgba(var(--k-gold-rgb),.14)}
+.je-tools svg{width:19px;height:19px}
+.je-box textarea.je{display:block;width:100%;border:0;border-radius:0;background-color:transparent}
+.je-box:not(:focus-within):has(.je:not(:placeholder-shown)){border-color:transparent;background:none}
+.je-box:not(:focus-within):has(.je:not(:placeholder-shown)) .je-tools{background:none;border-bottom-color:transparent;opacity:.6}
+.je-box:not(:focus-within) .je:not(:placeholder-shown){font-family:var(--font-serif);font-size:1.14rem;color:var(--k-ink)}
+.acts.row-acts .btn{flex:1;white-space:nowrap;padding:0 14px;letter-spacing:.1em}
+/* the Horoscope scene's line under its title is set as the mockup sets it, in the reading serif */
+.hero.hero-horoscope .hero-t p{font-family:var(--font-serif);font-weight:600;font-size:clamp(.95rem,4.4vw,1.15rem);letter-spacing:.01em;text-transform:none}
+.kscene.ratio.hero-horoscope{aspect-ratio:1/.95}
+.hero-horoscope{--bg-pos:50% 20%}
+.ce .kick{font-size:.74rem;font-weight:700;letter-spacing:.12em}
+/* the journal calendar: a gilt-framed parchment grid ruled in gold, a Moon under each day */
+.jcal{gap:0;padding:12px 10px;border-color:var(--k-gold);background:var(--c-tl) 5px 5px/22px no-repeat,var(--c-tr) calc(100% - 5px) 5px/22px no-repeat,var(--c-bl) 5px calc(100% - 5px)/22px no-repeat,var(--c-br) calc(100% - 5px) calc(100% - 5px)/22px no-repeat,var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.6),inset 0 0 0 4px rgba(var(--k-gold-rgb),.35),var(--sh-2)}
+.jc-d{padding:2px 0 8px;font-size:.84rem;color:var(--k-ink)}
+.jc-c{min-height:56px;border-radius:0;border-top:1px solid rgba(var(--k-gold-rgb),.35);font-size:1.08rem;font-weight:600;color:var(--k-ink)}
+.jc-c:not(:nth-child(7n)){border-right:1px solid rgba(var(--k-gold-rgb),.25)}
+.jc-ph{width:15px;height:15px;opacity:.85}
+.jc-moon{width:18px;height:18px}
+/* Tarot: the night continues behind the panel, edged with flowers, as in the mockup */
+.tland{background:var(--k-midnight) url(/art/atlas/home-vines.webp) center 30%/cover no-repeat}
+.tland .tpanel{margin-bottom:0}
+/* Journal: the title in the serif, the search and the new-entry button at the foot of the scene, over the lake */
+.hero.hero-journal .hero-t h1{font-family:var(--font-serif);font-weight:600;text-transform:none;letter-spacing:.02em;font-size:clamp(2.4rem,12vw,3.2rem)}
+.jlib .hero-acts{top:auto;bottom:40px}
+/* Journal insights: the scene as a band, the title in the serif; framed figures and darker theme names */
+.kscene.ratio.hero-insights{aspect-ratio:2/1}
+.hero-insights{--bg-pos:50% 25%}
+.hero.hero-insights .hero-t{top:24%}
+.hero.hero-insights .hero-t h1{font-family:var(--font-serif);font-weight:600;text-transform:none;letter-spacing:.02em;font-size:clamp(2rem,9.6vw,2.6rem)}
+.stat{border-color:rgba(var(--k-gold-rgb),.7);background:linear-gradient(rgba(var(--k-surface-hi-rgb),.5),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.5),inset 0 0 0 4px rgba(var(--k-gold-rgb),.25)}
+.stat strong{color:var(--k-ink)}
+.stat span{color:var(--k-ink)}
+.tbar{color:var(--k-ink)}
+.tb-i{border-radius:50%;box-shadow:0 0 0 1px rgba(var(--k-gold-rgb),.6);background:rgba(var(--k-surface-hi-rgb),.6)}
