@@ -385,7 +385,7 @@ const views={};
 /* Onboarding: the beginning of a celestial journey. Welcome, then the sign chosen on an antique wheel of the twelve
    medallions, a word about that sign, the account (email, password twice, with its strength shown), and the profile ready.
    Birth details wait until the reader opens Birth Chart. Without accounts (local mode) the account step is skipped. */
-const OB_STEPS=['welcome','sign','confirm','account','ready'];
+const OB_STEPS=['welcome','intro','sign','confirm','account','details','notify','ready'];
 const obDots=step=>{const i=OB_STEPS.indexOf(step);return i<0?'':`<div class="ob-dots" aria-hidden="true">${OB_STEPS.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>`};
 const needAcct=()=>C.enabled&&!C.user;
 // the sign the reader would be, from a birthday (by the Sun's usual dates; the chart confirms it later)
@@ -396,15 +396,13 @@ function pwRules(p){return [[p.length>=8,'At least 8 characters'],[/\d/.test(p),
 const pwField=(id,label,ph,auto)=>`<div class="field"><label for="${id}">${label}</label><div class="inp">${IC.lock}<input id="${id}" type="password" autocomplete="${auto}" placeholder="${ph}" minlength="6" required><button type="button" class="eye" data-act="pweye" data-for="${id}" aria-label="Show password">${IC.eye}</button></div></div>`;
 views.welcome=()=>{
  const st=V.ob,s=V.joinSign?sg(V.joinSign):null;
- if(st==='sign')return `<div class="ob ob-dark ob-sign">${STARS}<div class="ob-sun">${ui('ex-chart','ob-sun-i')}</div><h1 class="cz">What’s your<br>zodiac sign?</h1><p class="ob-lead">Choose your sun sign to personalise your cosmic experience.</p>
-  <div class="zwheel${s?' has':''}" role="radiogroup" aria-label="Your zodiac sign"><svg class="zw-ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="97" fill="none" stroke="#C9A45C" stroke-width=".6"/><circle cx="100" cy="100" r="62" fill="none" stroke="#C9A45C" stroke-width=".5" stroke-dasharray="1 3"/>${Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,r1=i%6?94:90;return `<line x1="${100+Math.cos(a)*r1}" y1="${100+Math.sin(a)*r1}" x2="${100+Math.cos(a)*97}" y2="${100+Math.sin(a)*97}" stroke="#C9A45C" stroke-width=".5"/>`}).join('')}</svg>
-  ${SIGNS.map((x,i)=>{const a=(-90+i*30)*Math.PI/180;return `<button class="zw-s" role="radio" aria-checked="${V.joinSign===x.id}" data-sign="${x.id}" style="left:${(50+Math.cos(a)*39).toFixed(2)}%;top:${(50+Math.sin(a)*39).toFixed(2)}%" aria-label="${x.name}, ${x.dates}">${med(x.id,'zw-m')}<span>${x.name}</span></button>`}).join('')}
-  <div class="zw-c">${s?`<span class="glyph">${s.g}</span><strong>${s.name}</strong><span>${s.dates}</span>`:'<span class="zw-tap">Tap your sign</span>'}</div></div>
+ if(st==='sign')return `<div class="ob ob-dark ob-sign">${STARS}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}<div class="ob-sun">${ui('ex-chart','ob-sun-i')}</div><h1 class="cz">What’s your<br>zodiac sign?</h1><p class="ob-lead">Choose your sun sign to personalise your cosmic experience.</p>
+  <div class="zgrid${s?' has':''}" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map(x=>`<button class="zg-s" role="radio" aria-checked="${V.joinSign===x.id}" data-sign="${x.id}" aria-label="${x.name}, ${x.dates}">${ui('zm-'+x.id,'zg-m')}<span>${x.name}</span></button>`).join('')}</div>
   <details class="ob-bday"><summary>Not sure of your sign?</summary><div class="field"><label for="obd">Your birthday</label><input type="date" id="obd"></div></details>
   <button class="btn gold" data-act="obnext" data-to="confirm" ${s?'':'disabled'}>Let’s Begin →</button>${obDots('sign')}</div>`;
  if(st==='confirm'&&s)return `<div class="ob ob-paper">${iconBtn('back','data-act="obstep" data-to="sign"','Back')}<h1>You’re ${/^[AEIOU]/.test(s.name)?'an':'a'} ${s.name}</h1><p class="ob-dates">${s.dates}</p>
   <div class="ob-art">${signArt(s.id)}</div><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="ob-blurb">${SIGN_BLURB[s.id]}</p>
-  ${panel(`<h3>Is this your sign?</h3><p class="muted">You can always update this later in your profile.</p><button class="btn" data-act="obnext" data-to="${needAcct()?'account':'ready'}">Yes, continue →</button><button class="btn ghost" data-act="obstep" data-to="sign">Choose a different sign</button>`,'ob-q')}${obDots('confirm')}</div>`;
+  ${panel(`<h3>Is this your sign?</h3><p class="muted">You can always update this later in your profile.</p><button class="btn" data-act="obnext" data-to="${needAcct()?'account':'details'}">Yes, continue →</button><button class="btn ghost" data-act="obstep" data-to="sign">Choose a different sign</button>`,'ob-q')}${obDots('confirm')}</div>`;
  if(st==='account')return `<div class="ob ob-paper ob-form">${iconBtn('back','data-act="obstep" data-to="confirm"','Back')}<h1>Create Your Account</h1><p class="ob-lead">Join Kosmia and start your journey of self-discovery.</p>
   <form id="authForm" class="ob-fields" novalidate><div class="field"><label for="em">Email address</label><div class="inp">${IC.mail}<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(S.email)}" required></div></div>
   ${pwField('pw','Create a password','At least 8 characters','new-password')}${pwField('pw2','Confirm password','Type it again','new-password')}
@@ -419,9 +417,27 @@ views.welcome=()=>{
   <div class="ob-foot">${ui('landscape2','ob-land')}</div></div>`;
  if(st==='verify')return `<div class="ob ob-paper ob-form"><div class="ob-mail">${IC.mail}</div><h1>Check Your Inbox</h1><p class="ob-lead">We’ve sent a link to <strong>${esc(S.email)}</strong>. Open it to activate your account, then sign in here.</p>
   <button class="btn" data-act="obstep" data-to="signin">I’ve verified, sign in →</button><button class="btn ghost" data-act="resend">Send the link again</button><div class="ob-foot">${ui('landscape2','ob-land')}</div></div>`;
- if(st==='ready'&&S.sign){const r=sg(S.sign);return `<div class="ob ob-dark ob-ready">${STARS}<p class="ob-kick">Your cosmic profile is ready</p><div class="ob-art glow">${signArt(r.id)}</div><h1 class="cz">Welcome, ${r.name}</h1><p class="keys light">${keys(SIGN_KEYS[r.id])}</p><p class="ob-lead">${SIGN_DESC[r.id]} The universe is always speaking. Now, you can listen.</p><button class="btn gold" data-act="enter">Enter Kosmia →</button>${obDots('ready')}</div>`}
- return `<div class="ob ob-welcome">${ui('welcome','ob-bg')}${STARS}<div class="ob-w-top"><h1 class="cz ob-logo">Kosmia</h1><p class="ob-tags">Astrology <i>•</i> Tarot <i>•</i> Guidance<br>A more aligned you</p></div><div class="ob-w-in"><p class="ob-tags">Self discovery <i>•</i> Cosmic connection</p>
-  <button class="btn gold" data-act="obnext" data-to="sign">Begin Your Journey →</button>${C.enabled&&!C.user?'<p class="auth-alt light">Already have an account? <button class="link" data-act="obstep" data-to="signin">Sign in</button></p>':''}${obDots('welcome')}</div></div>`;
+ if(st==='ready'&&S.sign){const r=sg(S.sign);return `<div class="ob ob-final">${ui('ob-final','obf-i','',true)}${STARS}<div class="obf-t"><p class="ob-kick">Your cosmic profile is ready</p><h1>Welcome to<br><span class="cz">Kosmia</span></h1><p class="ob-lead">The universe is always speaking.<br>Now, you can listen.</p>
+  <p class="obf-sign">${ui('zm-'+r.id,'obf-m')}<span><strong>${r.name}</strong><br>${keys(SIGN_KEYS[r.id])}</span></p><button class="btn gold" data-act="enter">Start Exploring →</button>${obDots('ready')}</div></div>`}
+ if(st==='intro')return `<div class="ob ob-paper ob-intro">${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}<h1 class="cz">Ancient Wisdom<br>for Modern Life</h1><p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p>
+  <div class="obi-art">${ui('welcome','obi-i','',true)}</div>
+  <ul class="obi-list">${[['sun','Personalised horoscopes','Daily, weekly, monthly and beyond'],['tarot','Tarot and daily Whispers','Guidance for your journey'],['moon','Astrology and numerology','Discover your unique blueprint'],['compass','Cosmic calendar','Follow the energy of the universe'],['star','Dream interpretation','Decode the messages within'],['kassandra','Kassandra, your AI oracle','Always here for your questions']].map(([i,t,d])=>`<li>${Kit.icon(i,{cls:'gold'})}<span><strong>${t}</strong><br>${d}</span></li>`).join('')}</ul>
+  <button class="btn" data-act="obnext" data-to="sign">Let’s Begin →</button>${obDots('intro')}</div>`;
+ if(st==='details'){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth,{name:S.fullName||S.name||''}));
+  return `<div class="ob ob-paper ob-form ob-details"><h1>Add a few details<br><span class="ob-opt">(optional)</span></h1><p class="ob-lead">This helps us give you a more personalised experience: your birth chart, Life Path and cycles.</p>
+  <div class="ob-fields"><div class="field"><label for="bn">Your name</label><div class="inp">${IC.star}<input type="text" id="bn" value="${esc(b.name||'')}" autocomplete="name" autocapitalize="words" placeholder="e.g. Ana"></div></div>
+  <div class="field"><label for="bd">Date of birth</label><div class="inp">${IC.cal}<input type="date" id="bd" value="${esc(b.date||'')}" max="${dkey()}" min="1900-01-01"></div></div>
+  <div class="field"><label for="bt">Time of birth <span class="muted">(if you know it)</span></label><input type="time" id="bt" value="${esc(b.time||'')}"></div>
+  ${placeField('birth',b)}
+  ${C.enabled?`<label class="row consent small"><input type="checkbox" id="bcons" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my Kosmia account so they sync across my devices.</span></label>`:''}
+  <p class="auth-err" id="obdErr" role="alert"></p><button class="btn" data-act="obdetails">Continue →</button><button class="link" data-act="obnext" data-to="notify">I’ll add this later</button></div>
+  <div class="ob-foot">${ui('landscape2','ob-land')}</div>${obDots('details')}</div>`}
+ if(st==='notify'){const n=S.notif;return `<div class="ob ob-paper ob-notify"><div class="obn-moon">${ui('ce-vignette','obn-i')}</div><h1>Stay in Sync<br>with the Cosmos</h1><p class="ob-lead">Gentle reminders, horoscope updates and important celestial events.</p>
+  <div class="obn-list">${[['n_on','sun','Daily horoscope','Start your day with cosmic guidance',n.on],['n_ev','moon','Celestial events','Moons, eclipses and planetary shifts',n.events],['n_wh','tarot','Daily Whisper','A new card and reflection each day',n.whisper]].map(([id,i,l,d,v])=>`<label class="obn-row" for="${id}">${Kit.icon(i,{cls:'gold'})}<span><strong>${l}</strong><br>${d}</span><input type="checkbox" role="switch" class="sw" id="${id}" ${v?'checked':''}></label>`).join('')}</div>
+  <p class="muted small">Your choices are saved now. Reminders start once Kosmia’s notifications launch, and your browser will ask your permission first.</p>
+  <button class="btn" data-act="obnotify">Continue →</button>${obDots('notify')}</div>`}
+ return `<div class="ob ob-welcome">${ui('ob-welcome','ob-bg','',true)}${STARS}<div class="ob-w-top"><h1 class="cz ob-logo">Kosmia</h1><p class="ob-tags">Your cosmic guide<br>for a more aligned you</p></div><div class="ob-w-in"><p class="ob-tags">Astrology <i>•</i> Tarot <i>•</i> Guidance<br>Self discovery <i>•</i> Cosmic connection</p>
+  <button class="btn gold" data-act="obnext" data-to="intro">Begin Your Journey →</button>${C.enabled&&!C.user?'<p class="auth-alt light">Already have an account? <button class="link" data-act="obstep" data-to="signin">Sign in</button></p>':''}${obDots('welcome')}</div></div>`;
 };
 views.join=views.welcome;
 views.reset=()=>`<div class="ob ob-paper ob-form"><h1>Choose a New Password</h1>${pwField('npw','New password','At least 8 characters','new-password')}<button class="btn" data-act="setpw">Save password</button></div>`;
@@ -455,7 +471,7 @@ async function submitJoin(e){
    S.email=email;S.sign=V.joinSign;save();
    const r=await C.signUp(email,pw,V.joinSign);
    // with email confirmation on, the account waits for its link; otherwise the reader is signed in and the profile is ready
-   V.busy=false;V.obHold=true;V.ob=r.session?'ready':'verify';render();
+   V.busy=false;V.obHold=true;V.ob=r.session?'details':'verify';render();
   }else{await C.signIn(email,pw);S.email=email;save();V.busy=false}
   // signing in: the auth listener runs pullMerge, which opens Kosmia once the profile has a sign
  }catch(x){V.busy=false;syncJoin();if(err)err.textContent=authMsg(x)}
@@ -1628,7 +1644,7 @@ views.kassandra=()=>{
   return `<div class="sub">${hdr('Past Conversations',{sub:'Your conversations with Kassandra'})}<div class="list">${past.map(b=>acc(ui('kassandra','th round'),esc((b.data||{}).title||'A conversation'),relDay((b.at||'').slice(0,10)||dkey()),`<div class="thread">${((b.data||{}).msgs||[]).map(m=>`<div class="kas-m ${m.role}">${esc(m.content).replace(/\n+/g,'<br>')}</div>`).join('')}</div><button class="link danger-t" data-act="kasdel" data-id="${esc(b.id)}">Delete this conversation</button>`)).join('')||'<p class="muted center">No past conversations yet. Start a new one and the last will be kept here.</p>'}</div></div>`}
  const signed=!!C.user,rec=KS.state,has=KS.msgs.length>0,on=KS.target==='kas';
  return `<div class="sub kas-page${has?' has':''}">${hdr('Kassandra',{sub:'Your AI Fortune Teller',back:false,right:iconBtn('history','data-go="kassandra" data-t="history"','Past conversations')})}
- <div class="kp-por">${STARS}${ui('kassandra','kp-img','Kassandra, the fortune teller')}</div>
+ <div class="kp-frame"><svg class="kp-ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="98" fill="none" stroke="#B98A4E" stroke-width=".8"/><circle cx="100" cy="100" r="93" fill="none" stroke="#B98A4E" stroke-width=".5" stroke-dasharray="1 2.5"/>${Array.from({length:12},(_,i)=>{const a=i*Math.PI/6,x=(100+Math.cos(a)*95.5).toFixed(1),y=(100+Math.sin(a)*95.5).toFixed(1);return `<path d="M${x} ${(+y-3).toFixed(1)}l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="#B98A4E"/>`}).join('')}</svg><div class="kp-por">${STARS}${ui('kassandra','kp-img','Kassandra, the fortune teller',true)}</div></div>
  <div class="kp-bub">${signed?(has?'Ask me anything else, or tap the mic to speak with me.':'Hello, I’m Kassandra.<br>Ask me anything or tap the mic to speak with me.'):'Hello, I’m Kassandra.<br>Sign in and I will read the cards, the stars and your numbers with you.'}</div>
  ${signed?`<button class="kp-mic${on&&rec==='listening'?' on':''}" data-act="kasmic" aria-label="${on&&rec==='listening'?'Stop recording':'Ask with your voice'}" ${rec==='processing'||KS.busy?'disabled':''}>${on&&rec==='listening'?IC.stop:IC.mic}</button>${on&&rec!=='idle'?`<p class="muted center small">${rec==='listening'?'Listening… tap again when you have finished.':'Hearing your question…'}</p>`:''}
  <div class="kp-pr">${kasPrompts().map(p=>`<button class="pill-b" data-act="kasask" data-q="${esc(p)}">${esc(p)}</button>`).join('')}</div>
@@ -1636,7 +1652,9 @@ views.kassandra=()=>{
  <form id="kas-f" class="kas-f"><label class="sr-only" for="kas-in">Your question for Kassandra</label><input type="text" id="kas-in" placeholder="Ask Kassandra…" maxlength="600" ${rec!=='idle'?'disabled':''}><button type="submit" class="kas-send" aria-label="Send" ${KS.busy||rec!=='idle'?'disabled':''}>${IC.send}</button></form>
  <label class="ck small"><input type="checkbox" id="kas-p" class="cb" ${S.settings.kPersonal?'checked':''}><span>Share my sign, chart and numbers with Kassandra</span></label>
  ${has?'<button class="btn ghost sm" data-act="kasnew">Start a New Conversation</button>':''}`
- :`<button class="btn" data-act="toauth">Sign in to talk with Kassandra</button>`}
+ :`<button class="kp-mic" data-act="toauth" aria-label="Sign in to speak with Kassandra">${IC.mic}</button>
+ <div class="kp-pr">${kasPrompts().map(p=>`<button class="pill-b" data-act="toauth">${esc(p)}</button>`).join('')}</div>
+ <button class="btn" data-act="toauth">Sign in to talk with Kassandra</button><p class="muted small center">Kassandra’s readings are written by AI, so she listens once you are signed in.</p>`}
  <p class="muted small center">Kassandra speaks in symbols, not certainties. She cannot give medical, legal or financial advice.</p></div>`;
 };
 function kasKeep(){S.kcur=KS.msgs.slice(-40);save()}
@@ -1679,7 +1697,9 @@ views.settings=()=>{
  const s=sg(S.sign),acct=!C.enabled?'<p class="muted">Accounts are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
  return `<div class="sub">${hdr('Your Profile')}
- <div class="pf">${med(s.id,'pf-med')}<div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="muted">${s.name} · ${s.el} · ruled by ${s.ruler}</p></div></div>${acct}
+ ${Kit.scene({cls:'pf-scene',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 8%',stars:true,bare:true,label:'Your cosmic identity',content:`
+ <span class="pf-fig" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo')}</span>${Kit.size('atlas/fg-'+s.id)?Kit.img('atlas/fg-'+s.id,{cls:'hh-fig'}):''}</span>
+ <div class="pf-card"><p class="kick">Your cosmic identity</p><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} <span class="muted">${SHORT_DATES(s)}</span></p><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="pf-meta">${s.el} · ${s.mod||''}${s.mod?' · ':''}ruled by ${s.ruler}</p>${hasBirthDate()?`<p class="pf-meta">Born ${ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})}${S.birth.place?' · '+esc(S.birth.place.split(',')[0]):''}</p>`:''}</div>`})}${acct}
  <div class="list">
  ${acc(glyphMed(s.id),'Your sign',s.name,`${signGrid('My sign',S.sign)}`)}
  ${acc(ui('ne-free','th'),'Display name',esc(S.name||'Not set'),`<div class="field"><label for="nm">Display name</label><input type="text" id="nm" value="${esc(S.name)}"></div><button class="btn sm" data-act="savename">Save</button>`)}
@@ -1823,6 +1843,13 @@ document.addEventListener('click',e=>{
   if(a==='obnext'&&to==='ready'){S.sign=V.joinSign;save();if(C.user)syncProfile();V.obHold=true}
   if(to==='account'||to==='signin'){const em=$('#em');if(em)S.email=em.value.trim()}
   V.ob=to;render();return window.scrollTo(0,0)}
+ if(a==='obdetails'){readBirth();const b=V.birthDraft,e=$('#obdErr'),today=dkey();
+  if(b.date&&(!/^\d{4}-\d\d-\d\d$/.test(b.date)||b.date>today||b.date<'1900-01-01')){if(e)e.textContent='Please enter a real date of birth.';return}
+  const nm=(b.name||'').trim();if(nm){S.fullName=nm;if(!S.name)S.name=nm.split(/\s+/)[0]}
+  if(b.date||b.place){S.birth=Object.assign({},S.birth,{date:b.date||S.birth.date,time:b.time||'',unk:!b.time,place:b.place||S.birth.place,lat:b.lat!=null?b.lat:S.birth.lat,lon:b.lon!=null?b.lon:S.birth.lon,tz:b.tz||S.birth.tz})}
+  const bc=$('#bcons');if(bc)S.birthConsent=bc.checked;V.birthDraft=null;save();if(C.user)syncProfile();V.ob='notify';render();return window.scrollTo(0,0)}
+ if(a==='obnotify'){const g=id=>{const x=$('#'+id);return x?x.checked:false};Object.assign(S.notif,{on:g('n_on'),events:g('n_ev'),whisper:g('n_wh')});save();if(C.user)syncProfile();
+  if(!S.sign){S.sign=V.joinSign;save();if(C.user)syncProfile()}V.obHold=true;V.ob='ready';render();return window.scrollTo(0,0)}
  if(a==='enter'){V.obHold=false;V.ob='welcome';return go('home','today',{replace:true})}
  if(a==='pweye'){const i=$('#'+t.dataset.for);if(i){i.type=i.type==='password'?'text':'password';t.setAttribute('aria-label',i.type==='password'?'Show password':'Hide password')}return}
  if(a==='resend'){if(C.resend)C.resend(S.email).then(()=>toast('A new link is on its way.'),x=>toast(authMsg(x)));return}

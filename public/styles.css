@@ -1215,3 +1215,102 @@ body.reduce .kscene .parallax{transform:none!important}
 .dft.arch .dft-art{width:86%;aspect-ratio:1.45}
 .dft{padding:2cqw 2cqw 2.4cqw}
 .dlib{margin-top:-9%}
+
+/* ==========================================================================================================
+   Stage 5, after docs/mockups/onboarding and overview: onboarding, Kassandra and the profile
+   ========================================================================================================== */
+/* welcome: the sun and the moon above, the wordmark in the open sky, the coast below */
+.ob-welcome .ob-bg{object-position:50% 0}
+.ob-w-top{top:calc(25% + env(safe-area-inset-top,0px))}
+.ob-w-top .ob-tags{font-size:.78rem;letter-spacing:.14em}
+.ob-w-in{padding-top:0}
+/* the introduction: the portrait, then the features as a quiet list */
+.ob-intro h1.cz{font-size:1.55rem;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.ob-intro .ob-lead{text-align:center}
+.obi-art{width:calc(100% + 44px);aspect-ratio:16/9;overflow:hidden;border-top:1px solid var(--k-gold);border-bottom:1px solid var(--k-gold)}
+.obi-i{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.obi-list{list-style:none;margin:0;padding:0;width:100%;max-width:380px;display:flex;flex-direction:column}
+.obi-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:center;padding:9px 2px;border-bottom:1px solid rgba(var(--k-gold-rgb),.3);font-size:.9rem;color:var(--k-ink-soft);line-height:1.3}
+.obi-list strong{font-family:var(--font-serif);font-size:1.05rem;color:var(--k-ink)}
+.obi-list .k-ico{--s:26px}
+.ob-intro .btn{width:min(100%,320px)}
+/* the sign: twelve medallions, three to a row */
+.zgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px;width:min(100%,340px);margin:4px auto}
+.zg-s{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;border:0;background:none;cursor:pointer;color:#E9D9B4;font-family:var(--font-serif);font-weight:600;font-size:.92rem}
+.zg-m{width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1.5px var(--k-gold),0 3px 8px rgba(0,0,0,.5);transition:box-shadow .25s,filter .25s,transform .25s}
+.zgrid.has .zg-s:not([aria-checked=true]) .zg-m{filter:saturate(.75) brightness(.78)}
+.zg-s[aria-checked=true]{color:#FFE7A8}
+.zg-s[aria-checked=true] .zg-m{transform:scale(1.06);box-shadow:0 0 0 2px #FFE7A8,0 0 18px 6px rgba(255,214,130,.7)}
+.ob-sign .ob-sun{width:84px}
+/* the details: the form on parchment, the landscape at its foot */
+.ob-opt{font-size:1.2rem;color:var(--k-ink-muted)}
+.ob-details h1{text-align:center}.ob-details .ob-lead{text-align:center}
+.ob-fields .link{align-self:center;padding:8px}
+/* notifications: switch rows on parchment */
+.obn-moon{width:110px}
+.obn-i{display:block;width:100%}
+.ob-notify h1,.ob-notify .ob-lead{text-align:center}
+.obn-list{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+.obn-row{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid rgba(var(--k-gold-rgb),.6);border-radius:14px;cursor:pointer;
+ background:linear-gradient(rgba(var(--k-surface-hi-rgb),.5),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.5);font-size:.86rem;color:var(--k-ink-muted);line-height:1.3}
+.obn-row strong{font-family:var(--font-serif);font-size:1.05rem;color:var(--k-ink)}
+.sw{appearance:none;-webkit-appearance:none;position:relative;width:46px;height:26px;margin:0;border-radius:99px;background:rgba(var(--k-gold-rgb),.3);border:1px solid rgba(var(--k-gold-rgb),.7);cursor:pointer;transition:background .2s}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--k-ivory);box-shadow:0 1px 3px rgba(0,0,0,.35);transition:transform .2s}
+.sw:checked{background:var(--k-btn-lo);border-color:var(--k-btn-lo)}
+.sw:checked::after{transform:translateX(20px);background:#E2BC80}
+.sw:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+.ob-notify .btn{width:min(100%,320px)}
+/* the close: the night over the lake, the welcome over it */
+.ob-final{padding:0;justify-content:flex-start;background:var(--k-midnight);color:#F3E6C6}
+.obf-i{display:block;width:100%;height:58svh;object-fit:cover;object-position:30% 50%;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+.obf-t{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:-26svh;padding:0 24px calc(28px + env(safe-area-inset-bottom,0px));text-align:center}
+.ob-final h1{font-family:var(--font-serif);font-weight:500;font-size:1.7rem;color:#F3E2B4;text-shadow:0 2px 10px #000}
+.ob-final h1 .cz{display:block;font-size:2.7rem;letter-spacing:.06em;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ob-final .ob-lead{color:#E9D9B4;text-shadow:0 1px 6px #000}
+.obf-sign{display:flex;align-items:center;gap:12px;padding:8px 16px 8px 8px;border:1px solid rgba(var(--k-gold-light-rgb),.5);border-radius:99px;background:rgba(var(--k-night-rgb),.6);text-align:left;font-size:.78rem;color:#D9C8A0}
+.obf-sign strong{font-family:var(--font-display);font-size:.95rem;letter-spacing:.08em;color:#F1D79A}
+.obf-sign .dot{color:#E2BC80}
+.obf-m{width:52px;height:52px;border-radius:50%;box-shadow:0 0 0 1px var(--k-gold)}
+.ob-final .btn{width:min(100%,320px)}
+
+/* Kassandra: her portrait in an engraved celestial ring on parchment, the great microphone beneath */
+.kp-frame{position:relative;align-self:center;width:min(76vw,280px);aspect-ratio:1;padding:5%}
+.kp-ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 240s linear infinite}
+.kp-frame .kp-por{width:100%;box-shadow:0 0 0 3px var(--k-gold),0 0 0 6px rgba(var(--k-surface-hi-rgb),.8),0 0 0 7px var(--k-gold-deep),0 10px 26px rgba(var(--k-shadow-rgb),.35)}
+.kas-page.has .kp-frame{width:140px}
+.kp-mic{width:84px;height:84px;background:radial-gradient(circle at 35% 30%,#4A3626,#22170F 70%);box-shadow:0 0 0 4px rgba(var(--k-surface-hi-rgb),.8),0 0 0 5px var(--k-gold),0 8px 20px rgba(var(--k-shadow-rgb),.35)}
+@media (prefers-reduced-motion:reduce){.kp-ring{animation:none}}
+
+/* the profile: the sign's figure before its moon in the night garden, the identity on parchment beside it */
+.pf-scene{position:relative;display:grid;grid-template-columns:42% 1fr;align-items:end;min-height:300px;margin:0 -16px;padding:18px 14px 16px;container-type:inline-size}
+.pf-fig{position:relative;align-self:stretch;min-height:240px}
+.pf-fig .hh-halo{position:absolute;left:4%;top:4%;width:86%;aspect-ratio:1;z-index:var(--zs-under)}
+.pf-fig .hh-fig{position:absolute;left:-30%;bottom:-16px;width:150%;height:auto;z-index:var(--zs-over);clip-path:none}
+.pf-card{position:relative;z-index:var(--zs-content);display:flex;flex-direction:column;gap:4px;padding:16px 14px;border:1px solid var(--k-gold);border-radius:14px;color:var(--k-ink);
+ background:var(--c-tr) calc(100% - 4px) 4px/20px no-repeat,var(--c-br) calc(100% - 4px) calc(100% - 4px)/20px no-repeat,var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 4px rgba(var(--k-gold-rgb),.45),0 10px 24px rgba(0,0,0,.5)}
+.pf-card h2{font-family:var(--font-serif);font-size:1.6rem;line-height:1.05}
+.pf-sign{font-family:var(--font-display);font-size:.95rem;letter-spacing:.06em}
+.pf-sign .glyph{font-size:1.3rem}
+.pf-sign .muted{font-family:var(--font-text);letter-spacing:0;font-size:.85rem}
+.pf-card .keys{text-align:left;font-size:.6rem}
+.pf-meta{font-size:.84rem;color:var(--k-ink-soft)}
+.pf-fig .hh-fig{left:-52%;bottom:-18px;width:196%}
+.pf-fig .hh-halo{left:10%;top:2%;width:96%}
+.obi-i{object-position:50% 38%}
+.obi-list .k-ico{color:var(--k-gold-deep)}
+.ob-details .row.nowrap{display:flex;gap:8px}
+.ob-details .row.nowrap input{flex:1;min-width:0}
+.ob-details .row.nowrap .btn{flex:none;width:auto;margin:0}
+.pf-scene{grid-template-columns:46% 1fr;min-height:320px}
+.pf-fig .hh-fig{left:-22%;bottom:-18px;width:160%}
+.pf-fig .hh-halo{left:6%;top:0;width:92%}
+/* the figure stands the full height of the banner, its gown running off the foot */
+.pf-fig{position:absolute;left:0;top:0;bottom:0;width:50%;min-height:0}
+.pf-fig .hh-fig{left:-18%;bottom:-6px;width:150%}
+.pf-fig .hh-halo{left:8%;top:8%;width:84%}
+.pf-card{grid-column:2}
+.pf-fig .hh-fig{top:auto;right:auto;height:auto}
+.pf-fig .hh-halo{left:4%;top:auto;bottom:24%;width:80%}
+.pf-fig .hh-fig{clip-path:none!important}
+.ob-welcome h1.ob-logo{font-size:clamp(3.2rem,17vw,4.4rem);letter-spacing:.04em}
+.ob-welcome .ob-w-in .ob-tags{text-shadow:0 1px 6px #000,0 0 14px rgba(0,0,0,.9)}

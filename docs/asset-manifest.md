@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 394 |
-| In use, provisional | 350 |
+| Images | 408 |
+| In use, provisional | 364 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -31,6 +31,20 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 289 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
+| `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 347 | provisional |  |
+| `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 537 | provisional |  |
+| `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
+| `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
+| `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/zm-capricorn.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/zm-gemini.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
+| `public/art/atlas/zm-leo.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
+| `public/art/atlas/zm-libra.webp` | 400×400 | 1:1 | no | 47 | provisional |  |
+| `public/art/atlas/zm-pisces.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
+| `public/art/atlas/zm-sagittarius.webp` | 400×400 | 1:1 | no | 45 | provisional |  |
+| `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
+| `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 51 | provisional |  |
+| `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
 
 ## Dream symbol medallion
 
