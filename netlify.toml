@@ -6,71 +6,166 @@
 [functions]
   included_files = ["node_modules/astronomy-engine/astronomy.js", "node_modules/astronomy-engine/package.json"]
 
-# Earlier addresses and names (Daily Fortune, Love Match, Name Match, Birth/Name Numerology, Cosmic Calendar,
-# My Universe) move permanently to their places in the six sections.
+# Earlier addresses (the first release's single words, then the six sections) move permanently to their places among
+# the five destinations: Home, Horoscope, Tarot, Discover and Kassandra. The app also maps any it is opened on.
 [[redirects]]
   from = "/fortune"
-  to = "/oracle/whispers"
+  to = "/tarot/whisper"
   status = 301
 
 [[redirects]]
   from = "/whispers"
-  to = "/oracle/whispers"
+  to = "/tarot/whisper"
   status = 301
 
 [[redirects]]
   from = "/daily-fortune"
-  to = "/oracle/whispers"
-  status = 301
-
-[[redirects]]
-  from = "/tarot"
-  to = "/oracle/tarot"
+  to = "/tarot/whisper"
   status = 301
 
 [[redirects]]
   from = "/love"
-  to = "/affinity/zodiac-match"
+  to = "/discover/affinity"
   status = 301
 
 [[redirects]]
   from = "/love-match"
-  to = "/affinity/zodiac-match"
+  to = "/discover/affinity"
   status = 301
 
 [[redirects]]
   from = "/name-match"
-  to = "/affinity/soul-resonance"
+  to = "/discover/resonance"
   status = 301
 
 [[redirects]]
   from = "/chart"
-  to = "/blueprint/birth-chart"
+  to = "/discover/birth-chart"
   status = 301
 
 [[redirects]]
   from = "/birth-chart"
-  to = "/blueprint/birth-chart"
+  to = "/discover/birth-chart"
   status = 301
 
 [[redirects]]
   from = "/name-numerology"
-  to = "/blueprint/the-name-within"
+  to = "/discover/name-within"
   status = 301
 
 [[redirects]]
   from = "/birth-numerology"
-  to = "/blueprint/life-path"
+  to = "/discover/life-path"
   status = 301
 
 [[redirects]]
   from = "/calendar"
-  to = "/cosmos/calendar"
+  to = "/discover/calendar"
   status = 301
 
 [[redirects]]
   from = "/universe"
-  to = "/settings/account"
+  to = "/settings"
+  status = 301
+
+[[redirects]]
+  from = "/oracle"
+  to = "/tarot"
+  status = 301
+
+[[redirects]]
+  from = "/oracle/whispers"
+  to = "/tarot/whisper"
+  status = 301
+
+[[redirects]]
+  from = "/oracle/tarot"
+  to = "/tarot/reading"
+  status = 301
+
+[[redirects]]
+  from = "/home/journal"
+  to = "/tarot/journal"
+  status = 301
+
+[[redirects]]
+  from = "/home/insights"
+  to = "/tarot/insights"
+  status = 301
+
+[[redirects]]
+  from = "/affinity/zodiac-match"
+  to = "/discover/affinity"
+  status = 301
+
+[[redirects]]
+  from = "/affinity/soul-resonance"
+  to = "/discover/resonance"
+  status = 301
+
+[[redirects]]
+  from = "/affinity/synastry"
+  to = "/discover/synastry"
+  status = 301
+
+[[redirects]]
+  from = "/blueprint"
+  to = "/discover/profile"
+  status = 301
+
+[[redirects]]
+  from = "/blueprint/profile"
+  to = "/discover/profile"
+  status = 301
+
+[[redirects]]
+  from = "/blueprint/birth-chart"
+  to = "/discover/birth-chart"
+  status = 301
+
+[[redirects]]
+  from = "/blueprint/life-path"
+  to = "/discover/life-path"
+  status = 301
+
+[[redirects]]
+  from = "/blueprint/the-name-within"
+  to = "/discover/name-within"
+  status = 301
+
+[[redirects]]
+  from = "/blueprint/my-cycles"
+  to = "/discover/cycles"
+  status = 301
+
+[[redirects]]
+  from = "/cosmos"
+  to = "/discover/calendar"
+  status = 301
+
+[[redirects]]
+  from = "/cosmos/calendar"
+  to = "/discover/calendar"
+  status = 301
+
+[[redirects]]
+  from = "/cosmos/moon"
+  to = "/discover/moon"
+  status = 301
+
+[[redirects]]
+  from = "/cosmos/planets"
+  to = "/discover/planets"
+  status = 301
+
+[[redirects]]
+  from = "/cosmos/celestial-events"
+  to = "/discover/events"
+  status = 301
+
+[[redirects]]
+  from = "/horoscopes"
+  to = "/horoscope"
   status = 301
 
 # Single-page app: every route serves index.html.

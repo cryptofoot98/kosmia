@@ -41,6 +41,8 @@ const Cloud={
   return check(await sb.auth.signUp({email,password,options:{data:{sign}}}));
  },
  async signIn(email,password){return check(await sb.auth.signInWithPassword({email,password}))},
+ // sends the activation link again, for an account waiting on email confirmation
+ async resend(email){check(await sb.auth.resend({type:'signup',email,options:{emailRedirectTo:location.origin+'/'}}))},
  async resetPassword(email){check(await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'}))},
  async updatePassword(password){check(await sb.auth.updateUser({password}))},
  async signOut(){if(sb)await sb.auth.signOut();user=null},
@@ -83,7 +85,10 @@ const Cloud={
  deleteConnection(id){if(!user)return Promise.resolve();return soft(sb.from('connections').delete().eq('id',id).eq('user_id',user.id))},
  // the matches table predates connections; a pairing deleted from Connections is removed there too
  deleteMatch(a,b){if(!user)return Promise.resolve();return soft(sb.from('matches').delete().eq('user_id',user.id).eq('sign_a',a).eq('sign_b',b))},
- saveBookmark(b){if(!user)return Promise.resolve();return soft(sb.from('bookmarks').upsert({id:b.id,user_id:user.id,kind:b.kind,ref:b.ref,data:b.data},{onConflict:'user_id,kind,ref'}))},
+ // dreams and kept conversations wait on this device until the database accepts their kinds (a check violation, 23514);
+ // they are sent again on the next sync. The rejection is passed on so the item is not marked as synced.
+ saveBookmark(b){if(!user)return Promise.resolve();const q=sb.from('bookmarks').upsert({id:b.id,user_id:user.id,kind:b.kind,ref:b.ref,data:b.data},{onConflict:'user_id,kind,ref'});
+  return /^(dream|chat)$/.test(b.kind)?q.then(check):soft(q)},
  deleteBookmark(kind,ref){if(!user)return Promise.resolve();return soft(sb.from('bookmarks').delete().eq('user_id',user.id).eq('kind',kind).eq('ref',ref))},
  // Removes painted cards, then the account itself (every table cascades from it).
  async deleteAccount(){
@@ -107,6 +112,8 @@ const Cloud={
  interpret(spread,question,cards){return Cloud.api('/api/interpret',{spread,question,cards}).then(r=>r.json())},
  horoscope(sign,cat,period,key){return Cloud.api(`/api/horoscope?sign=${sign}&cat=${cat}&period=${period}&key=${encodeURIComponent(key)}`,null,{method:'GET'}).then(r=>r.json())},
  kassandra(messages,context){return Cloud.api('/api/kassandra',{messages,context}).then(r=>r.json())},
+ // a dream read by Kassandra: its symbols, themes and a question to sit with
+ dream(d){return Cloud.api('/api/dream',d).then(r=>r.json())},
  transcribe(blob){return Cloud.api('/api/transcribe',blob).then(r=>r.json())},
  // Signed URL for a painting made earlier, or null when there is none.
  async paintingUrl(day){
