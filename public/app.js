@@ -265,6 +265,10 @@ const ATLAS_AS={'ev-moon':'ev-full','d-chart':'hero-chart','d-affinity':'hero-af
 const atlasId=id=>/^m-/.test(id)?'med-'+id.slice(2):/^sign-/.test(id)?'plate-'+id.slice(5):ATLAS_AS[id]||id;
 // (the parts themselves, and the scene system they sit in, are in kit.js)
 const ui=(id,cls='',alt='',priority=false)=>Kit.img('atlas/'+atlasId(id),{cls,alt,priority});
+// the scenery that carries on below a page's header scene (Home after Cosmic Energy, Discover's library): the night lake
+// from the top, the floral night band in the middle and the closing garden at the foot, overlapping and blended, never
+// stretched or repeated; it sits under its content and takes no taps
+const scenic=(content,cls='')=>`<div class="kscenic ${cls}"><div class="ksc-bg" aria-hidden="true">${ui('home-vines','ksc-m')}${ui('home-lake','ksc-c')}${ui('home-garden','ksc-d')}</div><div class="ksc-in">${content}</div></div>`;
 const panel=(h,cls='')=>Kit.panel(h,{cls});
 // a page's own header on parchment: the back arrow, its title (and a line under it), and an action at the right
 const IC={
@@ -523,7 +527,7 @@ views.home=()=>{
   ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-r">${rev?`<p class="dw-q">${Kit.icon('star')}${esc(c.msg)}${Kit.icon('star',{cls:'s2'})}</p>`:`<p class="dw-q">${Kit.icon('star')}A card, a message, a moment for you. Turn it over when you are ready.</p>`}${wbtn}</div></div>`,'gilt hwhisper')}
   <button class="energy" data-go="discover" data-t="moon">${ui('home-energy','en-bg')}<span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>`})}
- <div class="hsheet">
+ ${scenic(`
  ${panel(`${orn('Upcoming Celestial Events',seeAll('discover','calendar'))}
  <div class="evgrid">${evs.slice(0,3).map(e=>Kit.event({attrs:`data-act="evgo" data-ref="${evRef(e)}"`,art:`<span class="evc-art">${evArt(e,false)}</span>`,title:`${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}`,date:e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date),note:evKeys(e)})).join('')}</div>`,'home-p')}
  ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
@@ -532,8 +536,7 @@ views.home=()=>{
  <div class="list">${recent.length?recent.map(p=>{const n=jNote(p)||(p.t==='j'?p.j.body:'');return lrow(jThumb(p),JKIND[p.t][0],`<em>${jTitle(p)}</em>`,`data-act="jopen" data-k="${esc(jKey(p))}"`,`<span class="lr-m">${relDay(p.day)}${n?' • Reflection added':''}</span>`)}).join('')
   :lrow(ui('t-whisper','th'),'Your readings will gather here','Reveal today’s Whisper or draw a tarot spread to begin.','data-go="tarot" data-t="whisper"')}</div>`,'home-p')}
  <button class="kban" data-go="kassandra">${ui('kassandra-banner','kb-i')}<span class="kb-t"><span class="cz">Talk to Kassandra</span><span>Your AI fortune teller</span><span class="btn ghost light">Start a conversation →</span></span></button>
- <div class="sunq">${ui('home-sun','sq-i')}<p>Every day is a new page<br>in your cosmic story.</p></div>
- </div></div>`;
+ <div class="sunq">${ui('home-sun','sq-i')}<p>Every day is a new page<br>in your cosmic story.</p></div>`,'hsheet')}</div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){
@@ -1179,7 +1182,7 @@ views.discover=()=>{
  // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners
  const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
  return `<div class="land dland">${hero('hero-discover','<p class="dl-intro">Deepen your connection<br>with the cosmos and yourself.</p>','tall','Discover','Explore • Learn • Align')}
- <div class="dlib">
+ ${scenic(`<div class="dlib">
   ${ft('ex-chart','Birth Chart','Your cosmic blueprint','birth-chart','round')}${ft('ex-compat','Zodiac Affinity','Compatibility','affinity','round')}
   ${ft('ex-resonance','Soul Resonance','Name match','resonance','round')}${ft('ex-name','The Name Within','Name numerology','name-within','round')}
   ${ft('hero-lifepath','Life Path','Your soul’s journey','life-path','arch')}${ft('hero-dream','Dream Interpretation','Decode your dreams','dreams','arch')}
@@ -1188,7 +1191,7 @@ views.discover=()=>{
  <div class="sheet dmore">${Kit.divider('More of the sky')}
  <div class="list">${lrow(ui('m-'+S.sign,'th round'),'Cosmic Profile','Your signs and numbers','data-go="discover" data-t="profile"')}${lrow(ui('ex-lifepath','th round'),'My Cycles','Your personal year','data-go="discover" data-t="cycles"')}${lrow(ui('ex-compat','th round'),'Synastry','Compare two birth charts','data-go="discover" data-t="synastry"')}
  ${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteor showers','data-go="discover" data-t="events"')}</div>
- </div></div>`;
+ </div>`,'dscenic')}</div>`;
 };
 /* Birth Chart: the wheel in navy and gold with the reader's planets, then the planets, aspects and houses as their own tabs */
 function chartWheel(c){

@@ -365,9 +365,9 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .en-go{display:flex;width:max(30px,8cqw);height:max(30px,8cqw);flex:none;border-radius:50%;align-items:center;justify-content:center;background:var(--k-btn-lo);color:var(--k-on-dark)}
 .en-go svg{width:55%;height:55%}
 
-/* 3. the parchment sheet: gold rules down both sides, the panels on it */
-.hsheet{position:relative;display:flex;flex-direction:column;gap:2.6cqw;padding:3cqw 2.4cqw 4cqw;
- background:linear-gradient(90deg,transparent 1.1cqw,var(--k-gold) 1.1cqw,var(--k-gold) calc(1.1cqw + 1px),transparent calc(1.1cqw + 1px),transparent calc(100% - 1.1cqw - 1px),var(--k-gold) calc(100% - 1.1cqw - 1px),var(--k-gold) calc(100% - 1.1cqw),transparent calc(100% - 1.1cqw)),var(--bg) var(--paper-img) center top/100% auto}
+/* 3. the lower Home: the panels float over the continuing scenery (.kscenic, below), the gold rules down both sides */
+.hsheet>.ksc-in{display:flex;flex-direction:column;gap:4.2cqw;padding:4.2cqw 4.4cqw 0}
+.hsheet>.ksc-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 1.1cqw,var(--k-gold) 1.1cqw,var(--k-gold) calc(1.1cqw + 1px),transparent calc(1.1cqw + 1px),transparent calc(100% - 1.1cqw - 1px),var(--k-gold) calc(100% - 1.1cqw - 1px),var(--k-gold) calc(100% - 1.1cqw),transparent calc(100% - 1.1cqw))}
 .card.home-p{padding:3.4cqw 3cqw 3.6cqw;gap:3cqw;border-color:var(--k-gold)}
 .home-p .orn{justify-content:space-between}
 .home-p .orn h2{gap:2cqw;font-size:max(12px,3.5cqw);letter-spacing:.08em;white-space:nowrap}
@@ -411,10 +411,11 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .ev-dark{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#24305A,var(--k-midnight) 75%)}
 .ev-dark .ev-moon{width:62%;border-radius:50%}
 .hbar{position:fixed;top:0;left:50%;z-index:var(--z-bar);width:min(100%,480px);transform:translate(-50%,-110%);display:flex;align-items:center;justify-content:space-between;padding:calc(6px + env(safe-area-inset-top,0px)) 14px 6px;
- background:linear-gradient(#162042,var(--k-midnight));border-bottom:1px solid var(--gold);transition:transform .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+ background:linear-gradient(#162042,var(--k-midnight));border-bottom:1px solid var(--gold);box-shadow:0 4px 12px rgba(0,0,0,.35);
+ opacity:0;visibility:hidden;transition:transform .3s ease,opacity .3s ease,visibility 0s .3s}
 .hbar .cz{font-size:1.35rem;color:#F1D79A}
 .hbar .avatar{width:36px;height:36px}
-body.scrolled[data-sec=home] .hbar{transform:translate(-50%,0)}
+body.scrolled[data-sec=home] .hbar{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .3s ease,opacity .3s ease}
 
 /* Horoscope */
 .ce{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}
@@ -1188,8 +1189,8 @@ body.reduce .kscene .parallax{transform:none!important}
 .hero.hero-discover .hero-t{top:9%}
 .dl-intro{position:absolute;z-index:var(--zs-content);left:0;right:0;top:31%;text-align:center;font-family:var(--font-serif);font-weight:600;font-size:clamp(1rem,4.6vw,1.2rem);line-height:1.35;color:#F6E9CC;text-shadow:0 1px 8px rgba(0,0,0,.95)}
 /* the library of eight: parchment cards ruled in gold, each feature's own picture in its own shape */
-.dland{background:var(--k-midnight) url(/art/atlas/home-vines.webp) center top/cover}
-.dlib{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;margin-top:-12%;padding:0 2.6cqw 3cqw;container-type:inline-size}
+.dland{background:var(--k-midnight)}
+.dlib{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;padding:0 2.6cqw 3cqw;container-type:inline-size}
 .dland{container-type:inline-size}
 .dft{display:flex;flex-direction:column;align-items:center;min-width:0;padding:2.4cqw 2cqw 3cqw;border:1px solid var(--k-gold);border-radius:3cqw;cursor:pointer;text-align:center;color:var(--k-ink);
  background:linear-gradient(rgba(var(--k-surface-hi-rgb),.5),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1cqw 3cqw rgba(0,0,0,.35)}
@@ -1207,7 +1208,6 @@ body.reduce .kscene .parallax{transform:none!important}
 .dft.night .dft-t{position:relative;margin:0;padding:2cqw 3cqw;align-self:center;text-align:right;background:radial-gradient(closest-side,rgba(var(--k-night-rgb),.8),rgba(var(--k-night-rgb),0))}
 .dft.night strong{color:#F1D79A;font-size:max(14px,4.2cqw);text-shadow:0 1px 6px #000}
 .dft.night span{color:#E9D9B4;text-shadow:0 1px 6px #000}
-.dmore{margin-top:0;border-radius:24px 24px 0 0}
 /* the feature pages: the framed plate, a lead, the main action, then the readings it holds */
 .dfeat .list{margin-top:4px}
 .list.dim .lrow{opacity:.62;cursor:default}
@@ -1219,7 +1219,6 @@ body.reduce .kscene .parallax{transform:none!important}
 .dft.round .dft-art{width:58%}
 .dft.arch .dft-art{width:86%;aspect-ratio:1.45}
 .dft{padding:2cqw 2cqw 2.4cqw}
-.dlib{margin-top:-9%}
 
 /* ==========================================================================================================
    Stage 5, after docs/mockups/onboarding and overview: onboarding, Kassandra and the profile
@@ -1325,3 +1324,28 @@ body.reduce .kscene .parallax{transform:none!important}
 body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:15;top:0;bottom:var(--navh,0px);left:50%;width:min(100%,480px);transform:translateX(-50%);pointer-events:none;
  background:linear-gradient(90deg,transparent 4px,rgba(var(--k-gold-rgb),.85) 4px 5px,transparent 5px 7px,rgba(var(--k-gold-rgb),.45) 7px 8px,transparent 8px calc(100% - 8px),rgba(var(--k-gold-rgb),.45) calc(100% - 8px) calc(100% - 7px),transparent calc(100% - 7px) calc(100% - 5px),rgba(var(--k-gold-rgb),.85) calc(100% - 5px) calc(100% - 4px),transparent calc(100% - 4px))}
 .w-msg{text-align:center}
+
+/* ==========================================================================================================
+   Scenic continuity (docs/mockups/refine-home-discover): below the header scenes, Home and Discover carry on in one
+   painted night (the lake, the floral band, the closing garden) instead of turning to a plain sheet. Three segments,
+   each the column's width at its own ratio, overlap and blend through masks; the content floats above on its own layer.
+   ========================================================================================================== */
+.kscenic{position:relative;isolation:isolate;container-type:inline-size;
+ margin-bottom:calc(-1 * (var(--navh,0px) + 18px));padding-bottom:calc(var(--navh,0px) + 18px + 30cqw)}
+.ksc-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--k-midnight)}
+.ksc-bg img{position:absolute;left:0;width:100%;height:auto;max-width:none}
+.ksc-c{top:0;-webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent)}
+.ksc-m{top:50%;transform:translateY(-50%);-webkit-mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent)}
+.ksc-d{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000 24%);mask-image:linear-gradient(transparent,#000 24%)}
+.ksc-in{position:relative;z-index:1}
+/* panels lift off the night */
+.hsheet .card.home-p,.hsheet .sunq{box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.6),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.55)}
+.hsheet .kban{box-shadow:inset 0 0 0 .8cqw var(--k-midnight),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-light-rgb),.5),0 1.4cqw 4cqw rgba(0,0,0,.55)}
+/* Discover: the first row of cards rises over the foot of the header scene; the scenery starts beneath that overlap */
+.dscenic{margin-top:-9cqw}
+.dscenic>.ksc-bg{top:9cqw}
+.dscenic .dlib{padding:0 3.2cqw}
+.dscenic .dmore{margin:5cqw 3.2cqw 0;padding:4cqw 3.4cqw 4.4cqw;border:1px solid var(--k-gold);border-radius:3cqw;
+ box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.55)}
+.dscenic .dft{box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.5)}
+@media (prefers-reduced-motion:reduce){.hbar,body.scrolled[data-sec=home] .hbar{transition:none}}

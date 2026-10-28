@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 408 |
-| In use, provisional | 364 |
+| Images | 410 |
+| In use, provisional | 366 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -31,6 +31,8 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 253 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
+| `public/art/atlas/home-garden.webp` | 720×1080 | 2:3 | no | 207 | provisional |  |
+| `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
 | `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
