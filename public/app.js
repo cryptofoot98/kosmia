@@ -406,8 +406,8 @@ const SUNSET=['ob-sunset','obl-foot',false],CROWN=['ob-crescent','obl-crown'];
 const OB_FEATS=[['obm-sun','Personalised horoscopes','Daily, weekly, monthly and beyond'],['obm-tarot','Tarot and daily Whispers','Guidance for your journey'],['obm-moon','Astrology and numerology','Discover your unique blueprint'],['obm-star','Cosmic calendar','Follow the energy of the universe'],['obm-dream','Dream interpretation','Decode the messages within'],['kassandra','Kassandra, your AI oracle','Always here for your questions']];
 views.welcome=()=>{
  const st=V.ob,s=V.joinSign?sg(V.joinSign):null;
- if(st==='intro')return `<div class="ob ob-paper ob-intro">${obBg(['aw-foot','aw-f',false],['aw-top','aw-t'])}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
-  <div class="aw-top"><div class="aw-head"><h1 class="cz">Ancient Wisdom<br>for Modern Life</h1><span class="ob-rule" aria-hidden="true">${Kit.icon('compass')}</span><p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p></div></div>
+ if(st==='intro')return `<div class="ob ob-paper ob-intro">${obBg(['aw-foot','aw-f',false])}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
+  <div class="aw-top"><div class="aw-art" aria-hidden="true">${ui('aw-top','aw-sc','',true)}${ui('aw-top','aw-cl','',true)}</div><div class="aw-head"><h1 class="cz">Ancient Wisdom<br>for Modern Life</h1><p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p></div></div>
   <ul class="obi-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${ui(i,'obi-k')}</span><span><strong>${t}</strong><span>${d}</span></span></li>`).join('')}</ul>
   <div class="aw-go"><button class="btn" data-act="obnext" data-to="sign">Let’s Begin →</button></div></div>`;
  if(st==='sign')return `<div class="ob ob-dark ob-sign">${obBg(['ob-sky','obl-top'],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}

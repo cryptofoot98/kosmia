@@ -1292,24 +1292,32 @@ body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:
 .ob .link{color:var(--k-burgundy,#713B42);font-style:italic;text-decoration:underline;text-underline-offset:3px}
 .ob-dark .ob-panel .link{color:#713B42}
 
-/* 1. Ancient Wisdom: one illustrated page that fits the screen. The approved mockup's own scenery in two layers (aw-top: the
-   title's cloud, the woman before the moon; aw-foot: the vines beside the list, the sunset and its flowers), the interface over it.
-   Every height comes from the visible screen: the rows and the foot take their share and the painting the rest, cropped from
-   below on shorter screens; below about 640px the page scrolls rather than squeezing the text */
-.ob-intro{--H:100vh;--rh:clamp(44px,6.4vh,62px);--rg:clamp(2px,.55vh,5px);--ft:clamp(80px,13vh,124px);
- --T:max(250px,calc(var(--H) - 6*var(--rh) - 5*var(--rg) - var(--ft)));
- --sh:clamp(0px,calc((99.5cqw - var(--T))/3),30px);
+/* 1. Ancient Wisdom: one illustrated page that fits the screen. The approved mockup's own scenery (aw-top: the title's cloud
+   with its painted star rule, the woman before the moon; aw-foot: the vines beside the list, the sunset and its flowers), the
+   interface over it. The painting always keeps its whole frame (--N, its natural height at this width) so its clouds and
+   flowers meet the first row; the rows (44-62px) and the foot share what is left. On a screen too short even for that, the
+   painting is shown twice in layers: the title's cloud stays at the top and the woman's scene slides up beneath the
+   cloud's soft lower edge, so nothing is cut through; below about 640px the page scrolls rather than squeezing the text */
+.ob-intro{--H:100vh;--N:99.5cqw;--rg:clamp(2px,calc(var(--H)*.0055),5px);--ft:clamp(84px,calc(var(--H)*.13),124px);
+ --T:max(250px,min(var(--N),calc(var(--H) - 6*44px - 5*var(--rg) - 84px)));
+ --rh:clamp(44px,calc((var(--H) - var(--T) - 5*var(--rg) - var(--ft))/6),62px);
+ --sa:max(0px,calc(env(safe-area-inset-top,0px) + 4px - 10.8cqw));
  container-type:inline-size;min-height:var(--H);background:#F0D5AB;padding:0;gap:0;justify-content:flex-start}
-@supports (height:100dvh){.ob-intro{--H:100dvh;--rh:clamp(44px,6.4dvh,62px);--rg:clamp(2px,.55dvh,5px);--ft:clamp(80px,13dvh,124px)}}
-.aw-t{top:calc(-1*var(--sh));height:calc(var(--T) + var(--sh));object-fit:cover;object-position:50% 0}
+@supports (height:100dvh){.ob-intro{--H:100dvh}}
 .aw-f{bottom:0}
 html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behavior:none}
-.aw-top{position:relative;flex:none;width:100%;height:var(--T)}
-.aw-head{position:absolute;left:12%;right:12%;top:max(calc(9.6cqw - var(--sh)),calc(env(safe-area-inset-top,0px) + 4px));display:flex;flex-direction:column;align-items:center;gap:1.6cqw}
-.ob-intro h1.cz{margin:0;font-family:var(--font-display);font-size:5.05cqw;line-height:1.16;letter-spacing:.055em;text-transform:uppercase;font-weight:700;color:#2E2118;-webkit-text-stroke:.4px currentColor}
-.ob-intro .ob-lead{max-width:76cqw;text-wrap:wrap;margin:0;font-family:var(--font-text);font-size:max(13px,3.3cqw);line-height:1.36;color:var(--k-ink)}
-.ob-intro .aw-head .ob-rule{width:46cqw;color:var(--k-gold-deep)}
-.ob-intro .aw-head .ob-rule svg{width:7cqw;height:7cqw;margin:-1cqw 0}
+.aw-top{position:relative;flex:none;width:100%;height:var(--T);container-type:size;--A:clamp(84.6cqw,100cqh,99.5cqw)}
+/* the painting (aw-top: the mockup's frame with its sides painted further) at its full size where it fits; on a shorter
+   screen it scales down as a whole, title and all, to 85%, its extended sides filling the width; only below that does the
+   woman's scene slide up beneath the cloud's lower edge, over the empty sky above the moon */
+.aw-art{position:absolute;inset:0;pointer-events:none}
+.aw-sc,.aw-cl{position:absolute;left:50%;width:calc(var(--A)*1.493);max-width:none;height:var(--A);transform:translateX(-50%)}
+.aw-sc{bottom:0}
+.aw-cl{top:var(--sa);-webkit-mask-image:linear-gradient(#000 36.5%,transparent 42%);mask-image:linear-gradient(#000 36.5%,transparent 42%)}
+/* the title and subtitle sit where the mockup sets them, around its painted star rule */
+.aw-head{position:absolute;left:50%;top:var(--sa);width:calc(var(--A)*.8);height:calc(var(--A)*.4);transform:translateX(-50%);text-align:center}
+.ob-intro h1.cz{position:absolute;left:0;right:0;top:calc(var(--A)*.109);margin:0;font-family:var(--font-display);font-size:calc(var(--A)*.0508);line-height:calc(var(--A)*.0533);letter-spacing:.055em;text-transform:uppercase;font-weight:700;color:#2E2118}
+.ob-intro .aw-head .ob-lead{position:absolute;left:50%;top:calc(var(--A)*.287);width:calc(var(--A)*.62);transform:translateX(-50%);max-width:none;margin:0;font-family:var(--font-text);font-size:max(13px,calc(var(--A)*.0332));line-height:max(17.5px,calc(var(--A)*.0452));color:var(--k-ink);text-wrap:wrap}
 /* the six gifts: manuscript rows with a fine gilt line, the medallion, the title and its line, a chevron; no raised cards */
 .obi-list{position:relative;list-style:none;margin:0 auto;padding:0;width:84.5cqw;display:flex;flex-direction:column;gap:var(--rg)}
 .obi-list li{position:relative;height:var(--rh);display:grid;grid-template-columns:auto 1fr;gap:4.4cqw;align-items:center;padding:0 3.6cqw 0 2.6cqw;border:1px solid rgba(138,100,48,.5);border-radius:10px;background:rgba(243,217,177,.92);text-align:left;line-height:1.2}
@@ -1320,7 +1328,7 @@ html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behav
 .obi-list li>span:nth-child(2)>span{font-family:var(--font-text);font-size:max(12.5px,3.4cqw);color:var(--k-ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .obi-med{display:block;width:min(11.8cqw,calc(var(--rh) - 8px));aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--k-midnight);box-shadow:0 0 0 1px rgba(var(--k-gold-rgb),.85)}
 .obi-k{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 18%}
-.aw-go{flex:none;height:var(--ft);display:flex;justify-content:center;align-items:flex-start;padding-top:calc(var(--rg) + 5px)}
+.aw-go{flex:1 0 auto;min-height:84px;display:flex;justify-content:center;align-items:flex-start;padding-top:calc(var(--rg) + 5px)}
 .ob-intro .aw-go .btn{width:auto;min-width:0;min-height:42px;height:42px;padding:0 28px;font-size:.82rem;box-shadow:0 2px 10px rgba(var(--k-shadow-rgb),.35)}
 
 /* 2. The sign: the sun and the crescent above, the night with its flowers, the twelve medallions three to a row, the
@@ -1368,7 +1376,7 @@ html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behav
 .ob-signin .ob-rule.lone{margin-bottom:-4px}
 .ob-signin .ob-fields{text-align:left}
 .ob-signin .ob-mail{margin-top:0}
-.ob-intro>.ibtn{top:max(calc(13cqw - var(--sh)),calc(env(safe-area-inset-top,0px) + 6px));left:2.5cqw}
+.ob-intro>.ibtn{top:calc(12.5cqw + var(--sa));left:2.5cqw}
 .ob-intro>.ibtn,.ob-signin>.ibtn{color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
 .ob .ob-lead{text-wrap:balance}
 .oba-head{position:relative}
