@@ -268,7 +268,7 @@ const ui=(id,cls='',alt='',priority=false)=>Kit.img('atlas/'+atlasId(id),{cls,al
 // the scenery that carries on below a page's header scene (Home after Cosmic Energy, Discover's library): the night lake
 // from the top, the floral night band in the middle and the closing garden at the foot, overlapping and blended, never
 // stretched or repeated; it sits under its content and takes no taps
-const scenic=(content,cls='')=>`<div class="kscenic ${cls}"><div class="ksc-bg" aria-hidden="true">${ui('home-vines','ksc-m')}${ui('home-lake','ksc-c')}${ui('home-garden','ksc-d')}</div><div class="ksc-in">${content}</div></div>`;
+const scenic=(content,cls='',bg)=>`<div class="kscenic ${cls}"><div class="ksc-bg" aria-hidden="true">${bg||ui('home-vines','ksc-m')+ui('home-lake','ksc-c')+ui('home-garden','ksc-d')}</div><div class="ksc-in">${content}</div></div>`;
 const panel=(h,cls='')=>Kit.panel(h,{cls});
 // a page's own header on parchment: the back arrow, its title (and a line under it), and an action at the right
 const IC={
@@ -518,14 +518,14 @@ views.home=()=>{
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
   </div>
   <div class="qrow">${quick}</div>`})}
- ${Kit.scene({cls:'hband',bg:'atlas/home-vines',ratio:'auto',bgPos:'50% 0',content:`
+ ${scenic(`
   ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-r">${rev?`<p class="dw-q">${Kit.icon('star')}${esc(c.msg)}${Kit.icon('star',{cls:'s2'})}</p>`:`<p class="dw-q">${Kit.icon('star')}A card, a message, a moment for you. Turn it over when you are ready.</p>`}${wbtn}</div></div>`,'gilt hwhisper')}
-  <button class="energy" data-go="discover" data-t="moon">${ui('home-energy','en-bg')}<span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>`})}
- ${scenic(`
+  <button class="energy" data-go="discover" data-t="moon"><span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>
+
  ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
  <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>`,'home-p')}
- `,'hsheet')}</div>`;
+ `,'hsheet',ui('home-night','ksc-n'))}</div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){

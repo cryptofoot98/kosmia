@@ -1257,6 +1257,25 @@ body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:
 .ksc-m{top:50%;transform:translateY(-50%);-webkit-mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent)}
 .ksc-d{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000 24%);mask-image:linear-gradient(transparent,#000 24%)}
 .ksc-in{position:relative;z-index:1}
+/* Home's lower part: one tall painting (home-night: the flower borders rising out of the hero's, the open night, the lake
+   garden at the foot) behind the Whisper, the Cosmic Energy and Explore, anchored to the foot and cropped only at its sides */
+.ksc-bg img.ksc-n{top:0;bottom:0;height:100%;object-fit:cover;object-position:50% 100%}
+/* the two paintings meet without an edge: the lower one rises 22% of the width under the hero's foot, and the hero's painting
+   dissolves into it there; the gold rules and the dark ground begin only below the join */
+.hsheet{margin-top:-22cqw;padding-top:22cqw}
+.hsheet>.ksc-bg{background:none}
+.hsheet>.ksc-bg::after{top:30cqw}
+.home .hhero{z-index:1;background:none}
+/* the three sections below the topics sit 4.2% of the width apart, the same gap everywhere; Today's Cosmic Energy keeps only
+   its floating panel, over the same painting as the Whisper and Explore */
+.hsheet>.ksc-in{padding-top:0}
+.home .hhero{padding-bottom:4.2cqw}
+.hsheet .energy{width:100%;margin:0;border:0;background:none;overflow:visible}
+.hsheet .en-in{position:relative;inset:auto;gap:2cqw;padding:0}
+.hsheet .energy .orn-s{background:none;padding:0;color:#F3E2B4;text-shadow:0 1px 6px #000}
+.hsheet .energy .orn-s svg{color:#E9C88E}
+.home .hhero .stars{-webkit-mask-image:linear-gradient(#000 calc(100% - 22cqw),transparent);mask-image:linear-gradient(#000 calc(100% - 22cqw),transparent)}
+.home .hhero>.ks-bg{-webkit-mask-image:linear-gradient(#000 calc(100% - 22cqw),transparent);mask-image:linear-gradient(#000 calc(100% - 22cqw),transparent)}
 /* panels lift off the night */
 .hsheet .card.home-p,.hsheet .sunq{box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.6),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.55)}
 .hsheet .kban{box-shadow:inset 0 0 0 .8cqw var(--k-midnight),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-light-rgb),.5),0 1.4cqw 4cqw rgba(0,0,0,.55)}
