@@ -343,8 +343,11 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .hh-halo img{display:block;width:100%;height:100%;border-radius:50%}
 .hh-fig{position:absolute;z-index:var(--zs-over);inset:0;width:100%;height:100%;
  filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35));-webkit-mask-image:linear-gradient(#000 84%,transparent 99%),linear-gradient(90deg,#000 84%,transparent 99%);-webkit-mask-composite:source-in;mask-image:linear-gradient(#000 84%,transparent 99%),linear-gradient(90deg,#000 84%,transparent 99%);mask-composite:intersect}
-/* per figure: Libra's pans hang right at the text's edge, so her clip sits a little further right */
-.s-libra{--clip-x:85.8%}
+/* per figure: where the sign's emblem would reach under the text (the bull's horn, the bow, the bowl), the figure sits a
+   little further left and smaller, so it still crosses the card's edge but leaves its words clear */
+.s-taurus{--fx:-17cqw;--fw:68cqw}
+.s-sagittarius{--fx:-19cqw;--fw:66cqw}
+.s-pisces{--fx:-17cqw;--fw:67cqw}
 /* the five insights rest on the flowers at the foot of the scene, over the hem of the figure's gown */
 .home .qrow{position:relative;z-index:var(--zs-ctrl);display:grid;grid-template-columns:repeat(5,1fr);gap:1.4cqw;margin-top:3.4cqw;padding:1.2cqw;border-radius:3cqw;
  background:rgba(var(--k-night-rgb),.35);box-shadow:inset 0 0 0 1px rgba(var(--k-gold-light-rgb),.35)}
