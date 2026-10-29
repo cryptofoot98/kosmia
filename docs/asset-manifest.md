@@ -7,28 +7,17 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 420 |
-| In use, provisional | 376 |
+| Images | 421 |
+| In use, provisional | 377 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
-
-## Wide dark banner for a Discover tile
-
-- Mockup: `docs/mockups/discover.webp`
-- Screen: Discover grid (Cosmic Calendar, Astrology Library)
-- Crop: cover, anchored left
-- Background: opaque
-- Wanted width at 2×: 420 px
-
-| Asset | Size | Ratio | Alpha | KB | Status | Notes |
-|---|---|---|---|---|---|---|
-| `public/art/atlas/banner-calendar.webp` | 760×506 | 1.50:1 | no | 129 | provisional |  |
-| `public/art/atlas/banner-library.webp` | 760×506 | 1.50:1 | no | 131 | provisional |  |
 
 ## Unclassified
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
+| `public/art/atlas/aw-foot.webp` | 850×1004 | 0.85:1 | no | 74 | provisional |  |
+| `public/art/atlas/aw-top.webp` | 850×846 | 1.00:1 | no | 168 | provisional |  |
 | `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 253 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
 | `public/art/atlas/home-garden.webp` | 720×1080 | 2:3 | no | 207 | provisional |  |
@@ -38,7 +27,6 @@ their space before they load.
 | `public/art/atlas/ob-sky.webp` | 900×1350 | 2:3 | no | 311 | provisional |  |
 | `public/art/atlas/ob-sunset.webp` | 960×1440 | 2:3 | no | 378 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
-| `public/art/atlas/ob-wisdom.webp` | 1024×1024 | 1:1 | no | 230 | provisional |  |
 | `public/art/atlas/ob-woman.webp` | 1200×800 | 3:2 | no | 238 | provisional |  |
 | `public/art/atlas/obm-dream.webp` | 192×192 | 1:1 | no | 8 | provisional |  |
 | `public/art/atlas/obm-moon.webp` | 192×192 | 1:1 | no | 9 | provisional |  |
@@ -57,6 +45,19 @@ their space before they load.
 | `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
 | `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 51 | provisional |  |
 | `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
+
+## Wide dark banner for a Discover tile
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover grid (Cosmic Calendar, Astrology Library)
+- Crop: cover, anchored left
+- Background: opaque
+- Wanted width at 2×: 420 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/banner-calendar.webp` | 760×506 | 1.50:1 | no | 129 | provisional |  |
+| `public/art/atlas/banner-library.webp` | 760×506 | 1.50:1 | no | 131 | provisional |  |
 
 ## Dream symbol medallion
 

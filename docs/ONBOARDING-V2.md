@@ -33,7 +33,7 @@ Each page paints its art behind its content in one layer (`.obg`). The layer sit
 
 | Layer | Art | Used on |
 |---|---|---|
-| Woman before the golden moon, title in a parchment cloud | `ob-wisdom` | Ancient Wisdom (the head of the page; the title and its line sit in the painted cloud) |
+| The approved mockup's scenery: the cloud, the woman and the moon; the vines and the sunset | `aw-top`, `aw-foot` | Ancient Wisdom (the whole page) |
 | Sky with the sun, crescent and flower borders | `ob-sky` | Zodiac (from the top) |
 | Woman before the moon at the right, open sky at the left | `ob-woman` | Account (across the top; the title sits in the open sky) |
 | Botanical night | `home-vines` | Account (down the sides of the form) |
@@ -65,14 +65,22 @@ Five paintings were made with `gpt-image-2` on 29 October 2026, each guided by a
 
 They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` and `home-energy` on these pages), which stay in use elsewhere in the app.
 
-## Ancient Wisdom, second pass (29 October 2026)
+## Ancient Wisdom, one illustrated page (29 October 2026)
 
-**Reference:** `docs/mockups/ob3-intro.png` (approved). **Comparison:** `docs/review/ob3-intro.webp` (reference, before, after).
+**Reference:** `docs/mockups/ob3-intro.png` (approved). **Comparison:** `docs/review/ob3-intro.webp` (reference; the previous build on an iPhone; after at 390×844; after at 390×664, a Safari-sized screen).
 
-- **The painting** (`ob-wisdom`, repainted from a crop of the reference with its text blanked): a larger parchment cloud holds the title, its rule and the whole subtitle; its foot is a bank of cream clouds melting into the parchment, so the rows begin in the cloud, not under a hard edge. It is shown 112% wide (the outer vines cropped) so the cloud is tall enough at every width, and it starts below the status bar.
-- **The rows:** old parchment plaques with a double gilt edge and aged, darker borders, joined by a small gold lozenge, each with a decorative chevron; titles in EB Garamond semibold, subtitles in EB Garamond.
-- **The medallions:** five new paintings after the reference (`obm-sun`, `obm-tarot`, `obm-moon`, `obm-star`, `obm-dream`, 192 px, about 8–11 KB each); Kassandra keeps her portrait.
-- **The flowers:** the sunset's lilies and roses start below Let's Begin at every tested size and never reach the rows.
+**The art is the approved mockup's own scenery,** prepared as two layers (`scratchpad prepaw.py` steps, recorded here):
+- the interface was lifted out of the flattened mockup: the title, rule, subtitle, back arrow and closing divider by OpenCV inpainting; the status bar's two corners by a masked `gpt-image-2` edit pasted back only where the bar was; the six rows' box filled with parchment toned to the mockup's
+- `aw-top` (850×846): the parchment cloud, the woman before the moon, the lake and the lilies, anchored to the top and cropped from below on shorter screens
+- `aw-foot` (850×1004): the vines beside the list, the sunset, the lake and the corner flowers, anchored to the bottom edge with no box or seam
+
+**One screen, no scrolling:** every height is worked out from the visible screen (`dvh`): six rows of `clamp(48px, 6.4dvh, 62px)`, a foot of `clamp(84px, 13dvh, 124px)`, and the painting takes the rest (never under 250 px). At 390×844 this reproduces the mockup's proportions almost exactly (rows from 387 px, as in the mockup). On a screen too short to hold it, the page scrolls instead of shrinking the text.
+
+**The rows:** a fine gilt line, a parchment face matching the page (opaque enough that the corner flowers never show through), a thin inner rule, small gold lozenges between rows, the painted medallion (`obm-*`, Kassandra's own portrait), titles in EB Garamond semibold, decorative chevrons.
+
+**Let's Begin** is a compact button where the mockup's closing divider stood, above the sunset.
+
+The earlier bespoke `ob-wisdom` painting is retired (deleted with its paint job).
 
 ## Checks
 
@@ -97,5 +105,5 @@ They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` an
 
 - **Same story, new paintings:** the paintings follow the mockups' compositions but are new paintings, not copies, so details differ: the exact pose, the flowers and how far the town reaches.
 - **Feature rows:** the chevrons on Ancient Wisdom follow the approved design but are decorative (hidden from screen readers); the rows are not links.
-- **Side vines:** the vines that run down beside the rows on Ancient Wisdom in the reference are not drawn; the page's flowers stay in the painting above and the sunset below, clear of the rows.
+- **Ancient Wisdom:** the closing divider star gives way to Let's Begin, which the mockup doesn't show; on screens shorter than about 750 px the painting is cropped higher (the woman shows from the shoulders up).
 - **Height:** the zodiac and account pages are a little taller than one 390×844 screen, so the lowest part of the sunset sits just below the fold. Welcome Back fits on one screen with the sunset in view.
