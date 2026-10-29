@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 426 |
-| In use, provisional | 382 |
+| Images | 428 |
+| In use, provisional | 384 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -21,6 +21,7 @@ their space before they load.
 | `public/art/atlas/aw-top.webp` | 1269×846 | 3:2 | no | 284 | provisional |  |
 | `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 253 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
+| `public/art/atlas/home-bar.webp` | 1200×321 | 3.74:1 | no | 109 | provisional |  |
 | `public/art/atlas/home-garden.webp` | 720×1080 | 2:3 | no | 207 | provisional |  |
 | `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
 | `public/art/atlas/home-night.webp` | 720×1619 | 0.44:1 | no | 235 | provisional |  |
@@ -327,6 +328,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
+| `public/art/atlas/nav-bar.webp` | 1774×357 | 4.97:1 | yes | 91 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
 | `public/art/atlas/nav-discover.webp` | 314×320 | 0.98:1 | yes | 33 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
 | `public/art/atlas/nav-home.webp` | 267×320 | 0.83:1 | yes | 40 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
 | `public/art/atlas/nav-horoscope.webp` | 295×320 | 0.92:1 | yes | 29 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |

@@ -269,6 +269,18 @@ details.more{display:flex;flex-direction:column;gap:10px}
 #nav button[aria-current=page] span{border-bottom-color:#22160E}
 #nav button[aria-current=page] .nav-ico{transform:scale(1.06);color:#22160E}
 #nav button:not([aria-current]) .nav-ico{opacity:.82}
+/* the bottom menu as the approved painted bar (nav-bar: the rounded parchment plate, the five medallions in their gold
+   rings, the stars between them, the flowers at both ends, the engraved mountains): the buttons lie over the medallions with
+   their labels beneath, the current one marked by a small gold dot; a soft shadow lifts the bar off the page */
+#nav .in{position:relative;container-type:inline-size;padding:0 4.98% env(safe-area-inset-bottom,0px) 4.77%;border:0;border-radius:0;box-shadow:none;
+ background:url(/art/atlas/nav-bar.webp) 50% 0/100% auto no-repeat,linear-gradient(transparent 19cqw,rgb(212,182,138) 19cqw);
+ height:calc(20.12cqw + env(safe-area-inset-bottom,0px));filter:drop-shadow(0 -5px 10px rgba(0,0,0,.55))}
+#nav .in button{position:relative;height:20.12cqw;padding:0 0 4.3cqw;justify-content:flex-end;gap:0;color:#2A1D14;font-family:var(--font-text);font-weight:500;font-size:max(11px,3cqw);line-height:1}
+#nav .in .nav-ico{display:none}
+#nav .in button span{border:0;padding:0}
+#nav .in button[aria-current=page]{color:#22160E;font-weight:600}
+#nav .in button[aria-current=page]::after{content:'';position:absolute;left:50%;bottom:2.2cqw;width:1.3cqw;height:1.3cqw;border-radius:50%;background:#9A6A35;transform:translateX(-50%)}
+#nav .in button:focus-visible{outline:2px solid #9A6A35;outline-offset:-4px;border-radius:12px}
 .toast{position:fixed;left:50%;bottom:calc(var(--navh,0px) + 14px);transform:translateX(-50%);z-index:var(--z-toast);max-width:min(92vw,440px);background:var(--btn);color:var(--k-on-dark);border:1px solid var(--gold2);padding:10px 18px;border-radius:12px;font-size:.95rem;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .toast-a{margin-left:10px;background:none;border:0;border-bottom:1px solid #E9CB86;color:#F3DC9E;font:inherit;font-weight:600;cursor:pointer;padding:0}
 
@@ -413,8 +425,15 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .hbar{position:fixed;top:0;left:50%;z-index:var(--z-bar);width:min(100%,480px);transform:translate(-50%,-110%);display:flex;align-items:center;justify-content:space-between;padding:calc(6px + env(safe-area-inset-top,0px)) 14px 6px;
  background:linear-gradient(#162042,var(--k-midnight));border-bottom:1px solid var(--gold);box-shadow:0 4px 12px rgba(0,0,0,.35);
  opacity:0;visibility:hidden;transition:transform .3s ease,opacity .3s ease,visibility 0s .3s}
-.hbar .cz{font-size:1.35rem;color:#F1D79A}
-.hbar .avatar{width:36px;height:36px}
+/* the compact header: the approved painted band (home-bar: the night with its crescent, stars, clouds, gold vines and lilies, the
+   painted rule beneath the wordmark), KOSMIA in antique gold over it with a small star, the profile at the right */
+.hbar{background:var(--k-midnight);height:max(calc(min(100vw,480px)/3.74),calc(env(safe-area-inset-top,0px) + 62px));padding:0;border-bottom:1px solid var(--k-gold-deep);container-type:inline-size;overflow:hidden}
+.hb-art{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 100%;pointer-events:none}
+.hb-logo{position:absolute;left:55%;bottom:41%;transform:translate(-50%,50%);display:flex;align-items:flex-start;gap:.8cqw}
+.hb-word{font-family:var(--font-display);font-weight:700;font-size:7.4cqw;line-height:1;letter-spacing:.06em;text-transform:uppercase;color:#E8C27E;
+ background:linear-gradient(180deg,#F8E3AA,#E3B96F 55%,#C9944A 85%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 0 6px rgba(240,200,120,.3))}
+.hbar .hb-star{width:3.2cqw;height:3.2cqw;margin-top:-1.4cqw;color:#F3D896;filter:drop-shadow(0 0 4px rgba(240,200,120,.6))}
+.hbar .avatar{position:absolute;right:5.4%;bottom:31%;transform:translateY(50%);width:min(12cqw,50px);height:min(12cqw,50px)}
 body.scrolled[data-sec=home] .hbar{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .3s ease,opacity .3s ease}
 
 /* Horoscope */
