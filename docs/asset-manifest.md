@@ -25,7 +25,6 @@ their space before they load.
 | `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
 | `public/art/atlas/ob-crescent.webp` | 1200×800 | 3:2 | no | 221 | provisional |  |
 | `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
-| `public/art/atlas/ob-sky.webp` | 900×1350 | 2:3 | no | 311 | provisional |  |
 | `public/art/atlas/ob-sunset.webp` | 960×1440 | 2:3 | no | 378 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
 | `public/art/atlas/ob-woman.webp` | 1200×800 | 3:2 | no | 238 | provisional |  |
@@ -46,6 +45,7 @@ their space before they load.
 | `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
 | `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 51 | provisional |  |
 | `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
+| `public/art/atlas/zs-bg.webp` | 850×1850 | 0.46:1 | no | 353 | provisional |  |
 
 ## Wide dark banner for a Discover tile
 

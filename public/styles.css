@@ -1334,15 +1334,25 @@ html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behav
 .aw-go{flex:1 0 auto;min-height:84px;display:flex;justify-content:center;align-items:flex-start;padding-top:calc(var(--rg) + 5px)}
 .ob-intro .aw-go .btn{width:auto;min-width:0;min-height:42px;height:42px;padding:0 28px;font-size:.82rem;box-shadow:0 2px 10px rgba(var(--k-shadow-rgb),.35)}
 
-/* 2. The sign: the sun and the crescent above, the night with its flowers, the twelve medallions three to a row, the
-   sunset at the foot. A tap chooses and goes on */
-.ob-sign{gap:10px;padding-top:calc(env(safe-area-inset-top,0px) + min(26vw,125px));padding-bottom:calc(env(safe-area-inset-bottom,0px) + min(74vw,355px))}
-.ob-sign .obl-top{top:0;-webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent)}
-.ob-sign h1{font-family:var(--font-display);font-weight:600;font-size:clamp(1.5rem,7.4vw,1.95rem);line-height:1.15;letter-spacing:.05em;text-transform:uppercase;color:#F3E2B4;text-shadow:0 2px 10px rgba(0,0,0,.8)}
-.ob-sign .ob-lead{max-width:300px;text-wrap:balance;font-size:.98rem;color:#E9D9B4;text-shadow:0 1px 6px #000}
-.zgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px clamp(14px,5vw,24px);width:min(86%,370px);margin:8px auto 0}
-.zg-s{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:0;border:0;background:none;cursor:pointer;color:#F1E2BC;font-family:var(--font-serif);font-weight:600;font-size:clamp(.92rem,4.2vw,1.05rem);text-shadow:0 1px 5px #000;-webkit-tap-highlight-color:transparent}
-.zg-m{display:block;width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1.5px var(--k-gold),0 0 0 3.5px rgba(var(--k-night-rgb),.85),0 0 0 4.5px rgba(var(--k-gold-rgb),.45),0 4px 10px rgba(0,0,0,.55);transition:box-shadow .25s,filter .25s,transform .25s}
+/* 2. The sign: one painting behind the whole page (zs-bg, the approved mockup's own scenery with its interface lifted out:
+   the sun and crescent, the night with its flowers, the sunset at the foot), shown twice: anchored to the top and to the
+   bottom, the top copy dissolving into the bottom one inside the open starry sky, so there is never a band or a seam.
+   The title sits where the mockup sets it; the twelve medallions keep the mockup's spacing where the screen allows and
+   shrink together on shorter screens (every height from the visible screen), the sunset always left below them */
+.ob-sign{--H:100vh;--F:max(92px,24cqw);--P:min(30cqw,calc((var(--H) - 57.5cqw - var(--F))/4));--D:calc(var(--P) - 7.4cqw);
+ container-type:inline-size;min-height:var(--H);padding:0;gap:0;justify-content:flex-start;background:#0D1426}
+@supports (height:100dvh){.ob-sign{--H:100dvh}}
+html:has(.ob-sign),html:has(.ob-sign) body{background:#0D1426;overscroll-behavior:none}
+.zs-t,.zs-b{position:absolute;left:0;width:100%;height:217.65cqw;max-width:none}
+.zs-t{top:0;-webkit-mask-image:linear-gradient(#000 45%,transparent 54%);mask-image:linear-gradient(#000 45%,transparent 54%)}
+.zs-b{bottom:0}
+.ob-sign>.ibtn{top:calc(9.5cqw + max(0px,env(safe-area-inset-top,0px) - 9cqw));left:3cqw}
+.zs-head{position:relative;flex:none;width:100%;height:57.5cqw}
+.ob-sign h1{position:absolute;left:0;right:0;top:30cqw;margin:0;font-family:var(--font-display);font-weight:600;font-size:6.55cqw;line-height:6.75cqw;letter-spacing:.035em;text-transform:uppercase;color:#F3E2B4;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.ob-sign .ob-lead{position:absolute;left:0;right:0;top:45.9cqw;max-width:none;margin:0 auto;width:54cqw;text-wrap:wrap;font-family:var(--font-text);font-size:max(13px,3.55cqw);line-height:max(16px,4.05cqw);color:#E9D9B4;text-shadow:0 1px 6px #000}
+.zgrid{flex:none;display:grid;grid-template-columns:repeat(3,26.8cqw);grid-auto-rows:var(--P);justify-content:center;gap:0;width:100%;margin:0}
+.zg-s{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:min(1.6cqw,6px);min-width:0;padding:0;border:0;background:none;cursor:pointer;color:#F1E2BC;font-family:var(--font-text);font-weight:600;font-size:max(13.5px,3.6cqw);line-height:1.1;text-shadow:0 1px 5px #000;-webkit-tap-highlight-color:transparent}
+.zg-m{display:block;width:var(--D);max-width:22.6cqw;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1.5px var(--k-gold),0 0 0 3.5px rgba(var(--k-night-rgb),.85),0 0 0 4.5px rgba(var(--k-gold-rgb),.45),0 4px 10px rgba(0,0,0,.55);transition:box-shadow .25s,filter .25s,transform .25s}
 .zgrid.has .zg-s:not([aria-checked=true]) .zg-m{filter:saturate(.8) brightness(.8)}
 /* the chosen sign lit like an antique medallion: a champagne ring and glow, a little larger, its name underlined */
 .zg-s[aria-checked=true]{color:#FFE9B0}
@@ -1350,6 +1360,7 @@ html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behav
 .zg-s[aria-checked=true] .zg-m{transform:scale(1.05);box-shadow:0 0 0 2.5px #E9C88E,0 0 0 4.5px rgba(var(--k-night-rgb),.85),0 0 0 5.5px #E9C88E,0 0 20px 4px rgba(233,200,142,.55)}
 .zg-s:focus-visible{outline:none}.zg-s:focus-visible .zg-m{box-shadow:0 0 0 2.5px #FFE9B0,0 0 0 6px rgba(255,233,176,.5)}
 .ob-bday{width:min(100%,320px);color:#E2D2AE}
+.ob-sign .ob-bday{flex:none;margin:0 auto}
 .ob-bday summary{font-style:italic;color:#F1D79A!important;text-shadow:0 1px 5px #000}
 .ob-bday .field{margin-top:8px}.ob-bday label{color:#E2D2AE!important}
 .ob-hint{margin-top:8px;font-style:italic;color:#F1D79A}
@@ -1382,6 +1393,7 @@ html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behav
 .ob-intro>.ibtn{top:calc(12.5cqw + var(--sa));left:2.5cqw}
 .ob-intro>.ibtn,.ob-signin>.ibtn{color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
 .ob .ob-lead{text-wrap:balance}
+.ob-sign .zs-head .ob-lead{text-wrap:wrap}
 .oba-head{position:relative}
 .oba-head::before{content:none}
 .ob-acct{background:var(--k-midnight)}

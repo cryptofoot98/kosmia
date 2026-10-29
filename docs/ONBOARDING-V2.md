@@ -34,7 +34,7 @@ Each page paints its art behind its content in one layer (`.obg`). The layer sit
 | Layer | Art | Used on |
 |---|---|---|
 | The approved mockup's scenery: the cloud, the woman and the moon; the vines and the sunset | `aw-top`, `aw-foot` | Ancient Wisdom (the whole page) |
-| Sky with the sun, crescent and flower borders | `ob-sky` | Zodiac (from the top) |
+| The approved mockup's scenery: the sun and crescent, the night with its flowers, the sunset | `zs-bg` | Zodiac (the whole page, shown twice) |
 | Woman before the moon at the right, open sky at the left | `ob-woman` | Account (across the top; the title sits in the open sky) |
 | Botanical night | `home-vines` | Account (down the sides of the form) |
 | Crown of night with the crescent, opening into parchment | `ob-crescent` | Welcome Back, Check your inbox, Reset |
@@ -88,6 +88,14 @@ They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` an
 - **No navy strip:** the page no longer pulled itself up by the app's bottom padding (which onboarding already removes). On this screen only, the ground outside the page (behind Safari's toolbar, or shown by a bounce) is the dark brown of the flowers at the sunset's foot instead of the app's navy, and the bounce is turned off.
 
 The earlier bespoke `ob-wisdom` painting is retired (deleted with its paint job).
+
+## The zodiac page, one painting (29 October 2026, approved preview)
+
+**Reference:** `docs/mockups/ob3-sign.png`. **Comparisons:** `docs/review/ob3-sign.webp` (design and 393×852), `docs/review/ob3-sign-sizes.webp` (design, the previous build on an iPhone, 393×852, 402×715, 375×667).
+
+- **The blue band** was the page's own blue gradient showing between two separate paintings (`ob-sky` above, the sunset below). Now one painting lies behind the whole page: `zs-bg`, the approved mockup's own scenery with its interface lifted out (title, subtitle, the twelve medallions and their names, status bar and back arrow masked and repainted as the surrounding sky and landscape by a masked `gpt-image-2` edit; only the masked areas pasted back). It is shown twice, anchored to the top and to the bottom; the top copy dissolves into the bottom one inside the open starry sky, so shorter screens lose only open sky and never show a band or seam. `ob-sky` is retired.
+- **One screen:** the title and subtitle sit where the mockup sets them; the medallions keep the mockup's spacing (row pitch 30% of the width) where the screen allows and shrink together on shorter screens, each row's height worked out from the visible screen so the sunset stays below the last row (89 px medallions at 393×852, 62 px at 375×667). No scrolling from 360×640 to 430×932 and on a tablet; all twelve on screen and tappable. "Not sure of your sign?" stays below the grid (opening it may extend the page).
+- Unchanged: the medallions, names, gold rings, the selection glow, the one-tap choice.
 
 ## Checks
 
