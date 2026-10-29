@@ -97,6 +97,13 @@ The earlier bespoke `ob-wisdom` painting is retired (deleted with its paint job)
 - **One screen:** the title and subtitle sit where the mockup sets them; the medallions keep the mockup's spacing (row pitch 30% of the width) where the screen allows and shrink together on shorter screens, each row's height worked out from the visible screen so the sunset stays below the last row (89 px medallions at 393×852, 62 px at 375×667). No scrolling from 360×640 to 430×932 and on a tablet; all twelve on screen and tappable. "Not sure of your sign?" stays below the grid (opening it may extend the page).
 - Unchanged: the medallions, names, gold rings, the selection glow, the one-tap choice.
 
+## Create Your Account on one screen (29 October 2026, approved preview)
+
+**Comparison:** `docs/review/ob3-account-sizes.webp` (390×844, 402×715, 375×667, 360×640).
+
+- **No scrolling:** the artwork is unchanged; the empty band kept below the form is gone and the header and form spacing take their size from the visible screen. On screens under 780px tall the three password rules sit side by side; under 740px the title and labels are a little smaller and the sunset painting sits 20px lower (36px under 690px, where the form's small star rule is also hidden). Fits from 360×640 to 430×932 and on a tablet.
+- **The flowers embrace the form:** `ob-sunset-blooms` is the sunset painting's own lily (lower left) and roses (lower right), cut out and laid exactly over themselves above the form. The form ends 14px below the lily's tallest petal, so the petal tips reach over its lower-left edge and the rose wraps its lower-right corner, clear of all text; they take no taps.
+
 ## Checks
 
 **Viewports:** 360×800, 375×812, 390×844, 393×852, 430×932, 360×640 and 768×1024 (welcome, intro, sign, account, sign in):

@@ -420,7 +420,7 @@ views.welcome=()=>{
   ${pwField('pw','Create a password','At least 8 characters','new-password')}${pwField('pw2','Confirm password','Type it again','new-password')}
   <ul class="pw-rules" id="pwRules" aria-live="polite">${pwRules('').map(([ok,t])=>`<li class="${ok?'ok':''}">${t}</li>`).join('')}</ul>
   <p class="auth-err" id="authErr" role="alert"></p><button class="btn" id="joinBtn" type="submit">Continue →</button>
-  ${obRule()}<p class="auth-alt">Already have an account? <button type="button" class="link" data-act="obstep" data-to="signin">Sign in</button></p></form></div>`;
+  ${obRule()}<p class="auth-alt">Already have an account? <button type="button" class="link" data-act="obstep" data-to="signin">Sign in</button></p></form><div class="oba-blooms" aria-hidden="true">${ui('ob-sunset-blooms','obl obl-foot')}</div></div>`;
  if(st==='signin')return `<div class="ob ob-paper ob-form ob-signin">${obBg(CROWN,SUNSET)}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
   ${obRule('lone')}<h1>Welcome Back</h1><p class="ob-lead">Sign in to return to your cosmic journey.</p>
   <form id="authForm" class="ob-fields" novalidate><div class="field"><label for="em">Email address</label><div class="inp">${IC.mail}<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(S.email)}" required></div></div>

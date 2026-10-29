@@ -1397,4 +1397,36 @@ html:has(.ob-sign),html:has(.ob-sign) body{background:#0D1426;overscroll-behavio
 .oba-head{position:relative}
 .oba-head::before{content:none}
 .ob-acct{background:var(--k-midnight)}
+/* Create Your Account on one screen: the art is unchanged; the empty band kept for the sunset, the header's margins and the
+   form's spacing all take their size from the visible screen, so the page fits without scrolling (below about 640px it
+   scrolls rather than squeezing the fields). The sunset stays painted at the foot, behind the form's lower edge */
+.ob-acct{--H:100vh;min-height:var(--H);padding-bottom:0;justify-content:flex-start}
+@supports (height:100dvh){.ob-acct{--H:100dvh}}
+html:has(.ob-acct),html:has(.ob-acct) body{background:var(--k-midnight);overscroll-behavior:none}
+.ob-acct::after{content:'';flex:1 0 calc(env(safe-area-inset-bottom,0px) + clamp(28px,calc(var(--H)*.11),110px))}
+.ob-acct .oba-head{margin-top:clamp(6px,calc(var(--H)*.05 - 12px),50px);gap:clamp(4px,calc(var(--H)*.012),10px)}
+.ob-acct .ob-panel{flex:none;margin-top:clamp(8px,calc(var(--H)*.034 - 8px),30px);padding:clamp(12px,calc(var(--H)*.026),22px) 20px clamp(10px,calc(var(--H)*.021),18px);gap:clamp(5px,calc(var(--H)*.014),12px)}
+.ob-acct .ob-panel .field{gap:clamp(3px,calc(var(--H)*.007),6px)}
+.ob-acct .ob-panel input{min-height:clamp(44px,calc(var(--H)*.058),50px)}
+.ob-acct .ob-panel .btn{min-height:clamp(44px,calc(var(--H)*.058),52px);margin-top:0}
+.ob-acct .pw-rules{gap:clamp(2px,calc(var(--H)*.006),5px)}
+/* shorter screens: the three password rules side by side */
+@media (max-height:780px){.ob-acct .pw-rules{flex-direction:row;flex-wrap:wrap;gap:4px 14px}.ob-acct .pw-rules li{font-size:.86rem;gap:6px}.ob-acct .pw-rules li::before{width:14px;height:14px}}
+/* the sunset's own lily (left) and roses (right), lifted from the same painting in the same place, lap over the form's
+   lower corners as if it were held in them: the form sits low enough that their tips reach over its edge; they take no taps */
+.oba-blooms{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
+.oba-blooms .obl-foot{-webkit-mask-image:none;mask-image:none}
+.ob-acct .ob-panel{margin-bottom:0}
+.ob-acct{--fd:0px}
+.ob-acct .obl-foot{bottom:calc(-1*var(--fd))}
+/* the lily's tallest petal stands 26.7% of the width above the page foot (less --fd, how far the painting is set down on
+   short screens); the form ends 14px below it, so only the petal tips reach over its edge, clear of its text */
+.ob-acct::after{flex:0 0 calc(min(100vw,480px)*.2667 - 14px - var(--fd))}
+.ob-acct .oba-head{margin-bottom:auto}
+@media (max-height:740px){.ob-acct{--fd:20px}}
+@media (max-height:690px){.ob-acct{--fd:36px}.ob-acct .ob-panel .ob-rule{display:none}.ob-acct .oba-head{gap:3px}}
+@media (max-height:740px){
+ .ob-acct .oba-head h1{font-size:min(8.6vw,1.95rem)}.ob-acct .oba-head .ob-lead{font-size:.95rem;line-height:1.3}
+ .ob-acct .ob-panel .field>label{font-size:.95rem}.ob-acct .ob-panel input,.ob-acct .ob-panel .btn{min-height:44px}
+ .ob-acct .ob-panel .ob-rule{margin:0 0 -4px}}
 .ob-panel .field>label,.ob-signin .field>label{font-family:var(--font-serif);font-weight:700;font-size:1.02rem;color:var(--k-ink)}

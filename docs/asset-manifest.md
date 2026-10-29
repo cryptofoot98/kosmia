@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 422 |
-| In use, provisional | 378 |
+| Images | 423 |
+| In use, provisional | 379 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -25,6 +25,7 @@ their space before they load.
 | `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
 | `public/art/atlas/ob-crescent.webp` | 1200×800 | 3:2 | no | 221 | provisional |  |
 | `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
+| `public/art/atlas/ob-sunset-blooms.webp` | 960×1440 | 2:3 | yes | 59 | provisional |  |
 | `public/art/atlas/ob-sunset.webp` | 960×1440 | 2:3 | no | 378 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
 | `public/art/atlas/ob-woman.webp` | 1200×800 | 3:2 | no | 238 | provisional |  |
