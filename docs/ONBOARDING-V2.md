@@ -33,12 +33,15 @@ Each page paints its art behind its content in one layer (`.obg`). The layer sit
 
 | Layer | Art | Used on |
 |---|---|---|
-| Sky with the sun and crescent | `ob-welcome` (top only) | Zodiac |
-| Crown of night with crescent and lilies | `home-sky`, masked into the parchment | Ancient Wisdom, Welcome Back, Check your inbox, Reset |
-| Botanical night | `home-vines` | Zodiac (middle), Account (top, left border faded behind the title) |
-| Woman before the golden moon | `welcome` | Account (upper right); Ancient Wisdom (centrepiece in a window with no hard edges) |
-| Golden sunset over the lake | `home-energy`, its sky dissolving upward | The foot of every page |
+| Woman before the golden moon, title in a parchment cloud | `ob-wisdom` | Ancient Wisdom (the head of the page; the title and its line sit in the painted cloud) |
+| Sky with the sun, crescent and flower borders | `ob-sky` | Zodiac (from the top) |
+| Woman before the moon at the right, open sky at the left | `ob-woman` | Account (across the top; the title sits in the open sky) |
+| Botanical night | `home-vines` | Account (down the sides of the form) |
+| Crown of night with the crescent, opening into parchment | `ob-crescent` | Welcome Back, Check your inbox, Reset |
+| Golden sunset over the lake, lilies and roses | `ob-sunset`, shown as its lower band, its sky dissolving upward | The foot of every page |
 | Zodiac medallions | `zm-*`, unchanged | Zodiac |
+
+The sunset is shown in a band of fixed proportion at the page's foot (`min(96vw, 460px)`, cropped from the bottom). The band's top stays transparent before the sky fades in, and each page's bottom padding ends its text above the sunset's first light.
 
 **Small helpers:**
 - `obBg()`: the painted layers.
@@ -48,16 +51,19 @@ Each page paints its art behind its content in one layer (`.obg`). The layer sit
 
 **Selected sign:** a champagne ring and glow, a slight scale-up, and its name underlined, so the choice doesn't rely on colour alone. It is still a radio button with `aria-checked`.
 
-## New paintings: not made
+## The bespoke paintings
 
-Five bespoke paintings are scripted in `scripts/craft-atlas.mjs` but were not painted, because the OpenAI account had no credits left:
-- `ob-sunset`
-- `ob-sky`
-- `ob-woman`
-- `ob-wisdom`
-- `ob-crescent`
+Five paintings were made with `gpt-image-2` on 29 October 2026, each guided by a crop of its mockup (`scripts/craft-atlas.mjs`, ids below), then re-encoded for phones:
 
-The screens use the approved existing art instead. If credits are added, `node scripts/craft-atlas.mjs --refs <crops> --ids ob-sunset,ob-sky,ob-woman,ob-wisdom,ob-crescent` paints them, guided by crops of the mockups.
+| Painting | Size | Weight |
+|---|---|---|
+| `ob-wisdom` | 1024×1024 | 271 KB |
+| `ob-sky` | 900×1350 | 310 KB |
+| `ob-woman` | 1200×800 | 237 KB |
+| `ob-crescent` | 1200×800 | 221 KB |
+| `ob-sunset` | 960×1440 | 378 KB |
+
+They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` and `home-energy` on these pages), which stay in use elsewhere in the app.
 
 ## Checks
 
@@ -80,7 +86,6 @@ The screens use the approved existing art instead. If credits are added, `node s
 
 ## Remaining differences from the mockups
 
-- **Woman's outfit:** she wears the approved art's red shawl, not the mockup's ivory blouse. On the account page she sits to the right as in the mockup, but she is the same painting as on the introduction.
-- **Sunset:** it is the existing Cosmic Energy landscape, with palm fronds at its top corners, rather than the mockups' lily-framed sunset.
+- **Same story, new paintings:** the paintings follow the mockups' compositions but are new paintings, not copies, so details differ: the exact pose, the flowers and how far the town reaches.
 - **Feature rows:** the rows on Ancient Wisdom have no chevrons. The rows are not links, and a chevron would promise a tap that does nothing.
-- **Zodiac height:** the zodiac page is a little taller than one screen at 390×844, so the sunset sits just below the fold.
+- **Height:** the zodiac and account pages are a little taller than one 390×844 screen, so the lowest part of the sunset sits just below the fold. Welcome Back fits on one screen with the sunset in view.

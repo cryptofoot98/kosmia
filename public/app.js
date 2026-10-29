@@ -401,21 +401,20 @@ const pwField=(id,label,ph,auto)=>`<div class="field"><label for="${id}">${label
 const obBg=(...layers)=>`<div class="obg" aria-hidden="true">${layers.map(([id,cls,pri])=>ui(id,'obl '+cls,'',pri!==false)).join('')}</div>`;
 // the fine gold rule with a star at its centre, as the mockups set under their titles and above their last links
 const obRule=(cls='')=>`<span class="ob-rule${cls?' '+cls:''}" aria-hidden="true">${Kit.icon('star')}</span>`;
-// the golden sunset rising from the foot of the page, and the crown of night with its crescent over a parchment page
-const SUNSET=['home-energy','obl-foot',false],CROWN=['home-sky','obl-crown'];
+// the golden sunset rising from the foot of every page, and the crown of night with its crescent over a parchment page
+const SUNSET=['ob-sunset','obl-foot',false],CROWN=['ob-crescent','obl-crown'];
 const OB_FEATS=[['sun','Personalised horoscopes','Daily, weekly, monthly and beyond'],['tarot','Tarot and daily Whispers','Guidance for your journey'],['moon','Astrology and numerology','Discover your unique blueprint'],['compass','Cosmic calendar','Follow the energy of the universe'],['star','Dream interpretation','Decode the messages within'],['kassandra','Kassandra, your AI oracle','Always here for your questions']];
 views.welcome=()=>{
  const st=V.ob,s=V.joinSign?sg(V.joinSign):null;
- if(st==='intro')return `<div class="ob ob-paper ob-intro">${obBg(CROWN,SUNSET)}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
-  <h1 class="cz">Ancient Wisdom<br>for Modern Life</h1>${obRule()}<p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p>
-  <div class="obi-art">${ui('welcome','obi-i','',true)}</div>
+ if(st==='intro')return `<div class="ob ob-paper ob-intro">${obBg(SUNSET)}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
+  <div class="obi-top">${ui('ob-wisdom','obi-w','',true)}<div class="obi-head"><h1 class="cz">Ancient Wisdom<br>for Modern Life</h1>${obRule()}<p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p></div></div>
   <ul class="obi-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${i==='kassandra'?ui('kassandra','obi-k'):Kit.icon(i)}</span><span><strong>${t}</strong><span>${d}</span></span></li>`).join('')}</ul>
   ${obRule()}<button class="btn" data-act="obnext" data-to="sign">Let’s Begin →</button></div>`;
- if(st==='sign')return `<div class="ob ob-dark ob-sign">${obBg(['ob-welcome','obl-top'],['home-vines','obl-mid',false],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}
+ if(st==='sign')return `<div class="ob ob-dark ob-sign">${obBg(['ob-sky','obl-top'],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}
   <h1>What’s your<br>zodiac sign?</h1><p class="ob-lead">Choose your sun sign to personalise your cosmic experience.</p>
   <div class="zgrid${s?' has':''}" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map(x=>`<button class="zg-s" role="radio" aria-checked="${V.joinSign===x.id}" data-sign="${x.id}" aria-label="${x.name}, ${x.dates}">${ui('zm-'+x.id,'zg-m')}<span>${x.name}</span></button>`).join('')}</div>
   <details class="ob-bday"${V.bdayOpen?' open':''}><summary>Not sure of your sign?</summary><div class="field"><label for="obd">Your birthday</label><input type="date" id="obd"></div>${s&&V.bdayOpen?`<p class="ob-hint" role="status">That makes you ${s.name}. Tap ${s.name} to continue.</p>`:''}</details></div>`;
- if(st==='account')return `<div class="ob ob-dark ob-acct">${obBg(['home-vines','obl-top'],['welcome','obl-woman'],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="sign"','Back')}
+ if(st==='account')return `<div class="ob ob-dark ob-acct">${obBg(['ob-woman','obl-top'],['home-vines','obl-mid',false],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="sign"','Back')}
   <div class="oba-head"><h1>Create Your<br>Account</h1>${obRule()}<p class="ob-lead">Join Kosmia and start your journey of self-discovery.</p></div>
   <form id="authForm" class="ob-fields ob-panel" novalidate><div class="field"><label for="em">Email address</label><div class="inp">${IC.mail}<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(S.email)}" required></div></div>
   ${pwField('pw','Create a password','At least 8 characters','new-password')}${pwField('pw2','Confirm password','Type it again','new-password')}

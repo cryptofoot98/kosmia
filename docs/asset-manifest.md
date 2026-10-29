@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 410 |
-| In use, provisional | 366 |
+| Images | 415 |
+| In use, provisional | 371 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -33,8 +33,13 @@ their space before they load.
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
 | `public/art/atlas/home-garden.webp` | 720×1080 | 2:3 | no | 207 | provisional |  |
 | `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
+| `public/art/atlas/ob-crescent.webp` | 1200×800 | 3:2 | no | 221 | provisional |  |
 | `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
+| `public/art/atlas/ob-sky.webp` | 900×1350 | 2:3 | no | 311 | provisional |  |
+| `public/art/atlas/ob-sunset.webp` | 960×1440 | 2:3 | no | 378 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
+| `public/art/atlas/ob-wisdom.webp` | 1024×1024 | 1:1 | no | 271 | provisional |  |
+| `public/art/atlas/ob-woman.webp` | 1200×800 | 3:2 | no | 238 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
 | `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
 | `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
