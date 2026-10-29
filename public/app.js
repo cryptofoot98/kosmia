@@ -508,8 +508,6 @@ views.home=()=>{
  const nm=firstName(),short=hShort(h.body),fig='atlas/fg-'+sign.id;
  const quick=['love','health','career','money','family'].map(cat=>{const x=horoscope(sign.id,cat,'daily');return `<button class="qt" data-act="tohoroscope" data-cat="${cat}">${catIco(cat,'qt-i')}<strong>${CAT_INFO[cat][0]}</strong><span>${TILE[cat][x.rel]||''}</span></button>`}).join('');
  const note=S.notes[k],wbtn=!rev?`<button class="btn" data-act="reveal">Reveal Today’s Message</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Your Reflection':'Reflect in Your Journal'} →</button>`;
- const evs=upcoming().filter(e=>['moon','eclipse','season','retrograde'].includes(e.type)||(e.k==='ingress'&&['Venus','Mars','Mercury','Jupiter'].includes(e.planet))).slice(0,6);
- const recent=journalItems().slice().sort((a,b)=>(b.at||b.day)>(a.at||a.day)?1:-1).slice(0,3);
  return `<div class="home"><div class="hbar"><span class="cz">Kosmia</span>${avatar()}</div>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`
   <div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
@@ -525,15 +523,9 @@ views.home=()=>{
    <div class="dw-r">${rev?`<p class="dw-q">${Kit.icon('star')}${esc(c.msg)}${Kit.icon('star',{cls:'s2'})}</p>`:`<p class="dw-q">${Kit.icon('star')}A card, a message, a moment for you. Turn it over when you are ready.</p>`}${wbtn}</div></div>`,'gilt hwhisper')}
   <button class="energy" data-go="discover" data-t="moon">${ui('home-energy','en-bg')}<span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>`})}
  ${scenic(`
- ${panel(`${orn('Upcoming Celestial Events',seeAll('discover','calendar'))}
- <div class="evgrid">${evs.slice(0,3).map(e=>Kit.event({attrs:`data-act="evgo" data-ref="${evRef(e)}"`,art:`<span class="evc-art">${evArt(e,false)}</span>`,title:`${esc(e.name)}${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?`<br>in ${sIdx(e.sign).name}`:''}`,date:e.dateOnly?ymdLong(e.date.toISOString().slice(0,10),{day:'numeric',month:'short',year:'numeric'}):shortD(e.date),note:evKeys(e)})).join('')}</div>`,'home-p')}
  ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
  <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>`,'home-p')}
- ${panel(`${orn('Recent Readings',seeAll('tarot','journal'))}
- <div class="list">${recent.length?recent.map(p=>{const n=jNote(p)||(p.t==='j'?p.j.body:'');return lrow(jThumb(p),JKIND[p.t][0],`<em>${jTitle(p)}</em>`,`data-act="jopen" data-k="${esc(jKey(p))}"`,`<span class="lr-m">${relDay(p.day)}${n?' • Reflection added':''}</span>`)}).join('')
-  :lrow(ui('t-whisper','th'),'Your readings will gather here','Reveal today’s Whisper or draw a tarot spread to begin.','data-go="tarot" data-t="whisper"')}</div>`,'home-p')}
- <button class="kban" data-go="kassandra">${ui('kassandra-banner','kb-i')}<span class="kb-t"><span class="cz">Talk to Kassandra</span><span>Your AI fortune teller</span><span class="btn ghost light">Start a conversation →</span></span></button>
- <div class="sunq">${ui('home-sun','sq-i')}<p>Every day is a new page<br>in your cosmic story.</p></div>`,'hsheet')}</div>`;
+ `,'hsheet')}</div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){
