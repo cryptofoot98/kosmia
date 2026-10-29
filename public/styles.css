@@ -292,8 +292,8 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .hh-acts{grid-column:3;justify-self:end;display:flex;align-items:center;gap:1cqw;margin-top:2cqw}
 .hh-acts .ibtn{width:max(34px,8cqw);height:max(34px,8cqw);color:#F1DFB4}
 .hh-acts .avatar{width:max(36px,9.6cqw);height:max(36px,9.6cqw)}
-.hh-greet{position:relative;z-index:var(--zs-content);margin-top:5.5cqw;text-align:center;font-family:var(--font-serif);font-weight:600;font-size:max(20px,5.6cqw);color:#FBF1D8;text-shadow:0 2px 8px rgba(0,0,0,.9)}
-.hh-sub{position:relative;z-index:var(--zs-content);margin-top:.6cqw;text-align:center;font-size:max(13.5px,3.5cqw);color:#F1E2BC;text-shadow:0 1px 6px rgba(0,0,0,.95)}
+.hh-greet{position:relative;z-index:var(--zs-content);margin:1.8cqw 0 0 26cqw;width:58cqw;text-align:center;font-family:var(--font-serif);font-weight:600;font-size:max(22px,6.4cqw);line-height:1.15;color:#FBF1D8;text-shadow:0 2px 8px rgba(0,0,0,.9)}
+.hh-sub{position:relative;z-index:var(--zs-content);margin:3.8cqw 0 0 22cqw;width:66cqw;text-align:center;font-size:max(13.5px,3.5cqw);color:#F1E2BC;text-shadow:0 1px 6px rgba(0,0,0,.95)}
 
 /* the stage: the card holds its place at the right; the figure is anchored to the card's foot at the left */
 .hh-stage{position:relative;margin-top:7cqw;padding-left:42.5cqw;padding-right:1.5cqw}
@@ -1264,7 +1264,9 @@ body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:
    dissolves into it there; the gold rules and the dark ground begin only below the join */
 .hsheet{margin-top:-22cqw;padding-top:22cqw}
 .hsheet>.ksc-bg{background:none}
-.hsheet>.ksc-bg::after{top:30cqw}
+.hsheet>.ksc-bg::after{top:22cqw}
+/* the gold rules down both sides run unbroken from the top of Home to the foot: the hero draws them down to where the sheet's begin */
+.home .hhero::after{content:'';position:absolute;inset:0;z-index:var(--zs-over);pointer-events:none;background:linear-gradient(90deg,transparent 1.1cqw,var(--k-gold) 1.1cqw,var(--k-gold) calc(1.1cqw + 1px),transparent calc(1.1cqw + 1px),transparent calc(100% - 1.1cqw - 1px),var(--k-gold) calc(100% - 1.1cqw - 1px),var(--k-gold) calc(100% - 1.1cqw),transparent calc(100% - 1.1cqw))}
 .home .hhero{z-index:1;background:none}
 /* the three sections below the topics sit 4.2% of the width apart, the same gap everywhere; Today's Cosmic Energy keeps only
    its floating panel, over the same painting as the Whisper and Explore */
