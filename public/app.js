@@ -403,12 +403,12 @@ const obBg=(...layers)=>`<div class="obg" aria-hidden="true">${layers.map(([id,c
 const obRule=(cls='')=>`<span class="ob-rule${cls?' '+cls:''}" aria-hidden="true">${Kit.icon('star')}</span>`;
 // the golden sunset rising from the foot of every page, and the crown of night with its crescent over a parchment page
 const SUNSET=['ob-sunset','obl-foot',false],CROWN=['ob-crescent','obl-crown'];
-const OB_FEATS=[['sun','Personalised horoscopes','Daily, weekly, monthly and beyond'],['tarot','Tarot and daily Whispers','Guidance for your journey'],['moon','Astrology and numerology','Discover your unique blueprint'],['compass','Cosmic calendar','Follow the energy of the universe'],['star','Dream interpretation','Decode the messages within'],['kassandra','Kassandra, your AI oracle','Always here for your questions']];
+const OB_FEATS=[['obm-sun','Personalised horoscopes','Daily, weekly, monthly and beyond'],['obm-tarot','Tarot and daily Whispers','Guidance for your journey'],['obm-moon','Astrology and numerology','Discover your unique blueprint'],['obm-star','Cosmic calendar','Follow the energy of the universe'],['obm-dream','Dream interpretation','Decode the messages within'],['kassandra','Kassandra, your AI oracle','Always here for your questions']];
 views.welcome=()=>{
  const st=V.ob,s=V.joinSign?sg(V.joinSign):null;
  if(st==='intro')return `<div class="ob ob-paper ob-intro">${obBg(SUNSET)}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
   <div class="obi-top">${ui('ob-wisdom','obi-w','',true)}<div class="obi-head"><h1 class="cz">Ancient Wisdom<br>for Modern Life</h1>${obRule()}<p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p></div></div>
-  <ul class="obi-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${i==='kassandra'?ui('kassandra','obi-k'):Kit.icon(i)}</span><span><strong>${t}</strong><span>${d}</span></span></li>`).join('')}</ul>
+  <ul class="obi-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${ui(i,'obi-k')}</span><span><strong>${t}</strong><span>${d}</span></span><svg class="obi-chev" viewBox="0 0 12 20" aria-hidden="true"><path d="M2.5 2.5l7 7.5-7 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>`).join('')}</ul>
   ${obRule()}<button class="btn" data-act="obnext" data-to="sign">Let’s Begin →</button></div>`;
  if(st==='sign')return `<div class="ob ob-dark ob-sign">${obBg(['ob-sky','obl-top'],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}
   <h1>What’s your<br>zodiac sign?</h1><p class="ob-lead">Choose your sun sign to personalise your cosmic experience.</p>

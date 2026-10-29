@@ -65,6 +65,15 @@ Five paintings were made with `gpt-image-2` on 29 October 2026, each guided by a
 
 They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` and `home-energy` on these pages), which stay in use elsewhere in the app.
 
+## Ancient Wisdom, second pass (29 October 2026)
+
+**Reference:** `docs/mockups/ob3-intro.png` (approved). **Comparison:** `docs/review/ob3-intro.webp` (reference, before, after).
+
+- **The painting** (`ob-wisdom`, repainted from a crop of the reference with its text blanked): a larger parchment cloud holds the title, its rule and the whole subtitle; its foot is a bank of cream clouds melting into the parchment, so the rows begin in the cloud, not under a hard edge. It is shown 112% wide (the outer vines cropped) so the cloud is tall enough at every width, and it starts below the status bar.
+- **The rows:** old parchment plaques with a double gilt edge and aged, darker borders, joined by a small gold lozenge, each with a decorative chevron; titles in EB Garamond semibold, subtitles in EB Garamond.
+- **The medallions:** five new paintings after the reference (`obm-sun`, `obm-tarot`, `obm-moon`, `obm-star`, `obm-dream`, 192 px, about 8–11 KB each); Kassandra keeps her portrait.
+- **The flowers:** the sunset's lilies and roses start below Let's Begin at every tested size and never reach the rows.
+
 ## Checks
 
 **Viewports:** 360×800, 375×812, 390×844, 393×852, 430×932, 360×640 and 768×1024 (welcome, intro, sign, account, sign in):
@@ -87,5 +96,6 @@ They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` an
 ## Remaining differences from the mockups
 
 - **Same story, new paintings:** the paintings follow the mockups' compositions but are new paintings, not copies, so details differ: the exact pose, the flowers and how far the town reaches.
-- **Feature rows:** the rows on Ancient Wisdom have no chevrons. The rows are not links, and a chevron would promise a tap that does nothing.
+- **Feature rows:** the chevrons on Ancient Wisdom follow the approved design but are decorative (hidden from screen readers); the rows are not links.
+- **Side vines:** the vines that run down beside the rows on Ancient Wisdom in the reference are not drawn; the page's flowers stay in the painting above and the sunset below, clear of the rows.
 - **Height:** the zodiac and account pages are a little taller than one 390×844 screen, so the lowest part of the sunset sits just below the fold. Welcome Back fits on one screen with the sunset in view.

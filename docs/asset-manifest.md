@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 415 |
-| In use, provisional | 371 |
+| Images | 420 |
+| In use, provisional | 376 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -38,8 +38,13 @@ their space before they load.
 | `public/art/atlas/ob-sky.webp` | 900×1350 | 2:3 | no | 311 | provisional |  |
 | `public/art/atlas/ob-sunset.webp` | 960×1440 | 2:3 | no | 378 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
-| `public/art/atlas/ob-wisdom.webp` | 1024×1024 | 1:1 | no | 271 | provisional |  |
+| `public/art/atlas/ob-wisdom.webp` | 1024×1024 | 1:1 | no | 230 | provisional |  |
 | `public/art/atlas/ob-woman.webp` | 1200×800 | 3:2 | no | 238 | provisional |  |
+| `public/art/atlas/obm-dream.webp` | 192×192 | 1:1 | no | 8 | provisional |  |
+| `public/art/atlas/obm-moon.webp` | 192×192 | 1:1 | no | 9 | provisional |  |
+| `public/art/atlas/obm-star.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
+| `public/art/atlas/obm-sun.webp` | 192×192 | 1:1 | no | 11 | provisional |  |
+| `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
 | `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
 | `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
