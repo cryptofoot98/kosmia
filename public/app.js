@@ -408,7 +408,7 @@ views.welcome=()=>{
  const st=V.ob,s=V.joinSign?sg(V.joinSign):null;
  if(st==='intro')return `<div class="ob ob-paper ob-intro">${obBg(['aw-foot','aw-f',false],['aw-top','aw-t'])}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
   <div class="aw-top"><div class="aw-head"><h1 class="cz">Ancient Wisdom<br>for Modern Life</h1><span class="ob-rule" aria-hidden="true">${Kit.icon('compass')}</span><p class="ob-lead">Explore the cosmos and discover a deeper understanding of yourself.</p></div></div>
-  <ul class="obi-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${ui(i,'obi-k')}</span><span><strong>${t}</strong><span>${d}</span></span><svg class="obi-chev" viewBox="0 0 12 20" aria-hidden="true"><path d="M2.5 2.5l7 7.5-7 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>`).join('')}</ul>
+  <ul class="obi-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${ui(i,'obi-k')}</span><span><strong>${t}</strong><span>${d}</span></span></li>`).join('')}</ul>
   <div class="aw-go"><button class="btn" data-act="obnext" data-to="sign">Let’s Begin →</button></div></div>`;
  if(st==='sign')return `<div class="ob ob-dark ob-sign">${obBg(['ob-sky','obl-top'],SUNSET)}${STARS}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}
   <h1>What’s your<br>zodiac sign?</h1><p class="ob-lead">Choose your sun sign to personalise your cosmic experience.</p>

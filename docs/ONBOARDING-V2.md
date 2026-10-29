@@ -80,6 +80,11 @@ They replace the stand-ins used at first (`ob-welcome`, `home-sky`, `welcome` an
 
 **Let's Begin** is a compact button where the mockup's closing divider stood, above the sunset.
 
+**Corrections (29 October 2026, later):**
+- **The rows carry no chevrons:** they describe features and are not links; the arrow column is gone and Let's Begin is the page's only action.
+- **The painting on shorter screens:** the rows may compact to 44 px and the painting first gives up up to 30 px of the empty band above the title (the title and back arrow move up with it, never under the safe area), so the woman's face and shoulders stay in view before anything below them is cropped. At the standard sizes (375×812 to 430×932) nothing is cropped beyond the mockup's own frame. Sizes: `docs/review/ob3-intro-sizes.webp` (reference, 375×812, 390×844, 393×852, 430×932, 390×664).
+- **No navy strip:** the page no longer pulled itself up by the app's bottom padding (which onboarding already removes). On this screen only, the ground outside the page (behind Safari's toolbar, or shown by a bounce) is the dark brown of the flowers at the sunset's foot instead of the app's navy, and the bounce is turned off.
+
 The earlier bespoke `ob-wisdom` painting is retired (deleted with its paint job).
 
 ## Checks
