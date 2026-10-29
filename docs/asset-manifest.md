@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 428 |
-| In use, provisional | 384 |
+| Images | 433 |
+| In use, provisional | 389 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -25,6 +25,11 @@ their space before they load.
 | `public/art/atlas/home-garden.webp` | 720×1080 | 2:3 | no | 207 | provisional |  |
 | `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
 | `public/art/atlas/home-night.webp` | 720×1619 | 0.44:1 | no | 235 | provisional |  |
+| `public/art/atlas/nvm-discover.webp` | 192×192 | 1:1 | yes | 13 | provisional |  |
+| `public/art/atlas/nvm-home.webp` | 192×192 | 1:1 | yes | 19 | provisional |  |
+| `public/art/atlas/nvm-horoscope.webp` | 192×192 | 1:1 | yes | 12 | provisional |  |
+| `public/art/atlas/nvm-kassandra.webp` | 192×192 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/nvm-tarot.webp` | 192×192 | 1:1 | yes | 13 | provisional |  |
 | `public/art/atlas/ob-crescent.webp` | 1200×800 | 3:2 | no | 221 | provisional |  |
 | `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
 | `public/art/atlas/ob-sunset-blooms.webp` | 960×1440 | 2:3 | yes | 73 | provisional |  |
@@ -328,7 +333,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/nav-bar.webp` | 1774×357 | 4.97:1 | yes | 91 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
+| `public/art/atlas/nav-bar.webp` | 1774×321 | 5.53:1 | yes | 86 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
 | `public/art/atlas/nav-discover.webp` | 314×320 | 0.98:1 | yes | 33 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
 | `public/art/atlas/nav-home.webp` | 267×320 | 0.83:1 | yes | 40 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
 | `public/art/atlas/nav-horoscope.webp` | 295×320 | 0.92:1 | yes | 29 | provisional | Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved. |
