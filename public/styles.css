@@ -1313,6 +1313,9 @@ html:has(.ob-intro),html:has(.ob-intro) body{background:#523A25;overscroll-behav
 .aw-art{position:absolute;inset:0;pointer-events:none}
 .aw-sc,.aw-cl{position:absolute;left:50%;width:calc(var(--A)*1.493);max-width:none;height:var(--A);transform:translateX(-50%)}
 .aw-sc{bottom:0}
+/* the painting's foot: a low bed of painted cream-gold clouds (aw-clouds) over its bottom edge, the puffs just overlapping the
+   dress, their own lowest puffs dissolving into the textured parchment beneath the first row's edge, with no flat band */
+.aw-clouds{position:absolute;left:0;width:100%;max-width:none;height:13.96cqw;top:calc(100% + 3px - 7.34cqw)}
 .aw-cl{top:var(--sa);-webkit-mask-image:linear-gradient(#000 36.5%,transparent 42%);mask-image:linear-gradient(#000 36.5%,transparent 42%)}
 /* the title and subtitle sit where the mockup sets them, around its painted star rule */
 .aw-head{position:absolute;left:50%;top:var(--sa);width:calc(var(--A)*.8);height:calc(var(--A)*.4);transform:translateX(-50%);text-align:center}

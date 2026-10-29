@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 421 |
-| In use, provisional | 377 |
+| Images | 422 |
+| In use, provisional | 378 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -16,6 +16,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
+| `public/art/atlas/aw-clouds.webp` | 960×134 | 7.16:1 | yes | 34 | provisional |  |
 | `public/art/atlas/aw-foot.webp` | 850×1004 | 0.85:1 | no | 74 | provisional |  |
 | `public/art/atlas/aw-top.webp` | 1269×846 | 3:2 | no | 284 | provisional |  |
 | `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 253 | provisional |  |
