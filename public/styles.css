@@ -269,23 +269,22 @@ details.more{display:flex;flex-direction:column;gap:10px}
 #nav button[aria-current=page] span{border-bottom-color:#22160E}
 #nav button[aria-current=page] .nav-ico{transform:scale(1.06);color:#22160E}
 #nav button:not([aria-current]) .nav-ico{opacity:.82}
-/* the bottom menu, thin: five painted medallions (nvm-*) each in a gold rim and the approved bar's fine gold ring ornament,
-   on a parchment plate with a fine gold edge and rounded ends, gold stars between, the label a little below each medallion and a
-   small gold dot under the current one */
-#nav .in{position:relative;height:calc(61px + env(safe-area-inset-bottom,0px));padding:0 14px env(safe-area-inset-bottom,0px);border:0;border-top:1px solid #B88A4E;border-radius:22px 22px 0 0;
- background:linear-gradient(rgba(240,216,172,.9),rgba(232,205,160,.9)),var(--paper-img) center/cover;box-shadow:inset 0 3px 0 rgba(255,246,226,.55),inset 0 4px 0 rgba(184,138,78,.35)}
-#nav .in button{position:relative;height:61px;padding:2px 0 0;justify-content:flex-start;gap:3px;color:#2A1D14;font-family:var(--font-text);font-weight:500;font-size:11.5px;line-height:1}
-#nav .in button+button{background-position:0 18px!important;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M5 0Q5.6 6.4 10 8Q5.6 9.6 5 16Q4.4 9.6 0 8Q4.4 6.4 5 0Z' fill='%23B0773C'/%3E%3C/svg%3E") 0 17px/6px 10px no-repeat}
-#nav .in button::before{content:'';display:block;width:48px;height:38px;flex:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 38'%3E%3Cg fill='none' stroke='%23B98A4E'%3E%3Ccircle cx='24' cy='19' r='14.2' stroke='%23C99A55' stroke-width='1.5'/%3E%3Cpath d='M12.6 7.6A16.6 16.6 0 0 0 12.6 30.4M35.4 7.6A16.6 16.6 0 0 1 35.4 30.4' stroke-width='.7'/%3E%3Cpath d='M11.2 5.6A18.6 18.6 0 0 0 11.2 32.4M36.8 5.6A18.6 18.6 0 0 1 36.8 32.4' stroke-width='.45'/%3E%3Cpath d='M15 2.6q3 1.6 4.4 .2M33 2.6q-3 1.6-4.4 .2' stroke-width='.6'/%3E%3C/g%3E%3Cpath d='M3.6 19l1.6-.6.6-1.6.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6zM40 19l1.6-.6.6-1.6.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6z' fill='%23B98A4E'/%3E%3C/svg%3E") center/48px 38px no-repeat,var(--med) center/27px 27px no-repeat;border-radius:0}
-#nav .in [data-nav=home]{--med:url(/art/atlas/nvm-home.webp)}
-#nav .in [data-nav=horoscope]{--med:url(/art/atlas/nvm-horoscope.webp)}
-#nav .in [data-nav=tarot]{--med:url(/art/atlas/nvm-tarot.webp)}
-#nav .in [data-nav=discover]{--med:url(/art/atlas/nvm-discover.webp)}
-#nav .in [data-nav=kassandra]{--med:url(/art/atlas/nvm-kassandra.webp)}
+/* the bottom menu: a slim parchment strip with a hairline of antique gold along its gently rounded top, five engraved line
+   icons (nvi-*, newly painted) over small serif labels; the current tab is marked only by a richer icon, a faint warm light
+   behind it and a stronger label */
+#nav .in{position:relative;height:calc(56px + env(safe-area-inset-bottom,0px));padding:0 6px env(safe-area-inset-bottom,0px);border:0;border-top:1px solid rgba(185,138,78,.85);border-radius:16px 16px 0 0;
+ background:linear-gradient(rgba(242,224,190,.93),rgba(236,215,178,.93)),var(--paper-img) center/cover;box-shadow:inset 0 1px 0 rgba(255,248,232,.6)}
+#nav .in button{position:relative;height:56px;min-height:44px;padding:7px 0 0;justify-content:flex-start;gap:4px;color:#5E4A36;font-family:var(--font-text);font-weight:500;font-size:10.5px;line-height:1;letter-spacing:.01em}
+#nav .in button::before{content:'';display:block;width:26px;height:26px;flex:none;background:var(--ico) center/contain no-repeat;filter:brightness(.82) contrast(1.1);opacity:.9;transition:filter .2s,opacity .2s}
+#nav .in [data-nav=home]{--ico:url(/art/atlas/nvi-home.webp)}
+#nav .in [data-nav=horoscope]{--ico:url(/art/atlas/nvi-horoscope.webp)}
+#nav .in [data-nav=tarot]{--ico:url(/art/atlas/nvi-tarot.webp)}
+#nav .in [data-nav=discover]{--ico:url(/art/atlas/nvi-discover.webp)}
+#nav .in [data-nav=kassandra]{--ico:url(/art/atlas/nvi-kassandra.webp)}
 #nav .in .nav-ico{display:none}
 #nav .in button span{border:0;padding:0}
-#nav .in button[aria-current=page]{color:#22160E;font-weight:600}
-#nav .in button[aria-current=page]::after{content:'';position:absolute;left:50%;bottom:2px;width:4px;height:4px;border-radius:50%;background:#9A6A35;transform:translateX(-50%)}
+#nav .in button[aria-current=page]{color:#2A1A0E;font-weight:600}
+#nav .in button[aria-current=page]::before{opacity:1;filter:brightness(.98) saturate(1.25) contrast(1.15) drop-shadow(0 0 5px rgba(232,186,104,.75))}
 #nav .in button:focus-visible{outline:2px solid #9A6A35;outline-offset:-3px;border-radius:10px}
 .toast{position:fixed;left:50%;bottom:calc(var(--navh,0px) + 14px);transform:translateX(-50%);z-index:var(--z-toast);max-width:min(92vw,440px);background:var(--btn);color:var(--k-on-dark);border:1px solid var(--gold2);padding:10px 18px;border-radius:12px;font-size:.95rem;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .toast-a{margin-left:10px;background:none;border:0;border-bottom:1px solid #E9CB86;color:#F3DC9E;font:inherit;font-weight:600;cursor:pointer;padding:0}

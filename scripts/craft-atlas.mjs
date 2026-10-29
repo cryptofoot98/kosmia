@@ -52,14 +52,16 @@ const round = 'A single circular medallion filling the square image edge to edge
 const icon = 'A single small illustrated icon, centred with generous margin, on a perfectly plain flat light ivory background (#F4EADA) with no texture, no frame and no shadow, hand-engraved vintage style with gold, sepia and soft colour.';
 // the reference medallions hold their subject alone: the house style's flowers stay out of them
 const plainMed = 'Absolutely no flowers, no leaves, no lilies, no roses, no daisies, no vines and no wreath anywhere: only the single subject, the dark starry navy sky, a few tiny gold stars and the thin gold rim.';
-const navMed = 'A single round medallion icon filling the square image edge to edge: a deep black-navy enamel disc framed by a clearly visible polished antique-gold rim (a bold gold ring about 4% of the diameter, with a thin inner gold line) and a thin dark outer edge, the subject in rich engraved gold with crisp fine detail, sharp and clean, legible when shown small; plain flat dark navy (#0B1522) outside the circle. Absolutely no text, no letters, no ornament outside the disc, no flowers outside it.';
+// line icons: the house style without its botanical borders and night skies
+const LINESTYLE = 'Style: antique hand-engraved line work in the manner of a vintage celestial almanac: crisp fine ink and gold lines, delicate hatching, restrained antique gold, dark bronze-brown and (only where asked) muted violet. Nothing but the single subject: no flowers, no leaves, no lilies, no roses, no sky, no background fill. Absolutely no text, letters, numbers, signatures or watermarks.';
+const navLine = 'A single small, refined navigation icon: an antique hand-engraved line illustration in antique gold and dark bronze-brown, crisp fine lines of even weight, elegant and sophisticated, never cartoonish or emoji-like, perfectly legible when shown at 26 pixels; centred with generous empty margin on a perfectly plain, flat, untextured light ivory background (#F4EADA). Absolutely no circle, no medallion, no frame, no border, no flowers, no text, no shadow, no texture on the background.';
 const JOBS = [
-  // the bottom menu's five medallions (docs: the approved menu bar), painted sharp from crops of the zoomed mockup
-  ['nvm-home', sq, 'nvm-home', 'high', `${navMed} ${plainMed} The subject: a radiant engraved golden sun with a calm serene human face and long alternating straight and wavy rays, tiny gold specks around it.`],
-  ['nvm-horoscope', sq, 'nvm-horoscope', 'high', `${navMed} ${plainMed} The subject: a large engraved golden crescent moon opening to the right, small four-pointed gold stars around it, and nothing else: open dark sky fills the rest of the disc. NO flowers, NO lilies, NO roses, NO daisies anywhere.`],
-  ['nvm-tarot', sq, 'nvm-tarot', 'high', `${navMed} ${plainMed} The subject: a single upright tarot card drawn in fine gold lines with an ornate inner frame and an eight-pointed gold star in its centre, the card exactly centred, small gold stars on both sides and nothing else: open dark sky fills the rest of the disc. NO flowers, NO lilies, NO roses, NO daisies anywhere.`],
-  ['nvm-discover', sq, 'nvm-discover', 'high', `${navMed} ${plainMed} The subject: a large eight-pointed engraved golden compass star with long bevelled points and a small round centre, exactly centred, scattered small gold stars around it and nothing else. NO flowers, NO leaves, NO moon, NO lilies, NO roses anywhere.`],
-  ['nvm-kassandra', sq, 'nvm-kassandra', 'high', `${navMed} ${plainMed} The subject: a glowing crystal ball of violet and lavender light with a small gold crescent moon and tiny stars inside it, resting on an ornate engraved gold stand, fine gold rays radiating behind it.`],
+  // the slim bottom menu's icon family (a line set, newly painted; the approved mockup only as style reference)
+  ['nvi-home', sq, 'nvi-home', 'high', `${navLine} The subject: an engraved sun with a calm human face and fine alternating straight and wavy golden rays.`, '', 'line'],
+  ['nvi-horoscope', sq, 'nvi-horoscope', 'high', `${navLine} The subject: an elegant engraved crescent moon opening to the right, with two tiny four-pointed stars beside it.`, '', 'line'],
+  ['nvi-tarot', sq, 'nvi-tarot', 'high', `${navLine} The subject: a small upright tarot card drawn in a fine antique-gold outline with a thin inner border and an eight-pointed star in its centre.`, '', 'line'],
+  ['nvi-discover', sq, 'nvi-discover', 'high', `${navLine} The subject: a refined eight-pointed celestial compass star, its long points engraved with a fine central line and shading on one side.`, '', 'line'],
+  ['nvi-kassandra', sq, 'nvi-kassandra', 'high', `${navLine} The subject: a small crystal ball with a deep violet interior holding a few tiny gold stars, resting on a small ornate antique-gold stand; the only icon with colour inside, still in the same fine engraved style.`, '', 'line'],
   // onboarding v2 (docs/mockups/ob2-*): shared layers for the four screens. One sunset for the foot of every screen,
   // the sign chooser's sky, the woman before the moon (sign-up header and the introduction) and the sign-in crescent
   ['ob-sunset', tall, 'obsunset', 'high', 'Tall illustration for the foot of app screens; its upper part will fade into the page. The top 40% is a soft warm dusk sky: peach, amber and rose clouds with a few faint stars, calmer and lighter towards the top edge. A warm amber sun sits low over a calm lake at about 62% of the height, with a bright golden reflection running down the water. Blue-purple mountain silhouettes rise on both sides, small lit Italianate buildings and cypress trees stand on the right shore, and one or two tiny sailing boats float on the lake. In the lower corners and climbing up both side edges are white lilies, daisies, deep red roses and dark green leaves in the foreground. No frame, no border.'],
@@ -157,7 +159,7 @@ const JOBS = [
 ];
 
 async function paint([id, size, ref, quality, prompt, background, kind]) {
-  const text = `${prompt}\n${kind === 'solo' ? FIGSTYLE : STYLE}`;
+  const text = `${prompt}\n${kind === 'solo' ? FIGSTYLE : kind === 'line' ? LINESTYLE : STYLE}`;
   const refPath = refs && ref && join(refs, ref + '.png');
   const opts = { model, size, quality, output_format: 'webp', output_compression: '86', ...(background ? { background } : {}) };
   let res;
