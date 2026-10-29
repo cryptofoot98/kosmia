@@ -104,6 +104,16 @@ The earlier bespoke `ob-wisdom` painting is retired (deleted with its paint job)
 - **No scrolling:** the artwork is unchanged; the empty band kept below the form is gone and the header and form spacing take their size from the visible screen. On screens under 780px tall the three password rules sit side by side; under 740px the title and labels are a little smaller and the sunset painting sits 20px lower (36px under 690px, where the form's small star rule is also hidden). Fits from 360×640 to 430×932 and on a tablet.
 - **The flowers embrace the form:** `ob-sunset-blooms` is the sunset painting's own lily (lower left) and roses (lower right), cut out and laid exactly over themselves above the form. The form ends 14px below the lily's tallest petal, so the petal tips reach over its lower-left edge and the rose wraps its lower-right corner, clear of all text; they take no taps.
 
+## Welcome Back as one painting (29 October 2026, approved preview)
+
+**Reference:** `docs/mockups/ob3-signin.png`. **Comparison:** `docs/review/ob3-signin.webp` (design, the previous build on an iPhone, 393×852, 402×715, 375×667, keyboard open).
+
+- **The art is the mockup's own painting** with its interface lifted out: the parchment under the title and form repainted by a masked `gpt-image-2` edit and blended in the gradient domain (no box edges), the status bar, back arrow and phone frame filled from their neighbours.
+- **Two layers of it:** `wb-top` (the night, crescent, lilies and vines opening into the parchment with its painted star) from the top, and `wb-sun` (the sunset with clouds, sun, mountains, town, lake and flowers) from the foot. The mockup is three times taller than wide, so both are shown a little smaller than the mockup's scale, their sides painted further in the same style (the original centre unchanged, blended in the gradient domain).
+- **One screen:** the sunset starts just below the last link at every size (its top dissolving into the parchment), so all text stays on parchment. On short screens (under 780px tall) the form tightens a little and the sunset's upper clouds and sun dissolve away; the town, lake and flowers are always kept. No scrolling from 360×640 to 430×932.
+- **The form:** the mockup's serif heading and subtitle, cream fields with fine gold edges, a dark chocolate Sign In button with gold lettering (dark even before typing; dimmer lettering while disabled), burgundy links. The sign-in calls are unchanged.
+- `ob-crescent` stays in use on Check your inbox and the reset page.
+
 ## Checks
 
 **Viewports:** 360×800, 375×812, 390×844, 393×852, 430×932, 360×640 and 768×1024 (welcome, intro, sign, account, sign in):

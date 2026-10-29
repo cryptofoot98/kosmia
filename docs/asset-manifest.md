@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 423 |
-| In use, provisional | 379 |
+| Images | 425 |
+| In use, provisional | 381 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -34,6 +34,8 @@ their space before they load.
 | `public/art/atlas/obm-star.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/obm-sun.webp` | 192×192 | 1:1 | no | 11 | provisional |  |
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
+| `public/art/atlas/wb-sun.webp` | 1400×933 | 1.50:1 | no | 377 | provisional |  |
+| `public/art/atlas/wb-top.webp` | 1024×1536 | 2:3 | no | 240 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
 | `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
 | `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |

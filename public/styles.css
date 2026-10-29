@@ -1391,6 +1391,33 @@ html:has(.ob-sign),html:has(.ob-sign) body{background:#0D1426;overscroll-behavio
 .ob-signin .ob-fields{text-align:left}
 .ob-signin .ob-mail{margin-top:0}
 .ob-intro>.ibtn{top:calc(12.5cqw + var(--sa));left:2.5cqw}
+/* 3. Welcome Back: one painting behind the whole page (the approved mockup's own art, its interface lifted out): wb-top, the
+   night with its crescent and lilies opening into the glowing parchment (with the painted star above the title), at the
+   mockup's scale from the top; wb-sun, the sunset with its clouds, sun, town, lake and flowers (its sides painted further),
+   from the foot, rising out of the parchment. The form sits on the parchment as in the mockup; the sunset takes the height
+   the form leaves (from the visible screen): on short screens its upper clouds dissolve into the parchment, the sun, town,
+   lake and flowers always kept */
+.ob-wb{--H:100vh;container-type:inline-size;min-height:var(--H);padding:0;gap:0;justify-content:flex-start;background:#E9D2A6}
+@supports (height:100dvh){.ob-wb{--H:100dvh}}
+html:has(.ob-wb),html:has(.ob-wb) body{background:#2A2219;overscroll-behavior:none}
+.wb-t{top:0;height:150cqw;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
+.ob-wb{--av:clamp(36cqw,calc(var(--H)*.9 - 46.5cqw - 322px),84.62cqw)}
+.wb-s{left:50%;bottom:0;width:127cqw;height:84.62cqw;transform:translateX(-50%);-webkit-mask-image:linear-gradient(to top,#000 calc(var(--av) - 17cqw),transparent var(--av));mask-image:linear-gradient(to top,#000 calc(var(--av) - 17cqw),transparent var(--av))}
+.ob-wb>.ibtn{top:calc(12cqw + max(0px,env(safe-area-inset-top,0px) - 10cqw));left:3cqw}
+.ob-wb h1{margin:max(46.5cqw,calc(env(safe-area-inset-top,0px) + 42cqw)) 0 0;font-family:var(--font-serif);font-weight:700;font-size:min(10.4cqw,2.9rem);line-height:1.05;color:#2E2118}
+.ob-wb .ob-lead{margin:clamp(4px,1.2vh,10px) auto 0;max-width:84cqw;font-family:var(--font-text);font-size:max(14.5px,3.9cqw);line-height:1.3;color:var(--k-ink)}
+.ob-wb .ob-fields{width:82cqw;margin:clamp(8px,2.2vh,20px) auto 0;gap:clamp(6px,1.35vh,12px);max-width:none}
+.ob-wb .field{gap:clamp(3px,.7vh,6px)}
+.ob-wb .field>label{font-size:1rem}
+.ob-wb input{min-height:clamp(44px,5.8vh,50px);background:rgba(250,240,220,.7)}
+.ob-wb .btn,.ob-wb .btn[disabled]{min-height:clamp(44px,5.8vh,50px);margin-top:clamp(2px,.8vh,8px);opacity:1;background:linear-gradient(#4A3324,#2C1D13);color:#F1DCAA;letter-spacing:.16em}
+.ob-wb .btn[disabled]{color:rgba(241,220,170,.7)}
+.ob-wb .auth-alt{margin:0;font-size:.98rem;text-shadow:0 0 8px rgba(246,230,200,.95),0 0 3px rgba(246,230,200,.95)}
+.ob-wb .ob-fields .ob-rule{margin:0 auto}
+@media (max-height:780px){.ob-wb{--av:clamp(36cqw,calc(var(--H)*.94 - 46.5cqw - 300px),84.62cqw)}
+ .ob-wb .ob-lead{margin-top:2px;font-size:14px}.ob-wb .ob-fields{margin-top:8px;gap:5px}.ob-wb .field{gap:2px}
+ .ob-wb .field>label{font-size:.94rem}.ob-wb input,.ob-wb .btn,.ob-wb .btn[disabled]{min-height:44px}.ob-wb .btn{margin-top:4px}
+ .ob-wb .ob-fields .ob-rule{margin:-4px auto}.ob-wb .auth-alt{font-size:.93rem}}
 .ob-intro>.ibtn,.ob-signin>.ibtn{color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
 .ob .ob-lead{text-wrap:balance}
 .ob-sign .zs-head .ob-lead{text-wrap:wrap}
