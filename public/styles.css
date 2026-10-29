@@ -314,10 +314,15 @@ details.more{display:flex;flex-direction:column;gap:10px}
 
 /* the stage: the card holds its place at the right; the figure is anchored to the card's foot at the left */
 .hh-stage{position:relative;margin-top:7cqw;padding-left:42.5cqw;padding-right:1.5cqw}
-.hh-card{position:relative;z-index:var(--zs-content);display:flex;flex-direction:column;gap:1.6cqw;padding:3.6cqw 3.4cqw 5.4cqw 8.5cqw;border-radius:2.6cqw;color:var(--k-ink);
+.hh-card{position:relative;display:flex;flex-direction:column;gap:1.6cqw;padding:3.6cqw 3.4cqw 5.4cqw 8.5cqw;border-radius:2.6cqw;color:var(--k-ink)}
+/* the card is drawn in three layers so the sign's figure can rest across its left edge, whole: the parchment (::before) under
+   the figure, the text and button above it */
+.hh-card::before{content:'';position:absolute;inset:0;z-index:var(--zs-under);border-radius:inherit;pointer-events:none;
  background:var(--c-tr) calc(100% - 1cqw) 1cqw/5cqw no-repeat,var(--c-br) calc(100% - 1cqw) calc(100% - 1cqw)/5cqw no-repeat,linear-gradient(rgba(var(--k-surface-hi-rgb),.55),rgba(var(--k-surface-rgb),.2)),var(--k-parchment-light) var(--paper-img) center/cover;
  border:1px solid var(--k-gold);box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.55),0 2cqw 5cqw rgba(0,0,0,.55)}
-.hh-card::after{content:'';position:absolute;right:4cqw;top:4.5cqw;width:6cqw;height:6cqw;background:var(--k-gold);opacity:.55;
+.hh-card>*{position:relative;z-index:var(--zs-ctrl)}
+.hh-card>:not(.btn){text-shadow:0 0 .6em rgba(var(--k-surface-hi-rgb),.95),0 0 .2em rgba(var(--k-surface-hi-rgb),.95)}
+.hh-card::after{content:'';position:absolute;z-index:var(--zs-ctrl);right:4cqw;top:4.5cqw;width:6cqw;height:6cqw;background:var(--k-gold);opacity:.55;
  clip-path:polygon(50% 0,56% 44%,100% 50%,56% 56%,50% 100%,44% 56%,0 50%,44% 44%)}
 .hh-name{display:flex;gap:2.6cqw;align-items:center}
 .hh-name .glyph{font-size:10cqw;line-height:.9;color:var(--k-ink)}
@@ -337,8 +342,7 @@ details.more{display:flex;flex-direction:column;gap:10px}
  box-shadow:0 0 6cqw 1cqw rgba(var(--k-gold-light-rgb),.28)}
 .hh-halo img{display:block;width:100%;height:100%;border-radius:50%}
 .hh-fig{position:absolute;z-index:var(--zs-over);inset:0;width:100%;height:100%;
- clip-path:polygon(0 0,var(--clip-x,84%) 0,var(--clip-x,84%) var(--clip-y,71%),100% var(--clip-y,71%),100% 100%,0 100%);
- filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35))}
+ filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35));-webkit-mask-image:linear-gradient(#000 84%,transparent 99%),linear-gradient(90deg,#000 84%,transparent 99%);-webkit-mask-composite:source-in;mask-image:linear-gradient(#000 84%,transparent 99%),linear-gradient(90deg,#000 84%,transparent 99%);mask-composite:intersect}
 /* per figure: Libra's pans hang right at the text's edge, so her clip sits a little further right */
 .s-libra{--clip-x:85.8%}
 /* the five insights rest on the flowers at the foot of the scene, over the hem of the figure's gown */
