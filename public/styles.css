@@ -1701,10 +1701,6 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mbox .tbl{margin:0 -12px}.mbox td{font-size:.9rem}
 .mbox td{padding-left:3px;padding-right:3px}.mbox th{white-space:normal;overflow-wrap:anywhere}
 
-/* Home, 2026-10-30: the horoscope card on see-through parchment like the night pages' boxes (the figure and the text
-   are untouched) */
-.hh-card::before{background:var(--c-tr) calc(100% - 1cqw) 1cqw/5cqw no-repeat,var(--c-br) calc(100% - 1cqw) calc(100% - 1cqw)/5cqw no-repeat,rgba(244,232,206,.78);
- -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 /* Today's Cosmic Energy: the same floating panel, now a row of slides that snap one at a time, with dots beneath */
 .en-track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;padding:1.6cqw 0;margin:-1.6cqw 0}
 .en-track::-webkit-scrollbar{display:none}
@@ -1742,3 +1738,14 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 #nav .in button[aria-current=page]::before{filter:brightness(1.3) saturate(1.25) drop-shadow(0 0 4px rgba(255,214,120,1)) drop-shadow(0 0 12px rgba(245,190,90,.85))}
 #nav .in button:not([aria-current])::before{opacity:.82;filter:brightness(.92) drop-shadow(0 1px 1.5px rgba(70,40,10,.4))}
 .en-slot,.en-slide{min-width:0}.en-slot{width:100%;max-width:100%}
+/* the Daily Whisper's box narrower, so the lilies show at both sides; once turned, the message and its question sit under the card */
+.hsheet .card.hwhisper{margin:0 9cqw}
+.dw-big .scene.mini-w{width:80%}
+.dw-msg{font-family:var(--font-serif);font-weight:600;font-size:max(15px,4.3cqw);line-height:1.4;text-align:center;color:var(--k-ink)}
+.dw-ref{position:relative;align-self:stretch;padding:3cqw 3.4cqw 3cqw 8cqw;border:1px solid rgba(var(--k-gold-rgb),.5);border-radius:2.6cqw;background:rgba(var(--k-surface-hi-rgb),.55);
+ font-family:var(--font-text);font-style:italic;font-size:max(13px,3.6cqw);line-height:1.45;color:var(--k-ink-soft)}
+.dw-ref svg{position:absolute;left:2.8cqw;top:3.8cqw;width:3.4cqw;height:3.4cqw;color:var(--k-gold)}
+/* ...and the card enlarged on its own, to see it in detail; a tap anywhere closes it */
+.wpop .wp-in{justify-content:center;cursor:zoom-out}
+.wp-card{width:min(90vw,calc((100dvh - 120px) * 2 / 3),440px)}
+.hsheet .hwhisper .orn h2{white-space:nowrap;font-size:max(12px,3.4cqw);letter-spacing:.1em}.hsheet .hwhisper .orn{justify-content:center}

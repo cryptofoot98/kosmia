@@ -538,13 +538,10 @@ function energySlides(now,m,sign,h){
 const energyCarousel=sl=>`<div class="energy en-car"><span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span>
  <span class="en-track" aria-roledescription="carousel">${sl.map(([img,t,line,attrs],i)=>`<span class="en-slot"><button class="en-row en-slide" ${attrs}>${img}<span><strong>${t}</strong><span>${line}</span></span><span class="en-go">${IC.chev}</span><span class="sr-only">, ${i+1} of ${sl.length}</span></button></span>`).join('')}</span>
  <span class="en-dots" aria-hidden="true">${sl.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span></span></div>`;
-// the Daily Whisper opened: the card full screen, its message, its question and an invitation to reflect
-function whisperPop(c,k){const note=S.notes[k];
+// the Daily Whisper's card enlarged, to see it in detail
+function whisperPop(c){
  return `<div class="pop wpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="wp-in"><button class="pop-x" data-act="wpopclose" aria-label="Close">×</button>
- <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
- <h2>${esc(c.title)}</h2>${mrule()}<p class="wp-msg">${esc(c.msg)}</p>
- <p class="wp-q">${Kit.icon('star')}<span>${esc(c.ref)}</span></p>
- <button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Your Reflection':'Reflect in Your Journal'} →</button></div></div>`}
+ <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -565,11 +562,11 @@ views.home=()=>{
   </div>
   <div class="qrow">${quick}</div>`})}
  ${scenic(`
-  ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-big"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Open the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-   ${rev?`<button class="btn" data-act="wpop">Read Today’s Message →</button>`:wbtn}</div>`,'gilt hwhisper')}
+  ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-big"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+   ${rev?`<p class="dw-msg">${esc(c.msg)}</p><p class="dw-ref">${Kit.icon('star')}${esc(c.ref)}</p>`:''}${wbtn}</div>`,'gilt hwhisper')}
   ${energyCarousel(energySlides(now,m,sign,h))}
 
- `,'hsheet',ui('home-night','ksc-n'))}${V.wpop?whisperPop(c,k):''}</div>`;
+ `,'hsheet',ui('home-night','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){
@@ -1835,7 +1832,7 @@ function drawCards(){const T=V.tarot,sp=SPREADS[T.spread];
 function reveal(){
  const k=dkey();if(S.revealed[k])return;
  const sc=$('.scene');if(sc&&!S.settings.reduce)sc.classList.add('rise');
- S.days[k]=todayCard().id;S.revealed[k]=true;save();syncFortune(k);if(V.sec==='home')V.wpop=true;
+ S.days[k]=todayCard().id;S.revealed[k]=true;save();syncFortune(k);
  if(S.settings.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches)return render();
  setTimeout(()=>{sc&&sc.classList.add('flipped');setTimeout(render,1500)},450);
 }
@@ -2015,7 +2012,7 @@ document.addEventListener('click',e=>{
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
  if(a==='wpop'){V.wpop=true;return render()}
- if(a==='wpopclose'){if(e.target.closest('.wp-in')&&!e.target.closest('.pop-x'))return;V.wpop=false;return render()}
+ if(a==='wpopclose'){V.wpop=false;return render()}
  if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const r={id:uuid(),spread:T.spread,q:T.q,date:dkey(),at:new Date().toISOString(),note:'',cards:T.drawn.map(c=>({id:c.id,pos:c.pos,name:c.name,rev:c.rv}))};
   S.readings.push(r);T.savedId=r.id;save();C.saveReading&&C.saveReading(r).then(id=>{if(id){r.rid=id;r.id=id;r.sy=true;T.savedId=id;save()}});toast('Saved to your journal');return render()}
