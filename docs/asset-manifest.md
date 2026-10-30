@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 468 |
-| In use, provisional | 424 |
+| Images | 470 |
+| In use, provisional | 426 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -69,6 +69,18 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/banner-calendar.webp` | 760×506 | 1.50:1 | no | 129 | provisional |  |
 | `public/art/atlas/banner-library.webp` | 760×506 | 1.50:1 | no | 131 | provisional |  |
+
+## The My Cycles page’s backdrop: a golden wheel of the year under an arc of the Moon’s phases, an hourglass of stardust, a lily terrace over a sea at dusk (painted in the style of the owner’s backdrops)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › My Cycles (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/cycles-bg.webp` | 850×1842 | 0.46:1 | no | 417 | provisional |  |
 
 ## Dream symbol medallion
 
@@ -521,6 +533,18 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/sgmw-cancer.webp` | 354×258 | 1.37:1 | yes | 32 | provisional | below the 444 px it needs at 2× |
 | `public/art/atlas/sgmw-capricorn.webp` | 444×214 | 2.07:1 | yes | 16 | provisional |  |
+
+## The Synastry page’s backdrop: two linked golden zodiac wheels holding the sun and the moon over a rose terrace and moonlit sea (painted in the style of the owner’s backdrops)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Synastry (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/synastry-bg.webp` | 850×1842 | 0.46:1 | no | 414 | provisional |  |
 
 ## Tarot menu medallion (keyed from ivory)
 

@@ -1208,7 +1208,7 @@ function eventsView(){
 const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="sub">${hdr(t)}`);
 views.discover=()=>{
  const t=tab();
- const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>subPage(synastryView()),'life-path':lifePathView,'name-within':nameView,cycles:()=>subPage(cyclesView()),
+ const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>nightPage(synastryView(),'sy'),'life-path':lifePathView,'name-within':nameView,cycles:()=>nightPage(cyclesView(),'cy'),
   calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:eventsView,dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  V.chartOpen=false;
