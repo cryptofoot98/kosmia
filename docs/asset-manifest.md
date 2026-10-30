@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 467 |
-| In use, provisional | 423 |
+| Images | 468 |
+| In use, provisional | 424 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -103,6 +103,18 @@ their space before they load.
 | `public/art/atlas/ev-planet.webp` | 720×480 | 3:2 | no | 124 | provisional |  |
 | `public/art/atlas/ev-quarter.webp` | 720×480 | 3:2 | no | 118 | provisional |  |
 | `public/art/atlas/ev-sun.webp` | 720×480 | 3:2 | no | 134 | provisional |  |
+
+## The Celestial Events page’s backdrop: a total solar eclipse, a meteor shower and a comet over golden clouds, a lily terrace and a moonlit sea (painted in the style of the owner’s Moon, Planets and Profile backdrops)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Celestial Events (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/events-bg.webp` | 850×1842 | 0.46:1 | no | 382 | provisional |  |
 
 ## Circular Explore medallion
 

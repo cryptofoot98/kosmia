@@ -1194,10 +1194,13 @@ function planetsView(now){
  ${mbox(`<h3>Retrograde windows</h3>${mrule()}${rx.length?rx.map(w=>`<div class="asp"><strong>${w.planet}</strong> ${w.start&&w.start<=now&&(!w.end||w.end>=now)?'<span class="badge">now</span>':''}<p class="small">${w.start?d(w.start)+(w.sign!=null?' in '+sIdx(w.sign).name:''):'Before the search window'} → ${w.end?d(w.end)+(w.endSign!=null?' in '+sIdx(w.endSign).name:''):'beyond the next year'}</p><p class="muted small">Traditionally a time to review ${PM[w.planet]}.</p></div>`).join(''):'<p>No retrograde periods in the next year.</p>'}`)}
  ${mbox(`<h3>Coming sign changes</h3>${mrule()}<div class="list">${ing.map(e=>evRow(e)).join('')}</div>`,'phases')}</div>`;
 }
+// Celestial Events: a night page over the eclipse and meteor shower (atlas/events-bg); the filters with their introduction,
+// then the year's events, each on a gilded see-through box
 function eventsView(){
  const f=V.filter.events||'all',ev=upcoming().filter(e=>['eclipse','season','meteor','conjunction','planet'].includes(e.type)&&e.k!=='ingress'&&(f==='all'||e.type===f));
- return `<div class="stack"><h1>Celestial Events</h1><p class="muted center">Eclipses, solstices, equinoxes, meteor showers and meetings of planets over the next year. Each separates the astronomy from its traditional symbolism.</p>${plate('events')}${chips('Show',[['all','All'],['eclipse','Eclipses'],['season','Seasons'],['meteor','Meteors'],['conjunction','Conjunctions'],['planet','Planets']],f,'fevents')}
- ${ev.length?ev.map(e=>evRow(e)).join(''):empty('Nothing of this kind in the next year','Try another filter.')}</div>`;
+ return `<div class="mnp ev">${mnHead('Celestial Events')}
+ ${mbox(`<p class="center">Eclipses, solstices, equinoxes, meteor showers and meetings of planets over the next year. Each separates the astronomy from its traditional symbolism.</p>${mrule()}${chips('Show',[['all','All'],['eclipse','Eclipses'],['season','Seasons'],['meteor','Meteors'],['conjunction','Conjunctions'],['planet','Planets']],f,'fevents')}`,'ev-intro')}
+ ${mbox(`<h3>The year ahead</h3>${mrule()}${ev.length?`<div class="list">${ev.map(e=>evRow(e)).join('')}</div>`:'<p class="center">Nothing of this kind in the next year. Try another filter.</p>'}`,'phases')}</div>`;
 }
 /* ----- Discover: a mystical library of self-discovery, in six categories: Dream Interpretation, Your Cosmic Blueprint,
    Cosmic Connections, The Language of Numbers, the Celestial Calendar and the Mystical Library ----- */
@@ -1206,7 +1209,7 @@ const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<d
 views.discover=()=>{
  const t=tab();
  const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>subPage(synastryView()),'life-path':lifePathView,'name-within':nameView,cycles:()=>subPage(cyclesView()),
-  calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
+  calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:eventsView,dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  V.chartOpen=false;
  // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners
