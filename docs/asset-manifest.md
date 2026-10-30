@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 460 |
-| In use, provisional | 416 |
+| Images | 461 |
+| In use, provisional | 417 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -410,6 +410,18 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/owl.webp` | 1100×733 | 1.50:1 | no | 296 | provisional |  |
+
+## The Planets page’s backdrop: the planets, a sun-faced zodiac wheel and the Milky Way above a terrace over a sunset bay (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Planets (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/planets-bg.webp` | 850×1850 | 0.46:1 | no | 416 | provisional |  |
 
 ## Framed arched portrait of the sign with the glyph roundel
 

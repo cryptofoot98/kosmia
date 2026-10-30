@@ -1168,10 +1168,12 @@ function upcoming(){const k=dkey();if(EVC.k!==k){const now=new Date();EVC={k,lis
 const STAR4='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l1.5 8.5L20 10l-8.5 1.5L10 20l-1.5-8.5L0 10l8.5-1.5z" fill="currentColor"/></svg>';
 const mrule=(cls='')=>`<div class="mrule ${cls}"><i></i>${STAR4}<i></i></div>`;
 const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map(c=>`<i class="mb-c ${c}">${STAR4}</i>`).join('')}${h}</section>`;
+// the gold title set in the painting's sky, with its line, circles and star beneath
+const mnHead=t=>`<header class="mn-hd">${iconBtn('back','data-act="back"','Back')}<div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
 function moonView(now){
  const m=K.moon(now),ing=K.moonIngress(now),ph=K.lunarPhases(now,new Date(+now+120*DAY)),nn=ph.find(e=>e.k==='new_moon'),nf=ph.find(e=>e.k==='full_moon');
  const next=(l,e)=>`<div><div class="label">${l}</div><p>${e?evt(e.date)+'<br><span class="muted">in '+sIdx(e.sign).name+'</span>':''}</p></div>`;
- return `<div class="mnp"><header class="mn-hd">${iconBtn('back','data-act="back"','Back')}<div class="mn-t"><h1>The Moon</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>
+ return `<div class="mnp">${mnHead('The Moon')}
  ${mbox(`<span class="mb-bump"></span><span class="mb-moon">${pic('moons',m.name.toLowerCase().replace(/ /g,'-'),'mb-mi')||moonSvg(m,100)}</span><div class="mb-flank">${mrule('l')}${mrule('r')}</div>
  <div class="center"><h2>${m.name}</h2><p>About ${Math.round(m.ill*100)}% lit · ${m.waxing?'waxing':'waning'} · in ${sIdx(m.sign).name}</p><p class="muted small">Enters ${sIdx(ing.sign).name} ${evt(ing.date)}</p></div>${mrule()}
  <div class="label">Traditional reading</div><p>${m.name==='New Moon'?'A moment associated with beginnings. Consider what you would like to plant.':m.name==='Full Moon'?'A moment associated with fullness and gratitude. Notice what has grown.':m.waxing?'A waxing Moon is associated with growth and intention: what would you like to nurture?':'A waning Moon is associated with release: what are you ready to let go of?'} With the Moon in ${sIdx(m.sign).name}, feelings tend to move ${STYLE[sIdx(m.sign).id]}.</p><div class="label">An optional ritual</div><p>${RITUAL[m.name]}</p>`,'first')}
@@ -1179,12 +1181,14 @@ function moonView(now){
  ${mbox(`<h3>Lunar phases ahead</h3>${mrule()}<div class="list">${ph.slice(0,10).map(e=>evRow(e)).join('')}</div>`,'phases')}
  <p class="mn-note">Times are for ${esc(TZ())}. The Moon’s sign is its geocentric position on the tropical zodiac.</p></div>`;
 }
+// Planets: the same night page as The Moon, over the planets' painting (atlas/planets-bg)
 function planetsView(now){
  const pos=K.positions(now),rx=K.retrogrades(now,new Date(+now+366*DAY)),ing=upcoming().filter(e=>e.k==='ingress').slice(0,14);
  const d=x=>x?shortD(x):'';
- return `<div class="stack"><h1>Planets</h1>${panel(`<h3>Where the planets are now</h3>${plate('orrery')}<div class="tbl"><table><tr><th></th><th>Planet</th><th>Position</th><th></th></tr>${pos.map(p=>`<tr><td class="glyph">${p.g}</td><td>${p.n}</td><td>${degTxt(p.lon)}</td><td>${p.retro?'℞ retrograde':''}</td></tr>`).join('')}</table></div><p class="muted small">Geocentric, tropical zodiac, ${evt(now)}.</p>`)}
- ${panel(`<h3>Retrograde windows</h3>${rx.length?rx.map(w=>`<div class="asp"><strong>${w.planet}</strong> ${w.start&&w.start<=now&&(!w.end||w.end>=now)?'<span class="badge">now</span>':''}<p class="small">${w.start?d(w.start)+(w.sign!=null?' in '+sIdx(w.sign).name:''):'Before the search window'} → ${w.end?d(w.end)+(w.endSign!=null?' in '+sIdx(w.endSign).name:''):'beyond the next year'}</p><p class="muted small">Traditionally a time to review ${PM[w.planet]}.</p></div>`).join(''):'<p>No retrograde periods in the next year.</p>'}`)}
- <h3 class="center">Coming sign changes</h3>${ing.map(e=>evRow(e)).join('')}</div>`;
+ return `<div class="mnp pl">${mnHead('Planets')}
+ ${mbox(`<h3>Where the planets are now</h3>${mrule()}<div class="tbl"><table><tr><th></th><th>Planet</th><th>Position</th><th></th></tr>${pos.map(p=>`<tr><td class="glyph">${p.g}</td><td>${p.n}</td><td>${degTxt(p.lon)}</td><td>${p.retro?'℞ retrograde':''}</td></tr>`).join('')}</table></div><p class="muted small">Geocentric, tropical zodiac, ${evt(now)}.</p>`)}
+ ${mbox(`<h3>Retrograde windows</h3>${mrule()}${rx.length?rx.map(w=>`<div class="asp"><strong>${w.planet}</strong> ${w.start&&w.start<=now&&(!w.end||w.end>=now)?'<span class="badge">now</span>':''}<p class="small">${w.start?d(w.start)+(w.sign!=null?' in '+sIdx(w.sign).name:''):'Before the search window'} → ${w.end?d(w.end)+(w.endSign!=null?' in '+sIdx(w.endSign).name:''):'beyond the next year'}</p><p class="muted small">Traditionally a time to review ${PM[w.planet]}.</p></div>`).join(''):'<p>No retrograde periods in the next year.</p>'}`)}
+ ${mbox(`<h3>Coming sign changes</h3>${mrule()}<div class="list">${ing.map(e=>evRow(e)).join('')}</div>`,'phases')}</div>`;
 }
 function eventsView(){
  const f=V.filter.events||'all',ev=upcoming().filter(e=>['eclipse','season','meteor','conjunction','planet'].includes(e.type)&&e.k!=='ingress'&&(f==='all'||e.type===f));
@@ -1198,7 +1202,7 @@ const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<d
 views.discover=()=>{
  const t=tab();
  const map={'birth-chart':chartView,profile:()=>subPage(profileView()),affinity:affinityView,resonance:resonanceView,synastry:()=>subPage(synastryView()),'life-path':lifePathView,'name-within':nameView,cycles:()=>subPage(cyclesView()),
-  calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>subPage(planetsView(new Date())),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
+  calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  V.chartOpen=false;
  // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners
