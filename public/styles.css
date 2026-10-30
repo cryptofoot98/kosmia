@@ -334,20 +334,20 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .hh-text{font-size:max(12.5px,3.35cqw);line-height:1.4;color:var(--k-ink)}
 .hh-card .btn{align-self:stretch;min-height:max(34px,8.4cqw);margin-top:1cqw;padding:0 2cqw;font-size:max(9px,2.45cqw);letter-spacing:.09em}
 /* the figure and its halo share one box, anchored to the card's foot. Geometry (in the stage, which starts at the
-   scene's padding): the box spans -11cqw…61cqw, so its 84% line falls at 49.5cqw, just short of where the card's text
-   begins (42.5cqw + 8.5cqw of padding); the clip keeps the figure out of the text and the button. The halo passes behind the
+   scene's padding): the box spans -11cqw…61cqw, shown whole and unfaded. The halo passes behind the
    card, the figure in front of it, so only the card's left margin and its foot can ever lie under the figure */
-.hh-figbox{position:absolute;left:var(--fx,-11cqw);bottom:var(--fb,-17cqw);width:var(--fw,72cqw);aspect-ratio:1;pointer-events:none}
+.hh-figbox{position:absolute;left:var(--fx,-11cqw);bottom:var(--fb,-20.5cqw);width:var(--fw,75cqw);aspect-ratio:1;pointer-events:none}
 .hh-halo{position:absolute;z-index:var(--zs-under);left:var(--hx,14%);top:var(--hy,4%);width:var(--hw,56%);aspect-ratio:1;border-radius:50%;
  box-shadow:0 0 6cqw 1cqw rgba(var(--k-gold-light-rgb),.28)}
 .hh-halo img{display:block;width:100%;height:100%;border-radius:50%}
 .hh-fig{position:absolute;z-index:var(--zs-over);inset:0;width:100%;height:100%;
- filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35));-webkit-mask-image:linear-gradient(#000 84%,transparent 99%),linear-gradient(90deg,#000 84%,transparent 99%);-webkit-mask-composite:source-in;mask-image:linear-gradient(#000 84%,transparent 99%),linear-gradient(90deg,#000 84%,transparent 99%);mask-composite:intersect}
+ filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35))}
 /* per figure: where the sign's emblem would reach under the text (the bull's horn, the bow, the bowl), the figure sits a
    little further left and smaller, so it still crosses the card's edge but leaves its words clear */
-.s-taurus{--fx:-17cqw;--fw:68cqw}
-.s-sagittarius{--fx:-19cqw;--fw:66cqw}
-.s-pisces{--fx:-17cqw;--fw:67cqw}
+.s-taurus{--fx:-8cqw}
+.s-sagittarius{--fx:-13cqw}
+.s-pisces{--fx:-10cqw}
+.s-aquarius{--fx:-5cqw}
 /* the five insights rest on the flowers at the foot of the scene, over the hem of the figure's gown */
 .home .qrow{position:relative;z-index:var(--zs-ctrl);display:grid;grid-template-columns:repeat(5,1fr);gap:1.4cqw;margin-top:3.4cqw;padding:1.2cqw;border-radius:3cqw;
  background:rgba(var(--k-night-rgb),.35);box-shadow:inset 0 0 0 1px rgba(var(--k-gold-light-rgb),.35)}
@@ -1266,6 +1266,7 @@ body.reduce .kscene .parallax{transform:none!important}
 .pf-fig .hh-fig{top:auto;right:auto;height:auto}
 .pf-fig .hh-halo{left:4%;top:auto;bottom:24%;width:80%}
 .pf-fig .hh-fig{clip-path:none!important}
+.pf-fig .hh-fig{width:170%;bottom:-2px}
 .ob-welcome h1.ob-logo{font-size:clamp(3.2rem,17vw,4.4rem);letter-spacing:.04em}
 .ob-welcome .ob-w-in .ob-tags{text-shadow:0 1px 6px #000,0 0 14px rgba(0,0,0,.9)}
 

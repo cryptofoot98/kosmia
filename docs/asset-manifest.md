@@ -130,18 +130,18 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/fg-aquarius.webp` | 900×900 | 1:1 | yes | 238 | provisional |  |
-| `public/art/atlas/fg-aries.webp` | 900×900 | 1:1 | yes | 207 | provisional |  |
-| `public/art/atlas/fg-cancer.webp` | 900×900 | 1:1 | yes | 205 | provisional |  |
-| `public/art/atlas/fg-capricorn.webp` | 900×900 | 1:1 | yes | 228 | provisional |  |
-| `public/art/atlas/fg-gemini.webp` | 900×900 | 1:1 | yes | 221 | provisional |  |
-| `public/art/atlas/fg-leo.webp` | 900×900 | 1:1 | yes | 236 | provisional |  |
-| `public/art/atlas/fg-libra.webp` | 900×900 | 1:1 | yes | 217 | provisional |  |
-| `public/art/atlas/fg-pisces.webp` | 900×900 | 1:1 | yes | 209 | provisional |  |
-| `public/art/atlas/fg-sagittarius.webp` | 900×900 | 1:1 | yes | 224 | provisional |  |
-| `public/art/atlas/fg-scorpio.webp` | 900×900 | 1:1 | yes | 194 | provisional |  |
-| `public/art/atlas/fg-taurus.webp` | 900×900 | 1:1 | yes | 230 | provisional |  |
-| `public/art/atlas/fg-virgo.webp` | 900×900 | 1:1 | yes | 218 | provisional |  |
+| `public/art/atlas/fg-aquarius.webp` | 1024×1024 | 1:1 | yes | 226 | provisional |  |
+| `public/art/atlas/fg-aries.webp` | 1024×1024 | 1:1 | yes | 234 | provisional |  |
+| `public/art/atlas/fg-cancer.webp` | 1024×1024 | 1:1 | yes | 211 | provisional |  |
+| `public/art/atlas/fg-capricorn.webp` | 1024×1024 | 1:1 | yes | 195 | provisional |  |
+| `public/art/atlas/fg-gemini.webp` | 1024×1024 | 1:1 | yes | 208 | provisional |  |
+| `public/art/atlas/fg-leo.webp` | 1024×1024 | 1:1 | yes | 245 | provisional |  |
+| `public/art/atlas/fg-libra.webp` | 1024×1024 | 1:1 | yes | 234 | provisional |  |
+| `public/art/atlas/fg-pisces.webp` | 1024×1024 | 1:1 | yes | 230 | provisional |  |
+| `public/art/atlas/fg-sagittarius.webp` | 1024×1024 | 1:1 | yes | 215 | provisional |  |
+| `public/art/atlas/fg-scorpio.webp` | 1024×1024 | 1:1 | yes | 184 | provisional |  |
+| `public/art/atlas/fg-taurus.webp` | 1024×1024 | 1:1 | yes | 229 | provisional |  |
+| `public/art/atlas/fg-virgo.webp` | 1024×1024 | 1:1 | yes | 224 | provisional |  |
 
 ## Discover feature hero, framed
 
