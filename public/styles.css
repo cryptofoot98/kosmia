@@ -1526,3 +1526,39 @@ html:has(.ob-acct),html:has(.ob-acct) body{background:var(--k-midnight);overscro
  .ob-acct .ob-panel .field>label{font-size:.95rem}.ob-acct .ob-panel input,.ob-acct .ob-panel .btn{min-height:44px}
  .ob-acct .ob-panel .ob-rule{margin:0 0 -4px}}
 .ob-panel .field>label,.ob-signin .field>label{font-family:var(--font-serif);font-weight:700;font-size:1.02rem;color:var(--k-ink)}
+
+/* Horoscope › a sign's page, after the approved mockup: the sign's painting (atlas/hsh-<sign>) across the head, its name,
+   dates and words in the open sky at the left; the period, the reading and the key themes on parchment over the night
+   edged with lilies and roses (home-vines, repeated down the page) */
+.hsp{position:relative;isolation:isolate;container-type:inline-size;min-height:100%;padding-bottom:5cqw;background:var(--k-midnight)}
+.hsp::before{content:'';position:absolute;inset:0;z-index:-1;background:url(/art/atlas/home-vines.webp) 50% 0/100% auto repeat-y;filter:brightness(1.3) saturate(1.1)}
+.hsp-hero{--st:env(safe-area-inset-top,0px);position:relative;min-height:calc(var(--st) + 67cqw);padding-bottom:17cqw;overflow:hidden}
+.hsp-img{position:absolute;top:var(--st);right:-2cqw;width:116cqw;max-width:none;height:auto;filter:brightness(1.12) saturate(1.05);
+ -webkit-mask-image:linear-gradient(#000 calc(100% - 3cqw),transparent);mask-image:linear-gradient(#000 calc(100% - 3cqw),transparent)}
+.hsp-hero::before{content:'';position:absolute;inset:0;background:var(--k-midnight)}
+.hsp-hero>*{position:absolute}
+.hsp-vine{z-index:1;left:0;top:calc(var(--st) + 6cqw);width:20cqw;height:auto;pointer-events:none}
+.hsp-c{z-index:1;left:16cqw;top:var(--st);width:30cqw;height:auto;pointer-events:none;overflow:visible}
+.hsp-cl line{stroke:rgba(236,200,122,.72);stroke-width:.5;stroke-linecap:round}
+.hsp-cs path{fill:#F2CF7A;filter:drop-shadow(0 0 1.2px rgba(255,214,120,.95))}
+.hsp-g{z-index:2;left:37cqw;top:calc(var(--st) + 7.5cqw);font-size:8cqw;line-height:1;color:#E2B868;text-shadow:0 0 6px rgba(255,200,110,.45)}
+.hsp-bar{z-index:3;left:0;right:0;top:calc(var(--st) + 7.5cqw);display:flex;justify-content:space-between;padding:0 1.5cqw}
+.hsp-bar .ibtn{color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+.hsp-bar .ibtn.on{color:#E9A39A}
+.hsp-hero>.hsp-t{position:relative;z-index:2;width:28cqw;margin:calc(var(--st) + 13cqw) 0 0 12cqw;color:#F1DFB4;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.hsp-t h1{margin:0;font-family:var(--serif);font-weight:500;font-size:min(8.4cqw,62cqw / var(--nl,6));line-height:1.05;color:#EDD3A0}
+.hsp-d{margin:.8cqw 0 0;font-family:var(--serif);font-size:2.45cqw;letter-spacing:.12em;text-transform:uppercase;color:#E7D3A6}
+.hsp-desc{margin:2.2cqw 0 0;font-family:var(--serif);font-size:2.75cqw;line-height:1.36;color:#F6EAD0}
+.hsp-body{position:relative;z-index:2;display:flex;flex-direction:column;gap:3.6cqw;margin-top:-16cqw;padding:0 7cqw}
+.hsp .seg{border:1px solid var(--k-gold);background:var(--paper) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.55),0 4px 12px rgba(0,0,0,.45)}
+.hsp .card{border-color:var(--k-gold);box-shadow:inset 0 0 0 4px rgba(var(--k-surface-hi-rgb),.4),inset 0 0 0 5px rgba(var(--k-gold-rgb),.45),0 6px 18px rgba(0,0,0,.5)}
+.hsp .hd h2{font-size:1.75rem}
+.hsp .read{font-family:var(--serif);font-size:1.16rem;line-height:1.42}
+.hsp .h-focus{text-align:center;font-weight:500}
+.hsp .hread .rule{margin:2px 0 -4px}
+.hsp .th-h{font-size:1.6rem}
+.hsp .themes .acc.theme>summary{grid-template-columns:36px 74px 1fr 16px;min-height:50px}
+.hsp .themes .acc-i{width:32px;height:32px}
+.hsp .acts{margin-top:4px}
+.hsp .acts .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px}
+.hsp .acts .btn svg{width:24px;height:24px;flex:none}

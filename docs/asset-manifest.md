@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 446 |
-| In use, provisional | 402 |
+| Images | 459 |
+| In use, provisional | 415 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -234,6 +234,41 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/home-vines.webp` | 720×1080 | 2:3 | no | 198 | provisional |  |
+
+## The sign’s Horoscope hero: the plate’s figure unframed on the right, open night sky on the left for the title
+
+- Mockup: `docs/mockups/horoscope.webp`
+- Screen: Horoscope › sign page header
+- Crop: cover, anchored top right; left and foot masked into the page
+- Background: opaque
+- Wanted width at 2×: 1100 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/hsh-aquarius.webp` | 1100×733 | 1.50:1 | no | 161 | provisional |  |
+| `public/art/atlas/hsh-aries.webp` | 1100×733 | 1.50:1 | no | 207 | provisional |  |
+| `public/art/atlas/hsh-cancer.webp` | 1100×733 | 1.50:1 | no | 159 | provisional |  |
+| `public/art/atlas/hsh-capricorn.webp` | 1100×733 | 1.50:1 | no | 166 | provisional |  |
+| `public/art/atlas/hsh-gemini.webp` | 1100×733 | 1.50:1 | no | 182 | provisional |  |
+| `public/art/atlas/hsh-leo.webp` | 1100×733 | 1.50:1 | no | 200 | provisional |  |
+| `public/art/atlas/hsh-libra.webp` | 1100×733 | 1.50:1 | no | 158 | provisional |  |
+| `public/art/atlas/hsh-pisces.webp` | 1100×733 | 1.50:1 | no | 177 | provisional |  |
+| `public/art/atlas/hsh-sagittarius.webp` | 1100×733 | 1.50:1 | no | 196 | provisional |  |
+| `public/art/atlas/hsh-scorpio.webp` | 1100×733 | 1.50:1 | no | 167 | provisional |  |
+| `public/art/atlas/hsh-taurus.webp` | 1100×733 | 1.50:1 | no | 175 | provisional |  |
+| `public/art/atlas/hsh-virgo.webp` | 1100×733 | 1.50:1 | no | 174 | provisional |  |
+
+## The column of lilies and roses cut out of home-vines, laid over the left edge of a sign’s Horoscope painting
+
+- Mockup: `docs/mockups/horoscope.webp`
+- Screen: Horoscope › sign page header
+- Crop: left edge, over the painting
+- Background: transparent
+- Wanted width at 2×: 210 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/hsp-vine.webp` | 210×560 | 3:8 | yes | 58 | provisional |  |
 
 ## Engraved, tinted area-of-life icon (keyed from ivory)
 

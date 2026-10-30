@@ -295,6 +295,8 @@ const IC={
  star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z" fill="currentColor"/></svg>',
  mark:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10v17l-5-3.8-5 3.8z" fill="currentColor"/></svg>',
  refresh:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 11-2.2-5.3M19.5 4.5v4h-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ quill:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3.5C13 4.5 8 9.5 6.5 16.5M20 3.5c-.5 6-4.5 10.5-11 12.5M4 20.5l2.5-4M9.5 11.5h4.5M8 14h3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ chat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5c4.7 0 8.5 3 8.5 6.8s-3.8 6.7-8.5 6.7c-1 0-2-.1-2.9-.4L5 19.5l1.2-3.4C4.5 14.9 3.5 13.2 3.5 11.3 3.5 7.5 7.3 4.5 12 4.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8.5" cy="11.3" r="1" fill="currentColor"/><circle cx="12" cy="11.3" r="1" fill="currentColor"/><circle cx="15.5" cy="11.3" r="1" fill="currentColor"/></svg>',
  trash:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9.5 7V4.5h5V7M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
 };
 const iconBtn=(ic,attrs,label)=>`<button class="ibtn" ${attrs} aria-label="${esc(label)}">${IC[ic]}</button>`;
@@ -333,6 +335,25 @@ const relDay=k=>{const d=Math.round((K.parseYmd(dkey())-K.parseYmd(k))/DAY);retu
 /* ---------- words for the illustrated pages ---------- */
 const SIGN_KEYS={aries:['Courage','Passion','Initiative'],taurus:['Stability','Sensuality','Patience'],gemini:['Curiosity','Wit','Connection'],cancer:['Nurture','Intuition','Home'],leo:['Radiance','Heart','Creativity'],virgo:['Devotion','Craft','Clarity'],libra:['Harmony','Beauty','Balance'],scorpio:['Depth','Passion','Transformation'],sagittarius:['Freedom','Wisdom','Adventure'],capricorn:['Discipline','Ambition','Wisdom'],aquarius:['Vision','Freedom','Humanity'],pisces:['Dreams','Compassion','Intuition']};
 const SIGN_DESC={aries:'You are the spark that starts the fire, first through the door and brave enough to begin.',taurus:'You are the keeper of what lasts, patient, sensual and loyal to what you love.',gemini:'You are the messenger between worlds, curious, quick and always finding the connection.',cancer:'You are the shelter in the storm, tender, intuitive and fiercely protective of your own.',leo:'You are the warmth at the centre of the room, generous, playful and proud of heart.',virgo:'You are the quiet craftsperson, attentive, thoughtful and devoted to doing things well.',libra:'You are the bridge between worlds, always seeking beauty, truth and deeper connection.',scorpio:'You are the diver of deep waters, intense, loyal and unafraid of what lies beneath.',sagittarius:'You are the seeker on the open road, hopeful, honest and hungry for meaning.',capricorn:'You are the builder of dreams, turning vision into reality with patience and determination.',aquarius:'You are the visionary of tomorrow, original, humane and true to your own ideas.',pisces:'You are the dreamer by the sea, compassionate, imaginative and deeply intuitive.'};
+// each sign's constellation, drawn in the sky of its Horoscope page: stars [x,y,size] on a 100x80 field, and the lines
+// joining them as pairs of star indexes
+const CONST={
+ aries:[[[8,22,2],[48,34,3],[74,52,2],[80,64,1.5]],[[0,1],[1,2],[2,3]]],
+ taurus:[[[8,6,2],[44,32,1.5],[52,42,1.5],[60,50,2],[48,54,1.5],[38,56,3],[6,44,1.5],[74,62,1.5],[94,72,1.5]],[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[3,7],[7,8]]],
+ gemini:[[[20,8,2.5],[42,4,3],[24,40,1.5],[16,74,2],[46,36,1.5],[56,72,2],[6,26,1.5],[66,24,1.5]],[[0,2],[2,3],[1,4],[4,5],[2,4],[0,6],[1,7]]],
+ cancer:[[[46,6,1.5],[48,30,2],[50,46,2],[80,72,2.5],[14,68,2]],[[0,1],[1,2],[2,3],[2,4]]],
+ leo:[[[6,22,1.5],[16,10,1.5],[26,20,2],[32,34,2.5],[26,46,1.5],[26,62,3],[70,50,2],[96,58,2.5],[68,36,2]],[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,3]]],
+ virgo:[[[46,74,3],[40,54,1.5],[35,38,2],[20,32,1.5],[5,28,1.5],[50,28,1.5],[60,10,2],[62,46,1.5],[86,50,1.5]],[[0,1],[1,2],[2,3],[3,4],[2,5],[5,6],[5,7],[7,0],[7,8]]],
+ libra:[[[20,46,2.5],[50,14,3],[80,30,2],[24,72,1.5],[86,68,1.5]],[[0,1],[1,2],[0,2],[0,3],[2,4]]],
+ scorpio:[[[10,6,2],[8,20,2],[10,32,1.5],[26,26,1.5],[34,32,3],[40,40,1.5],[46,50,1.5],[50,60,1.5],[58,70,1.5],[72,76,1.5],[86,72,1.5],[92,60,1.5],[88,48,1.5],[78,44,2.5]],[[0,1],[1,2],[1,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,13]]],
+ sagittarius:[[[14,56,2],[30,44,2],[26,70,2.5],[56,66,2],[66,58,1.5],[72,44,2.5],[50,46,2],[40,26,2],[92,36,1.5]],[[0,1],[1,2],[2,3],[3,6],[6,1],[6,7],[7,1],[6,5],[5,4],[4,3],[5,8]]],
+ capricorn:[[[10,12,2.5],[16,24,2],[30,56,1.5],[36,68,1.5],[60,60,1.5],[90,28,2.5],[80,26,2],[56,28,1.5],[40,24,1.5]],[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,1]]],
+ aquarius:[[[6,24,1.5],[26,16,2.5],[46,12,2.5],[56,20,1.5],[64,18,1.5],[70,26,1.5],[56,44,1.5],[50,60,1.5],[40,72,1.5],[72,52,1.5],[86,68,2]],[[0,1],[1,2],[2,3],[3,4],[4,5],[2,6],[6,7],[7,8],[6,9],[9,10]]],
+ pisces:[[[46,74,2.5],[36,60,1.5],[26,52,1.5],[16,46,1.5],[6,40,1.5],[10,30,1.5],[22,32,1.5],[26,42,1.5],[56,56,1.5],[62,40,1.5],[68,24,2],[72,8,1.5],[82,16,1.5]],[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,3],[0,8],[8,9],[9,10],[10,11],[11,12],[12,10]]]};
+// a sparkle: four long points round a bright core
+const sparkle=(x,y,r)=>`<path d="M${x} ${y-r*1.9}Q${x+r*.28} ${y-r*.28} ${x+r*1.9} ${y}Q${x+r*.28} ${y+r*.28} ${x} ${y+r*1.9}Q${x-r*.28} ${y+r*.28} ${x-r*1.9} ${y}Q${x-r*.28} ${y-r*.28} ${x} ${y-r*1.9}Z"/><circle cx="${x}" cy="${y}" r="${r*.42}" fill="#FFF6DA"/>`;
+const constellation=id=>{const [st,ln]=CONST[id]||[[],[]];
+ return `<svg class="hsp-c" viewBox="0 0 100 80" aria-hidden="true"><g class="hsp-cl">${ln.map(([a,b])=>`<line x1="${st[a][0]}" y1="${st[a][1]}" x2="${st[b][0]}" y2="${st[b][1]}"/>`).join('')}</g><g class="hsp-cs">${st.map(([x,y,r])=>sparkle(x,y,r*.75)).join('')}</g></svg>`};
 const SIGN_BLURB={aries:'Ariens are natural pioneers, bold and direct. You bring energy, honesty and a fresh start to everything you touch.',taurus:'Taureans are natural steadiers, calm and dependable. You bring comfort, beauty and a patient strength to the world.',gemini:'Geminis are natural connectors, bright and adaptable. You bring wit, ideas and a gift for conversation to the world.',cancer:'Cancerians are natural carers, sensitive and wise. You bring warmth, memory and a sense of home to the world.',leo:'Leos are natural performers, warm and loyal. You bring joy, courage and a generous heart to the world.',virgo:'Virgos are natural healers, precise and kind. You bring order, care and quiet usefulness to the world.',libra:'Libras are natural peacemakers, always seeking harmony, truth and deeper connection. You bring beauty, fairness and a unique perspective to the world.',scorpio:'Scorpios are natural alchemists, passionate and perceptive. You bring depth, loyalty and transformation to the world.',sagittarius:'Sagittarians are natural explorers, optimistic and free. You bring adventure, humour and big questions to the world.',capricorn:'Capricorns are natural builders, steady and wise. You bring discipline, ambition and lasting foundations to the world.',aquarius:'Aquarians are natural reformers, inventive and friendly. You bring vision, independence and a love of humanity to the world.',pisces:'Pisceans are natural mystics, gentle and imaginative. You bring compassion, art and intuition to the world.'};
 const SHORT_DATES=s=>s.dates.replace(/(\d+) (\w{3})\w*/g,'$1 $2');
 // a few words for each area of life, from how its planet sits with the reader's sign this period
@@ -579,16 +600,19 @@ function horoSign(){
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
  const others=HCATS.map(c=>c[0]).filter(k=>k!==cat).map(k=>{const x=horoscope(ex,k,V.period);
   return `<details class="acc theme t-${k}"><summary><span class="lr-i">${catIco(k,'acc-i')}</span><strong class="th-l">${CAT_INFO[k][0]}</strong><span class="th-p">${THEME[k][x.rel]||''}</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><div class="read">${paras(x.body)}</div>${x.focus?`<p class="h-focus">${esc(x.focus)}</p>`:''}<button class="link" data-act="hcat" data-k="${k}">Make this the main reading</button></div></details>`}).join('');
- const playing=V.say===h.body;
- return `<div class="sub">${hdr(s.name,{sub:s.dates,right:`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`})}
- <div class="sp-art">${signArt(s.id)}</div><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="sp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p>
- ${periodSeg()}
+ const playing=V.say===h.body,heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
+ // the sign's painting across the head of the page, its name, dates and words in the open sky at its left; then the
+ // reading and the key themes on two parchment panels over the night edged with lilies and roses
+ return `<div class="hsp s-${s.id}"><div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-vine','hsp-vine','',true)}
+  ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}${heart}</div>
+  <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p></div></div>
+ <div class="hsp-body">${periodSeg()}
  ${panel(`<div class="hd"><div><h2>${cat==='overview'?pl[1]+' Horoscope':`${CAT_INFO[cat][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
-  <div class="read">${paras(h.body)}</div>${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<div class="rule"></div><p class="quote h-ref">${esc(h.reflection)}</p>`:''}
-  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}
-  <div class="rule" aria-hidden="true"></div><h3 class="th-h">Key Themes ${pl[0]}</h3><div class="list themes">${others}</div>`,'ornate hread')}
- <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">Ask Kassandra</button></div>
- </div>`;
+  <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
+  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')}
+ ${panel(`<h3 class="th-h">Key Themes ${pl[0]}</h3><div class="list themes">${others}</div>
+  <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`,'ornate hthemes')}
+ </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
 function speakText(txt){
