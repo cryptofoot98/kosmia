@@ -248,7 +248,7 @@ their space before they load.
 | `public/art/atlas/hsh-aquarius.webp` | 1100×733 | 1.50:1 | no | 161 | provisional |  |
 | `public/art/atlas/hsh-aries.webp` | 1100×733 | 1.50:1 | no | 207 | provisional |  |
 | `public/art/atlas/hsh-cancer.webp` | 1100×733 | 1.50:1 | no | 159 | provisional |  |
-| `public/art/atlas/hsh-capricorn.webp` | 1100×733 | 1.50:1 | no | 166 | provisional |  |
+| `public/art/atlas/hsh-capricorn.webp` | 1100×733 | 1.50:1 | no | 210 | provisional |  |
 | `public/art/atlas/hsh-gemini.webp` | 1100×733 | 1.50:1 | no | 182 | provisional |  |
 | `public/art/atlas/hsh-leo.webp` | 1100×733 | 1.50:1 | no | 200 | provisional |  |
 | `public/art/atlas/hsh-libra.webp` | 1100×733 | 1.50:1 | no | 158 | provisional |  |
