@@ -244,7 +244,7 @@ function viewQuery(){
 const syncUrl=()=>{const u=pathFor(V.sec,tab(),viewQuery());if(u!==location.pathname+location.search)history.replaceState(history.state,'',u)};
 history.scrollRestoration='manual';
 function go(sec,t,opt={}){
- stopAudio();V.edit=null;V.tpop=null;V.spop=null;V.sheet=null;jLeave();jeLeave();
+ stopAudio();V.edit=null;V.tpop=null;V.spop=null;V.sheet=null;V.wpop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  V.sec=sec;V.tab[sec]=t||landing(sec);
  if(SECTIONS[sec])history[opt.replace?'replaceState':'pushState']({scroll:0},'',pathFor(sec,tab(),viewQuery()));
@@ -522,6 +522,29 @@ const ROMAN=n=>[[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V']
 const wNum=c=>{const i=(globalThis.KOSMIA_WHISPERS||[]).findIndex(w=>w[0]===c.id);return i<0?'':ROMAN(i+1)};
 // the forecast on Home's card: whole sentences, as many as fit the card (about 150 letters), always at least one
 const hShort=t=>(t.match(/[^.!?]+[.!?]+/g)||[t]).reduce((o,x)=>!o||(o+x).trim().length<=150?(o+x):o,'').trim();
+// Today's Cosmic Energy as a carousel: the Moon, the next event in the sky, a planet turning retrograde, the season's sign
+// and the day's energy for the reader's sign, each in the same floating panel and each opening its own page
+function energySlides(now,m,sign,h){
+ const sl=[[moonPic(m,'en-moon'),`${m.name}<br>in ${sIdx(m.sign).name}`,MOON_LINE[m.name]||'','data-go="discover" data-t="moon"']];
+ const ev=upcoming().find(e=>['eclipse','meteor','conjunction','season','planet'].includes(e.type)&&e.date>now);
+ if(ev)sl.push([evArt(ev,true).replace('ev-r','en-moon'),esc(ev.name),`${ymdLong(dkey(ev.date),{day:'numeric',month:'long'})} · ${esc(evKeys(ev))}`,'data-go="discover" data-t="events"']);
+ const rx=K.retrogrades(now,new Date(+now+120*DAY)).find(w=>w.start&&w.start<=now&&(!w.end||w.end>=now))||K.retrogrades(now,new Date(+now+120*DAY)).find(w=>w.start&&w.start>now);
+ if(rx){const on=rx.start<=now;sl.push([ui('ev-planet','en-moon'),`${rx.planet} ${on?'retrograde':'turns retrograde'}`,on?`Until ${rx.end?ymdLong(dkey(rx.end),{day:'numeric',month:'long'}):'next year'}: a time to review ${PM[rx.planet]}.`:`From ${ymdLong(dkey(rx.start),{day:'numeric',month:'long'})}: a time to review ${PM[rx.planet]}.`,'data-go="discover" data-t="planets"'])}
+ const sun=sIdx(K.signIdx(K.positions(now)[0].lon));
+ sl.push([ui('ev-sun','en-moon'),`The Sun<br>in ${sun.name}`,`${sun.name} season colours everyone’s days: ${SIGN_KEYS[sun.id].join(', ').toLowerCase()}.`,`data-act="tohoroscope"`]);
+ sl.push([ui('m-'+sign.id,'en-moon'),`${sign.name}’s energy today`,esc(h.focus||''),`data-act="tohoroscope"`]);
+ return sl;
+}
+const energyCarousel=sl=>`<div class="energy en-car"><span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span>
+ <span class="en-track" aria-roledescription="carousel">${sl.map(([img,t,line,attrs],i)=>`<span class="en-slot"><button class="en-row en-slide" ${attrs}>${img}<span><strong>${t}</strong><span>${line}</span></span><span class="en-go">${IC.chev}</span><span class="sr-only">, ${i+1} of ${sl.length}</span></button></span>`).join('')}</span>
+ <span class="en-dots" aria-hidden="true">${sl.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span></span></div>`;
+// the Daily Whisper opened: the card full screen, its message, its question and an invitation to reflect
+function whisperPop(c,k){const note=S.notes[k];
+ return `<div class="pop wpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="wp-in"><button class="pop-x" data-act="wpopclose" aria-label="Close">×</button>
+ <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
+ <h2>${esc(c.title)}</h2>${mrule()}<p class="wp-msg">${esc(c.msg)}</p>
+ <p class="wp-q">${Kit.icon('star')}<span>${esc(c.ref)}</span></p>
+ <button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Your Reflection':'Reflect in Your Journal'} →</button></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -542,13 +565,11 @@ views.home=()=>{
   </div>
   <div class="qrow">${quick}</div>`})}
  ${scenic(`
-  ${panel(`${orn('Your Daily Whisper')}<div class="dw"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'jopen':'reveal'}" data-k="fortune:${k}" role="button" tabindex="0" aria-label="${rev?esc(c.title):'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-   <div class="dw-r">${rev?`<p class="dw-q">${Kit.icon('star')}${esc(c.msg)}${Kit.icon('star',{cls:'s2'})}</p>`:`<p class="dw-q">${Kit.icon('star')}A card, a message, a moment for you. Turn it over when you are ready.</p>`}${wbtn}</div></div>`,'gilt hwhisper')}
-  <button class="energy" data-go="discover" data-t="moon"><span class="en-in"><span class="orn-s">${Kit.icon('star')} Today’s Cosmic Energy ${Kit.icon('star')}</span><span class="en-row">${moonPic(m,'en-moon')}<span><strong>${m.name}<br>in ${sIdx(m.sign).name}</strong><span>${MOON_LINE[m.name]||''}</span></span><span class="en-go">${IC.chev}</span></span></span></button>
+  ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-big"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Open the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+   ${rev?`<button class="btn" data-act="wpop">Read Today’s Message →</button>`:wbtn}</div>`,'gilt hwhisper')}
+  ${energyCarousel(energySlides(now,m,sign,h))}
 
- ${panel(`${orn('Explore Kosmia',seeAll('discover','home'))}
- <div class="explore">${[['ex-chart','Birth Chart','birth-chart'],['ex-compat','Compatibility','affinity'],['ex-resonance','Soul Resonance','resonance'],['ex-lifepath','Life Path','life-path'],['ex-name','Name Numerology','name-within']].map(([i,l,t])=>`<button data-go="discover" data-t="${t}">${ui(i,'ex-i')}<span>${l}</span></button>`).join('')}</div>`,'home-p')}
- `,'hsheet',ui('home-night','ksc-n'))}</div>`;
+ `,'hsheet',ui('home-night','ksc-n'))}${V.wpop?whisperPop(c,k):''}</div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){
@@ -1772,7 +1793,7 @@ function render(){
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
  app.innerHTML=html;
- jxRender();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
@@ -1785,6 +1806,17 @@ function render(){
  if(onboarding())bindJoin();
  if(authed&&SECTIONS[sec])syncUrl();
  drift();
+}
+// the Cosmic Energy carousel: its dots follow the slide in view, and it moves on by itself every few seconds unless the
+// reader has just touched it or motion is reduced
+let enT=0;
+function enCar(){
+ clearInterval(enT);const t=$('.en-track');if(!t)return;
+ const dots=[...document.querySelectorAll('.en-dots i')],at=()=>Math.round(t.scrollLeft/Math.max(1,t.clientWidth));let hold=0;
+ t.addEventListener('scroll',()=>requestAnimationFrame(()=>{const i=at();dots.forEach((d,j)=>d.classList.toggle('on',j===i))}),{passive:true});
+ t.addEventListener('pointerdown',()=>{hold=Date.now()},{passive:true});
+ if(S.settings.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches||dots.length<2)return;
+ enT=setInterval(()=>{if(!t.isConnected)return clearInterval(enT);if(Date.now()-hold<12000||document.hidden)return;t.scrollTo({left:((at()+1)%dots.length)*t.clientWidth,behavior:'smooth'})},6000);
 }
 // the page keeps room for the bottom bar, whatever its height on this phone
 const navH=()=>{const n=$('#nav');document.documentElement.style.setProperty('--navh',(n.hidden?0:n.offsetHeight)+'px')};
@@ -1803,7 +1835,7 @@ function drawCards(){const T=V.tarot,sp=SPREADS[T.spread];
 function reveal(){
  const k=dkey();if(S.revealed[k])return;
  const sc=$('.scene');if(sc&&!S.settings.reduce)sc.classList.add('rise');
- S.days[k]=todayCard().id;S.revealed[k]=true;save();syncFortune(k);
+ S.days[k]=todayCard().id;S.revealed[k]=true;save();syncFortune(k);if(V.sec==='home')V.wpop=true;
  if(S.settings.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches)return render();
  setTimeout(()=>{sc&&sc.classList.add('flipped');setTimeout(render,1500)},450);
 }
@@ -1982,6 +2014,8 @@ document.addEventListener('click',e=>{
  if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
+ if(a==='wpop'){V.wpop=true;return render()}
+ if(a==='wpopclose'){if(e.target.closest('.wp-in')&&!e.target.closest('.pop-x'))return;V.wpop=false;return render()}
  if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const r={id:uuid(),spread:T.spread,q:T.q,date:dkey(),at:new Date().toISOString(),note:'',cards:T.drawn.map(c=>({id:c.id,pos:c.pos,name:c.name,rev:c.rv}))};
   S.readings.push(r);T.savedId=r.id;save();C.saveReading&&C.saveReading(r).then(id=>{if(id){r.rid=id;r.id=id;r.sy=true;T.savedId=id;save()}});toast('Saved to your journal');return render()}
