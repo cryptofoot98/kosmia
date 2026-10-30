@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 459 |
-| In use, provisional | 415 |
+| Images | 460 |
+| In use, provisional | 416 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -357,6 +357,18 @@ their space before they load.
 | `public/art/atlas/med-scorpio.webp` | 560×560 | 1:1 | no | 78 | provisional |  |
 | `public/art/atlas/med-taurus.webp` | 560×560 | 1:1 | no | 88 | provisional |  |
 | `public/art/atlas/med-virgo.webp` | 560×560 | 1:1 | no | 97 | provisional |  |
+
+## The Moon page’s backdrop: a full moon and the Milky Way over a moonlit bay and lakeside town, a balustrade and lilies below (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › The Moon (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/moon-bg.webp` | 850×1850 | 0.46:1 | no | 368 | provisional |  |
 
 ## Bottom navigation icon (raster, keyed from ivory)
 

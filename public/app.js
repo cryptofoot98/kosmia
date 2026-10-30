@@ -1163,12 +1163,21 @@ function evCard(e,open){
 }
 let EVC={k:'',list:[]};
 function upcoming(){const k=dkey();if(EVC.k!==k){const now=new Date();EVC={k,list:K.events(now,new Date(+now+366*DAY))}}return EVC.list}
+// The Moon: the whole screen is the night bay (atlas/moon-bg), the title set in gold in its sky; the readings sit on
+// gilded, slightly see-through parchment with a star at each corner, and the first rises in a bump where today's Moon sits
+const STAR4='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l1.5 8.5L20 10l-8.5 1.5L10 20l-1.5-8.5L0 10l8.5-1.5z" fill="currentColor"/></svg>';
+const mrule=(cls='')=>`<div class="mrule ${cls}"><i></i>${STAR4}<i></i></div>`;
+const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map(c=>`<i class="mb-c ${c}">${STAR4}</i>`).join('')}${h}</section>`;
 function moonView(now){
  const m=K.moon(now),ing=K.moonIngress(now),ph=K.lunarPhases(now,new Date(+now+120*DAY)),nn=ph.find(e=>e.k==='new_moon'),nf=ph.find(e=>e.k==='full_moon');
- return `<div class="stack"><h1>The Moon</h1>${panel(`${plate('moon')}<div class="center">${moonSvg(m,120)}<h2>${m.name}</h2><p>About ${Math.round(m.ill*100)}% lit · ${m.waxing?'waxing':'waning'} · in ${sIdx(m.sign).name}</p><p class="muted small">Enters ${sIdx(ing.sign).name} ${evt(ing.date)}</p></div><div class="rule"></div><div class="label">Traditional reading</div><p>${m.name==='New Moon'?'A moment associated with beginnings. Consider what you would like to plant.':m.name==='Full Moon'?'A moment associated with fullness and gratitude. Notice what has grown.':m.waxing?'A waxing Moon is associated with growth and intention: what would you like to nurture?':'A waning Moon is associated with release: what are you ready to let go of?'} With the Moon in ${sIdx(m.sign).name}, feelings tend to move ${STYLE[sIdx(m.sign).id]}.</p><div class="label">An optional ritual</div><p>${RITUAL[m.name]}</p>`,'glass')}
- ${panel(`<div class="row two"><div><div class="label">Next New Moon</div><p>${nn?evt(nn.date)+'<br><span class="muted">in '+sIdx(nn.sign).name+'</span>':''}</p></div><div><div class="label">Next Full Moon</div><p>${nf?evt(nf.date)+'<br><span class="muted">in '+sIdx(nf.sign).name+'</span>':''}</p></div></div>`)}
- <h3 class="center">Lunar phases ahead</h3>${ph.slice(0,10).map(e=>evRow(e)).join('')}
- <p class="muted small center">Times are for ${esc(TZ())}. The Moon’s sign is its geocentric position on the tropical zodiac.</p></div>`;
+ const next=(l,e)=>`<div><div class="label">${l}</div><p>${e?evt(e.date)+'<br><span class="muted">in '+sIdx(e.sign).name+'</span>':''}</p></div>`;
+ return `<div class="mnp"><header class="mn-hd">${iconBtn('back','data-act="back"','Back')}<div class="mn-t"><h1>The Moon</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>
+ ${mbox(`<span class="mb-bump"></span><span class="mb-moon">${pic('moons',m.name.toLowerCase().replace(/ /g,'-'),'mb-mi')||moonSvg(m,100)}</span><div class="mb-flank">${mrule('l')}${mrule('r')}</div>
+ <div class="center"><h2>${m.name}</h2><p>About ${Math.round(m.ill*100)}% lit · ${m.waxing?'waxing':'waning'} · in ${sIdx(m.sign).name}</p><p class="muted small">Enters ${sIdx(ing.sign).name} ${evt(ing.date)}</p></div>${mrule()}
+ <div class="label">Traditional reading</div><p>${m.name==='New Moon'?'A moment associated with beginnings. Consider what you would like to plant.':m.name==='Full Moon'?'A moment associated with fullness and gratitude. Notice what has grown.':m.waxing?'A waxing Moon is associated with growth and intention: what would you like to nurture?':'A waning Moon is associated with release: what are you ready to let go of?'} With the Moon in ${sIdx(m.sign).name}, feelings tend to move ${STYLE[sIdx(m.sign).id]}.</p><div class="label">An optional ritual</div><p>${RITUAL[m.name]}</p>`,'first')}
+ ${mbox(`<div class="mb-two">${next('Next New Moon',nn)}<span class="mb-vr">${STAR4}</span>${next('Next Full Moon',nf)}</div>`)}
+ ${mbox(`<h3>Lunar phases ahead</h3>${mrule()}<div class="list">${ph.slice(0,10).map(e=>evRow(e)).join('')}</div>`,'phases')}
+ <p class="mn-note">Times are for ${esc(TZ())}. The Moon’s sign is its geocentric position on the tropical zodiac.</p></div>`;
 }
 function planetsView(now){
  const pos=K.positions(now),rx=K.retrogrades(now,new Date(+now+366*DAY)),ing=upcoming().filter(e=>e.k==='ingress').slice(0,14);
@@ -1189,7 +1198,7 @@ const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<d
 views.discover=()=>{
  const t=tab();
  const map={'birth-chart':chartView,profile:()=>subPage(profileView()),affinity:affinityView,resonance:resonanceView,synastry:()=>subPage(synastryView()),'life-path':lifePathView,'name-within':nameView,cycles:()=>subPage(cyclesView()),
-  calendar:calendarView,moon:()=>subPage(moonView(new Date())),planets:()=>subPage(planetsView(new Date())),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
+  calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>subPage(planetsView(new Date())),events:()=>subPage(eventsView()),dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  V.chartOpen=false;
  // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners

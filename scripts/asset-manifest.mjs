@@ -43,6 +43,7 @@ const M = { home: 'home.webp', homeTop: 'home-top.webp', overview: 'overview.web
 const SPEC = [
   [/^atlas\/fg-/, 'The sign’s figure alone, cut out (scripts/cutout.py): stands before the halo and over the forecast card’s margin and foot', M.homeTop, 'Home header (foreground layer)', 'square box anchored to the card’s foot; clipped at the card’s text edge', true, 640],
   [/^atlas\/hsp-vine$/, 'The column of lilies and roses cut out of home-vines, laid over the left edge of a sign’s Horoscope painting', M.horo, 'Horoscope › sign page header', 'left edge, over the painting', true, 210],
+  [/^atlas\/moon-bg$/, 'The Moon page’s backdrop: a full moon and the Milky Way over a moonlit bay and lakeside town, a balustrade and lilies below (supplied by the owner)', M.disc, 'Discover › The Moon (whole screen)', 'fixed behind the page, cover', false, 850],
   [/^atlas\/hsh-/, 'The sign’s Horoscope hero: the plate’s figure unframed on the right, open night sky on the left for the title', M.horo, 'Horoscope › sign page header', 'cover, anchored top right; left and foot masked into the page', false, 1100],
   [/^atlas\/sgmw-/, 'A wide sign medallion painted to the outline of its plate’s cartouche (Cancer, Capricorn)', M.horo, 'Sign card', 'absolute over the plate’s cartouche', true, 444],
   [/^atlas\/sgm-/, 'The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)', M.horo, 'Sign card, Horoscope list, Profile', 'contain, circle', true, 320],
