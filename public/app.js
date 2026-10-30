@@ -315,7 +315,8 @@ const lrow=(img,title,sub,attrs,more='')=>`<button class="lrow" ${attrs}>${img?`
 const acc=(img,title,sub,body,open=false)=>`<details class="acc"${open?' open':''}><summary>${img?`<span class="lr-i">${img}</span>`:''}<span class="lr-t"><strong>${title}</strong>${sub?`<span>${sub}</span>`:''}</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b">${body}</div></details>`;
 // a zodiac sign's illustrated medallion (art/atlas/med-<sign>)
 const med=(id,cls='med')=>ui('m-'+id,cls,sg(id).name);
-const glyphMed=(id,cls='')=>`<span class="gmed ${cls}" aria-hidden="true"><span class="glyph">${sg(id).g}</span></span>`;
+// the sign's painted medallion: a gold engraved rim round a night-blue field with the glyph in gold
+const glyphMed=(id,cls='')=>`<span class="gmed ${cls}" aria-hidden="true">${Kit.size('atlas/zm-'+id)?ui('zm-'+id,'gmed-i'):`<span class="glyph">${sg(id).g}</span>`}</span>`;
 const keys=a=>a.map(esc).join(' <i class="dot">•</i> ');
 const paras=t=>String(t||'').split(/\n+/).filter(Boolean).map(p=>`<p>${esc(p)}</p>`).join('');
 const needLib=()=>A&&K?'':panel('<h3>Astronomy library unavailable</h3><p>The ephemeris could not load, so astronomical data is not shown rather than guessed. Check your connection and reload.</p>');
@@ -434,7 +435,8 @@ views.welcome=()=>{
 views.join=views.welcome;
 views.reset=()=>`<div class="ob ob-paper ob-form ob-signin">${obBg(CROWN,SUNSET)}${obRule('lone')}<h1>Choose a New Password</h1><div class="ob-fields">${pwField('npw','New password','At least 8 characters','new-password')}<button class="btn" data-act="setpw">Save password</button></div></div>`;
 // a sign's framed plate, its glyph set in a medallion at the foot of the arch
-const signArt=id=>`<span class="sp-plate">${ui('plate-'+id,'sign-plate',sg(id).name)}${glyphMed(id,'sp-gm')}</span>`;
+// a wide cartouche (Cancer, Capricorn) takes a medallion painted to its own outline; the others the round one
+const signArt=id=>`<span class="sp-plate g-${id}">${ui('plate-'+id,'sign-plate',sg(id).name)}${Kit.size('atlas/zmw-'+id)?ui('zmw-'+id,'sp-gmw'):glyphMed(id,'sp-gm')}</span>`;
 function obValid(){
  const em=$('#em'),pw=$('#pw'),pw2=$('#pw2'),up=V.ob==='account';
  const okEm=!!em&&/^\S+@\S+\.\S+$/.test(em.value.trim()),p=pw?pw.value:'';

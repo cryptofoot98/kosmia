@@ -239,6 +239,8 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .pgl{display:flex;width:38px;height:38px;align-items:center;justify-content:center;border-radius:50%;background:var(--navy);color:#E9CF92;font-size:1.25rem}
 .hn{display:flex;width:36px;height:36px;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--gold);font-family:var(--display);font-weight:600;color:var(--goldd)}
 .gmed{display:inline-flex;width:56px;height:56px;border-radius:50%;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 35%,#24305A,var(--k-midnight) 75%);border:2px solid var(--gold2);box-shadow:inset 0 0 0 3px var(--k-midnight),inset 0 0 0 4px rgba(var(--k-gold-light-rgb),.6);color:#E9CF92;font-size:1.8rem;flex:none}
+.gmed:has(.gmed-i){background:none;border:0;box-shadow:none;filter:drop-shadow(0 1px 2px rgba(60,40,15,.35))}
+.gmed-i{display:block;width:100%;height:100%;object-fit:contain}
 .med{border-radius:50%}
 .lr-m .dot{margin:0 .25em}
 
@@ -757,7 +759,21 @@ body.reduce *,body.reduce *::before,body.reduce *::after{animation:none!importan
 .jlib .hero .hero-t{top:auto;bottom:46px}
 .sp-plate{position:relative;display:block;width:min(100%,340px);margin:0 auto}
 .sp-plate .sign-plate{width:100%}
-.sp-gm{position:absolute;left:50%;bottom:4.5%;transform:translateX(-50%);width:62px;height:62px;font-size:2rem}
+/* the medallion fills the plain gap painted at the foot of each plate, centred, its rim meeting the gap's gold edge (measured on the 640x960 plate) */
+.sp-gm{position:absolute;left:var(--gx,50%);top:var(--gy,89.7%);transform:translate(-50%,-50%);width:var(--gd,16.6%);height:auto;aspect-ratio:1;font-size:2rem}
+.sp-gmw{position:absolute;height:auto;pointer-events:none}
+.g-cancer .sp-gmw{left:36.09%;top:84.79%;width:27.66%}
+.g-capricorn .sp-gmw{left:32.19%;top:86.56%;width:34.69%}
+.sp-plate.g-aries{--gx:49.84%;--gy:93.96%;--gd:17.50%}
+.sp-plate.g-taurus{--gx:50.00%;--gy:90.00%;--gd:19.69%}
+.sp-plate.g-gemini{--gx:49.69%;--gy:91.30%;--gd:17.34%}
+.sp-plate.g-leo{--gx:48.36%;--gy:90.83%;--gd:21.25%}
+.sp-plate.g-virgo{--gx:49.84%;--gy:89.79%;--gd:20.62%}
+.sp-plate.g-libra{--gx:49.69%;--gy:91.77%;--gd:19.38%}
+.sp-plate.g-scorpio{--gx:49.84%;--gy:90.10%;--gd:21.56%}
+.sp-plate.g-sagittarius{--gx:49.84%;--gy:89.84%;--gd:19.53%}
+.sp-plate.g-aquarius{--gx:49.84%;--gy:89.95%;--gd:17.97%}
+.sp-plate.g-pisces{--gx:49.69%;--gy:90.31%;--gd:20.00%}
 .ob-w-top{position:absolute;z-index:2;top:calc(28px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center}
 .ob-logo{font-size:clamp(3rem,16vw,4.2rem);line-height:1;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent!important;filter:drop-shadow(0 3px 5px rgba(0,0,0,.7));text-transform:uppercase}
 .ob-w-top .ob-tags{margin-top:8px;text-shadow:0 1px 6px #000}
