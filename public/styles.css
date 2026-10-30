@@ -1256,12 +1256,20 @@ body.reduce .kscene .parallax{transform:none!important}
 .kp-mic{width:84px;height:84px;background:radial-gradient(circle at 35% 30%,#4A3626,#22170F 70%);box-shadow:0 0 0 4px rgba(var(--k-surface-hi-rgb),.8),0 0 0 5px var(--k-gold),0 8px 20px rgba(var(--k-shadow-rgb),.35)}
 @media (prefers-reduced-motion:reduce){.kp-ring{animation:none}}
 
-/* the profile: the sign's figure before its moon in the night garden, the identity on parchment beside it */
-.pf-scene{position:relative;display:grid;grid-template-columns:42% 1fr;align-items:end;min-height:300px;margin:0 -16px;padding:18px 14px 16px;container-type:inline-size}
-.pf-fig{position:relative;align-self:stretch;min-height:240px}
-.pf-fig .hh-halo{position:absolute;left:4%;top:4%;width:86%;aspect-ratio:1;z-index:var(--zs-under)}
-.pf-fig .hh-fig{position:absolute;left:-30%;bottom:-16px;width:150%;height:auto;z-index:var(--zs-over);clip-path:none}
-.pf-card{position:relative;z-index:var(--zs-content);display:flex;flex-direction:column;gap:4px;padding:16px 14px;border:1px solid var(--k-gold);border-radius:14px;color:var(--k-ink);
+/* the profile, like a sign's Horoscope page: the night garden (home-sky, then home-vines repeated) runs the length of the
+   page; the title set in its sky, the sign's figure whole before its moon with the identity on parchment beside it, and
+   the settings rows on parchment over the lilies and roses */
+.pfp{position:relative;isolation:isolate;container-type:inline-size;min-height:100%;padding-bottom:6cqw;background:var(--k-midnight)}
+.pfp::before{content:'';position:absolute;inset:0;z-index:-1;background:url(/art/atlas/home-vines.webp) 50% 60cqw/100% auto repeat-y;filter:brightness(1.3) saturate(1.1)}
+.pf-hero{position:relative;padding-top:calc(env(safe-area-inset-top,0px) + 33cqw)}
+.pf-sky{position:absolute;z-index:-1;left:0;top:0;width:100%;height:auto;-webkit-mask-image:linear-gradient(#000 52%,transparent 74%);mask-image:linear-gradient(#000 52%,transparent 74%)}
+.pf-hero>.ibtn{position:absolute;z-index:3;top:calc(env(safe-area-inset-top,0px) + 2cqw);left:2cqw;color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+.pf-hero .hero-t{top:calc(env(safe-area-inset-top,0px) + 9cqw);left:16cqw;padding:6px 4cqw}
+.pf-row{position:relative;display:flex;align-items:center;gap:1cqw;padding:0 3cqw 0 0}
+.pf-fig{position:relative;flex:none;width:56cqw;aspect-ratio:1}
+.pf-fig .hh-halo{left:12%;top:2%;width:72%}
+.pf-fig .hh-fig{position:absolute;inset:0;width:100%;height:100%;clip-path:none;filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35))}
+.pf-card{flex:1;min-width:0;position:relative;z-index:var(--zs-content);display:flex;flex-direction:column;gap:4px;padding:16px 14px;border:1px solid var(--k-gold);border-radius:14px;color:var(--k-ink);
  background:var(--c-tr) calc(100% - 4px) 4px/20px no-repeat,var(--c-br) calc(100% - 4px) calc(100% - 4px)/20px no-repeat,var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 4px rgba(var(--k-gold-rgb),.45),0 10px 24px rgba(0,0,0,.5)}
 .pf-card h2{font-family:var(--font-serif);font-size:1.6rem;line-height:1.05}
 .pf-sign{font-family:var(--font-display);font-size:.95rem;letter-spacing:.06em}
@@ -1269,20 +1277,17 @@ body.reduce .kscene .parallax{transform:none!important}
 .pf-sign .muted{font-family:var(--font-text);letter-spacing:0;font-size:.85rem}
 .pf-card .keys{text-align:left;font-size:.6rem}
 .pf-meta{font-size:.84rem;color:var(--k-ink-soft)}
-.pf-fig .hh-fig{left:-52%;bottom:-18px;width:196%}
-.pf-fig .hh-halo{left:10%;top:2%;width:96%}
-.pf-scene{grid-template-columns:46% 1fr;min-height:320px}
-.pf-fig .hh-fig{left:-22%;bottom:-18px;width:160%}
-.pf-fig .hh-halo{left:6%;top:0;width:92%}
-/* the figure stands the full height of the banner, its gown running off the foot */
-.pf-fig{position:absolute;left:0;top:0;bottom:0;width:50%;min-height:0}
-.pf-fig .hh-fig{left:-18%;bottom:-6px;width:150%}
-.pf-fig .hh-halo{left:8%;top:8%;width:84%}
-.pf-card{grid-column:2}
-.pf-fig .hh-fig{top:auto;right:auto;height:auto}
-.pf-fig .hh-halo{left:4%;top:auto;bottom:24%;width:80%}
-.pf-fig .hh-fig{clip-path:none!important}
-.pf-fig .hh-fig{width:170%;bottom:-2px}
+.pf-card h2{font-size:1.4rem}
+.pf-sign{font-size:.8rem}
+.pf-card{padding:12px 11px}
+.pf-meta{font-size:.78rem}
+.pf-body{display:flex;flex-direction:column;gap:14px;padding:4cqw 7cqw 0}
+.pf-body>.muted{color:#EADBB8;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.pf-body>.btn.ghost{color:#F1DFB4;border-color:rgba(241,223,180,.75);background:rgba(var(--k-night-rgb),.45)}
+.pf-body .lrow,.pf-body .acc>summary,.pf-body .acc-b{background:var(--k-parchment-light) var(--paper-img) center/cover}
+.pf-body .lrow,.pf-body .acc{box-shadow:0 4px 12px rgba(0,0,0,.45)}
+.pf-hero .hero-t h1{font-size:min(6cqw,1.65rem);white-space:nowrap}
+.pf-sign .muted{display:block;margin-top:2px}
 .ob-welcome h1.ob-logo{font-size:clamp(3.2rem,17vw,4.4rem);letter-spacing:.04em}
 .ob-welcome .ob-w-in .ob-tags{text-shadow:0 1px 6px #000,0 0 14px rgba(0,0,0,.9)}
 

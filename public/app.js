@@ -1712,10 +1712,13 @@ views.settings=()=>{
  if(t!=='account')return subPage(settingsPage(t));
  const s=sg(S.sign),acct=!C.enabled?'<p class="muted">Accounts are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
- return `<div class="sub">${hdr('Your Profile')}
- ${Kit.scene({cls:'pf-scene',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 8%',stars:true,bare:true,label:'Your cosmic identity',content:`
- <span class="pf-fig" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo')}</span>${Kit.size('atlas/fg-'+s.id)?Kit.img('atlas/fg-'+s.id,{cls:'hh-fig'}):''}</span>
- <div class="pf-card"><p class="kick">Your cosmic identity</p><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} <span class="muted">${SHORT_DATES(s)}</span></p><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="pf-meta">${s.el} · ${s.mod||''}${s.mod?' · ':''}ruled by ${s.ruler}</p>${hasBirthDate()?`<p class="pf-meta">Born ${ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})}${S.birth.place?' · '+esc(S.birth.place.split(',')[0]):''}</p>`:''}</div>`})}${acct}
+ // the night garden runs the length of the page: the title set in its sky, the sign's figure whole before its moon with the
+ // identity on parchment beside it, and the settings on parchment rows over the lilies and roses below
+ return `<div class="pfp"><div class="pf-hero">${ui('home-sky','pf-sky','',true)}${iconBtn('back','data-act="back"','Back')}
+ <div class="hero-t"><h1 class="cz">Your Profile</h1><p>Your cosmic identity</p></div>
+ <div class="pf-row"><span class="pf-fig" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo')}</span>${Kit.size('atlas/fg-'+s.id)?Kit.img('atlas/fg-'+s.id,{cls:'hh-fig'}):''}</span>
+ <div class="pf-card"><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} <span class="muted">${SHORT_DATES(s)}</span></p><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="pf-meta">${s.el} · ${s.mod||''}${s.mod?' · ':''}ruled by ${s.ruler}</p>${hasBirthDate()?`<p class="pf-meta">Born ${ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})}${S.birth.place?' · '+esc(S.birth.place.split(',')[0]):''}</p>`:''}</div></div></div>
+ <div class="pf-body">${acct}
  <div class="list">
  ${acc(glyphMed(s.id),'Your sign',s.name,`${signGrid('My sign',S.sign)}`)}
  ${acc(ui('ne-free','th'),'Display name',esc(S.name||'Not set'),`<div class="field"><label for="nm">Display name</label><input type="text" id="nm" value="${esc(S.name)}"></div><button class="btn sm" data-act="savename">Save</button>`)}
@@ -1725,7 +1728,7 @@ views.settings=()=>{
  ${lrow(pic('cats','privacy','th'),'Privacy & Data','Consent, download and deletion','data-go="settings" data-t="privacy"')}
  ${lrow(pic('cats','collection','th'),'Subscription','Kosmia · Early Access','data-go="settings" data-t="subscription"')}
  ${C.user?acc(ui('t-history','th'),'Password','Change your password',`<div class="field"><label for="npw">New password</label><input id="npw" type="password" autocomplete="new-password" minlength="8"></div><button class="btn sm" data-act="setpw">Change password</button>`):''}
- </div><button class="btn ghost" data-act="signout">Sign out${C.user?'':' and clear this device'}</button></div>`;
+ </div><button class="btn ghost" data-act="signout">Sign out${C.user?'':' and clear this device'}</button></div></div>`;
 };
 /* ----- the profile's own pages: notifications, privacy and display ----- */
 function settingsPage(t){
