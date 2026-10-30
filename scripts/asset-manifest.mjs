@@ -56,6 +56,7 @@ const SPEC = [
   [/^atlas\/plate-/, 'Framed arched portrait of the sign with the glyph roundel', M.horo, 'Horoscope › sign page', 'contain, whole frame visible', false, 780],
   [/^atlas\/med-/, 'Round medallion of the sign', M.onb, 'Onboarding sign wheel, sign grids, Explore every sign', 'contain, circle', false, 240],
   [/^atlas\/ico-/, 'Engraved, tinted area-of-life icon (keyed from ivory)', M.horo, 'Home quick tiles, Horoscope tiles, list rows', 'contain', true, 160],
+  [/^atlas\/nvm-/, 'Bottom menu medallion: a round night-blue painting in a thin gold rim (sun, crescent and lilies, tarot card, compass star, crystal ball), cut free of its night disc with alpha, motif only (supplied by the owner)', M.home, 'Bottom navigation', 'contain', true, 128],
   [/^atlas\/nav-/, 'Bottom navigation icon (raster, keyed from ivory)', M.home, 'Bottom navigation', 'contain', true, 64,
     'Replaced in the UI by the SVG icons in kit.js (KosmiaBottomNavigation); kept until those are approved.'],
   [/^atlas\/ev-/, 'Celestial event plate: planet or moon on a starry ground', M.home, 'Home events, Cosmic Calendar', 'cover', false, 360],

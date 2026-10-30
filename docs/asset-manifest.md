@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 461 |
-| In use, provisional | 417 |
+| Images | 466 |
+| In use, provisional | 422 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -398,6 +398,22 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/ne-card.webp` | 230×320 | 23:32 | yes | 31 | provisional |  |
 | `public/art/atlas/ne-free.webp` | 269×320 | 0.84:1 | yes | 37 | provisional |  |
+
+## Bottom menu medallion: a round night-blue painting in a thin gold rim (sun, crescent and lilies, tarot card, compass star, crystal ball), cut free of its night disc with alpha, motif only (supplied by the owner)
+
+- Mockup: `docs/mockups/home.webp`
+- Screen: Bottom navigation
+- Crop: contain
+- Background: transparent
+- Wanted width at 2×: 128 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/nvm-discover.webp` | 160×160 | 1:1 | yes | 16 | provisional |  |
+| `public/art/atlas/nvm-home.webp` | 160×160 | 1:1 | yes | 20 | provisional |  |
+| `public/art/atlas/nvm-horoscope.webp` | 160×160 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/nvm-kassandra.webp` | 160×160 | 1:1 | yes | 10 | provisional |  |
+| `public/art/atlas/nvm-tarot.webp` | 160×160 | 1:1 | yes | 16 | provisional |  |
 
 ## Snowy owl on a branch before a crescent
 
