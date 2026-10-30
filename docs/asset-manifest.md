@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 466 |
-| In use, provisional | 422 |
+| Images | 467 |
+| In use, provisional | 423 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -461,6 +461,18 @@ their space before they load.
 | `public/art/atlas/plate-scorpio.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-taurus.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 214 | provisional | below the 780 px it needs at 2× |
+
+## The Cosmic Profile page’s backdrop: the planets, a full moon, a sun-faced wheel and a spiral galaxy over golden clouds (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Cosmic Profile (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/profile-bg.webp` | 850×1850 | 0.46:1 | no | 325 | provisional |  |
 
 ## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
 
