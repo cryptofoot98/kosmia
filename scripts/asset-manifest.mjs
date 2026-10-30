@@ -42,8 +42,8 @@ const M = { home: 'home.webp', homeTop: 'home-top.webp', overview: 'overview.web
 // what each asset is, by its name: [test, purpose, mockup, screen, crop, needs alpha, target width at 2x (px)]
 const SPEC = [
   [/^atlas\/fg-/, 'The sign’s figure alone, cut out (scripts/cutout.py): stands before the halo and over the forecast card’s margin and foot', M.homeTop, 'Home header (foreground layer)', 'square box anchored to the card’s foot; clipped at the card’s text edge', true, 640],
-  [/^atlas\/zmw-/, 'A wide sign medallion painted to the outline of its plate’s cartouche (Cancer, Capricorn)', M.horo, 'Sign card', 'absolute over the plate’s cartouche', true, 444],
-  [/^atlas\/zm-/, 'The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)', M.horo, 'Sign card, Horoscope list, Profile', 'contain, circle', true, 320],
+  [/^atlas\/sgmw-/, 'A wide sign medallion painted to the outline of its plate’s cartouche (Cancer, Capricorn)', M.horo, 'Sign card', 'absolute over the plate’s cartouche', true, 444],
+  [/^atlas\/sgm-/, 'The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)', M.horo, 'Sign card, Horoscope list, Profile', 'contain, circle', true, 320],
   [/^atlas\/home-sky$/, 'Home header background: night sky, crescent, sun face, vines, lilies and roses, no figure', M.homeTop, 'Home header (background layer)', 'cover, anchored top', false, 960],
   [/^atlas\/home-halo$/, 'Golden full-moon halo behind the figure, cut to a circle', M.homeTop, 'Home header (behind the card)', 'contain, circle', true, 400],
   [/^atlas\/home-vines$/, 'Night ground edged with lilies and roses, behind the Daily Whisper', M.homeTop, 'Home › Daily Whisper band', 'cover, anchored top', false, 720],

@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 434 |
-| In use, provisional | 390 |
+| Images | 446 |
+| In use, provisional | 402 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -43,6 +43,18 @@ their space before they load.
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/wb-sun.webp` | 1400×933 | 1.50:1 | no | 387 | provisional |  |
 | `public/art/atlas/wb-top.webp` | 1024×1857 | 0.55:1 | no | 358 | provisional |  |
+| `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
+| `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
+| `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/zm-capricorn.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/zm-gemini.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
+| `public/art/atlas/zm-leo.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
+| `public/art/atlas/zm-libra.webp` | 400×400 | 1:1 | no | 47 | provisional |  |
+| `public/art/atlas/zm-pisces.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
+| `public/art/atlas/zm-sagittarius.webp` | 400×400 | 1:1 | no | 45 | provisional |  |
+| `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
+| `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 51 | provisional |  |
+| `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
 | `public/art/atlas/zs-bg.webp` | 850×1850 | 0.46:1 | no | 353 | provisional |  |
 
 ## Wide dark banner for a Discover tile
@@ -375,6 +387,42 @@ their space before they load.
 | `public/art/atlas/plate-taurus.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
 | `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 214 | provisional | below the 780 px it needs at 2× |
 
+## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
+
+- Mockup: `docs/mockups/horoscope.webp`
+- Screen: Sign card, Horoscope list, Profile
+- Crop: contain, circle
+- Background: transparent
+- Wanted width at 2×: 320 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/sgm-aquarius.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
+| `public/art/atlas/sgm-aries.webp` | 320×320 | 1:1 | yes | 36 | provisional |  |
+| `public/art/atlas/sgm-cancer.webp` | 320×320 | 1:1 | yes | 38 | provisional |  |
+| `public/art/atlas/sgm-capricorn.webp` | 320×320 | 1:1 | yes | 34 | provisional |  |
+| `public/art/atlas/sgm-gemini.webp` | 320×320 | 1:1 | yes | 33 | provisional |  |
+| `public/art/atlas/sgm-leo.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
+| `public/art/atlas/sgm-libra.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
+| `public/art/atlas/sgm-pisces.webp` | 320×320 | 1:1 | yes | 38 | provisional |  |
+| `public/art/atlas/sgm-sagittarius.webp` | 320×320 | 1:1 | yes | 36 | provisional |  |
+| `public/art/atlas/sgm-scorpio.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
+| `public/art/atlas/sgm-taurus.webp` | 320×320 | 1:1 | yes | 37 | provisional |  |
+| `public/art/atlas/sgm-virgo.webp` | 320×320 | 1:1 | yes | 37 | provisional |  |
+
+## A wide sign medallion painted to the outline of its plate’s cartouche (Cancer, Capricorn)
+
+- Mockup: `docs/mockups/horoscope.webp`
+- Screen: Sign card
+- Crop: absolute over the plate’s cartouche
+- Background: transparent
+- Wanted width at 2×: 444 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/sgmw-cancer.webp` | 354×258 | 1.37:1 | yes | 32 | provisional | below the 444 px it needs at 2× |
+| `public/art/atlas/sgmw-capricorn.webp` | 444×214 | 2.07:1 | yes | 16 | provisional |  |
+
 ## Tarot menu medallion (keyed from ivory)
 
 - Mockup: `docs/mockups/tarot-journal.webp`
@@ -401,42 +449,6 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/welcome.webp` | 640×960 | 2:3 | no | 174 | provisional | below the 960 px it needs at 2× |
-
-## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
-
-- Mockup: `docs/mockups/horoscope.webp`
-- Screen: Sign card, Horoscope list, Profile
-- Crop: contain, circle
-- Background: transparent
-- Wanted width at 2×: 320 px
-
-| Asset | Size | Ratio | Alpha | KB | Status | Notes |
-|---|---|---|---|---|---|---|
-| `public/art/atlas/zm-aquarius.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
-| `public/art/atlas/zm-aries.webp` | 320×320 | 1:1 | yes | 36 | provisional |  |
-| `public/art/atlas/zm-cancer.webp` | 320×320 | 1:1 | yes | 38 | provisional |  |
-| `public/art/atlas/zm-capricorn.webp` | 320×320 | 1:1 | yes | 34 | provisional |  |
-| `public/art/atlas/zm-gemini.webp` | 320×320 | 1:1 | yes | 33 | provisional |  |
-| `public/art/atlas/zm-leo.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
-| `public/art/atlas/zm-libra.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
-| `public/art/atlas/zm-pisces.webp` | 320×320 | 1:1 | yes | 38 | provisional |  |
-| `public/art/atlas/zm-sagittarius.webp` | 320×320 | 1:1 | yes | 36 | provisional |  |
-| `public/art/atlas/zm-scorpio.webp` | 320×320 | 1:1 | yes | 35 | provisional |  |
-| `public/art/atlas/zm-taurus.webp` | 320×320 | 1:1 | yes | 37 | provisional |  |
-| `public/art/atlas/zm-virgo.webp` | 320×320 | 1:1 | yes | 37 | provisional |  |
-
-## A wide sign medallion painted to the outline of its plate’s cartouche (Cancer, Capricorn)
-
-- Mockup: `docs/mockups/horoscope.webp`
-- Screen: Sign card
-- Crop: absolute over the plate’s cartouche
-- Background: transparent
-- Wanted width at 2×: 444 px
-
-| Asset | Size | Ratio | Alpha | KB | Status | Notes |
-|---|---|---|---|---|---|---|
-| `public/art/atlas/zmw-cancer.webp` | 354×258 | 1.37:1 | yes | 32 | provisional | below the 444 px it needs at 2× |
-| `public/art/atlas/zmw-capricorn.webp` | 444×214 | 2.07:1 | yes | 35 | provisional |  |
 
 ## Card furniture: backs, plaque, crest, ornament
 
