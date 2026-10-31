@@ -1818,3 +1818,18 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.ch .mn-sub+p{margin-top:-8px;font-size:.95rem}
 .mnp.ch>:is(.big3,.acc){border-color:var(--k-gold);background:rgba(244,232,206,.92)}
 .mnp.ch>.btn.ghost{color:#FCEBB8;border-color:#D9AE5E;background:rgba(8,12,28,.55);text-shadow:0 1px 2px #000}
+/* Zodiac Affinity as a night page: the owner's sun and crescent moon faces over the Milky Way, the title centred beneath them */
+.mnp.af{--mn-bg:url(/art/atlas/affinity-bg.webp)}
+.mnp.af .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 66cqw)}
+.mnp.af .mn-t{position:relative;top:0;left:0}
+.mnp.af .mn-t h1{white-space:normal;text-align:center}
+.mnp.af .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 2%;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 60%,transparent)}
+.mnp.af>.btn,.mnp.af>.list,.mnp.af>.result,.mnp.af .result>:is(.list,.acts){align-self:stretch}
+.mnp.af .mbox .lead{font-family:var(--font-serif);font-weight:600;font-size:1.1rem;line-height:1.45;color:var(--k-ink)}
+.mnp.af .mbox .field label{color:var(--k-ink);font-weight:600}
+.mnp.af .result{gap:18px}
+.mnp.af .result .btn.ghost{color:#FCEBB8;border-color:#D9AE5E;background:rgba(8,12,28,.55);text-shadow:0 1px 2px #000}
+.mnp.af>.list.dim{opacity:.85}
+.mnp.af>.list.dim .lrow{background:rgba(244,232,206,.9)}
+.mnp.af>.btn:disabled{opacity:.75;color:#E9D7AE}
+.mnp.af>.list.dim .lrow{opacity:.9}

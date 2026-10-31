@@ -7,10 +7,22 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 475 |
-| In use, provisional | 431 |
+| Images | 476 |
+| In use, provisional | 432 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
+
+## The Zodiac Affinity page’s backdrop: a golden sun with a woman’s face and a crescent moon with a man’s face facing each other over the Milky Way, clouds, lilies, roses and daisies (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Zodiac Affinity (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/affinity-bg.webp` | 850×1510 | 0.56:1 | no | 288 | provisional |  |
 
 ## Unclassified
 
