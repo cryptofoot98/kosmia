@@ -618,7 +618,8 @@ function playText(txt){
   .catch(e=>{if(V.say===txt){V.say=null;render()}toast(e.message||'Could not play the reading')});
 }
 /* ----- Horoscope: the landing (the six areas of life and the signs), then a sign's own
-   page: its illustration, its words, the reading for the chosen period and area, and the other areas as expandable readings ----- */
+   page: its illustration, its words, the period, a row of the areas of life with a gold line under the chosen one, and
+   their readings as a carousel: swiping the reading glides the line along, tapping an area slides to its reading ----- */
 const PLABEL={daily:['Today','Today’s'],weekly:['This Week','This Week’s'],monthly:['This Month','This Month’s'],yearly:['This Year','This Year’s']};
 const periodSeg=()=>`<div role="group" aria-label="Time period">${seg(PERIODS.map(([k])=>[k,PLABEL[k][0]]),V.period,'period')}</div>`;
 views.horoscope=()=>{
@@ -636,19 +637,21 @@ views.horoscope=()=>{
 function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
- const others=HCATS.map(c=>c[0]).filter(k=>k!==cat).map(k=>{const x=horoscope(ex,k,V.period);
-  return `<button class="theme-b t-${k}" data-act="hcat" data-k="${k}"><span class="lr-i">${catIco(k,'acc-i')}</span><strong class="th-l">${CAT_INFO[k][0]}</strong><span class="th-p">${k==='overview'?'The whole picture':THEME[k][x.rel]||''}</span></button>`}).join('');
- const playing=V.say===h.body,heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
+ const tiles=HCATS.map(([k])=>{const x=horoscope(ex,k,V.period);
+  return `<button class="hc-ic t-${k}${k===cat?' on':''}" data-act="hcat" data-k="${k}" aria-pressed="${k===cat}" title="${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||'')}"><span class="hc-i">${catIco(k,'acc-i')}</span><span class="hc-l">${CAT_INFO[k][0]}</span></button>`}).join('');
+ const reading=k=>{const h=horoscope(ex,k,V.period),playing=V.say===h.body;
+  return panel(`<div class="hd"><div><h2>${k==='overview'?pl[1]+' Horoscope':`${CAT_INFO[k][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
+  <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
+  ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')};
+ const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the sign's painting across the head of the page, its name, dates and words in the open sky at its left; then the
  // reading and the key themes on two parchment panels over the night edged with lilies and roses
  return `<div class="hsp s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}${heart}</div><div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-vine','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p></div></div>
  <div class="hsp-body">${periodSeg()}
- ${panel(`<div class="hd"><div><h2>${cat==='overview'?pl[1]+' Horoscope':`${CAT_INFO[cat][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
-  <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
-  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')}
- <h3 class="th-h hk-h">Cosmic Insights</h3><div class="themes-g">${others}</div>
+ <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
+ <div class="hc-track hc-read" aria-label="Your horoscope by area of life">${HCATS.map(([k])=>`<div class="hc-slide" data-k="${k}"${k===cat?'':' aria-hidden="true"'}>${reading(k)}</div>`).join('')}</div></div>
   <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>
  </div></div>`;
 }
@@ -1850,7 +1853,7 @@ function render(){
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
  app.innerHTML=html;
- jxRender();enCar();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();hcar();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
@@ -1868,6 +1871,25 @@ function render(){
 // the Cosmic Energy carousel: its dots follow the slide in view, and it moves on by itself every few seconds unless the
 // reader has just touched it or motion is reduced
 let enT=0;
+/* the sign page's carousel: the readings (one per area, full width) swipe sideways under the row of areas, whose gold
+   line follows; when the swipe comes to rest the page takes that area as its own. */
+function hcar(){
+ const c=$('.hcar');if(!c)return;
+ const R=c.querySelector('.hc-read'),T=c.querySelector('.hc-cats'),ul=c.querySelector('.hc-ul'),n=HCATS.length;
+ const pos=()=>R.scrollLeft/Math.max(1,R.clientWidth);
+ const put=(j,smooth)=>R.scrollTo({left:j*R.clientWidth,behavior:smooth?'smooth':'auto'});
+ // the gold line glides under the icons as the reading is swiped
+ const line=p=>{ul.style.left=(p/n*100)+'%';T.querySelectorAll('.hc-ic').forEach((b,j)=>b.classList.toggle('on',j===Math.round(p)))};
+ const i0=Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
+ put(i0);line(i0);R.style.height=R.children[i0].offsetHeight+'px';
+ let touch=false,tm;
+ const settle=()=>{clearTimeout(tm);tm=setTimeout(()=>{if(touch)return settle();const j=Math.round(pos());
+  const k=HCATS[j][0];if(k!==V.hcat){V.hcat=k;stopAudio();render()}},180)};
+ R.addEventListener('scroll',()=>{line(pos());settle()},{passive:true});
+ R.addEventListener('touchstart',()=>{touch=true},{passive:true});
+ R.addEventListener('touchend',()=>{touch=false;settle()},{passive:true});
+ c.go=j=>{put(j,true);settle()};
+}
 function enCar(){
  clearInterval(enT);const t=$('.en-track');if(!t)return;
  const dots=[...document.querySelectorAll('.en-dots i')],at=()=>Math.round(t.scrollLeft/Math.max(1,t.clientWidth));let hold=0;
@@ -1981,7 +2003,7 @@ document.addEventListener('click',e=>{
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
  if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
- if(a==='hcat'){V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+ if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k));V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
  if(a==='hreflect'){const [sign,cat,period,key]=t.dataset.ref.split('/');return openEntry(ensureBook('horoscope',t.dataset.ref,horoData(sign,cat,period,key)))}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/');return bookmark('horoscope',t.dataset.ref,horoData(sign,cat,period,key))}
