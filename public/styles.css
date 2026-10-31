@@ -2124,3 +2124,12 @@ body.still .hc-read{-webkit-mask-image:linear-gradient(transparent,#000 14px);ma
 .hsp .hc-ul{left:calc(var(--pl) + var(--p,0) * (100% - 2 * var(--pl)) / var(--n));width:calc((100% - 2 * var(--pl)) / var(--n))}
 /* the readings move sideways only under the finger (see hcar), so the page scrolls straight up and down */
 .hsp .hc-read{overflow-x:hidden;scroll-snap-type:none;touch-action:pan-y}
+/* the sign page's reading: one area at a time, fading in; the reading only scrolls up and down */
+.hsp .hc-read{display:block;height:auto!important;overflow:visible;touch-action:auto}
+.hc-slide.cur{animation:hcfade .35s ease-out}
+@keyframes hcfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hsp .hc-cats{touch-action:pan-y}
+.hsp .hc-ul{transition:left .35s cubic-bezier(.3,.7,.3,1)}
+.hc-next{display:block;margin:14px auto 0;font-family:'Cinzel',var(--serif);font-weight:600;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:#F3DC9E;text-decoration:none;text-shadow:0 1px 3px #000}
+.hc-next span{display:inline-block;transition:transform .2s}.hc-next:hover span{transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){.hc-slide.cur{animation:none}.hsp .hc-ul{transition:none}}
