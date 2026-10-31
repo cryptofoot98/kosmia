@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 476 |
-| In use, provisional | 432 |
+| Images | 477 |
+| In use, provisional | 433 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -557,6 +557,18 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/reading-bg.webp` | 850×1850 | 0.46:1 | no | 274 | provisional |  |
+
+## The Soul Resonance page’s backdrop: a radiant red heart between two crescent moons above the Milky Way, golden clouds, and lilies, roses and daisies in a gilded frame (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Soul Resonance (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/resonance-bg.webp` | 850×1850 | 0.46:1 | no | 360 | provisional |  |
 
 ## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
 

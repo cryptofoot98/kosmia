@@ -1833,3 +1833,12 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.af>.list.dim .lrow{background:rgba(244,232,206,.9)}
 .mnp.af>.btn:disabled{opacity:.75;color:#E9D7AE}
 .mnp.af>.list.dim .lrow{opacity:.9}
+/* Soul Resonance as a night page: the owner's radiant heart over the Milky Way, the title centred beneath the heart */
+.mnp.rs{--mn-bg:url(/art/atlas/resonance-bg.webp)}
+.mnp.rs .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 44cqw)}
+.mnp.rs .mn-t{position:relative;top:0;left:0}
+.mnp.rs .mn-t h1{white-space:normal;text-align:center}
+.mnp.rs .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 2%;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 60%,transparent)}
+.mnp.rs>:is(.btn,.list,.acts){align-self:stretch}
+.mnp.rs .mbox .lead{font-family:var(--font-serif);font-weight:600;font-size:1.1rem;line-height:1.45;color:var(--k-ink)}
+.mnp.rs .mbox .field label{color:var(--k-ink);font-weight:600}
