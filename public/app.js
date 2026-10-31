@@ -643,16 +643,16 @@ function horoSign(){
   return panel(`<div class="hd"><div><h2>${k==='overview'?pl[1]+' Horoscope':`${CAT_INFO[k][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')};
+ const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the sign's painting across the head of the page, its name, dates and words in the open sky at its left; then the
  // reading and the key themes on two parchment panels over the night edged with lilies and roses
  return `<div class="hsp s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}${heart}</div><div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-vine','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
-  <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p></div></div>
- <div class="hsp-body">${periodSeg()}
+  <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p></div></div>
+ <div class="hsp-body"><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p>${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-track hc-read" aria-label="Your horoscope by area of life">${HCATS.map(([k])=>`<div class="hc-slide" data-k="${k}"${k===cat?'':' aria-hidden="true"'}>${reading(k)}</div>`).join('')}</div></div>
-  <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>
+ <div class="hc-track hc-read" aria-label="Your horoscope by area of life">${HCATS.map(([k])=>`<div class="hc-slide" data-k="${k}"${k===cat?'':' aria-hidden="true"'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -1871,6 +1871,13 @@ function render(){
 // the Cosmic Energy carousel: its dots follow the slide in view, and it moves on by itself every few seconds unless the
 // reader has just touched it or motion is reduced
 let enT=0;
+/* the sign page: the painting and the sign's name stay in place while its words, the period bar, the areas and the
+   reading roll up over them; the areas then stay at the top of the screen as its menu. The reading area takes the
+   height of the reading in view. */
+function hcarFit(){const R=$('.hc-read');if(!R)return;const i=Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));R.style.height=R.children[i].offsetHeight+'px'}
+const hcarStick=()=>{const t=$('.hc-cats');if(t)t.classList.toggle('stuck',t.getBoundingClientRect().top<1)};
+addEventListener('scroll',hcarStick,{passive:true});
+addEventListener('resize',()=>hcarFit());
 /* the sign page's carousel: the readings (one per area, full width) swipe sideways under the row of areas, whose gold
    line follows; when the swipe comes to rest the page takes that area as its own. */
 function hcar(){
@@ -1879,15 +1886,25 @@ function hcar(){
  const pos=()=>R.scrollLeft/Math.max(1,R.clientWidth);
  const put=(j,smooth)=>R.scrollTo({left:j*R.clientWidth,behavior:smooth?'smooth':'auto'});
  // the gold line glides under the icons as the reading is swiped
- const line=p=>{ul.style.left=(p/n*100)+'%';T.querySelectorAll('.hc-ic').forEach((b,j)=>b.classList.toggle('on',j===Math.round(p)))};
+ const line=p=>{T.style.setProperty('--p',p);T.querySelectorAll('.hc-ic').forEach((b,j)=>b.classList.toggle('on',j===Math.round(p)))};
  const i0=Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
- put(i0);line(i0);R.style.height=R.children[i0].offsetHeight+'px';
+ hcarFit();put(i0);line(i0);
+ // changed from the menu at the top: the new reading opens at its start, just under the menu
+ if(V.hcStuck){V.hcStuck=false;window.scrollTo(0,c.getBoundingClientRect().top+scrollY)}
+ hcarStick();
  let touch=false,tm;
  const settle=()=>{clearTimeout(tm);tm=setTimeout(()=>{if(touch)return settle();const j=Math.round(pos());
-  const k=HCATS[j][0];if(k!==V.hcat){V.hcat=k;stopAudio();render()}},180)};
+  const k=HCATS[j][0];if(k!==V.hcat){V.hcat=k;V.hcStuck=T.classList.contains('stuck');stopAudio();render()}},180)};
  R.addEventListener('scroll',()=>{line(pos());settle()},{passive:true});
- R.addEventListener('touchstart',()=>{touch=true},{passive:true});
- R.addEventListener('touchend',()=>{touch=false;settle()},{passive:true});
+ // a swipe goes one way only: the browser keeps the up-and-down scrolling, and a sideways swipe moves the readings,
+ // then glides on to the next (or back) once it is let go
+ let sx=0,sy=0,sl=0,dx=0,mode=null;
+ R.addEventListener('touchstart',e=>{touch=true;mode=null;dx=0;sx=e.touches[0].clientX;sy=e.touches[0].clientY;sl=R.scrollLeft},{passive:true});
+ R.addEventListener('touchmove',e=>{const x=e.touches[0].clientX-sx,y=e.touches[0].clientY-sy;
+  if(!mode&&(Math.abs(x)>8||Math.abs(y)>8))mode=Math.abs(x)>Math.abs(y)?'h':'v';
+  if(mode==='h'){dx=x;R.scrollLeft=Math.min(Math.max(0,sl-x),R.scrollWidth-R.clientWidth)}},{passive:true});
+ const end=()=>{touch=false;if(mode==='h'){const j0=Math.round(sl/Math.max(1,R.clientWidth));put(Math.min(n-1,Math.max(0,j0+(dx<-40?1:dx>40?-1:0))),true)}mode=null;settle()};
+ R.addEventListener('touchend',end,{passive:true});R.addEventListener('touchcancel',end,{passive:true});
  c.go=j=>{put(j,true);settle()};
 }
 function enCar(){

@@ -2106,3 +2106,21 @@ body.still .tland .tpanel{position:fixed;left:max(3.5%,calc(50% - 223px));right:
 /* no blur: the painting stays crisp under the bar, only a light veil of night for the lettering */
 .hsp .hsp-body .seg{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(rgba(8,12,28,.22),rgba(8,12,28,.34))}
 .hsp .hsp-body .seg button{text-shadow:0 1px 2px #000,0 0 8px rgba(0,0,0,.85)}
+/* the sign page holds still: only the parchment of each reading scrolls up, inside its own slide; sideways swipes the areas */
+body.still .hc-read{transition:none;align-items:stretch}
+body.still .hc-slide{height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:none;padding-bottom:14px}
+body.still .hc-slide::-webkit-scrollbar{display:none}
+body.still .hc-slide .acts{margin-top:14px}
+body.still .hc-read{touch-action:pan-x}
+body.still .hc-read{-webkit-mask-image:linear-gradient(transparent,#000 14px);mask-image:linear-gradient(transparent,#000 14px)}
+/* the sign page: its words leave the fixed painting and roll up with the parchment */
+.hsp-body>.hsp-desc{position:relative;z-index:1;width:28cqw;margin:-24cqw 0 -2.6cqw 5cqw;color:#F6EAD0;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+/* the areas' row: in place under the period bar, then held at the top of the screen as the page's menu, between Back
+   and the heart */
+.hsp .hc-cats{position:sticky;top:0;z-index:6;margin-top:calc(-1 * (env(safe-area-inset-top,0px) + 6cqw));padding:calc(env(safe-area-inset-top,0px) + 6cqw) 6.5cqw 9px;pointer-events:none;transition:background .25s}
+.hsp .hc-cats .hc-ic{pointer-events:auto}
+.hsp .hc-cats.stuck{margin-left:-7cqw;margin-right:-7cqw;padding-left:13.5cqw;padding-right:13.5cqw;background:linear-gradient(rgba(6,10,24,.96) 70%,rgba(6,10,24,.85));border-bottom-color:rgba(var(--k-gold-rgb),.55);box-shadow:0 6px 14px rgba(0,0,0,.45)}
+.hsp .hc-cats{--pl:6.5cqw}.hsp .hc-cats.stuck{--pl:13.5cqw}
+.hsp .hc-ul{left:calc(var(--pl) + var(--p,0) * (100% - 2 * var(--pl)) / var(--n));width:calc((100% - 2 * var(--pl)) / var(--n))}
+/* the readings move sideways only under the finger (see hcar), so the page scrolls straight up and down */
+.hsp .hc-read{overflow-x:hidden;scroll-snap-type:none;touch-action:pan-y}
