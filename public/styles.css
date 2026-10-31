@@ -830,7 +830,7 @@ body.reduce *,body.reduce *::before,body.reduce *::after{animation:none!importan
 .scene:not(.flat):not(.flipped) .face.front{visibility:hidden}
 .scene .face.back{transition:visibility 0s .55s}
 .scene.flipped .face.back{visibility:hidden}
-/* tarot: midnight-blue and gold sun-and-moon backs (art/cards/tarot-back.webp); faces are the painted art (art/deck) with the numeral and
+/* tarot: ivory parchment sun-and-moon backs engraved in gold (art/cards/tarot-back.webp); faces are the painted art (art/deck) with the numeral and
    title set in the app on parchment, like a printed deck */
 .rd-cell .face.back{background:url(/art/cards/tarot-back.webp) center/100% 100%}
 .face.front.tarot-face{padding:0;justify-content:flex-end;background:#EFE3CE;container-type:inline-size;justify-content:flex-end}
