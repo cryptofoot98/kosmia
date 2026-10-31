@@ -247,10 +247,15 @@ function go(sec,t,opt={}){
  stopAudio();V.edit=null;V.tpop=null;V.spop=null;V.sheet=null;V.wpop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  V.sec=sec;V.tab[sec]=t||landing(sec);
- if(SECTIONS[sec])history[opt.replace?'replaceState':'pushState']({scroll:0},'',pathFor(sec,tab(),viewQuery()));
+ // each page records how many steps into the app it is (d), so Back can return to the page it was opened from
+ const d=(history.state&&history.state.d)||0;
+ if(SECTIONS[sec])history[opt.replace?'replaceState':'pushState']({scroll:0,d:opt.replace?d:d+1},'',pathFor(sec,tab(),viewQuery()));
  render();window.scrollTo(0,0);
 }
-const goBack=()=>{if(V.sec==='discover'&&tab()==='birth-chart'&&V.chartOpen){V.chartOpen=false;V.chartInterp=false;return render()}const [s,t]=parentOf(V.sec,tab());go(s,t)};
+// Back returns to the page the reader came from; a page opened straight from a link (nothing to return to) goes to its parent
+const goBack=()=>{if(V.sec==='discover'&&tab()==='birth-chart'&&V.chartOpen){V.chartOpen=false;V.chartInterp=false;return render()}
+ if(((history.state&&history.state.d)||0)>0)return history.back();
+ const [s,t]=parentOf(V.sec,tab());go(s,t,{replace:true})};
 addEventListener('popstate',e=>{stopAudio();jLeave();jeLeave();V.tpop=null;V.edit=null;V.sheet=null;if(!S.sign)return;applyLocation();render();const y=(e.state&&e.state.scroll)||0;requestAnimationFrame(()=>window.scrollTo(0,y))});
 
 // a passing message, with an action (Undo) when there is one
@@ -625,7 +630,7 @@ function horoSign(){
  <div class="hsp-body">${periodSeg()}
  ${panel(`<div class="hd"><div><h2>${cat==='overview'?pl[1]+' Horoscope':`${CAT_INFO[cat][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
-  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,`ornate hread hc-${cat}`)}
+  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')}
  <h3 class="th-h hk-h">Key Themes ${pl[0]}</h3><div class="themes-g">${others}</div>
   <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>
  </div></div>`;
@@ -1498,8 +1503,7 @@ function entryView(){
  <div class="je-box"><div class="je-tools" role="toolbar" aria-label="Writing tools">${JTOOLS.map(([k,l,g])=>`<button type="button" data-act="jfmt" data-k="${k}" aria-label="${l}" title="${l}">${g}</button>`).join('')}</div>
  <label class="sr-only" for="je">My reflection</label><textarea id="je" class="je" placeholder="${esc(pr[0])}">${esc(txt)}</textarea></div>`)}
  ${mbox(`<div class="prompts"><p class="kick">Guiding prompts <span class="muted">(optional)</span></p>${pr.map((q,i)=>`<button class="pr" data-act="jprompt" data-i="${i}">${ui(['t-whisper','t-reading','t-journal'][i],'pr-i')}<span>${esc(q)}</span>${IC.chev}</button>`).join('')}</div>`)}
- ${p.t!=='j'?mbox(`<div class="intent"><h3>Today I’m taking with me…</h3>${intents(key).map((x,i)=>`<label class="ck"><input type="checkbox" class="cb" data-act="jint" data-i="${i}" ${on[i]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`):''}
- <p class="muted small center">Private to you${C.user?' and kept in your account':' and kept in this browser'}. Everything is saved as you write.</p></div>`;
+ ${p.t!=='j'?mbox(`<div class="intent"><h3>Today I’m taking with me…</h3>${intents(key).map((x,i)=>`<label class="ck"><input type="checkbox" class="cb" data-act="jint" data-i="${i}" ${on[i]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`):''}</div>`;
 }
 // a small engraved Moon for a calendar day: the lit part drawn from how much of the Moon is lit that night
 const phaseGlyph=d=>{const m=K.moon(d),o=((m.waxing?-1:1)*m.ill*2).toFixed(2),id='pg'+d.getTime();

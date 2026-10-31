@@ -1923,14 +1923,14 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .theme-b .th-l{font-size:1.05rem;line-height:1.1}
 .theme-b .th-p{font-size:.8rem;line-height:1.2;color:#4E3D2C}
 .theme-b:last-child:nth-child(odd){grid-column:1/-1}
-/* each area's colour, for its box and for the main reading when it is chosen */
-.t-overview,.hc-overview{--hc:rgba(217,174,94,.10)}
-.t-love,.hc-love{--hc:rgba(196,96,110,.28)}
-.t-family,.hc-family{--hc:rgba(150,90,150,.22)}
-.t-health,.hc-health{--hc:rgba(96,140,96,.28)}
-.t-career,.hc-career{--hc:rgba(70,110,170,.24)}
-.t-money,.hc-money{--hc:rgba(200,160,60,.32)}
-.hsp .hread{background:linear-gradient(var(--hc,transparent),var(--hc,transparent)),var(--c-tl) 6px 6px/26px no-repeat,var(--c-tr) calc(100% - 6px) 6px/26px no-repeat,var(--c-bl) 6px calc(100% - 6px)/26px no-repeat,var(--c-br) calc(100% - 6px) calc(100% - 6px)/26px no-repeat,var(--paper) var(--paper-img) center/cover;transition:background .3s;scroll-margin-top:12px}
+/* each area's colour, for its box (the main reading keeps the plain parchment whichever area it shows) */
+.t-overview{--hc:rgba(217,174,94,.10)}
+.t-love{--hc:rgba(196,96,110,.28)}
+.t-family{--hc:rgba(150,90,150,.22)}
+.t-health{--hc:rgba(96,140,96,.28)}
+.t-career{--hc:rgba(70,110,170,.24)}
+.t-money{--hc:rgba(200,160,60,.32)}
+.hsp .hread{background:var(--c-tl) 6px 6px/26px no-repeat,var(--c-tr) calc(100% - 6px) 6px/26px no-repeat,var(--c-bl) 6px calc(100% - 6px)/26px no-repeat,var(--c-br) calc(100% - 6px) calc(100% - 6px)/26px no-repeat,var(--paper) var(--paper-img) center/cover;transition:background .3s;scroll-margin-top:12px}
 /* the buttons' lettering a little heavier and larger, so it reads clearly through the clear glass */
 .btn:not(.danger){font-weight:700;-webkit-text-stroke:.55px currentColor;paint-order:stroke fill}
 .btn.sm:not(.danger){-webkit-text-stroke:.4px currentColor}
