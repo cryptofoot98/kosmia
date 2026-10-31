@@ -257,7 +257,7 @@ function go(sec,t,opt={}){
  render();window.scrollTo(0,0);
 }
 // Back returns to the page the reader came from; a page opened straight from a link (nothing to return to) goes to its parent
-const goBack=()=>{if(V.sec==='discover'&&tab()==='birth-chart'&&V.chartOpen&&!V.ns.chart){V.chartOpen=false;V.chartInterp=false;return render()}
+const goBack=()=>{
  if(V.sec==='tarot'&&tab()==='reading'&&V.tarot.stage!=='setup'){newReading();render();return window.scrollTo(0,0)}
  if(((history.state&&history.state.d)||0)>0)return history.back();
  const [s,t]=parentOf(V.sec,tab());go(s,t,{replace:true})};
@@ -619,7 +619,7 @@ function playText(txt){
 }
 /* ----- Horoscope: the landing (the six areas of life and the signs), then a sign's own
    page: its illustration, its words, the period, a row of the areas of life with a gold line under the chosen one, and
-   the chosen area's reading; tapping an area (or swiping the row) fades its reading in ----- */
+   the chosen area's reading; tapping an area, or swiping sideways, brings its reading in ----- */
 const PLABEL={daily:['Today','Today’s'],weekly:['This Week','This Week’s'],monthly:['This Month','This Month’s'],yearly:['This Year','This Year’s']};
 const periodSeg=()=>`<div role="group" aria-label="Time period">${seg(PERIODS.map(([k])=>[k,PLABEL[k][0]]),V.period,'period')}</div>`;
 views.horoscope=()=>{
@@ -643,8 +643,6 @@ function horoSign(){
   return panel(`<div class="hd"><div><h2>${k==='overview'?pl[1]+' Horoscope':`${CAT_INFO[k][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')};
- // at the foot of each reading, the way on to the next area (the last leads back to the first)
- const nextBtn=k=>{const i=HCATS.findIndex(x=>x[0]===k),nx=HCATS[(i+1)%HCATS.length][0];return `<button class="link hc-next" data-act="hcat" data-k="${nx}">${i===HCATS.length-1?'Back to '+CAT_INFO[nx][0]:'Next: '+CAT_INFO[nx][0]} <span aria-hidden="true">→</span></button>`};
  const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the sign's painting across the head of the page, its name, dates and words in the open sky at its left; then the
@@ -654,7 +652,7 @@ function horoSign(){
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p></div></div>
  <div class="hsp-body"><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p>${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${nextBtn(k)}${acts(k)}</div>`).join('')}</div></div>
+ <div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -1289,12 +1287,9 @@ function chartWheel(c){
 }
 const CHART_ROWS=[['planets',()=>pic('cats','planets','acc-i'),'Planetary Positions','Where the planets were at your birth'],['houses',()=>ui('ico-family','acc-i'),'Houses','The 12 areas of your life'],['aspects',()=>pic('cats','aspects','acc-i'),'Aspects','The connections between planets'],['interp',()=>pic('cats','insights','acc-i'),'Full Interpretation','A complete analysis of your chart']];
 function chartView(){
- const other=!!V.ns.chart,c=other?V.oChart:myChart(),oname=(V.oBirthName||'').trim(),H=`${mnHead(other&&c?(oname?esc(oname.split(' ')[0])+'’s Chart':'Their Birth Chart'):c&&V.chartOpen?'Your Birth Chart':'Birth Chart')}<p class="mn-sub">${other?'Another cosmic blueprint':'Your cosmic blueprint'}</p>`;
- const intro=mbox(`<p class="lead">A personalised map of the sky at the moment you were born. Discover your planetary placements, aspects and what they reveal about your unique path.</p>`);
+ const other=!!V.ns.chart,c=other?V.oChart:myChart(),oname=(V.oBirthName||'').trim(),H=`${mnHead(other&&c?(oname?esc(oname.split(' ')[0])+'’s Chart':'Their Birth Chart'):c?'Your Birth Chart':'Birth Chart')}<p class="mn-sub">${other?'Another cosmic blueprint':'Your cosmic blueprint'}</p>`;
  if(other&&!c)return `<div class="mnp ch">${H}${mbox('<p class="lead">Calculate anyone’s birth chart from their date, time and place of birth.</p>')}${birthForm(true)}${mineBtn('chart',!!myChart())}</div>`;
- if(!c)return `<div class="mnp ch">${H}${invite('A personalised map of the sky at the moment you were born. Add your date, time and place of birth to your Cosmic Profile, or look up anyone’s chart.','chart')}<div class="list dim">${CHART_ROWS.map(([,i,a,b])=>lrow(i(),a,b,'disabled')).join('')}</div></div>`;
- if(!other&&!V.chartOpen)return `<div class="mnp ch dfeat">${H}${intro}<button class="btn" data-act="chartopen" data-k="chart">View My Birth Chart →</button>
- <div class="list">${CHART_ROWS.map(([k,i,a,b])=>lrow(i(),a,b,`data-act="chartopen" data-k="${k}"`)).join('')}</div>${nsBtn('chart')}</div>`;
+ if(!c)return `<div class="mnp ch">${H}${invite('A personalised map of the sky at the moment you were born. Add your date, time and place of birth to your Cosmic Profile, or look up anyone’s chart.','chart')}</div>`;
  const b=other?V.oBirth:S.birth,sel=c.pl.find(p=>p.n===V.chartSel),ct=V.chartTab;
  const note=b.unk||!b.time?`<p class="note">Without a birth time, planets are taken at noon on your birth date. ${!hasPlace(b)?'Add your birth place to calculate the Ascendant, Midheaven and houses. ':''}${c.moonRange?`The Moon moves from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} during your birth day, so its sign depends on your birth time.`:''}</p>`:!hasPlace(b)?'<p class="note">Add your birth place so your birth time can be used for the Ascendant, Midheaven and houses.</p>':'';
  const big=[['Sun',c.pl[0]],['Moon',c.pl[1]]].map(([n,p])=>`<div class="b3"><span class="glyph">${p.g}</span><span>${n}</span><span class="b3-s"><span class="glyph">${sIdx(p.sign).g}</span> ${n==='Moon'&&c.moonRange?'Uncertain':sIdx(p.sign).name}</span><span class="b3-d">${n==='Moon'&&c.moonRange?'':degTxt(p.lon).replace(/ \S+ /,'° ').replace('°°','°')}</span></div>`).join('')
@@ -1305,11 +1300,12 @@ function chartView(){
  else if(ct==='houses')body=c.known?`<p class="muted small center">Whole-sign houses: each sign is one house, starting from the rising sign.</p><div class="list">${HOUSE.map((h,i)=>{const s=sIdx(K.signIdx(c.ang.asc)+i),inn=c.pl.filter(p=>p.house===i+1).map(p=>p.n);return acc(`<span class="hn">${i+1}</span>`,`${ORD(i+1)} house · ${s.name}`,h,`<p>The ${ORD(i+1)} house is the life area of ${h}. In your chart it falls in ${s.name}, so you tend to meet it ${STYLE[s.id]}.${inn.length?` ${inn.join(', ')} ${inn.length>1?'are':'is'} placed here, bringing ${inn.map(n=>PM[n]).join('; ')} into this area.`:''}</p>`)}).join('')}</div>`:empty('Houses need your birth time and place','Add them below to see the twelve houses of your chart.');
  else body=`${mbox(`<div class="wheel-wrap">${chartWheel(c)}</div>${sel?`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${sIdx(sel.sign).name}</h3><p>${placement(sel)}</p>`:'<p class="muted center small">Tap a planet to read it.</p>'}`)}<div class="big3">${big}</div>
   ${acc('','Full Interpretation','A complete analysis of your chart',`<div class="read">${c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).map(p=>`<p><strong>${p.n} in ${sIdx(p.sign).name}.</strong> ${placement(p)}</p>`).join('')}${c.ang?`<p><strong>${sIdx(K.signIdx(c.ang.asc)).name} rising.</strong> You tend to meet the world ${STYLE[sIdx(K.signIdx(c.ang.asc)).id]}.</p>`:''}</div>`,!!V.chartInterp)}`;
- return `<div class="mnp ch">${H}<p class="muted center">${ymdLong(b.date)}${b.unk||!b.time?'':' · '+esc(b.time)}${b.place?' · '+esc(b.place):''}</p>
+ return `<div class="mnp ch">${H}<p class="muted center ch-who">${ymdLong(b.date)}${b.unk||!b.time?'':' · '+esc(b.time)}${b.place?' · '+esc(b.place):''}</p>
+ ${other?'':`<button class="link ch-ns" data-act="nsearch" data-k="chart">Search another person’s chart</button>`}
  <div role="group" aria-label="Chart views">${seg([['chart','Chart'],['planets','Planets'],['aspects','Aspects'],['houses','Houses']],ct,'ctab')}</div>${note}${body}
  <p class="muted small">Method: tropical zodiac, geocentric positions on the true ecliptic of date from the Astronomy Engine ephemeris. Your local birth time is converted to UTC with the historical rules for ${esc(b.tz||TZ())}. Houses are whole-sign; aspect orbs are 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p>
  ${other?'':'<button class="btn ghost" data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest.">Ask Kassandra about my chart</button>'}
- ${nsBtn('chart')}${other?mineBtn('chart',!!myChart()):'<button class="btn ghost" data-go="discover" data-t="profile">Edit my Cosmic Profile</button>'}</div>`;
+ ${other?nsBtn('chart')+mineBtn('chart',!!myChart()):'<button class="btn ghost" data-go="discover" data-t="profile">Edit my Cosmic Profile</button>'}</div>`;
 }
 /* Zodiac Affinity: a symbolic score from the angle between the signs, their elements and modalities */
 const AFF_T=['A Mirror Connection','A Curious Connection','A Friendly Spark','A Dynamic Tension','A Harmonious Connection','An Unlikely Pairing','A Magnetic Pull'];
@@ -1863,7 +1859,7 @@ function render(){
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.toggle('still',authed&&sec==='tarot'&&tab()==='home');
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
- navH();
+ navH();tarotFit();
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
  if(onboarding())bindJoin();
  if(authed&&SECTIONS[sec])syncUrl();
@@ -1877,27 +1873,28 @@ let enT=0;
    reading roll up over them; the areas then stay at the top of the screen as its menu. */
 const hcarStick=()=>{const t=$('.hc-cats');if(t)t.classList.toggle('stuck',t.getBoundingClientRect().top<1)};
 addEventListener('scroll',hcarStick,{passive:true});
-/* the areas of life on a sign page. The reading itself only ever scrolls up and down; the area changes by tapping an
-   icon, by swiping sideways along the row of icons, or by the link at the foot of each reading. The new reading fades
-   in without redrawing the page, and if the reader was further down it opens at its start, under the menu. */
+/* the areas of life on a sign page. The reading never moves sideways under the finger (so scrolling stays steady): a
+   clearly sideways swipe on the icons or the reading, once let go, brings in the next area (or the one before), and a
+   tap on an icon brings in that one. The new reading slides in without redrawing the page, and if the reader was
+   further down it opens at its start, under the menu. */
 function hcar(){
  const c=$('.hcar');if(!c)return;
  const R=c.querySelector('.hc-read'),T=c.querySelector('.hc-cats'),n=HCATS.length;
  const line=j=>{T.style.setProperty('--p',j);T.querySelectorAll('.hc-ic').forEach((b,x)=>{b.classList.toggle('on',x===j);b.setAttribute('aria-pressed',x===j)})};
  const cur=()=>Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
  line(cur());hcarStick();
- const take=j=>{j=(j+n)%n;const k=HCATS[j][0];if(k===V.hcat)return;
+ const take=(j,dir)=>{j=(j+n)%n;const k=HCATS[j][0];if(k===V.hcat)return;const cur0=cur();
   const was=V.say;V.hcat=k;stopAudio();line(j);
-  [...R.children].forEach((sl,x)=>{const on=x===j;sl.hidden=!on;sl.classList.toggle('cur',on)});
+  const back=dir?dir<0:j<cur0;[...R.children].forEach((sl,x)=>{const on=x===j;sl.hidden=!on;sl.classList.toggle('cur',on);sl.classList.toggle('from-l',on&&back)});
   const sl=R.children[j],hb=$('.hsp-bar [data-act=bookhoro]');
   if(hb){const on=isSaved('horoscope',sl.dataset.ref);hb.dataset.ref=sl.dataset.ref;hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);hb.setAttribute('aria-label',on?'Saved to your journal':'Save to your journal')}
   syncUrl();
   if(c.getBoundingClientRect().top<0)window.scrollTo(0,c.getBoundingClientRect().top+scrollY);
   if(was)render()};
- // a clearly sideways swipe along the icons moves to the next area or back
+ // a clearly sideways swipe moves to the next area or back; anything more up-and-down is left to scrolling
  let sx=0,sy=0;
- T.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
- T.addEventListener('touchend',e=>{const t=e.changedTouches[0],x=t.clientX-sx,y=t.clientY-sy;if(Math.abs(x)>40&&Math.abs(x)>2*Math.abs(y))take(cur()+(x<0?1:-1))},{passive:true});
+ c.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+ c.addEventListener('touchend',e=>{const t=e.changedTouches[0],x=t.clientX-sx,y=t.clientY-sy;if(Math.abs(x)>50&&Math.abs(x)>2*Math.abs(y))take(cur()+(x<0?1:-1),x<0?1:-1)},{passive:true});
  c.go=j=>take(j);
 }
 function enCar(){
@@ -1909,6 +1906,11 @@ function enCar(){
  enT=setInterval(()=>{if(!t.isConnected)return clearInterval(enT);if(Date.now()-hold<12000||document.hidden)return;t.scrollTo({left:((at()+1)%dots.length)*t.clientWidth,behavior:'smooth'})},6000);
 }
 // the page keeps room for the bottom bar, whatever its height on this phone
+// Tarot's landing: its options sit under the painting, lifted above the menu only on a screen too short to show them
+const tarotFit=()=>{const t=$('body.still .tland .tpanel');if(!t)return;t.classList.remove('lift');
+ const nav=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navh'))||0;
+ if(t.getBoundingClientRect().bottom>innerHeight-nav-12)t.classList.add('lift')};
+addEventListener('resize',tarotFit);
 const navH=()=>{const n=$('#nav');document.documentElement.style.setProperty('--navh',(n.hidden?0:n.offsetHeight)+'px')};
 addEventListener('resize',navH);
 // living details: a hero's picture drifts more slowly than the page (parallax), and Home's header folds into a slim bar
@@ -2013,7 +2015,7 @@ document.addEventListener('click',e=>{
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
  if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
- if(a==='hcat'){const c=$('.hcar');if(c&&c.go){if(t.closest('.hc-next'))window.scrollTo(0,c.getBoundingClientRect().top+scrollY);return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k))}V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+ if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k));V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
  if(a==='hreflect'){const [sign,cat,period,key]=t.dataset.ref.split('/');return openEntry(ensureBook('horoscope',t.dataset.ref,horoData(sign,cat,period,key)))}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/');return bookmark('horoscope',t.dataset.ref,horoData(sign,cat,period,key))}

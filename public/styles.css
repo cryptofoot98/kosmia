@@ -71,7 +71,7 @@ html{-webkit-text-size-adjust:100%}
 body{min-height:100vh;color:var(--ink);font:17px/1.5 var(--text);
  background:#0E1426 radial-gradient(ellipse at 50% -10%,#24305A 0,#0E1426 60%) fixed;-webkit-font-smoothing:antialiased;font-variant-numeric:lining-nums}
 body.large{font-size:19px}
-#app{position:relative;max-width:480px;min-height:100svh;margin:0 auto;padding-bottom:calc(var(--navh,0px) + 18px);overflow-x:clip;
+#app{position:relative;max-width:var(--appw);min-height:100svh;margin:0 auto;padding-bottom:calc(var(--navh,0px) + 18px);overflow-x:clip;
  background:var(--bg) var(--paper-img) center top/100% auto repeat-y;box-shadow:0 0 50px rgba(0,0,0,.45)}
 body.onboarding #app{padding-bottom:0}
 h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0;color:var(--ink);text-wrap:balance}
@@ -261,7 +261,7 @@ details.more{display:flex;flex-direction:column;gap:10px}
 
 /* the bar at the foot of every page: five engraved icons and their names */
 #nav{position:fixed;left:0;right:0;bottom:0;z-index:var(--z-nav);pointer-events:none}
-#nav .in{pointer-events:auto;display:flex;max-width:480px;margin:0 auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-radius:20px 20px 0 0;
+#nav .in{pointer-events:auto;display:flex;max-width:var(--appw);margin:0 auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-radius:20px 20px 0 0;
  background:linear-gradient(rgba(var(--k-surface-rgb),.97),rgba(240,228,203,.98)),var(--paper-img) center/cover;border:1px solid var(--gold);border-bottom:0;
  box-shadow:0 -6px 18px rgba(var(--k-shadow-rgb),.25),inset 0 3px 0 rgba(255,250,240,.7),inset 0 0 0 4px rgba(var(--k-surface-rgb),.6),inset 0 0 0 5px rgba(var(--k-gold-rgb),.28)}
 #nav button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 0 2px;border:0;background:none;cursor:pointer;color:var(--ink2);font-family:var(--serif);font-weight:600;font-size:clamp(.72rem,3.1vw,.84rem);line-height:1.15}
@@ -436,12 +436,12 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .ev-img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;margin-bottom:4px;border:1px solid rgba(var(--k-gold-rgb),.5)}
 .ev-dark{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#24305A,var(--k-midnight) 75%)}
 .ev-dark .ev-moon{width:62%;border-radius:50%}
-.hbar{position:fixed;top:0;left:50%;z-index:var(--z-bar);width:min(100%,480px);transform:translate(-50%,-110%);display:flex;align-items:center;justify-content:space-between;padding:calc(6px + env(safe-area-inset-top,0px)) 14px 6px;
+.hbar{position:fixed;top:0;left:50%;z-index:var(--z-bar);width:min(100%,var(--appw));transform:translate(-50%,-110%);display:flex;align-items:center;justify-content:space-between;padding:calc(6px + env(safe-area-inset-top,0px)) 14px 6px;
  background:linear-gradient(#162042,var(--k-midnight));border-bottom:1px solid var(--gold);box-shadow:0 4px 12px rgba(0,0,0,.35);
  opacity:0;visibility:hidden;transition:transform .3s ease,opacity .3s ease,visibility 0s .3s}
 /* the compact header: the approved painted band (home-bar: the night with its crescent, stars, clouds, gold vines and lilies, the
    painted rule beneath the wordmark), KOSMIA in antique gold over it with a small star, the profile at the right */
-.hbar{background:var(--k-midnight);height:max(calc(min(100vw,480px)/3.74),calc(env(safe-area-inset-top,0px) + 62px));padding:0;border-bottom:1px solid var(--k-gold-deep);container-type:inline-size;overflow:hidden}
+.hbar{background:var(--k-midnight);height:max(calc(min(100vw,var(--appw))/3.74),calc(env(safe-area-inset-top,0px) + 62px));padding:0;border-bottom:1px solid var(--k-gold-deep);container-type:inline-size;overflow:hidden}
 .hb-art{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 100%;pointer-events:none}
 .hb-logo{position:absolute;left:55%;bottom:41%;transform:translate(-50%,50%);display:flex;align-items:flex-start;gap:.8cqw}
 .hb-word{font-family:var(--font-display);font-weight:700;font-size:7.4cqw;line-height:1;letter-spacing:.06em;text-transform:uppercase;color:#E8C27E;
@@ -739,7 +739,7 @@ td.wrap{white-space:normal}
 
 /* pop-ups: a parchment sheet rising from the foot of the screen */
 .pop{position:fixed;inset:0;z-index:var(--z-pop);background:rgba(18,14,10,.6);display:flex;align-items:flex-end;justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 24px)}
-.pop-box{position:relative;width:100%;max-width:480px;max-height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:22px 18px calc(24px + env(safe-area-inset-bottom,0px));
+.pop-box{position:relative;width:100%;max-width:var(--appw);max-height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:22px 18px calc(24px + env(safe-area-inset-bottom,0px));
  background:var(--c-tl) 8px 8px/28px no-repeat,var(--c-tr) calc(100% - 8px) 8px/28px no-repeat,var(--paper) var(--paper-img) center top/100% auto;border:1px solid var(--gold);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.4)}
 .pop-box .scene{width:min(260px,70vw);margin:4px auto 8px}
 .pop-x{position:absolute;top:8px;right:10px;width:42px;height:42px;border:0;background:none;font-size:1.9rem;line-height:1;color:var(--ink);cursor:pointer}
@@ -1293,7 +1293,7 @@ body.reduce .kscene .parallax{transform:none!important}
 
 /* Stage 6: the mockups' fine double gold rule down both sides of every screen; it never takes a tap and keeps clear
    of the text (16px gutters). Home draws its own rules on its parchment sheet. */
-body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:15;top:0;bottom:var(--navh,0px);left:50%;width:min(100%,480px);transform:translateX(-50%);pointer-events:none;
+body.has-nav:not([data-sec=home]) #app::after{content:'';position:fixed;z-index:15;top:0;bottom:var(--navh,0px);left:50%;width:min(100%,var(--appw));transform:translateX(-50%);pointer-events:none;
  background:linear-gradient(90deg,transparent 4px,rgba(var(--k-gold-rgb),.85) 4px 5px,transparent 5px 7px,rgba(var(--k-gold-rgb),.45) 7px 8px,transparent 8px calc(100% - 8px),rgba(var(--k-gold-rgb),.45) calc(100% - 8px) calc(100% - 7px),transparent calc(100% - 7px) calc(100% - 5px),rgba(var(--k-gold-rgb),.85) calc(100% - 5px) calc(100% - 4px),transparent calc(100% - 4px))}
 .w-msg{text-align:center}
 
@@ -1522,7 +1522,7 @@ html:has(.ob-acct),html:has(.ob-acct) body{background:var(--k-midnight);overscro
 .ob-acct .obl-foot{bottom:calc(-1*var(--fd))}
 /* the lily's tallest petal stands 26.7% of the width above the page foot (less --fd, how far the painting is set down on
    short screens); the form ends 14px below it, so only the petal tips reach over its edge, clear of its text */
-.ob-acct::after{flex:0 0 calc(min(100vw,480px)*.2667 - 14px - var(--fd))}
+.ob-acct::after{flex:0 0 calc(min(100vw,var(--appw))*.2667 - 14px - var(--fd))}
 .ob-acct .oba-head{margin-bottom:auto}
 @media (max-height:740px){.ob-acct{--fd:20px}}
 @media (max-height:690px){.ob-acct{--fd:36px}.ob-acct .ob-panel .ob-rule{display:none}.ob-acct .oba-head{gap:3px}}
@@ -1576,7 +1576,7 @@ html:has(.ob-acct),html:has(.ob-acct) body{background:var(--k-midnight);overscro
    first where today's Moon sits */
 .mnp{--mb-bg:rgba(244,232,206,.8);position:relative;isolation:isolate;container-type:inline-size;display:flex;flex-direction:column;gap:18px;min-height:100vh;min-height:100dvh;
  margin-bottom:calc(-18px - var(--navh,0px));padding:0 16px calc(var(--navh,0px) + 34px);color:var(--k-ink)}
-.mnp::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,480px);transform:translateX(-50%);background:#0B1226 var(--mn-bg,url(/art/atlas/moon-bg.webp)) 50% 0/cover no-repeat}
+.mnp::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);background:#0B1226 var(--mn-bg,url(/art/atlas/moon-bg.webp)) 50% 0/cover no-repeat}
 .mn-hd{position:relative;height:calc(env(safe-area-inset-top,0px) + 54cqw)}
 .mn-hd>.ibtn{position:absolute;z-index:3;top:calc(env(safe-area-inset-top,0px) + 8px);left:-8px;color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
 .mn-t{position:absolute;left:1cqw;top:calc(env(safe-area-inset-top,0px) + 17cqw);display:flex;flex-direction:column;align-items:center;gap:1cqw}
@@ -1716,7 +1716,7 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .dw-big>.btn{align-self:stretch;margin:0 6cqw;min-height:max(42px,10.5cqw);font-size:max(10px,2.7cqw)}
 /* ...and opened: the card full screen over the night, its message, its question and the invitation to reflect */
 .wpop{align-items:stretch;padding:0;overflow-y:auto;background:rgba(8,12,28,.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.wp-in{position:relative;width:100%;max-width:480px;min-height:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;
+.wp-in{position:relative;width:100%;max-width:var(--appw);min-height:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;
  padding:calc(env(safe-area-inset-top,0px) + 54px) 22px calc(env(safe-area-inset-bottom,0px) + 30px);color:#F1E4C4;text-align:center}
 .wp-in .pop-x{top:calc(env(safe-area-inset-top,0px) + 8px);color:#F1DFB4}
 .wp-card{position:relative;width:min(76vw,340px);aspect-ratio:2/3;flex:none;border-radius:8px;box-shadow:0 0 0 1px rgba(233,200,142,.6),0 10px 40px rgba(0,0,0,.7),0 0 60px rgba(240,200,120,.18)}
@@ -1730,7 +1730,7 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .wp-q svg{position:absolute;left:14px;top:20px;width:16px;height:16px;color:var(--k-gold)}
 .wp-in>.btn{align-self:stretch;margin-top:4px}
 /* the compact header that slides in on scroll: a thinner band */
-.hbar{height:max(calc(min(100vw,480px)/5.6),calc(env(safe-area-inset-top,0px) + 50px))}
+.hbar{height:max(calc(min(100vw,var(--appw))/5.6),calc(env(safe-area-inset-top,0px) + 50px))}
 .hb-word{font-size:6cqw}
 .hbar .avatar{width:min(9.5cqw,40px);height:min(9.5cqw,40px);bottom:50%}
 .hb-logo{bottom:50%}
@@ -1938,7 +1938,7 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
    Back and the page's buttons float in their own bar above everything */
 .mnp>.mn-hd{position:sticky;top:0;z-index:0}
 :where(.mnp>:not(.mn-hd,.mn-bar)){position:relative;z-index:1}
-.mn-bar{position:fixed;z-index:30;top:0;left:50%;width:min(100%,480px);height:0;transform:translateX(-50%);pointer-events:none}
+.mn-bar{position:fixed;z-index:30;top:0;left:50%;width:min(100%,var(--appw));height:0;transform:translateX(-50%);pointer-events:none}
 .mn-bar>*{pointer-events:auto}
 .mn-bar>.ibtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:8px;color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9)) drop-shadow(0 0 6px rgba(0,0,0,.6))}
 .mn-bar>.mn-r{right:8px}
@@ -1946,7 +1946,7 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 /* a sign's page the same way: its painting and name stay while the reading scrolls up over them */
 .hsp>.hsp-hero{position:sticky;top:0;z-index:0}
 .hsp>.hsp-body{z-index:2}
-.hsp>.hsp-bar{position:fixed;z-index:30;top:calc(env(safe-area-inset-top,0px) + 7.5cqw);left:50%;width:min(100%,480px);transform:translateX(-50%);display:flex;justify-content:space-between;padding:0 1.5cqw}
+.hsp>.hsp-bar{position:fixed;z-index:30;top:calc(env(safe-area-inset-top,0px) + 7.5cqw);left:50%;width:min(100%,var(--appw));transform:translateX(-50%);display:flex;justify-content:space-between;padding:0 1.5cqw}
 .mbox{-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
 /* Home: Back when there is a page to return to */
 .hh-back{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 8px);left:8px;color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9))}
@@ -2011,7 +2011,7 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.cp>.cp-intro{font-family:var(--font-serif);font-size:1.05rem;line-height:1.45}
 /* Tarot, Discover and Horoscope: the garden behind the parchment holds still too; only the parchment scrolls */
 .land:is(.tland,.dland,.hland){isolation:isolate;background:none}
-.land:is(.tland,.dland,.hland)::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,480px);transform:translateX(-50%);
+.land:is(.tland,.dland,.hland)::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);
  background:var(--k-midnight) url(/art/atlas/home-vines.webp) 50% 100%/cover no-repeat}
 .dscenic>.ksc-bg{display:none}
 /* Horoscope: the same framed parchment panel as Tarot, risen over the painting with the garden at its sides */
@@ -2022,13 +2022,13 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 /* every section page (Horoscope, Tarot, Discover, Journal, Dreams): the garden held still behind the parchment, and the
    painting at the top melting into it, so the two read as one picture */
 .land{isolation:isolate;background:none}
-.land::before{content:'';position:fixed;z-index:-1;top:0;left:50%;width:min(100%,480px);transform:translateX(-50%);
+.land::before{content:'';position:fixed;z-index:-1;top:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);
  background:var(--k-midnight) url(/art/atlas/home-vines.webp) 50% 100%/cover no-repeat}
 .land>.hero{background:transparent}
 .land>.hero .hero-img{-webkit-mask-image:linear-gradient(#000 62%,rgba(0,0,0,.6) 80%,transparent 98%);mask-image:linear-gradient(#000 62%,rgba(0,0,0,.6) 80%,transparent 98%)}
 /* the backgrounds hold perfectly still while scrolling: centred without a transform, sized to the full screen once,
    and the page's own backdrop no longer asked to stay fixed (iPhone redraws that on every scroll step) */
-.mnp::before,.land::before{left:0;right:0;margin:0 auto;max-width:480px;width:100%;transform:none;will-change:auto;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.mnp::before,.land::before{left:0;right:0;margin:0 auto;max-width:var(--appw);width:100%;transform:none;will-change:auto;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 body{background-attachment:scroll}
 /* the reading spoken to the reader: a name, a calling, a practice, and a line from the Stoics */
 .soul{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:10px;border-top:1px solid rgba(var(--k-gold-rgb),.5)}
@@ -2051,7 +2051,7 @@ body{background-attachment:scroll}
 .mnp.trd>.field input{min-height:40px}
 /* a sign's horoscope page: the garden behind the reading held still on the screen like every other page (it had scrolled
    with the page), and the sign's painting fading into it so the two read as one picture */
-.hsp::before{position:fixed;inset:auto;top:0;left:0;right:0;margin:0 auto;width:100%;max-width:480px;height:100vh;height:100lvh;
+.hsp::before{position:fixed;inset:auto;top:0;left:0;right:0;margin:0 auto;width:100%;max-width:var(--appw);height:100vh;height:100lvh;
  background:var(--k-midnight) url(/art/atlas/home-vines.webp) 50% 100%/cover no-repeat}
 .hsp{background:none}
 .hsp>.hsp-hero{-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
@@ -2091,7 +2091,7 @@ body{background-attachment:scroll}
 @media (prefers-reduced-motion:reduce){.hc-read,.hc-i,.hc-l{transition:none}}
 /* Tarot's landing holds still: no scrolling, the options box fixed above the menu */
 html:has(body.still),body.still{overflow:hidden;overscroll-behavior:none}
-body.still .tland .tpanel{position:fixed;left:max(3.5%,calc(50% - 223px));right:max(3.5%,calc(50% - 223px));bottom:calc(var(--navh,74px) + 12px);margin:0}
+body.still .tland .tpanel.lift{position:fixed;left:max(3.5%,calc(50% - var(--appw) / 2 + 17px));right:max(3.5%,calc(50% - var(--appw) / 2 + 17px));bottom:calc(var(--navh,74px) + 12px);margin:0}
 @media (max-height:700px){body.still .tpanel{padding:12px 10px}body.still .tpanel .lrow{min-height:66px}body.still .tpanel .lr-i .th{width:48px;height:48px}}
 /* the chosen area: only a light touch, a soft glow in its own colour */
 .t-overview{--glow:rgba(233,203,134,.45)}.t-love{--glow:rgba(214,110,125,.5)}.t-family{--glow:rgba(170,110,170,.45)}.t-health{--glow:rgba(120,170,120,.45)}.t-career{--glow:rgba(110,150,210,.45)}.t-money{--glow:rgba(225,185,80,.5)}
@@ -2130,6 +2130,30 @@ body.still .hc-read{-webkit-mask-image:linear-gradient(transparent,#000 14px);ma
 @keyframes hcfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .hsp .hc-cats{touch-action:pan-y}
 .hsp .hc-ul{transition:left .35s cubic-bezier(.3,.7,.3,1)}
-.hc-next{display:block;margin:14px auto 0;font-family:'Cinzel',var(--serif);font-weight:600;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:#F3DC9E;text-decoration:none;text-shadow:0 1px 3px #000}
-.hc-next span{display:inline-block;transition:transform .2s}.hc-next:hover span{transform:translateX(3px)}
 @media (prefers-reduced-motion:reduce){.hc-slide.cur{animation:none}.hsp .hc-ul{transition:none}}
+
+/* larger screens (iPad, unfolded Galaxy Fold and foldable iPhones): the column widens with the screen, held to a
+   comfortable reading width, and the type grows a little with it. Everything drawn in container units scales along. */
+:root{--appw:480px}
+@media (min-width:700px){:root{--appw:min(640px,100vw,78vh)}html{font-size:110%}}
+@media (min-width:700px) and (min-height:1000px){:root{--appw:min(680px,100vw)}html{font-size:114%}}
+/* the narrow folded screen (Galaxy Z Fold cover, about 344 px): the area names under the icons scale down to fit */
+.hc-l{font-size:clamp(6.5px,2.2cqw,.54rem)}
+.hsp .hc-cats.stuck .hc-l{font-size:clamp(6px,1.95cqw,.54rem);letter-spacing:.02em}
+/* Tarot: the options sit under the painting where the screen is tall enough, and are lifted above the menu only where
+   it is not (see tarotFit) */
+body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bottom:auto;margin:-21% 3.5% 0}
+
+/* the sign page: the next area's reading slides in from the side it was swiped from */
+.hc-slide.cur{animation:hcin .32s ease-out}.hc-slide.cur.from-l{animation-name:hcinl}
+@keyframes hcin{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes hcinl{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hc-slide.cur,.hc-slide.cur.from-l{animation:hcfade .2s}}
+/* larger area icons; a little smaller once held at the top as the menu */
+.hsp .hc-i{width:min(50px,13cqw);height:min(50px,13cqw)}
+.hsp .hc-i .acc-i{width:min(38px,10cqw);height:min(38px,10cqw)}
+.hsp .hc-l{font-size:clamp(6.5px,2.4cqw,.62rem)}
+.hsp .hc-cats.stuck .hc-i{width:min(42px,10.5cqw);height:min(42px,10.5cqw)}
+.hsp .hc-cats.stuck .hc-i .acc-i{width:min(32px,8cqw);height:min(32px,8cqw)}
+/* Birth Chart: the reader's details, with the way to look up someone else's chart beside them */
+.ch-ns{display:block;margin:-6px auto 4px;font-family:var(--serif);font-weight:600;color:#F3DC9E;text-shadow:0 1px 3px #000}
