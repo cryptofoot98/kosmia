@@ -2062,3 +2062,13 @@ body{background-attachment:scroll}
 /* the Journal's New Entry over its dark painting: the clear glass with gold lettering */
 .jend .btn{color:#FCEBB8!important;border:1px solid rgba(226,190,115,.75)!important;background:linear-gradient(180deg,rgba(255,240,205,.09),rgba(255,240,205,0) 45%),rgba(8,12,28,.35)!important;
  text-shadow:0 1px 3px rgba(0,0,0,.95)!important;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+/* the Journal: its calendar first, a tapped day's entries dropping open beneath it, and the Insights link */
+.jlib .jcal-w{margin:0 0 6px}
+.jlib .mnav{margin-bottom:8px}
+.jc-drop{margin-top:10px;animation:jcdrop .25s ease-out}
+.jc-drop .sec-h{margin:0 0 6px;text-align:center}
+@keyframes jcdrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.jins{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px auto 16px;font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--k-burgundy,#6B1F2B)}
+.jins svg{width:18px;height:18px;color:var(--goldd)}
+.ins-box{max-height:86vh;overflow-y:auto}
+.ins-box .seg{margin:6px 0 12px}

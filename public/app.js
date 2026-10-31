@@ -182,14 +182,14 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Horoscope',tabs:[['overview','Horoscope'],['sign','Horoscope']]},
- tarot:{label:'Tarot',tabs:[['home','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['history','Reading History'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal']]},
+ tarot:{label:'Tarot',tabs:[['home','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Affinity'],['resonance','Soul Resonance'],['synastry','Synastry'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Subscription']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra'];
 // where a page's back arrow leads, when it is not the section's landing
-const PARENT={'tarot/entry':'tarot/journal','tarot/calendar':'tarot/journal','tarot/insights':'tarot/journal',
+const PARENT={'tarot/entry':'tarot/journal',
  'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/synastry':'discover/affinity',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
@@ -246,7 +246,7 @@ history.scrollRestoration='manual';
 // a fresh Card Reading: back to the choice of spread, with no question, cards or interpretation
 function newReading(){const T=V.tarot;T.stage='setup';T.q='';T.picks=[];T.drawn=null;T.ai='';T.aiState='';T.savedId=null;V.tpop=null}
 function go(sec,t,opt={}){
- stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;jLeave();jeLeave();
+ stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.insPop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
  if(sec==='discover')V.ns={};
@@ -660,23 +660,20 @@ function speakText(txt){
  speechSynthesis.cancel();V.say=txt;const u=new SpeechSynthesisUtterance(txt);u.lang='en-GB';u.rate=.95;u.onend=u.onerror=()=>{if(V.say===txt){V.say=null;render()}};speechSynthesis.speak(u);render();
 }
 /* ----- Tarot: the daily ritual (Whispers, with its reflection) and the intentional readings (spreads) share the tab,
-   with the Journal and the history of readings beside them ----- */
+   with the Journal beside them, where any reading the reader chooses to keep is saved ----- */
 views.tarot=()=>{
  const t=tab();
  if(t==='whisper')return whisperView();
  if(t==='reading')return tarotView();
- if(t==='history')return historyView();
  if(t==='journal')return journalLib();
  if(t==='entry')return entryView();
- if(t==='calendar')return nightSub(journalCal(),'jc');
- if(t==='insights')return journalInsights();
- // the Notebook was removed: an old link to it opens the Journal
- if(t==='notebook'){V.tab.tarot='journal';history.replaceState(history.state,'',pathFor('tarot','journal',viewQuery()));return journalLib()}
+ // the Notebook, the Reading History and the Journal Calendar page were removed (the calendar now opens the Journal);
+ // an old link to any of them opens the Journal, and one to the insights opens them over it
+ if(['notebook','history','calendar','insights'].includes(t)){if(t==='insights')V.insPop=true;V.tab.tarot='journal';history.replaceState(history.state,'',pathFor('tarot','journal',viewQuery()));return journalLib()}
  return `<div class="land tland">${hero('hero-tarot',iconBtn('back','data-act="back"','Back'),'tall','Tarot','Insights for a more aligned you')}<div class="tpanel card gilt"><div class="list big">
  ${lrow(ui('t-whisper','th oval'),'Daily Whisper','A card, a message, a moment for you, and a space to reflect.','data-go="tarot" data-t="whisper"')}
  ${lrow(ui('t-reading','th oval'),'Card Reading','Single card, three cards, love, career and the Celtic Cross.','data-go="tarot" data-t="reading"')}
  ${lrow(ui('t-journal','th oval'),'Your Journal','Reflections, insights and personal growth.','data-go="tarot" data-t="journal"')}
- ${lrow(ui('t-history','th oval'),'Reading History','Your past readings and notes.','data-go="tarot" data-t="history"')}
  </div></div></div>`;
 };
 function whisperView(){
@@ -702,14 +699,6 @@ function tarotView(){
  ${done?mbox(`<h2>Interpretation</h2>${T.ai?`<div class="ai-read read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<p class="kick">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</p><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><p class="kick">The reading as a whole</p>${paras(T.ai.whole)}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`<div class="read">${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}</div><p class="quote">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted small">Symbols for reflection, not predictions.</p>
  ${T.savedId?`<p class="center"><strong>Saved to your journal.</strong></p><button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write Your Reflection</button>`:`<button class="btn" data-act="saveread">Save to My Journal</button>`}<button class="btn ghost" data-act="newread">New Reading</button>`):''}
  ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
-}
-function historyView(){
- const rs=S.readings.slice().sort((a,b)=>(b.at||b.date)>(a.at||a.date)?1:-1);
- const ws=Object.keys(S.revealed).filter(d=>S.revealed[d]).sort().reverse().slice(0,30);
- return `<div class="mnp rh">${mnHead('Reading History')}<p class="mn-sub">Your past readings and notes</p>
- <h3 class="sec-h">Tarot readings</h3><div class="list">${rs.length?rs.map(r=>lrow(`<span class="fan">${r.cards.slice(0,3).map(x=>pic('deck',x.id,'fan-c'+(x.rev?' rev':''))).join('')}</span>`,esc((SPREADS[r.spread]||{s:r.spread}).s),r.cards.map(x=>esc(x.name)).join(', '),`data-act="jopen" data-k="reading:${esc(r.id)}"`,`<span class="lr-m">${relDay(r.date)}${r.note?' • Reflection added':''}</span>`)).join('')
-  :`<p class="muted center">No saved readings yet.</p>`}</div><button class="btn" data-go="tarot" data-t="reading">New Reading</button>
- <h3 class="sec-h">Daily Whispers</h3><div class="list">${ws.length?ws.map(d=>{const c=cardFor(d);return lrow(pic('whispers',c.id,'th'),esc(c.title),keys(wKeys(c)),`data-act="jopen" data-k="fortune:${d}"`,`<span class="lr-m">${relDay(d)}${S.notes[d]?' • Reflection added':''}</span>`)}).join(''):'<p class="muted center">Your first Whisper is waiting.</p>'}</div></div>`;
 }
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
 function tarotPop(c){const k=V.tctx||'love';
@@ -1479,17 +1468,16 @@ function jrow(p){
  const x=jText(p),K2=JKIND[p.t];
  return `<button class="jrow" data-act="jopen" data-k="${esc(jKey(p))}"><span class="jr-i">${jThumb(p)}</span><span class="jr-t"><strong>${jHeading(p)}</strong><span class="jr-s">${jSub(p)}</span>${x?`<span class="jr-x">${esc(x)}</span>`:''}</span><span class="jr-d">${ymdLong(p.day,{day:'numeric',month:'short'})}<br>${p.day.slice(0,4)}<i class="jr-star ${K2[1]}">${p.t==='j'?IC.mark:IC.star}</i></span></button>`;
 }
-const JFILT=[['all','All'],['tarot','Tarot'],['horoscope','Horoscope'],['dreams','Dreams'],['connections','Connections'],['free','Free Write']];
 function journalLib(){
- const f=V.jfilter,q=(V.jsearch||'').trim().toLowerCase();
- const items=journalItems().filter(p=>(f==='all'||JKIND[p.t][2]===f)&&(!q||plain(jHeading(p)+' '+jSub(p)+' '+jText(p)).toLowerCase().includes(q))).sort((a,b)=>(b.day+(b.at||''))>(a.day+(a.at||''))?1:-1);
+ const q=(V.jsearch||'').trim().toLowerCase();
+ const items=q?journalItems().filter(p=>plain(jHeading(p)+' '+jSub(p)+' '+jText(p)).toLowerCase().includes(q)).sort((a,b)=>(b.day+(b.at||''))>(a.day+(a.at||''))?1:-1):[];
  return `<div class="land jlib">${hero('hero-journal',`${iconBtn('back','data-act="back"','Back')}<div class="hero-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="fab" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>`,'mid','Journal','Your space to reflect, integrate and grow')}
  <div class="sheet">${V.jsearch!=null?`<div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>`:''}
- <div class="fscroll">${chips('Show',JFILT,f,'jfilter')}</div>
- <div class="tools">${[['cal','Calendar','calendar'],['chart','Insights','insights']].map(([i,l,t])=>`<button data-go="tarot" data-t="${t}">${IC[i]}<span>${l}</span></button>`).join('')}</div>
- <div class="list jlist">${items.length?items.map(jrow).join(''):`<p class="muted center">${q||f!=='all'?'Nothing here yet.':'Your journal is waiting for its first page.'}</p>`}</div>
+ ${q?`<div class="list jlist">${items.length?items.map(jrow).join(''):'<p class="muted center">Nothing found.</p>'}</div>`:''}
+ ${journalCal()}
+ <button class="link jins" data-act="inspop">${IC.chart} Insights &amp; Themes</button>
  <div class="jend">${ui('journal-end','je-i')}<p class="je-t">Every thought you write<br>is a star you place<br>in your own sky.</p><button class="btn gold" data-act="sheet" data-k="new">New Entry</button></div>
- </div></div>${sheetView()}`;
+ </div></div>${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><h2 class="center">Insights &amp; Themes</h2>${journalInsights()}</div></div>`:''}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
 function sheetView(){
@@ -1564,18 +1552,18 @@ function entryView(){
 // a small engraved Moon for a calendar day: the lit part drawn from how much of the Moon is lit that night
 const phaseGlyph=d=>{const m=K.moon(d),o=((m.waxing?-1:1)*m.ill*2).toFixed(2),id='pg'+d.getTime();
  return `<svg class="jc-ph" viewBox="-1.1 -1.1 2.2 2.2" aria-hidden="true"><defs><clipPath id="${id}"><circle r="1"/></clipPath></defs><g clip-path="url(#${id})"><circle r="1" fill="#EADCBC"/><circle cx="${o}" r="1" fill="#1E2740"/></g><circle r="1" fill="none" stroke="#8A6430" stroke-width=".12"/></svg>`};
-/* the calendar: each month with its Moon's phases, the days that hold entries, and those entries beneath */
+/* the Journal's calendar: each month with its Moon's phases and the days that hold entries; tapping a day opens the
+   readings kept and the reflections written that day beneath it, and tapping it again closes them */
 function journalCal(){
  const mk=V.jcal.month||dkey().slice(0,7),[y,mo]=mk.split('-').map(Number),first=Date.UTC(y,mo-1,1),days=new Date(Date.UTC(y,mo,0)).getUTCDate(),lead=(new Date(first).getUTCDay()+6)%7;
  const prev=new Date(Date.UTC(y,mo-2,1)).toISOString().slice(0,7),next=new Date(Date.UTC(y,mo,1)).toISOString().slice(0,7);
  const byDay={};journalItems().forEach(p=>{if(p.day.slice(0,7)===mk)(byDay[p.day]=byDay[p.day]||[]).push(p)});
  const ph={};if(K)K.lunarPhases(new Date(first-DAY),new Date(Date.UTC(y,mo,1)+DAY)).forEach(e=>{const k=dkey(e.date);if(k.slice(0,7)===mk)ph[k]=e.k.replace('_','-')});
- const sel=V.jcal.day&&V.jcal.day.slice(0,7)===mk?V.jcal.day:mk===dkey().slice(0,7)?dkey():'';
- return `<div class="sub">${hdr('Journal Calendar',{sub:'Find past entries by date'})}
- <div class="mnav"><button class="ibtn" data-act="jcalm" data-k="${prev}" aria-label="Previous month">${IC.back}</button><h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="jcalm" data-k="${next}" aria-label="Next month">${IC.back}</button></div>
+ const sel=V.jcal.day&&V.jcal.day.slice(0,7)===mk?V.jcal.day:'';
+ return `<div class="jcal-w"><div class="mnav"><button class="ibtn" data-act="jcalm" data-k="${prev}" aria-label="Previous month">${IC.back}</button><h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="jcalm" data-k="${next}" aria-label="Next month">${IC.back}</button></div>
  <div class="jcal" role="grid">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="jc-d" role="columnheader">${d}</div>`).join('')}${Array.from({length:lead},()=>'<div></div>').join('')}
  ${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,n=(byDay[k]||[]).length;return `<button class="jc-c${k===dkey()?' today':''}${k===sel?' sel':''}" data-act="jcald" data-k="${k}" aria-label="${ymdLong(k)}${n?', '+n+' entr'+(n>1?'ies':'y'):''}${ph[k]?', '+ph[k].replace('-',' '):''}"><span>${i+1}</span>${ph[k]?pic('moons',ph[k],'jc-moon'):K?phaseGlyph(new Date(Date.UTC(y,mo-1,i+1,20))):'<i class="jc-sp"></i>'}${n?`<i class="jc-dot">${'•'.repeat(Math.min(3,n))}</i>`:''}</button>`}).join('')}</div>
- ${sel?`<h3 class="sec-h">Entries on ${ymdLong(sel,{day:'numeric',month:'long'})}</h3><div class="list">${(byDay[sel]||[]).map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]}${p.at?' • '+fmt({hour:'2-digit',minute:'2-digit'},new Date(p.at)):''}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')||'<p class="muted center">Nothing written on this day.</p>'}</div>`:''}</div>`;
+ ${sel?`<div class="jc-drop"><h3 class="sec-h">${ymdLong(sel,{weekday:'long',day:'numeric',month:'long'})}</h3><div class="list">${(byDay[sel]||[]).map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]}${p.at?' • '+fmt({hour:'2-digit',minute:'2-digit'},new Date(p.at)):''}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')||'<p class="muted center">Nothing kept or written on this day.</p>'}</div></div>`:''}</div>`;
 }
 /* insights: how much has been written, and the themes the reflections keep returning to */
 const THEMES=[['Self Love','reflections',/\b(myself|self|worth|enough|confiden|proud|kind to me)/g],['Career','career',/\b(work|job|career|boss|project|office|business|colleague)/g],['Relationships','love',/\b(love|partner|relationship|friend|together|heart|him|her)\b/g],['Growth','lifepath',/\b(grow|learn|change|progress|better|heal|journey)/g],['Abundance','finance',/\b(money|abundan|grateful|gratitude|prosper|wealth)/g],['Wellbeing','health',/\b(rest|sleep|tired|body|health|calm|anxi|stress|energy)/g],['Family','family',/\b(family|mother|mum|father|dad|sister|brother|home|child)/g]];
@@ -1595,7 +1583,7 @@ function journalInsights(){
   <h3 class="sec-h">Symbols in your dreams</h3><div class="pills">${top(sym,([k,v])=>`<span class="pill">${esc(k)} <b>${v}</b></span>`)}</div>`;
  }else body=`<div class="stats">${[[it.length,'Entries'],[months,'Months'],[n('r'),'Tarot Readings'],[n('h'),'Horoscope Notes'],[n('e'),'Cosmic Events'],[n('j'),'Free Writes']].map(([v,l])=>`<div class="stat"><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>
   <h3 class="sec-h">Your most explored themes</h3>${score.length?`<div class="bars">${score.map(([l,ic,c],i)=>`<div class="tbar">${pic('cats',ic,'tb-i')}<span>${l}</span><i class="tb${i}"><b style="width:${Math.round(c/tot*100)}%"></b></i><em>${Math.round(c/tot*100)}%</em></div>`).join('')}</div>`:'<p class="muted">Write a few reflections and the themes you return to will appear here.</p>'}`;
- return `<div class="land">${hero('hero-insights',iconBtn('back','data-act="back"','Back'),'short','Your Journal','A journey of discovery')}<div class="sheet">${seg([['insights','Insights'],['themes','Themes']],V.insTab,'ins')}${body}</div></div>`;
+ return `${seg([['insights','Insights'],['themes','Themes']],V.insTab,'ins')}${body}`;
 }
 /* ----- Dream Interpretation: describe a dream by text or voice, and its symbols, feelings and possible themes are read
    back, with Kassandra's personal reading when signed in and the dream dictionary otherwise. Every dream is kept in the
@@ -2026,7 +2014,9 @@ document.addEventListener('click',e=>{
  if(a==='jsavenow'){if(JE&&JS&&JS.p===JE)jflushSave();save();const s=$('#jsaved');if(s)s.textContent='Saved';return toast('Saved to your journal')}
  if(a==='jprompt'){const x=$('#je');if(!x)return;const q=(PROMPTS[(JE||{}).t]||PROMPTS.j)[+t.dataset.i];x.value=(x.value.trim()?x.value.replace(/\s+$/,'')+'\n\n':'')+q+'\n';x.dispatchEvent(new Event('input',{bubbles:true}));x.focus();x.setSelectionRange(x.value.length,x.value.length);return}
  if(a==='jcalm'){V.jcal={month:t.dataset.k,day:''};return render()}
- if(a==='jcald'){V.jcal.day=t.dataset.k;return render()}
+ if(a==='jcald'){V.jcal.day=V.jcal.day===t.dataset.k?'':t.dataset.k;return render()}
+ if(a==='inspop'){V.insPop=true;return render()}
+ if(a==='inspopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.insPop=false;return render()}
  if(a==='jnameedit'){V.jnameEdit=true;render();const x=$('#jn');if(x){x.focus();x.select()}return}
  if(a==='jedit'){const pages=journalPages(),i=jIdx(pages),p=pages[i];if(!p)return;
   if(V.jw&&V.jw.key===jKey(p)){const k=V.jw.key;jDone();V.jpage=jAt(k,i);return render()}
