@@ -204,7 +204,7 @@ details.more{display:flex;flex-direction:column;gap:10px}
 .list{display:flex;flex-direction:column;gap:8px}
 .lrow,.acc>summary{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;width:100%;min-height:62px;padding:9px 10px 9px 10px;text-align:left;cursor:pointer;color:var(--ink);
  border:1px solid rgba(var(--k-gold-rgb),.42);border-radius:12px;background:rgba(var(--k-surface-rgb),.82);box-shadow:0 1px 2px rgba(var(--k-shadow-rgb),.08)}
-.lrow:hover,.acc>summary:hover{background:rgba(var(--k-surface-hi-rgb),.95)}
+@media (hover:hover){.lrow:hover,.acc>summary:hover{background:rgba(var(--k-surface-hi-rgb),.95)}}
 .lrow[disabled]{opacity:.55;cursor:default}
 .lr-i{display:flex;align-items:center;justify-content:center;min-width:0}
 .lr-i:empty{display:none}
@@ -1934,3 +1934,51 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 /* the buttons' lettering a little heavier and larger, so it reads clearly through the clear glass */
 .btn:not(.danger){font-weight:700;-webkit-text-stroke:.55px currentColor;paint-order:stroke fill}
 .btn.sm:not(.danger){-webkit-text-stroke:.4px currentColor}
+/* the title stays fixed with the painting: the header holds its place at the top while the boxes scroll up over it;
+   Back and the page's buttons float in their own bar above everything */
+.mnp>.mn-hd{position:sticky;top:0;z-index:0}
+:where(.mnp>:not(.mn-hd,.mn-bar)){position:relative;z-index:1}
+.mn-bar{position:fixed;z-index:30;top:0;left:50%;width:min(100%,480px);height:0;transform:translateX(-50%);pointer-events:none}
+.mn-bar>*{pointer-events:auto}
+.mn-bar>.ibtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:8px;color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9)) drop-shadow(0 0 6px rgba(0,0,0,.6))}
+.mn-bar>.mn-r{right:8px}
+.mnp .mn-hd .mn-sub{margin:4px 0 0;text-align:center}
+/* a sign's page the same way: its painting and name stay while the reading scrolls up over them */
+.hsp>.hsp-hero{position:sticky;top:0;z-index:0}
+.hsp>.hsp-body{z-index:2}
+.hsp>.hsp-bar{position:fixed;z-index:30;top:calc(env(safe-area-inset-top,0px) + 7.5cqw);left:50%;width:min(100%,480px);transform:translateX(-50%);display:flex;justify-content:space-between;padding:0 1.5cqw}
+.mbox{-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+/* Home: Back when there is a page to return to */
+.hh-back{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 8px);left:8px;color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9))}
+/* Card Reading on one screen: the six readings as tiles two by two, only the chosen one lit; the question and Shuffle
+   beneath, all without scrolling */
+.mnp.trd .mn-hd{padding-top:calc(env(safe-area-inset-top,0px) + 11cqw)}
+.mnp.trd .mn-t h1{font-size:11cqw}
+.mnp.trd{gap:12px}
+.mnp.trd .list.spreads{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.spreads .lrow{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-height:0;padding:10px 6px 8px;text-align:center;
+ background:rgba(244,232,206,.55);border:1px solid rgba(var(--k-gold-rgb),.55);box-shadow:none;opacity:.86}
+.spreads .lrow .lr-i .th{width:44px;height:44px}
+.spreads .lrow .lr-t strong{font-size:1rem;line-height:1.15}
+.spreads .lrow .lr-t span{display:none}
+.spreads .lrow .lr-t .sp-n{display:block;font-size:.78rem;color:#4E3D2C}
+.spreads .lrow .tick{position:absolute;top:6px;right:6px;width:18px;height:18px}
+.spreads .lrow.on{opacity:1;background:rgba(252,246,232,.98);border-color:var(--burg);box-shadow:inset 0 0 0 1px var(--burg),0 0 14px rgba(240,200,120,.55)}
+.mnp.trd>.field{margin-top:-2px}
+.mnp.trd>.field input{min-height:44px}
+/* choosing the cards: the twenty backs sized so they all fit on the screen */
+.mnp.trd .grid5{gap:7px;width:min(100%,calc((100dvh - 330px) * .5));align-self:center}
+/* the subtitle now sits in the fixed header with its title: light on the night */
+.mnp .mn-hd .mn-sub{color:#EFE2C2;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.9);margin:2px 0 0}
+.mnp.trd .mn-hd .mn-sub{font-size:1.05rem}
+/* reading tiles: all clearly readable, only the chosen one lit */
+.spreads .lrow{opacity:1;background:rgba(244,232,206,.82);padding:7px 6px 6px;gap:2px}
+.spreads .lrow .lr-i .th{width:38px;height:38px}
+.spreads .lrow .lr-t strong{font-size:.95rem;color:#2C2016}
+.spreads .lrow.on{background:#FFF8E8;box-shadow:inset 0 0 0 1.5px var(--burg),0 0 16px rgba(250,210,130,.75)}
+.mnp.trd .mn-hd{padding-top:calc(env(safe-area-inset-top,0px) + 9cqw)}
+.mnp.trd .mn-t h1{font-size:10cqw}
+.mnp.trd .mn-orn{width:36cqw}
+.mnp.trd>.field label{font-size:.9rem}
+/* choosing the cards: the twenty backs as large as the screen allows, in four rows of five */
+.mnp.trd .grid5{width:min(100%,calc((100dvh - 250px) / 1.2))}
