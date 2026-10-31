@@ -1774,3 +1774,6 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.wh .mbox .row-acts{gap:8px}
 .mnp.wh .mbox .row-acts .btn{min-width:0;padding:0 10px;letter-spacing:.06em;font-size:.86rem}
 .mnp.wh .mbox .row-acts .ibtn.sq{flex:none;width:46px;height:46px}
+/* the enlarged Whisper card from Home stands on the Daily Whisper backdrop */
+.wpop{background:#0B1226}
+.wpop .wp-in{background:url(/art/atlas/whisper-bg.webp) 50% 50%/cover no-repeat}
