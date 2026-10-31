@@ -18,11 +18,11 @@ their space before they load.
 - Screen: Discover › Zodiac Affinity (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/affinity-bg.webp` | 850×1510 | 0.56:1 | no | 288 | provisional |  |
+| `public/art/atlas/affinity-bg.webp` | 780×1386 | 0.56:1 | no | 222 | provisional |  |
 
 ## Unclassified
 
@@ -67,7 +67,7 @@ their space before they load.
 | `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
 | `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 51 | provisional |  |
 | `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
-| `public/art/atlas/zs-bg.webp` | 850×1850 | 0.46:1 | no | 353 | provisional |  |
+| `public/art/atlas/zs-bg.webp` | 780×1698 | 0.46:1 | no | 199 | provisional |  |
 
 ## Wide dark banner for a Discover tile
 
@@ -88,11 +88,11 @@ their space before they load.
 - Screen: Birth Details (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/birth-bg.webp` | 850×1842 | 0.46:1 | no | 274 | provisional |  |
+| `public/art/atlas/birth-bg.webp` | 780×1690 | 6:13 | no | 213 | provisional |  |
 
 ## The Cosmic Calendar page’s backdrop: an arc of Moon phases over a golden astronomical clock at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
 
@@ -100,11 +100,11 @@ their space before they load.
 - Screen: Cosmic Calendar (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/calendar-bg.webp` | 850×1842 | 0.46:1 | no | 303 | provisional |  |
+| `public/art/atlas/calendar-bg.webp` | 780×1690 | 6:13 | no | 232 | provisional |  |
 
 ## The Birth Chart page’s backdrop: a golden sun face in a circle over the Milky Way, crescent moons and planets, clouds, and lilies, roses and daisies around a gilded arch (supplied by the owner)
 
@@ -112,11 +112,11 @@ their space before they load.
 - Screen: Discover › Birth Chart (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/chart-bg.webp` | 850×1850 | 0.46:1 | no | 420 | provisional |  |
+| `public/art/atlas/chart-bg.webp` | 780×1698 | 0.46:1 | no | 337 | provisional |  |
 
 ## The My Cycles page’s backdrop: a golden wheel of the year under an arc of the Moon’s phases, an hourglass of stardust, a lily terrace over a sea at dusk (painted in the style of the owner’s backdrops)
 
@@ -124,11 +124,11 @@ their space before they load.
 - Screen: Discover › My Cycles (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/cycles-bg.webp` | 850×1842 | 0.46:1 | no | 417 | provisional |  |
+| `public/art/atlas/cycles-bg.webp` | 780×1690 | 6:13 | no | 212 | provisional |  |
 
 ## The Your Dream Meaning page’s backdrop: a sleeping woman on a golden crescent moon with moths drifting up at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
 
@@ -136,11 +136,11 @@ their space before they load.
 - Screen: Your Dream Meaning (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/dream-bg.webp` | 850×1842 | 0.46:1 | no | 303 | provisional |  |
+| `public/art/atlas/dream-bg.webp` | 780×1690 | 6:13 | no | 236 | provisional |  |
 
 ## The Dream Journal page’s backdrop: an open book with a crescent moon and moths rising from it at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
 
@@ -148,11 +148,11 @@ their space before they load.
 - Screen: Dream Journal (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/dreamjournal-bg.webp` | 850×1842 | 0.46:1 | no | 291 | provisional |  |
+| `public/art/atlas/dreamjournal-bg.webp` | 780×1690 | 6:13 | no | 225 | provisional |  |
 
 ## Dream symbol medallion
 
@@ -194,11 +194,11 @@ their space before they load.
 - Screen: Discover › Celestial Events (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/events-bg.webp` | 850×1842 | 0.46:1 | no | 382 | provisional |  |
+| `public/art/atlas/events-bg.webp` | 780×1690 | 6:13 | no | 186 | provisional |  |
 
 ## Circular Explore medallion
 
@@ -277,11 +277,11 @@ their space before they load.
 - Screen: Tarot › Reading History (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/history-bg.webp` | 850×1850 | 0.46:1 | no | 296 | provisional |  |
+| `public/art/atlas/history-bg.webp` | 780×1698 | 0.46:1 | no | 190 | provisional |  |
 
 ## Sunset lake, mountains and flowers, edge to edge
 
@@ -401,11 +401,11 @@ their space before they load.
 - Screen: Journal Calendar (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/jcal-bg.webp` | 850×1842 | 0.46:1 | no | 294 | provisional |  |
+| `public/art/atlas/jcal-bg.webp` | 780×1690 | 6:13 | no | 222 | provisional |  |
 
 ## The Journal Entry page’s backdrop: a night sky with a large Moon and arcs of the Moon’s phases over an open parchment, framed by white blossoms and leaves, a lake under mountains at the foot (supplied by the owner)
 
@@ -413,11 +413,11 @@ their space before they load.
 - Screen: Tarot › Journal Entry (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/journal-bg.webp` | 850×1850 | 0.46:1 | no | 237 | provisional |  |
+| `public/art/atlas/journal-bg.webp` | 780×1698 | 0.46:1 | no | 142 | provisional |  |
 
 ## Woman on a rock under a crescent (closing page)
 
@@ -449,11 +449,11 @@ their space before they load.
 - Screen: Kassandra and Past Conversations (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/kassandra-bg.webp` | 850×1842 | 0.46:1 | no | 319 | provisional |  |
+| `public/art/atlas/kassandra-bg.webp` | 780×1690 | 6:13 | no | 243 | provisional |  |
 
 ## Kassandra’s portrait
 
@@ -485,11 +485,11 @@ their space before they load.
 - Screen: Astrology Library (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/library-bg.webp` | 850×1842 | 0.46:1 | no | 296 | provisional |  |
+| `public/art/atlas/library-bg.webp` | 780×1690 | 6:13 | no | 226 | provisional |  |
 
 ## The Life Path page’s backdrop: a radiant eight-pointed star above a winding path of stepping stones at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
 
@@ -497,11 +497,11 @@ their space before they load.
 - Screen: Life Path (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/lifepath-bg.webp` | 850×1842 | 0.46:1 | no | 264 | provisional |  |
+| `public/art/atlas/lifepath-bg.webp` | 780×1690 | 6:13 | no | 203 | provisional |  |
 
 ## Round medallion of the sign
 
@@ -532,11 +532,11 @@ their space before they load.
 - Screen: Discover › The Moon (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/moon-bg.webp` | 850×1850 | 0.46:1 | no | 368 | provisional |  |
+| `public/art/atlas/moon-bg.webp` | 780×1698 | 0.46:1 | no | 180 | provisional |  |
 
 ## The The Name Within page’s backdrop: an open book with a golden quill and a spiral of golden sparks at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
 
@@ -544,11 +544,11 @@ their space before they load.
 - Screen: The Name Within (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/name-bg.webp` | 850×1842 | 0.46:1 | no | 296 | provisional |  |
+| `public/art/atlas/name-bg.webp` | 780×1690 | 6:13 | no | 226 | provisional |  |
 
 ## Bottom navigation icon (raster, keyed from ivory)
 
@@ -585,11 +585,11 @@ their space before they load.
 - Screen: New Dream (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/newdream-bg.webp` | 850×1842 | 0.46:1 | no | 321 | provisional |  |
+| `public/art/atlas/newdream-bg.webp` | 780×1690 | 6:13 | no | 251 | provisional |  |
 
 ## Bottom menu medallion: a round night-blue painting in a thin gold rim (sun, crescent and lilies, tarot card, compass star, crystal ball), cut free of its night disc with alpha, motif only (supplied by the owner)
 
@@ -625,11 +625,11 @@ their space before they load.
 - Screen: Discover › Planets (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/planets-bg.webp` | 850×1850 | 0.46:1 | no | 416 | provisional |  |
+| `public/art/atlas/planets-bg.webp` | 780×1698 | 0.46:1 | no | 211 | provisional |  |
 
 ## Framed arched portrait of the sign with the glyph roundel
 
@@ -660,11 +660,11 @@ their space before they load.
 - Screen: Discover › Cosmic Profile (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/profile-bg.webp` | 850×1850 | 0.46:1 | no | 325 | provisional |  |
+| `public/art/atlas/profile-bg.webp` | 780×1698 | 0.46:1 | no | 163 | provisional |  |
 
 ## The Card Reading pages’ backdrop: the Milky Way across a starry sky, a crescent Moon, golden clouds at the foot (supplied by the owner)
 
@@ -672,11 +672,11 @@ their space before they load.
 - Screen: Tarot › Card Reading, choosing the cards, the spread (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/reading-bg.webp` | 850×1850 | 0.46:1 | no | 274 | provisional |  |
+| `public/art/atlas/reading-bg.webp` | 780×1698 | 0.46:1 | no | 185 | provisional |  |
 
 ## The Soul Resonance page’s backdrop: a radiant red heart between two crescent moons above the Milky Way, golden clouds, and lilies, roses and daisies in a gilded frame (supplied by the owner)
 
@@ -684,11 +684,11 @@ their space before they load.
 - Screen: Discover › Soul Resonance (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/resonance-bg.webp` | 850×1850 | 0.46:1 | no | 360 | provisional |  |
+| `public/art/atlas/resonance-bg.webp` | 780×1698 | 0.46:1 | no | 281 | provisional |  |
 
 ## The Settings pages page’s backdrop: a glowing lantern on a vine with a golden key at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
 
@@ -696,11 +696,11 @@ their space before they load.
 - Screen: Settings pages (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/settings-bg.webp` | 850×1842 | 0.46:1 | no | 278 | provisional |  |
+| `public/art/atlas/settings-bg.webp` | 780×1690 | 6:13 | no | 214 | provisional |  |
 
 ## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
 
@@ -744,11 +744,11 @@ their space before they load.
 - Screen: Discover › Synastry (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/synastry-bg.webp` | 850×1842 | 0.46:1 | no | 414 | provisional |  |
+| `public/art/atlas/synastry-bg.webp` | 780×1690 | 6:13 | no | 211 | provisional |  |
 
 ## Tarot menu medallion (keyed from ivory)
 
@@ -783,11 +783,11 @@ their space before they load.
 - Screen: Tarot › Daily Whisper (whole screen)
 - Crop: fixed behind the page, cover
 - Background: opaque
-- Wanted width at 2×: 850 px
+- Wanted width at 2×: 780 px
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/whisper-bg.webp` | 850×1850 | 0.46:1 | no | 316 | provisional |  |
+| `public/art/atlas/whisper-bg.webp` | 780×1698 | 0.46:1 | no | 206 | provisional |  |
 
 ## Card furniture: backs, plaque, crest, ornament
 
