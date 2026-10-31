@@ -1982,3 +1982,25 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.trd>.field label{font-size:.9rem}
 /* choosing the cards: the twenty backs as large as the screen allows, in four rows of five */
 .mnp.trd .grid5{width:min(100%,calc((100dvh - 250px) / 1.2))}
+/* the Whisper opened from Home: the parchment sheet a tarot card opens on */
+.wp-box{padding-bottom:calc(var(--navh,0px) + 26px)}
+.wp-box .wp-card{width:min(62vw,270px);margin:4px auto 6px;align-self:center}
+.wp-box .w-msg{font-family:var(--font-serif);font-weight:600;font-size:1.15rem;line-height:1.45;text-align:center;color:var(--k-ink)}
+.wp-box .w-ref{font-size:1.05rem}
+
+/* the section pages (Horoscope, Tarot, Discover, Journal, Dreams): their painting and title hold their place at the top
+   while the parchment slides up over them */
+.land>.hero{position:sticky;top:0;z-index:0}
+.land>:not(.hero){position:relative;z-index:1}
+.land>.hero .parallax{transform:none!important}
+
+/* every page title in the lettering of Kosmia on Home: Cinzel capitals in the same gold, gently spaced */
+.mnp .mn-hd .mn-t h1,.hero .hero-t h1,.hsp .hsp-t h1{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.03em;line-height:1.05;
+ background:linear-gradient(180deg,#FBE9B6,#E0B56A 50%,#C9944A 70%,#F2D592);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:0;
+ filter:drop-shadow(0 2px 3px rgba(0,0,0,.85)) drop-shadow(0 0 8px rgba(0,0,0,.5))}
+.mnp .mn-hd .mn-t h1{font-size:9.6cqw;white-space:normal;text-align:center;max-width:94cqw;width:auto}
+.mnp .mn-hd .mn-t{left:0;right:0;align-items:center}
+.hero .hero-t h1{font-size:clamp(1.9rem,10cqw,2.7rem)}
+.hero .hero-t h1.long{font-size:clamp(1.4rem,7.4cqw,2rem)}
+.hsp .hsp-t h1{font-size:min(7.4cqw,54cqw / var(--nl,6))}
+.hero:is(.hero-journal,.hero-insights) .hero-t h1{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(1.9rem,10cqw,2.7rem)}

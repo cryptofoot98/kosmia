@@ -548,9 +548,13 @@ const energyCarousel=sl=>`<div class="energy en-car"><span class="en-in"><span c
  <span class="en-track" aria-roledescription="carousel">${sl.map(([img,t,line,attrs],i)=>`<span class="en-slot"><button class="en-row en-slide" ${attrs}>${img}<span><strong>${t}</strong><span>${line}</span></span><span class="en-go">${IC.chev}</span><span class="sr-only">, ${i+1} of ${sl.length}</span></button></span>`).join('')}</span>
  <span class="en-dots" aria-hidden="true">${sl.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span></span></div>`;
 // the Daily Whisper's card enlarged, to see it in detail
+// the Daily Whisper's card opened from Home on the parchment sheet a tarot card opens on: its name, the card, its message
+// and its question
 function whisperPop(c){
- return `<div class="pop wpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="wp-in"><button class="pop-x" data-act="wpopclose" aria-label="Close">×</button>
- <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>`}
+ return `<div class="pop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="pop-box wp-box"><button class="pop-x" data-act="wpopclose" aria-label="Close">×</button>
+ <div class="label center">Daily Whisper · ${ymdLong(dkey(),{day:'numeric',month:'long'})}</div><h2 class="center">${esc(c.title)}</h2>
+ <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
+ <p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -1824,14 +1828,7 @@ function render(){
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
  if(onboarding())bindJoin();
  if(authed&&SECTIONS[sec])syncUrl();
- drift();titleFade();
-}
-// a fixed title fades as the first box slides up over it, and returns as the reader scrolls back
-function titleFade(){
- const t=$('.mnp>.mn-hd .mn-t, .hsp>.hsp-hero>.hsp-t'),c=t&&(t.closest('.mn-hd')||t.closest('.hsp-hero')).nextElementSibling;
- if(!t||!c){titleFade.f=null;return}
- const f=()=>{const a=t.getBoundingClientRect(),b=c.getBoundingClientRect(),o=Math.min(1,Math.max(0,(a.bottom-b.top)/a.height));t.style.opacity=String(1-o)};
- f();if(!titleFade.on){titleFade.on=1;addEventListener('scroll',()=>requestAnimationFrame(()=>titleFade.f&&titleFade.f()),{passive:true})}titleFade.f=f;
+ drift();
 }
 // the Cosmic Energy carousel: its dots follow the slide in view, and it moves on by itself every few seconds unless the
 // reader has just touched it or motion is reduced
