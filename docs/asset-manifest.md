@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 470 |
-| In use, provisional | 426 |
+| Images | 471 |
+| In use, provisional | 427 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -310,6 +310,18 @@ their space before they load.
 | `public/art/atlas/ico-love.webp` | 319×320 | 1.00:1 | yes | 33 | provisional |  |
 | `public/art/atlas/ico-money.webp` | 262×320 | 0.82:1 | yes | 37 | provisional |  |
 | `public/art/atlas/ico-overview.webp` | 282×320 | 0.88:1 | yes | 37 | provisional |  |
+
+## The Journal Entry page’s backdrop: a night sky with a large Moon and arcs of the Moon’s phases over an open parchment, framed by white blossoms and leaves, a lake under mountains at the foot (supplied by the owner)
+
+- Mockup: `docs/mockups/tarot-journal.webp`
+- Screen: Tarot › Journal Entry (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/journal-bg.webp` | 850×1850 | 0.46:1 | no | 237 | provisional |  |
 
 ## Woman on a rock under a crescent (closing page)
 

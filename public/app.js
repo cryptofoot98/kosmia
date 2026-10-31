@@ -1187,7 +1187,7 @@ const STAR4='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l1.5 8.5L
 const mrule=(cls='')=>`<div class="mrule ${cls}"><i></i>${STAR4}<i></i></div>`;
 const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map(c=>`<i class="mb-c ${c}">${STAR4}</i>`).join('')}${h}</section>`;
 // the gold title set in the painting's sky, with its line, circles and star beneath
-const mnHead=t=>`<header class="mn-hd">${iconBtn('back','data-act="back"','Back')}<div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
+const mnHead=(t,right='')=>`<header class="mn-hd">${iconBtn('back','data-act="back"','Back')}${right?`<div class="mn-r">${right}</div>`:''}<div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
 // a page built as a stack of parchment panels, set as a night page instead: its painting behind (cls picks it), the
 // gold title in the sky, and each panel a gilded see-through box with a star at each corner
 const nightPage=(h,cls)=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="mnp ${cls}">${mnHead(t)}`)
@@ -1482,14 +1482,14 @@ function entryView(){
  if(!p)return `<div class="sub">${hdr('Journal Entry')}${empty('This page is no longer in your journal','It may have been torn out on another device.',linkBtn('Back to the journal','tarot','journal','btn'))}</div>`;
  if(!JE||jKey(JE)!==jKey(p)){jeLeave();JE=p}
  const key=jKey(p),pr=PROMPTS[p.t]||PROMPTS.j,on=(S.intent||{})[key]||[],txt=jText(p);
- return `<div class="sub entry">${hdr('Journal Entry',{right:`<button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}`})}
+ return `<div class="mnp jn entry">${mnHead('Journal Entry',`<button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}`)}
  ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button><button data-act="jnotebook">${IC.book} Open in the notebook</button></div>`:''}
- ${entryTop(p)}<div class="divider" aria-hidden="true">${IC.star}</div>
- <h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>
+ ${mbox(entryTop(p))}
+ ${mbox(`<h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>
  <div class="je-box"><div class="je-tools" role="toolbar" aria-label="Writing tools">${JTOOLS.map(([k,l,g])=>`<button type="button" data-act="jfmt" data-k="${k}" aria-label="${l}" title="${l}">${g}</button>`).join('')}</div>
- <label class="sr-only" for="je">My reflection</label><textarea id="je" class="je" placeholder="${esc(pr[0])}">${esc(txt)}</textarea></div>
- <div class="prompts"><p class="kick">Guiding prompts <span class="muted">(optional)</span></p>${pr.map((q,i)=>`<button class="pr" data-act="jprompt" data-i="${i}">${ui(['t-whisper','t-reading','t-journal'][i],'pr-i')}<span>${esc(q)}</span>${IC.chev}</button>`).join('')}</div>
- ${p.t!=='j'?`<div class="intent"><h3>Today I’m taking with me…</h3>${intents(key).map((x,i)=>`<label class="ck"><input type="checkbox" class="cb" data-act="jint" data-i="${i}" ${on[i]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`:''}
+ <label class="sr-only" for="je">My reflection</label><textarea id="je" class="je" placeholder="${esc(pr[0])}">${esc(txt)}</textarea></div>`)}
+ ${mbox(`<div class="prompts"><p class="kick">Guiding prompts <span class="muted">(optional)</span></p>${pr.map((q,i)=>`<button class="pr" data-act="jprompt" data-i="${i}">${ui(['t-whisper','t-reading','t-journal'][i],'pr-i')}<span>${esc(q)}</span>${IC.chev}</button>`).join('')}</div>`)}
+ ${p.t!=='j'?mbox(`<div class="intent"><h3>Today I’m taking with me…</h3>${intents(key).map((x,i)=>`<label class="ck"><input type="checkbox" class="cb" data-act="jint" data-i="${i}" ${on[i]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`):''}
  <p class="muted small center">Private to you${C.user?' and kept in your account':' and kept in this browser'}. Everything is saved as you write.</p></div>`;
 }
 // a small engraved Moon for a calendar day: the lit part drawn from how much of the Moon is lit that night
