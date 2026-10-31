@@ -1886,3 +1886,51 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.cc{--mn-top:52cqw}
 .mnp.nd{--mn-top:46cqw}.mnp.dj{--mn-top:46cqw}.mnp.bd{--mn-top:48cqw}.mnp.st{--mn-top:72cqw}
 .mnp.lp{--mn-top:66cqw}
+/* Cosmic Calendar: from today on. The list is the month ahead day by day, today set apart in gold; the month grid starts at
+   this month, its past days quiet */
+.cal-list{display:flex;flex-direction:column;gap:14px;align-self:stretch}
+.cal-day h3{margin:0 0 8px 4px;font-family:var(--font-serif);font-weight:600;font-size:1.05rem;color:#F1DFB4;text-shadow:0 1px 3px #000,0 0 8px rgba(0,0,0,.8)}
+.cal-day.today{padding:10px;margin:0 -6px;border:1px solid rgba(233,198,126,.9);border-radius:18px;background:rgba(8,12,28,.45);box-shadow:0 0 18px rgba(240,200,120,.25)}
+.cal-day.today h3 b{font-weight:700;color:#FCEBB8;letter-spacing:.06em;text-transform:uppercase;font-size:.9rem}
+.cal-day>.list>p.muted{color:#EFE2C2;text-shadow:0 1px 3px #000}
+.jc-c.past{opacity:.35;cursor:default}
+.jc-c.today>span{background:radial-gradient(circle at 35% 30%,#F6DFA0,#C99A45 75%);color:#2C1D10;box-shadow:0 0 0 2px #FCEBB8,0 0 10px rgba(240,200,120,.8)}
+.evr.today>.lrow{box-shadow:0 0 0 1.5px #D9AE5E,0 0 12px rgba(240,200,120,.45)}
+.evr-now{display:inline-block;margin-right:4px;padding:1px 7px;border-radius:99px;background:#7A2333;color:#FCEBB8;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+.mnp.cc>.mn-note{margin:-6px 0 -4px;font-family:var(--font-serif);font-style:italic;font-size:1rem}
+
+/* every action button in Kosmia is a pane of clear glass: no fill, a light blur so the painting behind stays crisp, a thin
+   gold rim and only a fine line of light along the top edge. Over the night its lettering is gold; on parchment it is ink.
+   (!important: this one look replaces the per-page button colours above) */
+.btn:not(.danger){background:linear-gradient(180deg,rgba(255,250,235,.10),rgba(255,250,235,0) 45%)!important;
+ color:#2C2016!important;border:1px solid rgba(160,120,60,.6)!important;-webkit-backdrop-filter:blur(2px) saturate(1.5);backdrop-filter:blur(2px) saturate(1.5);
+ box-shadow:inset 0 1px 0 rgba(255,248,230,.55),inset 0 -1px 0 rgba(160,120,60,.18),0 3px 10px rgba(60,40,20,.12)!important;text-shadow:none!important}
+:is(.mnp,.wpop,.hero,.scene,.hsp-body) .btn:not(.danger):not(:is(.mbox,.card,.sheet,.acc-b,.evr,.kp-bub,.wp-q) .btn){
+ background:linear-gradient(180deg,rgba(255,240,205,.09),rgba(255,240,205,0) 45%),rgba(8,12,28,.12)!important;
+ color:#F6DFA6!important;border:1px solid rgba(226,190,115,.65)!important;
+ box-shadow:inset 0 1px 0 rgba(255,236,190,.35),inset 0 -1px 0 rgba(226,190,115,.15),0 6px 16px rgba(0,0,0,.35)!important;
+ text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.6)!important}
+.tools{grid-template-columns:repeat(2,1fr)}
+/* Horoscope sign page: the key themes are only their boxes, straight on the night; a tap makes that area the main reading,
+   and the main box takes the area's colour (the area just left takes its place among the boxes) */
+.hsp .hk-h{margin:2px 0 -4px;text-align:center;font-family:var(--font-serif);font-weight:700;font-size:1.5rem;-webkit-text-stroke:.5px #E9C67E;paint-order:stroke fill;
+ background:linear-gradient(180deg,#FCEBB8 10%,#D9AE5E 55%,#F2D592 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px rgba(0,0,0,.9))}
+.themes-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.theme-b{display:grid;grid-template-columns:34px 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;min-height:64px;padding:9px 10px;text-align:left;cursor:pointer;font:inherit;color:var(--k-ink);
+ border:1px solid rgba(var(--k-gold-rgb),.85);border-radius:14px;background:linear-gradient(var(--hc),var(--hc)),rgba(244,232,206,.9);box-shadow:0 4px 12px rgba(0,0,0,.35);transition:transform .15s}
+.theme-b:active{transform:scale(.98)}
+.theme-b .lr-i{grid-row:1/3}.theme-b .acc-i{width:32px;height:32px}
+.theme-b .th-l{font-size:1.05rem;line-height:1.1}
+.theme-b .th-p{font-size:.8rem;line-height:1.2;color:#4E3D2C}
+.theme-b:last-child:nth-child(odd){grid-column:1/-1}
+/* each area's colour, for its box and for the main reading when it is chosen */
+.t-overview,.hc-overview{--hc:rgba(217,174,94,.10)}
+.t-love,.hc-love{--hc:rgba(196,96,110,.28)}
+.t-family,.hc-family{--hc:rgba(150,90,150,.22)}
+.t-health,.hc-health{--hc:rgba(96,140,96,.28)}
+.t-career,.hc-career{--hc:rgba(70,110,170,.24)}
+.t-money,.hc-money{--hc:rgba(200,160,60,.32)}
+.hsp .hread{background:linear-gradient(var(--hc,transparent),var(--hc,transparent)),var(--c-tl) 6px 6px/26px no-repeat,var(--c-tr) calc(100% - 6px) 6px/26px no-repeat,var(--c-bl) 6px calc(100% - 6px)/26px no-repeat,var(--c-br) calc(100% - 6px) calc(100% - 6px)/26px no-repeat,var(--paper) var(--paper-img) center/cover;transition:background .3s;scroll-margin-top:12px}
+/* the buttons' lettering a little heavier and larger, so it reads clearly through the clear glass */
+.btn:not(.danger){font-weight:700;-webkit-text-stroke:.55px currentColor;paint-order:stroke fill}
+.btn.sm:not(.danger){-webkit-text-stroke:.4px currentColor}

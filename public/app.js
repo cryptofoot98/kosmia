@@ -182,14 +182,14 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Horoscope',tabs:[['overview','Horoscope'],['sign','Horoscope']]},
- tarot:{label:'Tarot',tabs:[['home','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['history','Reading History'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['notebook','Notebook']]},
+ tarot:{label:'Tarot',tabs:[['home','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['history','Reading History'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal']]},
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Affinity'],['resonance','Soul Resonance'],['synastry','Synastry'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Subscription']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra'];
 // where a page's back arrow leads, when it is not the section's landing
-const PARENT={'tarot/entry':'tarot/journal','tarot/calendar':'tarot/journal','tarot/insights':'tarot/journal','tarot/notebook':'tarot/journal',
+const PARENT={'tarot/entry':'tarot/journal','tarot/calendar':'tarot/journal','tarot/insights':'tarot/journal',
  'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/synastry':'discover/affinity',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
@@ -615,7 +615,7 @@ function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
  const others=HCATS.map(c=>c[0]).filter(k=>k!==cat).map(k=>{const x=horoscope(ex,k,V.period);
-  return `<details class="acc theme t-${k}"><summary><span class="lr-i">${catIco(k,'acc-i')}</span><strong class="th-l">${CAT_INFO[k][0]}</strong><span class="th-p">${THEME[k][x.rel]||''}</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><div class="read">${paras(x.body)}</div>${x.focus?`<p class="h-focus">${esc(x.focus)}</p>`:''}<button class="link" data-act="hcat" data-k="${k}">Make this the main reading</button></div></details>`}).join('');
+  return `<button class="theme-b t-${k}" data-act="hcat" data-k="${k}"><span class="lr-i">${catIco(k,'acc-i')}</span><strong class="th-l">${CAT_INFO[k][0]}</strong><span class="th-p">${k==='overview'?'The whole picture':THEME[k][x.rel]||''}</span></button>`}).join('');
  const playing=V.say===h.body,heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the sign's painting across the head of the page, its name, dates and words in the open sky at its left; then the
  // reading and the key themes on two parchment panels over the night edged with lilies and roses
@@ -625,9 +625,9 @@ function horoSign(){
  <div class="hsp-body">${periodSeg()}
  ${panel(`<div class="hd"><div><h2>${cat==='overview'?pl[1]+' Horoscope':`${CAT_INFO[cat][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
-  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')}
- ${panel(`<h3 class="th-h">Key Themes ${pl[0]}</h3><div class="list themes">${others}</div>
-  <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`,'ornate hthemes')}
+  ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,`ornate hread hc-${cat}`)}
+ <h3 class="th-h hk-h">Key Themes ${pl[0]}</h3><div class="themes-g">${others}</div>
+  <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -648,7 +648,8 @@ views.tarot=()=>{
  if(t==='entry')return entryView();
  if(t==='calendar')return nightSub(journalCal(),'jc');
  if(t==='insights')return journalInsights();
- if(t==='notebook')return nightSub(`<div class="sub">${hdr('Notebook',{sub:'Your journal as a book'})}${journalView()}</div>`,'nb');
+ // the Notebook was removed: an old link to it opens the Journal
+ if(t==='notebook'){V.tab.tarot='journal';history.replaceState(history.state,'',pathFor('tarot','journal',viewQuery()));return journalLib()}
  return `<div class="land tland">${hero('hero-tarot','','tall','Tarot','Insights for a more aligned you')}<div class="tpanel card gilt"><div class="list big">
  ${lrow(ui('t-whisper','th oval'),'Daily Whisper','A card, a message, a moment for you, and a space to reflect.','data-go="tarot" data-t="whisper"')}
  ${lrow(ui('t-reading','th oval'),'Card Reading','Single card, three cards, love, career and the Celtic Cross.','data-go="tarot" data-t="reading"')}
@@ -1362,27 +1363,32 @@ function nameView(){
 }
 /* Cosmic Calendar: a month of the sky, each event with its picture, its words and, when opened, its astronomy and meaning */
 function calendarView(){
- const now=new Date(),m=K.moon(now),pos=K.positions(now),rx=pos.filter(p=>p.retro),mk=V.cal.month||dkey().slice(0,7),[y,mo]=mk.split('-').map(Number);
+ const now=new Date(),m=K.moon(now),pos=K.positions(now),rx=pos.filter(p=>p.retro),today=dkey(),cur=today.slice(0,7),mk=(V.cal.month||'')>cur?V.cal.month:cur,[y,mo]=mk.split('-').map(Number);
  const prev=new Date(Date.UTC(y,mo-2,1)).toISOString().slice(0,7),next=new Date(Date.UTC(y,mo,1)).toISOString().slice(0,7);
- const first=Date.UTC(y,mo-1,1),evs=K.events(new Date(first-14*36e5),new Date(Date.UTC(y,mo,1)+14*36e5)).filter(e=>(e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date)).slice(0,7)===mk);
+ const first=Date.UTC(y,mo-1,1),evs=K.events(new Date(first-14*36e5),new Date(Date.UTC(y,mo,1)+14*36e5)).filter(e=>{const k=evDay(e);return k.slice(0,7)===mk&&k>=today});
  const weather=panel(`<p class="kick">Today’s cosmic weather</p><div class="ce"><span class="ce-art">${moonPic(m,'ce-moon')}</span><p>The Moon is ${m.name==='Full Moon'?'full':m.name==='New Moon'?'new':'a '+m.name.toLowerCase()} in ${sIdx(m.sign).name}; the Sun is in ${sIdx(pos[0].sign).name}.${rx.length?` ${rx.map(p=>p.n).join(', ')} ${rx.length>1?'are':'is'} retrograde.`:' No planets are retrograde.'}</p></div>`,'ornate');
  let body;
  if(V.cal.view==='month'){
   const days=new Date(Date.UTC(y,mo,0)).getUTCDate(),lead=(new Date(first).getUTCDay()+6)%7,byDay={};
   evs.forEach(e=>{const k=e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date);(byDay[k]=byDay[k]||[]).push(e)});
   const sel=V.cal.day&&V.cal.day.slice(0,7)===mk?V.cal.day:'';
-  body=`<div class="jcal" role="grid">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="jc-d" role="columnheader">${d}</div>`).join('')}${Array.from({length:lead},()=>'<div></div>').join('')}${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,es=byDay[k]||[],ph=es.find(e=>e.type==='moon');return `<button class="jc-c${k===dkey()?' today':''}${k===sel?' sel':''}" data-act="calday" data-k="${k}" aria-label="${ymdLong(k)}${es.length?', '+es.length+' event'+(es.length>1?'s':''):''}"><span>${i+1}</span>${ph?pic('moons',phaseSlug(ph.name),'jc-moon'):es.length?'<i class="jc-star">✦</i>':''}</button>`}).join('')}</div>
+  body=`<div class="jcal" role="grid">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="jc-d" role="columnheader">${d}</div>`).join('')}${Array.from({length:lead},()=>'<div></div>').join('')}${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,es=byDay[k]||[],ph=es.find(e=>e.type==='moon');if(k<today)return `<div class="jc-c past" aria-hidden="true"><span>${i+1}</span></div>`;return `<button class="jc-c${k===today?' today':''}${k===sel?' sel':''}" data-act="calday" data-k="${k}" aria-label="${ymdLong(k)}${es.length?', '+es.length+' event'+(es.length>1?'s':''):''}"><span>${i+1}</span>${ph?pic('moons',phaseSlug(ph.name),'jc-moon'):es.length?'<i class="jc-star">✦</i>':''}</button>`}).join('')}</div>
   ${sel?`<h3 class="sec-h">${ymdLong(sel)}</h3><div class="list">${(byDay[sel]||[]).map(e=>evRow(e)).join('')||'<p class="muted center">Nothing notable in the sky this day.</p>'}</div>`:'<p class="muted center small">Tap a day to see its events.</p>'}`;
- }else body=`<div class="list">${evs.map(e=>evRow(e)).join('')||'<p class="muted center">A quiet month in the sky.</p>'}</div>`;
+ }else{
+  const start=new Date(today+'T00:00:00'),ahead=K.events(new Date(+start-14*36e5),new Date(+start+31*DAY)).filter(e=>evDay(e)>=today),days={};
+  ahead.forEach(e=>(days[evDay(e)]=days[evDay(e)]||[]).push(e));
+  body=`<div class="cal-list">${[today,...Object.keys(days).filter(k=>k!==today).sort()].map(k=>`<div class="cal-day${k===today?' today':''}"><h3>${k===today?'<b>Today</b> · ':''}${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</h3><div class="list">${(days[k]||[]).map(e=>evRow(e)).join('')||'<p class="muted center small">Nothing notable in the sky today.</p>'}</div></div>`).join('')}</div>`;
+ }
  return `<div class="sub">${hdr('Cosmic Calendar',{right:iconBtn('refresh','data-act="calmonth" data-k=""','Back to this month')})}
- <div class="mnav"><button class="ibtn" data-act="calmonth" data-k="${prev}" aria-label="Previous month">${IC.back}</button><h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="calmonth" data-k="${next}" aria-label="Next month">${IC.back}</button></div>
- ${seg([['list','List'],['month','Month']],V.cal.view,'calview')}${body}${weather}
- <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteors','data-go="discover" data-t="events"')}</div>${ui('cal-scene','foot-scene')}</div>`;
+ ${seg([['list','List'],['month','Month']],V.cal.view,'calview')}
+ ${V.cal.view==='month'?`<div class="mnav">${mk>cur?`<button class="ibtn" data-act="calmonth" data-k="${prev}" aria-label="Previous month">${IC.back}</button>`:'<span></span>'}<h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="calmonth" data-k="${next}" aria-label="Next month">${IC.back}</button></div>`:'<p class="mn-note">From today, the month ahead</p>'}${body}${weather}
+ <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteors','data-go="discover" data-t="events"')}</div></div>`;
 }
+const evDay=e=>e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date);
 // one event in a list: its picture, date, name and words; opened, the astronomy, the symbolism and a question
 function evRow(e){
  const ref=evRef(e),open=V.evOpen===ref,i=evInfo(e),sv=isSaved('event',ref),d=e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date);
- return `<div class="evr${open?' open':''}" id="ev-${esc(ref).replace(/[^\w-]/g,'')}"><button class="lrow" data-act="evtoggle" data-ref="${ref}" aria-expanded="${open}"><span class="lr-i">${evArt(e,true)}</span><span class="lr-t"><span class="evr-d">${ymdLong(d,{day:'numeric',month:'short'})}</span><strong>${esc(e.name)}${e.sign!=null&&e.k!=='ingress'?` in ${sIdx(e.sign).name}`:''}</strong><span>${esc(evKeys(e))}</span></span><span class="lr-c">${IC.chev}</span></button>
+ return `<div class="evr${open?' open':''}${d===dkey()?' today':''}" id="ev-${esc(ref).replace(/[^\w-]/g,'')}"><button class="lrow" data-act="evtoggle" data-ref="${ref}" aria-expanded="${open}"><span class="lr-i">${evArt(e,true)}</span><span class="lr-t"><span class="evr-d">${d===dkey()?'<b class="evr-now">Today</b> ':''}${ymdLong(d,{day:'numeric',month:'short'})}</span><strong>${esc(e.name)}${e.sign!=null&&e.k!=='ingress'?` in ${sIdx(e.sign).name}`:''}</strong><span>${esc(evKeys(e))}</span></span><span class="lr-c">${IC.chev}</span></button>
  ${open?`<div class="acc-b"><p class="muted small">${evWhen(e)}</p><p class="kick">Astronomy</p><p>${i.fact}</p><p class="kick">Astrological symbolism</p><p>${i.sym}</p><p class="quote">“${i.ref}”</p><div class="acts"><button class="btn sm" data-act="bookev" data-ref="${ref}">${sv?'Saved to your journal':'Save to my journal'}</button>${sv?`<button class="btn ghost sm" data-act="jopen" data-k="bk:event:${esc(ref)}">Write a reflection</button>`:''}</div></div>`:''}</div>`;
 }
 /* ----- Journal: a personal celestial diary. A dark, illustrated library for browsing what was kept (Whispers, readings,
@@ -1419,7 +1425,7 @@ function journalLib(){
  return `<div class="land jlib">${hero('hero-journal',`<div class="hero-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="fab" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>`,'mid','Journal','Your space to reflect, integrate and grow')}
  <div class="sheet">${V.jsearch!=null?`<div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>`:''}
  <div class="fscroll">${chips('Show',JFILT,f,'jfilter')}</div>
- <div class="tools">${[['cal','Calendar','calendar'],['chart','Insights','insights'],['book','Notebook','notebook']].map(([i,l,t])=>`<button data-go="tarot" data-t="${t}">${IC[i]}<span>${l}</span></button>`).join('')}</div>
+ <div class="tools">${[['cal','Calendar','calendar'],['chart','Insights','insights']].map(([i,l,t])=>`<button data-go="tarot" data-t="${t}">${IC[i]}<span>${l}</span></button>`).join('')}</div>
  <div class="list jlist">${items.length?items.map(jrow).join(''):`<p class="muted center">${q||f!=='all'?'Nothing here yet.':'Your journal is waiting for its first page.'}</p>`}</div>
  <div class="jend">${ui('journal-end','je-i')}<p class="je-t">Every thought you write<br>is a star you place<br>in your own sky.</p><button class="btn gold" data-act="sheet" data-k="new">New Entry</button></div>
  </div></div>${sheetView()}`;
@@ -1486,7 +1492,7 @@ function entryView(){
  if(!JE||jKey(JE)!==jKey(p)){jeLeave();JE=p}
  const key=jKey(p),pr=PROMPTS[p.t]||PROMPTS.j,on=(S.intent||{})[key]||[],txt=jText(p);
  return `<div class="mnp jn entry">${mnHead('Journal Entry',`<button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}`)}
- ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button><button data-act="jnotebook">${IC.book} Open in the notebook</button></div>`:''}
+ ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button></div>`:''}
  ${mbox(entryTop(p))}
  ${mbox(`<h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>
  <div class="je-box"><div class="je-tools" role="toolbar" aria-label="Writing tools">${JTOOLS.map(([k,l,g])=>`<button type="button" data-act="jfmt" data-k="${k}" aria-label="${l}" title="${l}">${g}</button>`).join('')}</div>
@@ -1925,7 +1931,7 @@ document.addEventListener('click',e=>{
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
  if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
- if(a==='hcat'){V.hcat=t.dataset.k;render();return window.scrollTo(0,0)}
+ if(a==='hcat'){V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
  if(a==='hreflect'){const [sign,cat,period,key]=t.dataset.ref.split('/');return openEntry(ensureBook('horoscope',t.dataset.ref,horoData(sign,cat,period,key)))}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/');return bookmark('horoscope',t.dataset.ref,horoData(sign,cat,period,key))}
