@@ -2049,3 +2049,10 @@ body{background-attachment:scroll}
 .spreads .lrow{padding:6px 6px 5px}
 .spreads .lrow .lr-i .th{width:32px;height:32px}
 .mnp.trd>.field input{min-height:40px}
+/* a sign's horoscope page: the garden behind the reading held still on the screen like every other page (it had scrolled
+   with the page), and the sign's painting fading into it so the two read as one picture */
+.hsp::before{position:fixed;inset:auto;top:0;left:0;right:0;margin:0 auto;width:100%;max-width:480px;height:100vh;height:100lvh;
+ background:var(--k-midnight) url(/art/atlas/home-vines.webp) 50% 100%/cover no-repeat}
+.hsp{background:none}
+.hsp>.hsp-hero{-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.hsp-hero::before{background:transparent}
