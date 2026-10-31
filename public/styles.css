@@ -2004,3 +2004,8 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .hero .hero-t h1.long{font-size:clamp(1.4rem,7.4cqw,2rem)}
 .hsp .hsp-t h1{font-size:min(7.4cqw,54cqw / var(--nl,6))}
 .hero:is(.hero-journal,.hero-insights) .hero-t h1{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(1.9rem,10cqw,2.7rem)}
+/* Profile: Sign out in gold over the night garden */
+.pf-body>.btn:not(.danger){color:#FCEBB8!important;border:1px solid rgba(226,190,115,.75)!important;background:linear-gradient(180deg,rgba(255,240,205,.09),rgba(255,240,205,0) 45%),rgba(8,12,28,.35)!important;
+ text-shadow:0 1px 3px rgba(0,0,0,.95)!important}
+/* Cosmic Profile: the invitation line before the form */
+.mnp.cp>.cp-intro{font-family:var(--font-serif);font-size:1.05rem;line-height:1.45}

@@ -208,7 +208,7 @@ const OLD={'/oracle':'/tarot','/oracle/whispers':'/tarot/whisper','/oracle/tarot
 const V={sec:'welcome',tab:{},period:'daily',hcat:'overview',exploreSign:null,q:{},love:{a:'',b:'',done:false},res:{a:'',b:'',done:false},syn:{name:'',date:'',time:'',unk:true,place:'',lat:'',lon:'',tz:'',done:false},
  tarot:{spread:'one',q:'',stage:'setup',picks:[],drawn:null,deck:null},chartSel:null,chartTab:'chart',paint:{},painting:false,say:null,auth:'up',busy:false,ob:'welcome',
  places:{},filter:{},search:'',edit:null,cal:{view:'list',month:'',day:''},jcal:{month:'',day:''},evOpen:null,birthDraft:null,jkey:'',jfilter:'all',jsearch:null,sheet:null,
- dream:{text:'',mood:'',symbols:[],busy:false},dreamId:'',lib:{tab:'guides',q:''},insTab:'insights'};
+ dream:{text:'',mood:'',symbols:[],busy:false},ns:{},dreamId:'',lib:{tab:'guides',q:''},insTab:'insights'};
 const tab=()=>{const s=SECTIONS[V.sec];return s?(V.tab[V.sec]||s.tabs[0][0]):''};
 const tabLabel=(sec,t)=>{const x=(SECTIONS[sec]||{tabs:[]}).tabs.find(x=>x[0]===t);return x?x[1]:''};
 const landing=sec=>SECTIONS[sec].tabs[0][0];
@@ -249,6 +249,7 @@ function go(sec,t,opt={}){
  stopAudio();V.edit=null;V.tpop=null;V.spop=null;V.sheet=null;V.wpop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
+ if(sec==='discover')V.ns={};
  V.sec=sec;V.tab[sec]=t||landing(sec);
  // each page records how many steps into the app it is (d), so Back can return to the page it was opened from
  const d=(history.state&&history.state.d)||0;
@@ -256,7 +257,7 @@ function go(sec,t,opt={}){
  render();window.scrollTo(0,0);
 }
 // Back returns to the page the reader came from; a page opened straight from a link (nothing to return to) goes to its parent
-const goBack=()=>{if(V.sec==='discover'&&tab()==='birth-chart'&&V.chartOpen){V.chartOpen=false;V.chartInterp=false;return render()}
+const goBack=()=>{if(V.sec==='discover'&&tab()==='birth-chart'&&V.chartOpen&&!V.ns.chart){V.chartOpen=false;V.chartInterp=false;return render()}
  if(V.sec==='tarot'&&tab()==='reading'&&V.tarot.stage!=='setup'){newReading();render();return window.scrollTo(0,0)}
  if(((history.state&&history.state.d)||0)>0)return history.back();
  const [s,t]=parentOf(V.sec,tab());go(s,t,{replace:true})};
@@ -413,6 +414,14 @@ function myChart(){
  if(chartCache.k!==k){try{chartCache={k,c:K.chart(b)}}catch(e){chartCache={k,c:null}}}
  return chartCache.c;
 }
+// a chart for anyone's birth details (a New search on Birth Chart), without touching the reader's own
+function chartOf(b){if(!A||!b||!/^\d{4}-\d\d-\d\d$/.test(b.date||''))return null;const x=Object.assign({},b);if(!x.tz){x.unk=true;x.tz=TZ()}try{return K.chart(x)}catch(e){return null}}
+// the readings drawn from the Cosmic Profile. Without the reader's details: an invitation to complete the profile, or a
+// New search for anyone else. With them: the reader's own reading first, and New search beneath it. A search never
+// changes the profile.
+const invite=(what,k)=>mbox(`<p class="lead">${what}</p><button class="btn" data-go="discover" data-t="profile">Complete my Cosmic Profile</button><button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`);
+const nsBtn=k=>`<button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`;
+const mineBtn=(k,has)=>has?`<button class="btn ghost" data-act="nsmine" data-k="${k}">Back to my own reading</button>`:`<button class="btn ghost" data-go="discover" data-t="profile">Complete my Cosmic Profile</button>`;
 const nameNums=nm=>nm&&N.clean(nm)?N.name(nm,S.settings.yMode):null;
 
 /* ---------- views ---------- */
@@ -1122,7 +1131,7 @@ function synastryView(){
  if(!A)return needLib();
  const Y=V.syn,mine=hasBirthDate();
  const form=panel(`${plate('synastry')}<h3>Their birth details</h3><div class="field"><label for="sn">Their name</label><input type="text" id="sn" value="${esc(Y.name)}"></div><div class="field"><label for="sd">Date of birth</label><input type="date" id="sd" value="${esc(Y.date)}"></div><label class="row"><input type="checkbox" id="su" ${Y.unk?'checked':''} class="cb"> Birth time unknown</label>${Y.unk?'':`<div class="field"><label for="st">Time of birth</label><input type="time" id="st" value="${esc(Y.time)}"></div>`}${placeField('syn',Y)}<button class="btn" data-act="dosyn">Compare our charts</button><p class="muted small">Their details are private to you and are only kept if you save the connection.</p>`);
- if(!mine)return `<div class="stack"><h1>Synastry</h1>${empty('Your birth details first','Synastry compares two birth charts, so it needs your date of birth (and, for the most detail, your time and place).',linkBtn('Add my birth details','discover','birth-chart','btn'))}</div>`;
+ if(!mine)return `<div class="stack"><h1>Synastry</h1>${empty('Your birth details first','Synastry compares two birth charts, so it needs your date of birth (and, for the most detail, your time and place).',linkBtn('Complete my Cosmic Profile','discover','profile','btn'))}</div>`;
  let out='';
  if(Y.done&&Y.date){
   const saved=S.conns.some(c=>c.kind==='synastry'&&(c.data.them||{}).date===Y.date&&(c.data.them||{}).name===Y.name);
@@ -1133,31 +1142,37 @@ function synastryView(){
 // the Personal Cosmic Profile: birth details, the big three and the numbers, each linking to its page
 function profileView(){
  const ch=myChart(),L=hasBirthDate()?N.lifePath(S.birth.date):null,nm=nameNums(S.fullName),b=S.birth,yr=Number(dkey().slice(0,4));
- const val=(v,miss,sec,tt)=>v?`<span>${v}</span>`:`<button class="link" data-go="${sec}" data-t="${tt}">${miss}</button>`;
+ const val=v=>v?`<span>${v}</span>`:`<span class="muted">Not added yet</span>`;
  const sun=ch?sIdx(ch.pl[0].sign):null;
  return `<div class="stack"><h1>Cosmic Profile</h1>
  ${panel(`<div class="prof-h">${pic('icons',S.sign,'sign-ico')}<div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="muted">${sg(S.sign).name} · ${sg(S.sign).el} · ruled by ${sg(S.sign).ruler}</p></div></div>
-  <dl class="dl"><dt>Birth date</dt><dd>${val(hasBirthDate()?ymdLong(b.date):'', 'Add','discover','birth-chart')}</dd><dt>Birth time</dt><dd>${val(b.unk?'Unknown':b.time,'Add','discover','birth-chart')}</dd><dt>Birth place</dt><dd>${val(b.place,'Add','discover','birth-chart')}</dd><dt>Full birth name</dt><dd>${val(esc(S.fullName),'Add','discover','name-within')}</dd></dl>
-  <p class="muted small">${S.birthConsent?'Birth details are kept privately in your account.':'Birth details stay on this device unless you choose to keep them in your account (in Birth Chart).'}</p>`)}
+  <dl class="dl"><dt>Birth date</dt><dd>${val(hasBirthDate()?ymdLong(b.date):'')}</dd><dt>Birth time</dt><dd>${val(b.unk?'Unknown':b.time)}</dd><dt>Birth place</dt><dd>${val(b.place)}</dd><dt>Full birth name</dt><dd>${val(esc(S.fullName))}</dd></dl>
+  <p class="muted small">${S.birthConsent?'Birth details are kept privately in your account.':'Birth details stay on this device unless you choose to keep them in your account below.'}</p>`)}
+ <p class="cp-intro">Add your details once for a personal experience: your full birth name for your numerology, and your date, time and place of birth for your birth chart, Life Path and cycles.</p>
+ ${birthForm()}
  ${panel(`<div class="label">The big three</div>${plate('astro')}<dl class="dl"><dt>Sun</dt><dd>${ch?sun.name+` <span class="muted small">calculated</span>`:`<span class="muted">Needs birth date</span>`}</dd><dt>Moon</dt><dd>${ch?(ch.moonRange?`${sIdx(ch.moonRange[0]).name} or ${sIdx(ch.moonRange[1]).name} <span class="muted small">needs birth time</span>`:sIdx(ch.pl[1].sign).name+' <span class="muted small">calculated</span>'):'<span class="muted">Needs birth date</span>'}</dd><dt>Rising</dt><dd>${ch&&ch.ang?sIdx(K.signIdx(ch.ang.asc)).name+' <span class="muted small">calculated</span>':`<span class="muted">Needs birth time and place</span>`}</dd></dl>${ch&&sun.id!==S.sign?`<p class="note">Your calculated Sun sign is ${sun.name}, but your chosen sign is ${sg(S.sign).name}. Births near the edge of a sign can fall either side; you can change your chosen sign in Settings.</p>`:''}`)}
  ${panel(`<div class="label">Numerology</div><dl class="dl"><dt>Life Path</dt><dd>${L?L.r.n+' · '+N.MEANING[L.r.n][0]:'<span class="muted">Needs birth date</span>'}</dd><dt>Expression</dt><dd>${nm?nm.expression.r.n+' · '+N.MEANING[nm.expression.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Soul Urge</dt><dd>${nm&&nm.soul.r.n?nm.soul.r.n+' · '+N.MEANING[nm.soul.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Personality</dt><dd>${nm&&nm.personality.r.n?nm.personality.r.n+' · '+N.MEANING[nm.personality.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Personal Year ${yr}</dt><dd>${hasBirthDate()?N.personalYear(S.birth.date,yr).r.n:'<span class="muted">Needs birth date</span>'}</dd></dl>`)}
  </div>`;
 }
-function birthForm(){
- const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth));
- return panel(`${plate('natal')}<h3>Your birth details</h3><div class="field"><label for="bn">Your name</label><input type="text" id="bn" value="${esc(b.name!=null?b.name:S.fullName)}" autocomplete="name" placeholder="Your full name"></div><div class="field"><label for="bd">Date of birth</label><input type="date" id="bd" value="${esc(b.date)}"></div><label class="row"><input type="checkbox" id="bu" ${b.unk?'checked':''} class="cb"> I don’t know my birth time</label>${b.unk?'':`<div class="field"><label for="bt">Time of birth (local time)</label><input type="time" id="bt" value="${esc(b.time)}"></div>`}${placeField('birth',b)}
- <label class="row consent"><input type="checkbox" id="bcons" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my Kosmia account so they sync across my devices. They are private to me and I can delete them in Settings.</span></label>
- <button class="btn" data-act="savebirth">Save and calculate</button><p class="muted small">Birth details are only needed for your chart, Life Path and cycles. Without a time and place, the Ascendant and houses are not calculated.</p>`);
+function birthForm(other){
+ const b=other?(V.oDraft||(V.oDraft=Object.assign({},fresh().birth,{name:''}))):(V.birthDraft||(V.birthDraft=Object.assign({},S.birth)));
+ return panel(`${other?'':plate('natal')}<h3>${other?'Their':'Your'} birth details</h3><div class="field"><label for="bn">${other?'Their name':'Your full name at birth'}</label><input type="text" id="bn" value="${esc(b.name!=null?b.name:S.fullName)}" ${other?'':'autocomplete="name"'} placeholder="${other?'Their name':'Your full name'}"></div><div class="field"><label for="bd">Date of birth</label><input type="date" id="bd" value="${esc(b.date)}"></div><label class="row"><input type="checkbox" id="bu" ${b.unk?'checked':''} class="cb"> I don’t know my birth time</label>${b.unk?'':`<div class="field"><label for="bt">Time of birth (local time)</label><input type="time" id="bt" value="${esc(b.time)}"></div>`}${placeField(other?'other':'birth',b)}
+ ${other?'':`<details class="more"><summary>More options</summary><div class="field"><label for="an">Name you use now (optional)</label><input type="text" id="an" value="${esc(S.altName)}" placeholder="A married name, a chosen name, a nickname"></div><div class="field"><label for="ym">The letter Y counts as</label><select id="ym"><option value="auto" ${S.settings.yMode==='auto'?'selected':''}>Vowel when no other vowel is beside it</option><option value="vowel" ${S.settings.yMode==='vowel'?'selected':''}>Always a vowel</option><option value="consonant" ${S.settings.yMode==='consonant'?'selected':''}>Always a consonant</option></select></div></details>
+ <label class="row consent"><input type="checkbox" id="bcons" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my Kosmia account so they sync across my devices. They are private to me and I can delete them in Settings.</span></label>`}
+ <button class="btn" data-act="savebirth"${other?' data-other="1"':''}>${other?'Calculate Their Chart':'Save my Cosmic Profile'}</button><p class="muted small">${other?'This search is not saved to your profile.':'Without a time and place, the Ascendant and houses are not calculated.'}</p>`);
 }
 function cyclesView(){
- if(!hasBirthDate())return `<div class="stack"><h1>My Cycles</h1>${empty('Your birth date','Personal cycles are counted from your birth day and month.',linkBtn('Add my birth date','discover','birth-chart','btn'))}</div>`;
- const [y,mo,d]=dkey().split('-').map(Number),b=S.birth.date,py=N.personalYear(b,y),pyn=N.personalYear(b,y+1),pm=N.personalMonth(b,y,mo),pdd=N.personalDay(b,y,mo,d),uy=N.universalYear(y),by=Number(b.slice(0,4));
+ const other=!!V.ns.cy;
+ if(!other&&!hasBirthDate())return `<div class="stack"><h1>My Cycles</h1>${invite('Your personal cycles are counted from your birth day and month. Add your date of birth to your Cosmic Profile, or look up anyone’s cycles.','cy')}</div>`;
+ if(other&&!V.cyOther)return `<div class="stack"><h1>My Cycles</h1>${mbox(`<p class="lead">Find anyone’s personal cycles from their date of birth.</p><div class="field"><label for="cyd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="cyd"></div></div>`)}<button class="btn" data-act="cygo">See Their Cycles →</button>${mineBtn('cy',hasBirthDate())}</div>`;
+ const [y,mo,d]=dkey().split('-').map(Number),b=other?V.cyOther:S.birth.date,py=N.personalYear(b,y),pyn=N.personalYear(b,y+1),pm=N.personalMonth(b,y,mo),pdd=N.personalDay(b,y,mo,d),uy=N.universalYear(y),by=Number(b.slice(0,4));
  const mname=ymdLong(dkey(),{month:'long',year:'numeric'});
  return `<div class="stack"><h1>My Cycles</h1>
  ${panel(`${plate('cycles')}<div class="label">Personal Year · ${y}</div><div class="num-line"><span class="num">${py.r.n}</span><p>${cap(N.CYCLE[py.r.n])}.</p></div><p class="calc">Birth month ${Number(b.slice(5,7))} + birth day ${Number(b.slice(8,10))} + year ${y}, each reduced: total ${py.total} → ${py.r.n}</p><p class="muted small">Your Personal Year runs with the calendar year, 1 January to 31 December ${y}.</p>`)}
  ${panel(`<div class="label">Personal Month · ${mname}</div><div class="num-line"><span class="num">${pm.r.n}</span><p>${cap(N.CYCLE[pm.r.n].replace('a year','a month'))}.</p></div><div class="rule"></div><div class="label">Personal Day · ${ymdLong(dkey(),{weekday:'long',day:'numeric',month:'long'})}</div><div class="num-line"><span class="num">${pdd.r.n}</span><p>${cap(N.CYCLE[pdd.r.n].replace('a year','a day'))}.</p></div>`)}
  ${panel(`<div class="label">Next year · ${y+1}</div><p>Personal Year <strong>${pyn.r.n}</strong>: ${N.CYCLE[pyn.r.n]}.</p><div class="label">Universal Year · ${y}</div><p>${uy.n}: the shared backdrop for everyone, ${N.CYCLE[uy.n]}.</p>`)}
  ${panel(`<h3>Pinnacles and challenges</h3><p class="muted small">Four long chapters of life, counted from your birth date.</p><div class="tbl"><table><tr><th>Ages</th><th>Years</th><th>Pinnacle</th><th>Challenge</th></tr>${N.pinnacles(b).map(p=>`<tr><td>${p.from}${p.to!=null?'–'+p.to:'+'}</td><td>${by+p.from}${p.to!=null?'–'+(by+p.to):' onward'}</td><td>${p.p} · ${N.MEANING[p.p][0]}</td><td>${p.c}</td></tr>`).join('')}</table></div><p class="muted small">The first pinnacle ends at age 36 minus your Life Path number; the next two last nine years each; the fourth runs for the rest of life.</p>`)}
+ ${V.ns.cy?`<p class="mn-note">Cycles for someone born ${ymdLong(b)}</p>`:''}${nsBtn('cy')}${V.ns.cy?mineBtn('cy',hasBirthDate()):''}
  </div>`;
 }
 /* ----- Cosmos ----- */
@@ -1277,12 +1292,13 @@ function chartWheel(c){
 }
 const CHART_ROWS=[['planets',()=>pic('cats','planets','acc-i'),'Planetary Positions','Where the planets were at your birth'],['houses',()=>ui('ico-family','acc-i'),'Houses','The 12 areas of your life'],['aspects',()=>pic('cats','aspects','acc-i'),'Aspects','The connections between planets'],['interp',()=>pic('cats','insights','acc-i'),'Full Interpretation','A complete analysis of your chart']];
 function chartView(){
- const c=myChart(),form=birthForm(),H=`${mnHead(c&&V.chartOpen?'Your Birth Chart':'Birth Chart')}<p class="mn-sub">Your cosmic blueprint</p>`;
+ const other=!!V.ns.chart,c=other?V.oChart:myChart(),oname=(V.oBirthName||'').trim(),H=`${mnHead(other&&c?(oname?esc(oname.split(' ')[0])+'’s Chart':'Their Birth Chart'):c&&V.chartOpen?'Your Birth Chart':'Birth Chart')}<p class="mn-sub">${other?'Another cosmic blueprint':'Your cosmic blueprint'}</p>`;
  const intro=mbox(`<p class="lead">A personalised map of the sky at the moment you were born. Discover your planetary placements, aspects and what they reveal about your unique path.</p>`);
- if(!c)return `<div class="mnp ch">${H}${intro}${form}<div class="list dim">${CHART_ROWS.map(([,i,a,b])=>lrow(i(),a,b,'disabled')).join('')}</div></div>`;
- if(!V.chartOpen)return `<div class="mnp ch dfeat">${H}${intro}<button class="btn" data-act="chartopen" data-k="chart">View My Birth Chart →</button>
- <div class="list">${CHART_ROWS.map(([k,i,a,b])=>lrow(i(),a,b,`data-act="chartopen" data-k="${k}"`)).join('')}</div></div>`;
- const b=S.birth,sel=c.pl.find(p=>p.n===V.chartSel),ct=V.chartTab;
+ if(other&&!c)return `<div class="mnp ch">${H}${mbox('<p class="lead">Calculate anyone’s birth chart from their date, time and place of birth.</p>')}${birthForm(true)}${mineBtn('chart',!!myChart())}</div>`;
+ if(!c)return `<div class="mnp ch">${H}${invite('A personalised map of the sky at the moment you were born. Add your date, time and place of birth to your Cosmic Profile, or look up anyone’s chart.','chart')}<div class="list dim">${CHART_ROWS.map(([,i,a,b])=>lrow(i(),a,b,'disabled')).join('')}</div></div>`;
+ if(!other&&!V.chartOpen)return `<div class="mnp ch dfeat">${H}${intro}<button class="btn" data-act="chartopen" data-k="chart">View My Birth Chart →</button>
+ <div class="list">${CHART_ROWS.map(([k,i,a,b])=>lrow(i(),a,b,`data-act="chartopen" data-k="${k}"`)).join('')}</div>${nsBtn('chart')}</div>`;
+ const b=other?V.oBirth:S.birth,sel=c.pl.find(p=>p.n===V.chartSel),ct=V.chartTab;
  const note=b.unk||!b.time?`<p class="note">Without a birth time, planets are taken at noon on your birth date. ${!hasPlace(b)?'Add your birth place to calculate the Ascendant, Midheaven and houses. ':''}${c.moonRange?`The Moon moves from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} during your birth day, so its sign depends on your birth time.`:''}</p>`:!hasPlace(b)?'<p class="note">Add your birth place so your birth time can be used for the Ascendant, Midheaven and houses.</p>':'';
  const big=[['Sun',c.pl[0]],['Moon',c.pl[1]]].map(([n,p])=>`<div class="b3"><span class="glyph">${p.g}</span><span>${n}</span><span class="b3-s"><span class="glyph">${sIdx(p.sign).g}</span> ${n==='Moon'&&c.moonRange?'Uncertain':sIdx(p.sign).name}</span><span class="b3-d">${n==='Moon'&&c.moonRange?'':degTxt(p.lon).replace(/ \S+ /,'° ').replace('°°','°')}</span></div>`).join('')
   +`<div class="b3"><span class="glyph">↑</span><span>Rising</span><span class="b3-s">${c.ang?`<span class="glyph">${sIdx(K.signIdx(c.ang.asc)).g}</span> ${sIdx(K.signIdx(c.ang.asc)).name}`:'Needs time and place'}</span><span class="b3-d">${c.ang?degTxt(c.ang.asc).replace(/ \S+ /,'° ').replace('°°','°'):''}</span></div>`;
@@ -1295,8 +1311,8 @@ function chartView(){
  return `<div class="mnp ch">${H}<p class="muted center">${ymdLong(b.date)}${b.unk||!b.time?'':' · '+esc(b.time)}${b.place?' · '+esc(b.place):''}</p>
  <div role="group" aria-label="Chart views">${seg([['chart','Chart'],['planets','Planets'],['aspects','Aspects'],['houses','Houses']],ct,'ctab')}</div>${note}${body}
  <p class="muted small">Method: tropical zodiac, geocentric positions on the true ecliptic of date from the Astronomy Engine ephemeris. Your local birth time is converted to UTC with the historical rules for ${esc(b.tz||TZ())}. Houses are whole-sign; aspect orbs are 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p>
- <button class="btn ghost" data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest.">Ask Kassandra about my chart</button>
- <details class="acc"${V.birthDraft?' open':''}><summary><span class="lr-t"><strong>Edit birth details</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b">${form}</div></details></div>`;
+ ${other?'':'<button class="btn ghost" data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest.">Ask Kassandra about my chart</button>'}
+ ${nsBtn('chart')}${other?mineBtn('chart',!!myChart()):'<button class="btn ghost" data-go="discover" data-t="profile">Edit my Cosmic Profile</button>'}</div>`;
 }
 /* Zodiac Affinity: a symbolic score from the angle between the signs, their elements and modalities */
 const AFF_T=['A Mirror Connection','A Curious Connection','A Friendly Spark','A Dynamic Tension','A Harmonious Connection','An Unlikely Pairing','A Magnetic Pull'];
@@ -1345,21 +1361,22 @@ const LPX={1:['Courage, originality and the drive to begin what others only imag
  22:['Vision with the practical power to build it on a grand scale.','Pressure, overwhelm and fear of not living up to the dream.','Build one stone at a time; the great work is made of small, faithful days.'],
  33:['Selfless love, healing and the gift of teaching through example.','Over-responsibility and neglecting your own needs.','Serve from fullness, not depletion; your care heals best when it includes you.']};
 function lifePathView(){
- const d=V.lpDate||S.birth.date,H=hdr('Life Path',{sub:'Your soul’s journey'});
- const form=`${mbox(`<p class="lead">Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.</p>
- <div class="field"><label for="lpd">Your date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd" value="${esc(d||'')}"></div></div>`)}<button class="btn" data-act="lpgo">Discover My Life Path →</button>`;
- if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return `<div class="sub">${H}${form}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
+ const other=!!V.ns.lp,d=other?V.lpOther:(hasBirthDate()?S.birth.date:''),H=hdr('Life Path',{sub:other?'Another soul’s journey':'Your soul’s journey'});
+ const lead='Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.';
+ if(other&&!d)return `<div class="sub">${H}${mbox(`<p class="lead">Find anyone’s Life Path from their date of birth.</p><div class="field"><label for="lpd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd"></div></div>`)}<button class="btn" data-act="lpgo">Discover Their Life Path →</button>${mineBtn('lp',hasBirthDate())}</div>`;
+ const form=other?'':mbox(`<p class="lead">${lead}</p>`);
+ if(!d)return `<div class="sub">${H}${invite(lead+' Add your date of birth to your Cosmic Profile, or look up anyone’s Life Path.','lp')}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
  return `<div class="sub">${H}${form}
- ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">Your Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>`,'ornate')}
+ ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">${other?'Their':'Your'} Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>`,'ornate')}
  <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Guidance','How to align with your path',`<p>${X[2]}</p>`)}
  ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
- <button class="btn ghost" data-go="discover" data-t="cycles">My Personal Cycles</button></div>`;
+ ${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My Personal Cycles</button>'}</div>`;
 }
 /* The Name Within: the numbers in a full birth name, each an expandable reading with its working */
 function nameView(){
- const nm=nameNums(S.fullName),alt=nameNums(S.altName),L=hasBirthDate()?N.lifePath(S.birth.date):null;
+ const other=!!V.ns.nw,nm=nameNums(other?V.oName:S.fullName),alt=other?null:nameNums(S.altName),L=!other&&hasBirthDate()?N.lifePath(S.birth.date):null;
  const tbl=`<table class="ltable"><tr>${N.TABLE.map(([v])=>`<th>${v}</th>`).join('')}</tr>${[0,1,2].map(r=>`<tr>${N.TABLE.map(([,ls])=>`<td>${ls[r]||''}</td>`).join('')}</tr>`).join('')}</table>`;
  const letters=x=>`<div class="letters">${x.letters.map(l=>`<span class="lt${l.vowel?' v':''}"><b>${l.c}</b><i>${l.v}</i></span>`).join('')}</div>`;
  const one=(x,k)=>x[k]&&x[k].r.n?`<span class="num">${x[k].r.n}</span> <strong>${N.MEANING[x[k].r.n][0]}</strong>`:'';
@@ -1368,13 +1385,16 @@ function nameView(){
   +acc(pic('cats','insights','acc-i'),'Personality Number',`How you show up to the world ${one(x,'personality')}`,numBlock('Personality: how others first meet you',x.personality,true))
   +(L&&x.expression.r.n?(()=>{const m=N.reduce(L.r.n+x.expression.r.n);return acc(pic('cats','lifepath','acc-i'),'Maturity Number',`Who you grow into · <span class="num">${m.n}</span>`,`<p>Your Life Path (${L.r.n}) and Expression (${x.expression.r.n}) together: ${L.r.n} + ${x.expression.r.n} = ${L.r.n+x.expression.r.n}${m.chain.length>1?' → '+m.chain.slice(1).join(' → '):''}. <strong>${N.MEANING[m.n][0]}</strong>: ${N.MEANING[m.n][1]}, the qualities that tend to ripen in the second half of life.</p>`)})():'')
   +acc('','Your letters','Vowels are highlighted',letters(x));
- return `<div class="sub">${hdr('The Name Within',{sub:'Name numerology'})}${mbox(`<p class="lead">Your name carries a vibration and a story. Discover what your name reveals about your personality, purpose and life path.</p>
- <div class="field"><label for="fn">Your full name at birth</label><div class="inp">${IC.star}<input type="text" id="fn" value="${esc(S.fullName)}" autocomplete="name" placeholder="Enter your full name"></div></div>
- <details class="more"><summary>More options</summary><div class="field"><label for="an">Name you use now (optional)</label><input type="text" id="an" value="${esc(S.altName)}" placeholder="A married name, a chosen name, a nickname"></div><div class="field"><label for="ym">The letter Y counts as</label><select id="ym"><option value="auto" ${S.settings.yMode==='auto'?'selected':''}>Vowel when no other vowel is beside it</option><option value="vowel" ${S.settings.yMode==='vowel'?'selected':''}>Always a vowel</option><option value="consonant" ${S.settings.yMode==='consonant'?'selected':''}>Always a consonant</option></select></div></details>`)}
- <button class="btn" data-act="savenames">Reveal My Numbers →</button>
- ${nm?`<div class="list">${rows(nm)}</div>`:`<div class="list dim">${[['general','Expression Number','Your natural abilities'],['love','Soul Urge Number','Your inner desires'],['insights','Personality Number','How you show up to the world'],['lifepath','Destiny Number','Your life purpose']].map(([i,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div>`}
+ const lead='Your name carries a vibration and a story. Discover what your name reveals about your personality, purpose and life path.';
+ const dim=`<div class="list dim">${[['general','Expression Number','Your natural abilities'],['love','Soul Urge Number','Your inner desires'],['insights','Personality Number','How you show up to the world'],['lifepath','Destiny Number','Your life purpose']].map(([i,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div>`;
+ const H=hdr('The Name Within',{sub:other?'Another name’s numbers':'Name numerology'});
+ if(other&&!nm)return `<div class="sub">${H}${mbox(`<p class="lead">Discover the numbers in anyone’s name: use their full name at birth.</p><div class="field"><label for="fn2">Their full name</label><div class="inp">${IC.star}<input type="text" id="fn2" value="${esc(V.oName||'')}" placeholder="Their full name at birth"></div></div>`)}<button class="btn" data-act="nwgo">Reveal Their Numbers →</button>${mineBtn('nw',!!nameNums(S.fullName))}</div>`;
+ if(!nm)return `<div class="sub">${H}${invite(lead+' Add your full name at birth to your Cosmic Profile, or look up anyone’s name.','nw')}${dim}</div>`;
+ return `<div class="sub">${H}${mbox(`<p class="lead">${other?`The numbers in the name <strong>${esc(V.oName)}</strong>.`:lead}</p>`)}
+ <div class="list">${rows(nm)}</div>
  ${alt?`<h3 class="sec-h">The name you use now</h3><div class="list">${rows(alt)}</div><p class="muted small">Your birth name is read as the blueprint you arrived with; the name you use now as the way you have chosen to express it.</p>`:''}
- ${acc('','The Pythagorean letter table','How each letter is counted',`${tbl}<p class="muted small">Accents are ignored (É counts as E), as are hyphens, apostrophes and spaces. Each word of a name is reduced on its own, then the words are added and reduced again, keeping master numbers 11, 22 and 33.</p>`)}</div>`;
+ ${acc('','The Pythagorean letter table','How each letter is counted',`${tbl}<p class="muted small">Accents are ignored (É counts as E), as are hyphens, apostrophes and spaces. Each word of a name is reduced on its own, then the words are added and reduced again, keeping master numbers 11, 22 and 33.</p>`)}
+ ${nsBtn('nw')}${other?mineBtn('nw',!!nameNums(S.fullName)):''}</div>`;
 }
 /* Cosmic Calendar: a month of the sky, each event with its picture, its words and, when opened, its astronomy and meaning */
 function calendarView(){
@@ -1785,7 +1805,7 @@ views.settings=()=>{
  <div class="list">
  ${acc(glyphMed(s.id),'Your sign',s.name,`${signGrid('My sign',S.sign)}`)}
  ${acc(ui('ne-free','th'),'Display name',esc(S.name||'Not set'),`<div class="field"><label for="nm">Display name</label><input type="text" id="nm" value="${esc(S.name)}"></div><button class="btn sm" data-act="savename">Save</button>`)}
- ${lrow(ui('ex-chart','th round'),'Birth information',hasBirthDate()?ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})+(S.birth.place?' · '+esc(S.birth.place):''):'Add your birth date, time and place','data-go="settings" data-t="birth"')}
+ ${lrow(ui('ex-chart','th round'),'Cosmic Profile',hasBirthDate()&&S.fullName?'Your birth details, chart and numbers':'Add your birth details for your chart and numbers','data-go="discover" data-t="profile"')}
  ${lrow(pic('cats','notifications','th'),'Notifications','Daily horoscope, Whispers and celestial events','data-go="settings" data-t="notifications"')}
  ${lrow(pic('cats','prefs','th'),'Display','Text size, motion, time zone and voice','data-go="settings" data-t="display"')}
  ${lrow(pic('cats','privacy','th'),'Privacy & Data','Consent, download and deletion','data-go="settings" data-t="privacy"')}
@@ -1996,7 +2016,11 @@ document.addEventListener('click',e=>{
  if(a==='doresonance'){V.res={a:$('#ra').value.trim(),b:$('#rb').value.trim(),done:true};if(!N.clean(V.res.a)||!N.clean(V.res.b)){V.res.done=false;toast('Enter both names')}return render()}
  if(a==='dosyn'){readSyn();if(!V.syn.date)return toast('Add their date of birth');V.syn.done=true;return render()}
  if(a==='openconn'){const c=S.conns.find(x=>x.id===t.dataset.id);return c&&connOpen(c)}
- if(a==='lpgo'){const d=($('#lpd')||{}).value;if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return toast('Add your date of birth');V.lpDate=d;if(!hasBirthDate()){S.birth.date=d;save();syncProfile()}return render()}
+ if(a==='lpgo'){const d=($('#lpd')||{}).value;if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return toast('Add a date of birth');V.lpOther=d;return render()}
+ if(a==='cygo'){const d=($('#cyd')||{}).value;if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return toast('Add a date of birth');V.cyOther=d;return render()}
+ if(a==='nwgo'){const n=(($('#fn2')||{}).value||'').trim();if(!N.clean(n))return toast('Enter a full name');V.oName=n;return render()}
+ if(a==='nsearch'){const k=t.dataset.k;V.ns[k]=true;if(k==='chart'){V.oBirth=null;V.oChart=null;V.oBirthName='';V.oDraft=null;V.chartSel=null}if(k==='lp')V.lpOther='';if(k==='cy')V.cyOther='';if(k==='nw')V.oName='';render();return window.scrollTo(0,0)}
+ if(a==='nsmine'){V.ns[t.dataset.k]=false;if(t.dataset.k==='chart')V.chartSel=null;render();return window.scrollTo(0,0)}
  if(a==='fevents'){V.filter.events=t.dataset.k;return render()}
  if(a==='bookev'){const e=upcoming().find(x=>evRef(x)===t.dataset.ref)||(K?K.events(new Date(Date.parse(t.dataset.ref.split(':').pop()+':00Z')-DAY),new Date(Date.parse(t.dataset.ref.split(':').pop()+':00Z')+DAY)).find(x=>evRef(x)===t.dataset.ref):null);if(e)bookmark('event',t.dataset.ref,evData(e));return}
  if(a==='evtoggle'){V.evOpen=V.evOpen===t.dataset.ref?null:t.dataset.ref;return render()}
@@ -2012,10 +2036,12 @@ document.addEventListener('click',e=>{
  if(a==='dsym'){const x=$('#dt');if(x)V.dream.text=x.value;const s=V.dream.symbols,i=s.indexOf(t.dataset.k);if(i>=0)s.splice(i,1);else s.push(t.dataset.k);return render()}
  if(a==='dgo')return interpretDream();
  if(a==='placesearch'){if(t.dataset.id==='syn')readSyn();else readBirth();return placeSearch(t.dataset.id)}
- if(a==='placepick'){const P=V.places[t.dataset.id],r=P.results[+t.dataset.i],obj=t.dataset.id==='syn'?V.syn:V.birthDraft;
+ if(a==='placepick'){const P=V.places[t.dataset.id],r=P.results[+t.dataset.i],obj=t.dataset.id==='syn'?V.syn:t.dataset.id==='other'?V.oDraft:V.birthDraft;
   if(t.dataset.id==='syn')readSyn();else readBirth();
   Object.assign(obj,{place:[r.name,r.admin1,r.country].filter(Boolean).join(', '),lat:r.latitude,lon:r.longitude,tz:r.timezone});V.places[t.dataset.id]={};return render()}
- if(a==='savebirth'){readBirth();const b=V.birthDraft;if(!b.date)return toast('Add your date of birth');
+ if(a==='savebirth'&&t.dataset.other){readBirth();const b=V.oDraft;if(!b.date)return toast('Add their date of birth');
+  V.oBirth=Object.assign({},b,{time:b.unk?'':b.time});V.oBirthName=b.name||'';delete V.oBirth.name;V.oChart=chartOf(V.oBirth);V.oDraft=null;V.chartOpen=true;V.chartSel=null;V.chartTab='chart';render();return window.scrollTo(0,0)}
+ if(a==='savebirth'){readBirth();const b=V.birthDraft;if(!b.date)return toast('Add your date of birth');{const an=$('#an'),ym=$('#ym');if(an)S.altName=an.value.trim();if(ym)S.settings.yMode=ym.value}
   if(b.name!=null)S.fullName=b.name.trim();S.birth=Object.assign({},b,{time:b.unk?'':b.time});delete S.birth.name;S.birthConsent=$('#bcons').checked;V.birthDraft=null;save();syncProfile();toast(S.birthConsent?'Saved to your account':'Saved on this device');return render()}
  if(a==='savenames'){S.fullName=$('#fn').value.trim();const an=$('#an'),ym=$('#ym');if(an)S.altName=an.value.trim();if(ym)S.settings.yMode=ym.value;save();syncProfile();if(!N.clean(S.fullName))toast('Enter your full name');return render()}
  // profile and account
@@ -2046,7 +2072,8 @@ document.addEventListener('click',e=>{
  if(a==='newread'){newReading();render();return window.scrollTo(0,0)}
 });
 function readSyn(){const Y=V.syn,g=id=>$('#'+id);if(g('sn'))Y.name=g('sn').value.trim();if(g('sd'))Y.date=g('sd').value;if(g('su'))Y.unk=g('su').checked;if(g('st'))Y.time=g('st').value}
-function readBirth(){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth)),g=id=>$('#'+id);if(g('bn'))b.name=g('bn').value;if(g('bd'))b.date=g('bd').value;if(g('bu'))b.unk=g('bu').checked;if(g('bt'))b.time=g('bt').value}
+// the birth form on the page is someone else's (a New search) when its button says so
+function readBirth(){const other=!!$('[data-act=savebirth][data-other]'),b=other?(V.oDraft||(V.oDraft=Object.assign({},fresh().birth))):(V.birthDraft||(V.birthDraft=Object.assign({},S.birth))),g=id=>$('#'+id);if(g('bn'))b.name=g('bn').value;if(g('bd'))b.date=g('bd').value;if(g('bu'))b.unk=g('bu').checked;if(g('bt'))b.time=g('bt').value}
 const tap=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));
 document.addEventListener('input',e=>{
  const el=e.target;
