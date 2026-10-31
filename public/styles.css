@@ -2072,3 +2072,7 @@ body{background-attachment:scroll}
 .jins svg{width:18px;height:18px;color:var(--goldd)}
 .ins-box{max-height:86vh;overflow-y:auto}
 .ins-box .seg{margin:6px 0 12px}
+/* Tarot's landing holds still: no scrolling, the options box fixed above the menu */
+html:has(body.still),body.still{overflow:hidden;overscroll-behavior:none}
+body.still .tland .tpanel{position:fixed;left:max(3.5%,calc(50% - 223px));right:max(3.5%,calc(50% - 223px));bottom:calc(var(--navh,74px) + 12px);margin:0}
+@media (max-height:700px){body.still .tpanel{padding:12px 10px}body.still .tpanel .lrow{min-height:66px}body.still .tpanel .lr-i .th{width:48px;height:48px}}

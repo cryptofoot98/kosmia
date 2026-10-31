@@ -1856,7 +1856,7 @@ function render(){
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
  if(authed)$('#navin').innerHTML=Kit.nav(MAIN.map(k=>({key:k,label:SECTIONS[k].label})),sec);
  document.body.classList.toggle('onboarding',!authed);
- document.body.dataset.sec=sec;
+ document.body.dataset.sec=sec;document.body.classList.toggle('still',authed&&sec==='tarot'&&tab()==='home');
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
  navH();
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
