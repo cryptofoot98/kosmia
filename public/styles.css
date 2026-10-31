@@ -1777,3 +1777,18 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 /* the enlarged Whisper card from Home stands on the Daily Whisper backdrop */
 .wpop{background:#0B1226}
 .wpop .wp-in{background:url(/art/atlas/whisper-bg.webp) 50% 50%/cover no-repeat}
+/* Card Reading, choosing the cards and the spread as night pages on the owner's Milky Way sky, the title centred */
+.mnp.trd{--mn-bg:url(/art/atlas/reading-bg.webp)}
+.mnp.trd .mn-hd{height:calc(env(safe-area-inset-top,0px) + 36cqw)}
+.mnp.trd .mn-t{left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 15cqw)}
+.mnp.trd .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 4%;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 60%,transparent)}
+.mnp .mn-sub{margin-top:-14px;font-family:var(--font-serif);font-style:italic;font-size:1.15rem}
+.mnp.trd>.btn{align-self:stretch}
+.mnp.trd .rd-cell .label{color:#F1DFB4;text-shadow:0 1px 3px #000}
+.mnp.trd .mbox .field label{color:var(--k-ink)}
+.mnp.trd .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 15cqw)}
+.mnp.trd .mn-t{position:relative;top:0}
+.mnp.trd .mn-t h1{white-space:normal;text-align:center;line-height:1}
+.mnp.trd .mbox p{font-family:var(--font-serif);font-weight:600;font-size:1.1rem;line-height:1.45;color:var(--k-ink)}
+.mnp.trd>.list{align-self:stretch}
+.mnp.trd>.field label{color:#F1DFB4;text-shadow:0 1px 3px #000}

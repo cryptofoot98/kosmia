@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 472 |
-| In use, provisional | 428 |
+| Images | 473 |
+| In use, provisional | 429 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -509,6 +509,18 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/profile-bg.webp` | 850×1850 | 0.46:1 | no | 325 | provisional |  |
+
+## The Card Reading pages’ backdrop: the Milky Way across a starry sky, a crescent Moon, golden clouds at the foot (supplied by the owner)
+
+- Mockup: `docs/mockups/tarot-journal.webp`
+- Screen: Tarot › Card Reading, choosing the cards, the spread (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/reading-bg.webp` | 850×1850 | 0.46:1 | no | 274 | provisional |  |
 
 ## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
 
