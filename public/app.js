@@ -246,7 +246,7 @@ history.scrollRestoration='manual';
 // a fresh Card Reading: back to the choice of spread, with no question, cards or interpretation
 function newReading(){const T=V.tarot;T.stage='setup';T.q='';T.picks=[];T.drawn=null;T.ai='';T.aiState='';T.savedId=null;V.tpop=null}
 function go(sec,t,opt={}){
- stopAudio();V.edit=null;V.tpop=null;V.spop=null;V.sheet=null;V.wpop=false;jLeave();jeLeave();
+ stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
  if(sec==='discover')V.ns={};
@@ -419,9 +419,9 @@ function chartOf(b){if(!A||!b||!/^\d{4}-\d\d-\d\d$/.test(b.date||''))return null
 // the readings drawn from the Cosmic Profile. Without the reader's details: an invitation to complete the profile, or a
 // New search for anyone else. With them: the reader's own reading first, and New search beneath it. A search never
 // changes the profile.
-const invite=(what,k)=>mbox(`<p class="lead">${what}</p><button class="btn" data-go="discover" data-t="profile">Complete my Cosmic Profile</button><button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`);
+const invite=(what,k)=>mbox(`<p class="lead">${what}</p><button class="btn" data-act="cpopen">Complete my Cosmic Profile</button><button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`);
 const nsBtn=k=>`<button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`;
-const mineBtn=(k,has)=>has?`<button class="btn ghost" data-act="nsmine" data-k="${k}">Back to my own reading</button>`:`<button class="btn ghost" data-go="discover" data-t="profile">Complete my Cosmic Profile</button>`;
+const mineBtn=(k,has)=>has?`<button class="btn ghost" data-act="nsmine" data-k="${k}">Back to my own reading</button>`:`<button class="btn ghost" data-act="cpopen">Complete my Cosmic Profile</button>`;
 const nameNums=nm=>nm&&N.clean(nm)?N.name(nm,S.settings.yMode):null;
 
 /* ---------- views ---------- */
@@ -1145,13 +1145,13 @@ function profileView(){
  const val=v=>v?`<span>${v}</span>`:`<span class="muted">Not added yet</span>`;
  const sun=ch?sIdx(ch.pl[0].sign):null;
  return `<div class="stack"><h1>Cosmic Profile</h1>
- ${panel(`<div class="prof-h">${pic('icons',S.sign,'sign-ico')}<div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="muted">${sg(S.sign).name} · ${sg(S.sign).el} · ruled by ${sg(S.sign).ruler}</p></div></div>
+ ${panel(`<button class="link cp-edit" data-act="cpedit">Edit</button><div class="prof-h">${pic('icons',S.sign,'sign-ico')}<div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="muted">${sg(S.sign).name} · ${sg(S.sign).el} · ruled by ${sg(S.sign).ruler}</p></div></div>
   <dl class="dl"><dt>Birth date</dt><dd>${val(hasBirthDate()?ymdLong(b.date):'')}</dd><dt>Birth time</dt><dd>${val(b.unk?'Unknown':b.time)}</dd><dt>Birth place</dt><dd>${val(b.place)}</dd><dt>Full birth name</dt><dd>${val(esc(S.fullName))}</dd></dl>
-  <p class="muted small">${S.birthConsent?'Birth details are kept privately in your account.':'Birth details stay on this device unless you choose to keep them in your account below.'}</p>`)}
- <p class="cp-intro">Add your details once for a personal experience: your full birth name for your numerology, and your date, time and place of birth for your birth chart, Life Path and cycles.</p>
- ${birthForm()}
+  <p class="muted small">${S.birthConsent?'Birth details are kept privately in your account.':'Birth details stay on this device unless you keep them in your account.'}</p>`)}
+ ${hasBirthDate()?mbox(soulBlock(L.r.n,firstOf(S.name||S.fullName),'Your soul’s reading')+`<p>Your Sun in ${sg(ch?sIdx(ch.pl[0].sign).id:S.sign).name} colours how you shine: ${SIGN_DESC[ch?sIdx(ch.pl[0].sign).id:S.sign]}</p>`):`<p class="cp-intro">Add your details once for a reading that is yours alone: your full birth name for your numerology, and your date, time and place of birth for your birth chart, Life Path and cycles.</p><button class="btn" data-act="cpedit">Add my details</button>`}
  ${panel(`<div class="label">The big three</div>${plate('astro')}<dl class="dl"><dt>Sun</dt><dd>${ch?sun.name+` <span class="muted small">calculated</span>`:`<span class="muted">Needs birth date</span>`}</dd><dt>Moon</dt><dd>${ch?(ch.moonRange?`${sIdx(ch.moonRange[0]).name} or ${sIdx(ch.moonRange[1]).name} <span class="muted small">needs birth time</span>`:sIdx(ch.pl[1].sign).name+' <span class="muted small">calculated</span>'):'<span class="muted">Needs birth date</span>'}</dd><dt>Rising</dt><dd>${ch&&ch.ang?sIdx(K.signIdx(ch.ang.asc)).name+' <span class="muted small">calculated</span>':`<span class="muted">Needs birth time and place</span>`}</dd></dl>${ch&&sun.id!==S.sign?`<p class="note">Your calculated Sun sign is ${sun.name}, but your chosen sign is ${sg(S.sign).name}. Births near the edge of a sign can fall either side; you can change your chosen sign in Settings.</p>`:''}`)}
  ${panel(`<div class="label">Numerology</div><dl class="dl"><dt>Life Path</dt><dd>${L?L.r.n+' · '+N.MEANING[L.r.n][0]:'<span class="muted">Needs birth date</span>'}</dd><dt>Expression</dt><dd>${nm?nm.expression.r.n+' · '+N.MEANING[nm.expression.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Soul Urge</dt><dd>${nm&&nm.soul.r.n?nm.soul.r.n+' · '+N.MEANING[nm.soul.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Personality</dt><dd>${nm&&nm.personality.r.n?nm.personality.r.n+' · '+N.MEANING[nm.personality.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Personal Year ${yr}</dt><dd>${hasBirthDate()?N.personalYear(S.birth.date,yr).r.n:'<span class="muted">Needs birth date</span>'}</dd></dl>`)}
+ ${V.cpEdit?`<div class="pop" role="dialog" aria-modal="true" aria-label="Edit your Cosmic Profile" data-act="cpclose"><div class="pop-box cp-box"><button class="pop-x" data-act="cpclose" aria-label="Close">×</button><h2 class="center">Your Cosmic Profile</h2><p class="center muted">Your details are read in your birth chart, numerology, Life Path and cycles.</p>${birthForm()}</div></div>`:''}
  </div>`;
 }
 function birthForm(other){
@@ -1168,7 +1168,7 @@ function cyclesView(){
  const [y,mo,d]=dkey().split('-').map(Number),b=other?V.cyOther:S.birth.date,py=N.personalYear(b,y),pyn=N.personalYear(b,y+1),pm=N.personalMonth(b,y,mo),pdd=N.personalDay(b,y,mo,d),uy=N.universalYear(y),by=Number(b.slice(0,4));
  const mname=ymdLong(dkey(),{month:'long',year:'numeric'});
  return `<div class="stack"><h1>My Cycles</h1>
- ${panel(`${plate('cycles')}<div class="label">Personal Year · ${y}</div><div class="num-line"><span class="num">${py.r.n}</span><p>${cap(N.CYCLE[py.r.n])}.</p></div><p class="calc">Birth month ${Number(b.slice(5,7))} + birth day ${Number(b.slice(8,10))} + year ${y}, each reduced: total ${py.total} → ${py.r.n}</p><p class="muted small">Your Personal Year runs with the calendar year, 1 January to 31 December ${y}.</p>`)}
+ ${panel(`${plate('cycles')}<div class="label">Personal Year · ${y}</div><div class="num-line"><span class="num">${py.r.n}</span><p>${cap(N.CYCLE[py.r.n])}.</p></div><p class="calc">Birth month ${Number(b.slice(5,7))} + birth day ${Number(b.slice(8,10))} + year ${y}, each reduced: total ${py.total} → ${py.r.n}</p><p class="muted small">Your Personal Year runs with the calendar year, 1 January to 31 December ${y}.</p><div class="soul"><p class="soul-t">${other?'':esc(firstOf(S.name||S.fullName))+', '}${(YEAR[py.r.n]||YEAR[py.r.n%9||9]).replace(/^This/,other?'This':'this')}</p><p class="soul-q">“${soul(py.r.n)[2][0]}”<span>${soul(py.r.n)[2][1]}</span></p></div>`)}
  ${panel(`<div class="label">Personal Month · ${mname}</div><div class="num-line"><span class="num">${pm.r.n}</span><p>${cap(N.CYCLE[pm.r.n].replace('a year','a month'))}.</p></div><div class="rule"></div><div class="label">Personal Day · ${ymdLong(dkey(),{weekday:'long',day:'numeric',month:'long'})}</div><div class="num-line"><span class="num">${pdd.r.n}</span><p>${cap(N.CYCLE[pdd.r.n].replace('a year','a day'))}.</p></div>`)}
  ${panel(`<div class="label">Next year · ${y+1}</div><p>Personal Year <strong>${pyn.r.n}</strong>: ${N.CYCLE[pyn.r.n]}.</p><div class="label">Universal Year · ${y}</div><p>${uy.n}: the shared backdrop for everyone, ${N.CYCLE[uy.n]}.</p>`)}
  ${panel(`<h3>Pinnacles and challenges</h3><p class="muted small">Four long chapters of life, counted from your birth date.</p><div class="tbl"><table><tr><th>Ages</th><th>Years</th><th>Pinnacle</th><th>Challenge</th></tr>${N.pinnacles(b).map(p=>`<tr><td>${p.from}${p.to!=null?'–'+p.to:'+'}</td><td>${by+p.from}${p.to!=null?'–'+(by+p.to):' onward'}</td><td>${p.p} · ${N.MEANING[p.p][0]}</td><td>${p.c}</td></tr>`).join('')}</table></div><p class="muted small">The first pinnacle ends at age 36 minus your Life Path number; the next two last nine years each; the fourth runs for the rest of life.</p>`)}
@@ -1348,6 +1348,28 @@ function resonanceView(){
  <div class="field"><label for="ra">Your name</label><div class="inp">${IC.star}<input type="text" id="ra" value="${esc(a)}" autocomplete="name" placeholder="Your full name"></div></div><div class="field"><label for="rb">Their name</label><div class="inp">${IC.heart}<input type="text" id="rb" value="${esc(b)}" placeholder="Their full name"></div></div>`)}<button class="btn" data-act="doresonance">Compare Our Names →</button><p class="muted small center">Names stay private to you.</p>${out}</div>`;
 }
 /* Life Path: the number, then its strengths, challenges and guidance as expandable readings */
+/* the soul of each number, spoken to the reader: who they are at their best, a practice in the spirit of the Stoics,
+   and a line from one of them. The same details always give the same words; nothing is drawn at random. */
+const SOUL={
+ 1:['You are here to begin things. The courage to take the first step lives in you, and others find their own courage watching you take it.','Each morning, choose one thing that is yours to start and give it your whole attention. What others think of it is theirs; the effort is yours.',['No man is free who is not master of himself.','Epictetus']],
+ 2:['You are a bridge between people. Your quiet attention notices what others feel before they say it, and peace grows where you stand.','Listen fully today, then say the one honest thing that matters. Kindness and truth are not rivals; in you they work together.',['We were born to work together, like feet, like hands, like eyelids.','Marcus Aurelius']],
+ 3:['You carry a light that wants to be shared. Your words, your laughter and your creativity remind people that life can be beautiful.','Make one small thing today, a sentence, a sketch, a kind message, and finish it. Joy grows deeper when it is given form.',['Begin at once to live, and count each separate day as a separate life.','Seneca']],
+ 4:['You are a builder of lasting things. Your steadiness is a gift: what you tend with patience becomes a shelter for others.','Lay one good stone today. Do the next right task well, and trust that small steps, faithfully taken, become a road.',['Well-being is realised by small steps, but is truly no small thing.','Zeno of Citium']],
+ 5:['You are made for discovery. Change does not frighten you for long; it calls you forward into a larger life.','Welcome what changes today as a teacher rather than a thief. Freedom is not escaping your life; it is choosing how you meet it.',['The universe is change; our life is what our thoughts make it.','Marcus Aurelius']],
+ 6:['You are a keeper of hearts. Where you are, people feel at home, and your care makes the world gentler than you know.','Offer one act of care today, and include yourself in it. The love you give is strongest when it also rests in you.',['Wherever there is a human being, there is an opportunity for a kindness.','Seneca']],
+ 7:['You are a seeker of what is true. Your inner world is deep, and the wisdom you gather in quiet becomes a lantern for others.','Give yourself a little silence today and ask one honest question. Then trust what you find; your mind is a sanctuary, tend it well.',['The happiness of your life depends upon the quality of your thoughts.','Marcus Aurelius']],
+ 8:['You are here to hold power gently. You can build, lead and provide, and your strength is greatest when it serves something good.','Act today with integrity in one decision, large or small. Let your work be your character made visible.',['Waste no more time arguing what a good man should be. Be one.','Marcus Aurelius']],
+ 9:['You are an old soul with a wide heart. You see the whole picture, and your compassion reaches further than you realise.','Let go of one thing that has already ended, and give something away freely. What you release makes room for what is meant for you.',['What is not good for the swarm is not good for the bee.','Marcus Aurelius']],
+ 11:['You are a messenger of inspiration. Your intuition is a bright, sensitive instrument, and your presence can wake hope in others.','Trust one quiet intuition today, and ground it in a simple action. Inspiration becomes real when your feet stay on the earth.',['Dwell on the beauty of life. Watch the stars, and see yourself running with them.','Marcus Aurelius']],
+ 22:['You are a master builder. You can turn great visions into real foundations that serve many people.','Choose the one part of your vision you can build today, and build it honestly. Great works are made of small true actions.',['If it is not right, do not do it; if it is not true, do not say it.','Marcus Aurelius']],
+ 33:['You are a teacher of the heart. Your love is meant to heal and uplift, and your example speaks louder than any lesson.','Be the kindness you wish to see in one moment today, without needing it returned. Love freely given is never lost.',['He who lives in harmony with himself lives in harmony with the universe.','Marcus Aurelius']]};
+const soul=n=>SOUL[n]||SOUL[n%9||9];
+// what a Personal Year asks, in the same voice
+const YEAR={1:'This is your year to begin. Plant the seeds you have been carrying; the soil is ready for you.',2:'This is a year to let things grow. Patience is not waiting, it is trusting the roots you have already planted.',3:'This is a year to express yourself. Share your voice, your joy and your gifts; they were never meant to stay hidden.',4:'This is a year to build. Steady work now becomes the home your future self will live in.',5:'This is a year of change and fresh air. Say yes to what expands you, and let go of what keeps you small.',6:'This is a year of love and responsibility. The care you give at home and to yourself comes back to you.',7:'This is a year to go inward. Rest, reflect and learn; the answers you seek are quietly forming within you.',8:'This is a year of harvest and strength. Step into your power with integrity, and let your effort be rewarded.',9:'This is a year of completion. Close the chapters that are finished with gratitude, and make room for a new beginning.'};
+// a reading spoken to the reader (or about someone else), from one number
+function soulBlock(n,who,label){const x=soul(n);
+ return `<div class="soul"><p class="soul-l">${label}</p><p class="soul-t">${who?esc(who)+', ':''}${who?x[0].charAt(0).toLowerCase()+x[0].slice(1):x[0]}</p><p>${x[1]}</p><p class="soul-q">“${x[2][0]}”<span>${x[2][1]}</span></p></div>`}
+const firstOf=nm=>(nm||'').trim().split(/\s+/)[0]||'';
 const LPX={1:['Courage, originality and the drive to begin what others only imagine.','Going it alone, impatience, and pride that will not ask for help.','Lead by example and let others walk beside you; independence is strongest when it is generous.'],
  2:['Sensitivity, diplomacy and a gift for bringing people together.','Self-doubt, over-giving and losing your own voice in the harmony.','Your quiet way is a strength. Speak your needs as gently as you listen to others.'],
  3:['Expression, warmth, humour and a creative spark that lifts a room.','Scattered energy, unfinished projects and hiding feelings behind a smile.','Choose one creative thread and follow it; joy grows deeper when it is given form.'],
@@ -1368,7 +1390,7 @@ function lifePathView(){
  if(!d)return `<div class="sub">${H}${invite(lead+' Add your date of birth to your Cosmic Profile, or look up anyone’s Life Path.','lp')}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
  return `<div class="sub">${H}${form}
- ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">${other?'Their':'Your'} Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>`,'ornate')}
+ ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">${other?'Their':'Your'} Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>${soulBlock(L.r.n,other?'':firstOf(S.name||S.fullName),'A message for '+(other?'this path':'you'))}`,'ornate')}
  <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Guidance','How to align with your path',`<p>${X[2]}</p>`)}
  ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
@@ -1391,6 +1413,7 @@ function nameView(){
  if(other&&!nm)return `<div class="sub">${H}${mbox(`<p class="lead">Discover the numbers in anyone’s name: use their full name at birth.</p><div class="field"><label for="fn2">Their full name</label><div class="inp">${IC.star}<input type="text" id="fn2" value="${esc(V.oName||'')}" placeholder="Their full name at birth"></div></div>`)}<button class="btn" data-act="nwgo">Reveal Their Numbers →</button>${mineBtn('nw',!!nameNums(S.fullName))}</div>`;
  if(!nm)return `<div class="sub">${H}${invite(lead+' Add your full name at birth to your Cosmic Profile, or look up anyone’s name.','nw')}${dim}</div>`;
  return `<div class="sub">${H}${mbox(`<p class="lead">${other?`The numbers in the name <strong>${esc(V.oName)}</strong>.`:lead}</p>`)}
+ ${nm.expression.r.n?mbox(soulBlock(nm.expression.r.n,other?firstOf(V.oName):firstOf(S.name||S.fullName),other?'What this name carries':'What your name carries')):''}
  <div class="list">${rows(nm)}</div>
  ${alt?`<h3 class="sec-h">The name you use now</h3><div class="list">${rows(alt)}</div><p class="muted small">Your birth name is read as the blueprint you arrived with; the name you use now as the way you have chosen to express it.</p>`:''}
  ${acc('','The Pythagorean letter table','How each letter is counted',`${tbl}<p class="muted small">Accents are ignored (É counts as E), as are hyphens, apostrophes and spaces. Each word of a name is reduced on its own, then the words are added and reduced again, keeping master numbers 11, 22 and 33.</p>`)}
@@ -1849,6 +1872,7 @@ function render(){
  if(onboarding())bindJoin();
  if(authed&&SECTIONS[sec])syncUrl();
  drift();
+ const vk=sec+'/'+tab()+(sec==='tarot'?'/'+V.tarot.stage:'');if(vk!==render.vk&&sec==='tarot'&&tab()==='reading')requestAnimationFrame(()=>window.scrollTo(0,0));render.vk=vk;
 }
 // the Cosmic Energy carousel: its dots follow the slide in view, and it moves on by itself every few seconds unless the
 // reader has just touched it or motion is reduced
@@ -2042,7 +2066,7 @@ document.addEventListener('click',e=>{
  if(a==='savebirth'&&t.dataset.other){readBirth();const b=V.oDraft;if(!b.date)return toast('Add their date of birth');
   V.oBirth=Object.assign({},b,{time:b.unk?'':b.time});V.oBirthName=b.name||'';delete V.oBirth.name;V.oChart=chartOf(V.oBirth);V.oDraft=null;V.chartOpen=true;V.chartSel=null;V.chartTab='chart';render();return window.scrollTo(0,0)}
  if(a==='savebirth'){readBirth();const b=V.birthDraft;if(!b.date)return toast('Add your date of birth');{const an=$('#an'),ym=$('#ym');if(an)S.altName=an.value.trim();if(ym)S.settings.yMode=ym.value}
-  if(b.name!=null)S.fullName=b.name.trim();S.birth=Object.assign({},b,{time:b.unk?'':b.time});delete S.birth.name;S.birthConsent=$('#bcons').checked;V.birthDraft=null;save();syncProfile();toast(S.birthConsent?'Saved to your account':'Saved on this device');return render()}
+  if(b.name!=null)S.fullName=b.name.trim();S.birth=Object.assign({},b,{time:b.unk?'':b.time});delete S.birth.name;S.birthConsent=$('#bcons').checked;V.birthDraft=null;V.cpEdit=false;save();syncProfile();toast(S.birthConsent?'Saved to your account':'Saved on this device');return render()}
  if(a==='savenames'){S.fullName=$('#fn').value.trim();const an=$('#an'),ym=$('#ym');if(an)S.altName=an.value.trim();if(ym)S.settings.yMode=ym.value;save();syncProfile();if(!N.clean(S.fullName))toast('Enter your full name');return render()}
  // profile and account
  if(a==='savename'){S.name=$('#nm').value.trim();save();syncProfile();toast('Saved');return render()}
@@ -2065,6 +2089,9 @@ document.addEventListener('click',e=>{
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
  if(a==='wpop'){V.wpop=true;return render()}
  if(a==='wpopclose'){V.wpop=false;return render()}
+ if(a==='cpedit'){V.cpEdit=true;V.birthDraft=null;return render()}
+ if(a==='cpopen'){go('discover','profile');V.cpEdit=true;V.birthDraft=null;return render()}
+ if(a==='cpclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.cpEdit=false;V.birthDraft=null;return render()}
  if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const r={id:uuid(),spread:T.spread,q:T.q,date:dkey(),at:new Date().toISOString(),note:'',cards:T.drawn.map(c=>({id:c.id,pos:c.pos,name:c.name,rev:c.rv}))};
   S.readings.push(r);T.savedId=r.id;save();C.saveReading&&C.saveReading(r).then(id=>{if(id){r.rid=id;r.id=id;r.sy=true;T.savedId=id;save()}});toast('Saved to your journal');return render()}
