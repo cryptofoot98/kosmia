@@ -563,7 +563,7 @@ function whisperPop(c){
  return `<div class="pop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="pop-box wp-box"><button class="pop-x" data-act="wpopclose" aria-label="Close">×</button>
  <div class="label center">Daily Whisper · ${ymdLong(dkey(),{day:'numeric',month:'long'})}</div><h2 class="center">${esc(c.title)}</h2>
  <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
- <p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p></div></div>`}
+ <p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p><button class="btn" data-act="jopen" data-k="fortune:${dkey()}">${S.notes[dkey()]?'Continue Your Reflection':'Reflect in Your Journal'}</button></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -648,7 +648,7 @@ function horoSign(){
  ${panel(`<div class="hd"><div><h2>${cat==='overview'?pl[1]+' Horoscope':`${CAT_INFO[cat][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
   ${cat==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${cat==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')}
- <h3 class="th-h hk-h">Key Themes ${pl[0]}</h3><div class="themes-g">${others}</div>
+ <h3 class="th-h hk-h">Cosmic Insights</h3><div class="themes-g">${others}</div>
   <div class="acts"><button class="btn" data-act="hreflect" data-ref="${ref}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>
  </div></div>`;
 }
@@ -1094,7 +1094,7 @@ const KIND_LABEL={zodiac:'Zodiac Match',resonance:'Soul Resonance',synastry:'Syn
 const connTitle=c=>c.name||(c.kind==='zodiac'?`${sg(c.data.a).name} + ${sg(c.data.b).name}`:c.kind==='resonance'?`${c.data.a} + ${c.data.b}`:`You + ${(c.data.them||{}).name||'them'}`);
 // the zodiac match reading for two signs (Zodiac Match page and the saved connection pop-up)
 function matchBody(a,b){const r=zodiacMatch(a,b);
- return `<div class="row pair"><span class="pair-s">${pic('icons',a,'sign-ico')}<span class="sign-nm">${sg(a).name}</span></span><svg width="70" height="30" viewBox="0 0 80 30" aria-hidden="true"><path d="M2 15C20 2 30 28 40 15S62 2 78 15" fill="none" stroke="#8B6A3E" stroke-width="1.2"/><circle cx="40" cy="15" r="3" fill="#8B6A3E"/></svg><span class="pair-s">${pic('icons',b,'sign-ico')}<span class="sign-nm">${sg(b).name}</span></span></div><div class="center"><div class="label">${r.angle[0]}</div></div>${r.themes.map(([k,v])=>`<div class="label">${k}</div><p>${v}</p>`).join('')}<div class="rule"></div><p class="muted small">Method: traditional astrology compares the angle between two signs around the zodiac, their elements (${sg(a).el} and ${sg(b).el}) and their modalities (${sg(a).mod} and ${sg(b).mod}). These are symbolic themes for conversation, not a measured score. For a fuller picture, compare birth charts in Synastry.</p>`;
+ return `<div class="row pair"><span class="pair-s">${pic('icons',a,'sign-ico')}<span class="sign-nm">${sg(a).name}</span></span><svg width="70" height="30" viewBox="0 0 80 30" aria-hidden="true"><path d="M2 15C20 2 30 28 40 15S62 2 78 15" fill="none" stroke="#8B6A3E" stroke-width="1.2"/><circle cx="40" cy="15" r="3" fill="#8B6A3E"/></svg><span class="pair-s">${pic('icons',b,'sign-ico')}<span class="sign-nm">${sg(b).name}</span></span></div><div class="center"><div class="label">${r.angle[0]}</div></div>${r.themes.map(([k,v])=>`<div class="label">${k}</div><p>${v}</p>`).join('')}<div class="rule"></div><p class="muted small">Method: traditional astrology compares the angle between two signs around the zodiac, their elements and their modalities. For a fuller picture, compare birth charts in Synastry.</p>`;
 }
 function numBlock(title,x,steps){
  if(!x||!x.r.n)return `<div class="label">${title}</div><p class="muted">Not enough letters to calculate.</p>`;
@@ -1209,6 +1209,9 @@ function evCard(e,open){
  return `<article class="ev${open?' open':''}"><button class="ev-h" data-act="evtoggle" data-ref="${ref}" aria-expanded="${!!open}"><span class="badge">${TYPE_L[e.type]||''}</span><span class="ev-t"><strong>${esc(e.name)}</strong>${e.sign!=null&&e.type!=='ingress'&&e.k!=='ingress'?` <span class="muted">in ${sIdx(e.sign).name}</span>`:''}<br><span class="muted small">${evWhen(e)}</span></span></button>${open?`<div class="ev-b"><div class="label">Astronomy</div><p>${i.fact}</p><div class="label">Astrological symbolism</div><p>${i.sym}</p><div class="label">Reflection</div><p class="quote sm-q">“${i.ref}”</p><button class="btn ghost sm" data-act="bookev" data-ref="${ref}">${sv?'Saved':'Save event'}</button></div>`:''}</article>`;
 }
 let EVC={k:'',list:[]};
+// the sky's lists show what is coming from today for the next three months
+const ahead3=()=>{const d=new Date();d.setMonth(d.getMonth()+3);return d};
+const soon=e=>e.date<=ahead3();
 function upcoming(){const k=dkey();if(EVC.k!==k){const now=new Date();EVC={k,list:K.events(now,new Date(+now+366*DAY))}}return EVC.list}
 // The Moon: the whole screen is the night bay (atlas/moon-bg), the title set in gold in its sky; the readings sit on
 // gilded, slightly see-through parchment with a star at each corner, and the first rises in a bump where today's Moon sits
@@ -1227,19 +1230,19 @@ const nightPage=(h,cls)=>gild(h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1
 const nightSub=(h,cls)=>gild(h.replace(/^\s*<div class="sub([^"]*)">\s*<header class="phd"><div class="ph-l">([\s\S]*?)<\/div><div class="ph-t"><h1>([\s\S]*?)<\/h1>(?:<p class="ph-sub">([\s\S]*?)<\/p>)?<\/div><div class="ph-r">([\s\S]*?)<\/div><\/header>/,
  (_,c,l,t,sub,r)=>`<div class="mnp ${cls}${c}">${mnHead(t,r,!!l)}${sub?`<p class="mn-sub">${sub}</p>`:''}`));
 function moonView(now){
- const m=K.moon(now),ing=K.moonIngress(now),ph=K.lunarPhases(now,new Date(+now+120*DAY)),nn=ph.find(e=>e.k==='new_moon'),nf=ph.find(e=>e.k==='full_moon');
+ const m=K.moon(now),ing=K.moonIngress(now),ph=K.lunarPhases(now,ahead3()),nn=ph.find(e=>e.k==='new_moon'),nf=ph.find(e=>e.k==='full_moon');
  const next=(l,e)=>`<div><div class="label">${l}</div><p>${e?evt(e.date)+'<br><span class="muted">in '+sIdx(e.sign).name+'</span>':''}</p></div>`;
  return `<div class="mnp">${mnHead('The Moon')}
  ${mbox(`<span class="mb-bump"></span><span class="mb-moon">${pic('moons',m.name.toLowerCase().replace(/ /g,'-'),'mb-mi')||moonSvg(m,100)}</span><div class="mb-flank">${mrule('l')}${mrule('r')}</div>
  <div class="center"><h2>${m.name}</h2><p>About ${Math.round(m.ill*100)}% lit · ${m.waxing?'waxing':'waning'} · in ${sIdx(m.sign).name}</p><p class="muted small">Enters ${sIdx(ing.sign).name} ${evt(ing.date)}</p></div>${mrule()}
  <div class="label">Traditional reading</div><p>${m.name==='New Moon'?'A moment associated with beginnings. Consider what you would like to plant.':m.name==='Full Moon'?'A moment associated with fullness and gratitude. Notice what has grown.':m.waxing?'A waxing Moon is associated with growth and intention: what would you like to nurture?':'A waning Moon is associated with release: what are you ready to let go of?'} With the Moon in ${sIdx(m.sign).name}, feelings tend to move ${STYLE[sIdx(m.sign).id]}.</p><div class="label">An optional ritual</div><p>${RITUAL[m.name]}</p>`,'first')}
  ${mbox(`<div class="mb-two">${next('Next New Moon',nn)}<span class="mb-vr">${STAR4}</span>${next('Next Full Moon',nf)}</div>`)}
- ${mbox(`<h3>Lunar phases ahead</h3>${mrule()}<div class="list">${ph.slice(0,10).map(e=>evRow(e)).join('')}</div>`,'phases')}
+ ${mbox(`<h3>Lunar phases ahead</h3>${mrule()}<div class="list">${ph.map(e=>evRow(e)).join('')}</div>`,'phases')}
  <p class="mn-note">Times are for ${esc(TZ())}. The Moon’s sign is its geocentric position on the tropical zodiac.</p></div>`;
 }
 // Planets: the same night page as The Moon, over the planets' painting (atlas/planets-bg)
 function planetsView(now){
- const pos=K.positions(now),rx=K.retrogrades(now,new Date(+now+366*DAY)),ing=upcoming().filter(e=>e.k==='ingress').slice(0,14);
+ const pos=K.positions(now),rx=K.retrogrades(now,ahead3()),ing=upcoming().filter(e=>e.k==='ingress'&&soon(e));
  const d=x=>x?shortD(x):'';
  return `<div class="mnp pl">${mnHead('Planets')}
  ${mbox(`<h3>Where the planets are now</h3>${mrule()}<div class="tbl"><table><tr><th></th><th>Planet</th><th>Position</th><th></th></tr>${pos.map(p=>`<tr><td class="glyph">${p.g}</td><td>${p.n}</td><td>${degTxt(p.lon)}</td><td>${p.retro?'℞ retrograde':''}</td></tr>`).join('')}</table></div><p class="muted small">Geocentric, tropical zodiac, ${evt(now)}.</p>`)}
@@ -1249,10 +1252,10 @@ function planetsView(now){
 // Celestial Events: a night page over the eclipse and meteor shower (atlas/events-bg); the filters with their introduction,
 // then the year's events, each on a gilded see-through box
 function eventsView(){
- const f=V.filter.events||'all',ev=upcoming().filter(e=>['eclipse','season','meteor','conjunction','planet'].includes(e.type)&&e.k!=='ingress'&&(f==='all'||e.type===f));
+ const f=V.filter.events||'all',ev=upcoming().filter(e=>['eclipse','season','meteor','conjunction','planet'].includes(e.type)&&e.k!=='ingress'&&soon(e)&&(f==='all'||e.type===f));
  return `<div class="mnp ev">${mnHead('Celestial Events')}
- ${mbox(`<p class="center">Eclipses, solstices, equinoxes, meteor showers and meetings of planets over the next year. Each separates the astronomy from its traditional symbolism.</p>${mrule()}${chips('Show',[['all','All'],['eclipse','Eclipses'],['season','Seasons'],['meteor','Meteors'],['conjunction','Conjunctions'],['planet','Planets']],f,'fevents')}`,'ev-intro')}
- ${mbox(`<h3>The year ahead</h3>${mrule()}${ev.length?`<div class="list">${ev.map(e=>evRow(e)).join('')}</div>`:'<p class="center">Nothing of this kind in the next year. Try another filter.</p>'}`,'phases')}</div>`;
+ ${mbox(`<p class="center">Eclipses, solstices, equinoxes, meteor showers and meetings of planets over the next three months. Each separates the astronomy from its traditional symbolism.</p>${mrule()}${chips('Show',[['all','All'],['eclipse','Eclipses'],['season','Seasons'],['meteor','Meteors'],['conjunction','Conjunctions'],['planet','Planets']],f,'fevents')}`,'ev-intro')}
+ ${mbox(`<h3>The next three months</h3>${mrule()}${ev.length?`<div class="list">${ev.map(e=>evRow(e)).join('')}</div>`:'<p class="center">Nothing of this kind in the next three months. Try another filter.</p>'}`,'phases')}</div>`;
 }
 /* ----- Discover: a mystical library of self-discovery, in six categories: Dream Interpretation, Your Cosmic Blueprint,
    Cosmic Connections, The Language of Numbers, the Celestial Calendar and the Mystical Library ----- */
@@ -1332,7 +1335,7 @@ function affinityView(){
   <h2 class="center">${sc.title}</h2><p class="center lead">${el[1][1]} ${r.angle[1]}</p>
   <div class="score"><span class="sc-h">${IC.heart}</span><strong>${sc.overall}%</strong><span>Overall compatibility</span></div>
   <div class="pills4"><span class="p-love">Love <b>${sc.love}%</b></span><span class="p-friend">Friendship <b>${sc.friend}%</b></span><span class="p-comm">Communication <b>${sc.comm}%</b></span><span class="p-val">Values <b>${sc.values}%</b></span></div>
-  <p class="muted small center">A symbolic score from the angle between your signs (${r.angle[0].toLowerCase()}), their elements and their modalities: a starting point for conversation, not a verdict.</p>`)}
+  `)}
   <div class="list">${acc(pic('cats','love','acc-i'),'Love Compatibility','Romance and emotional connection',`<p>${el[1][1]}</p><p>${r.angle[1]}</p>`)}${acc(pic('cats','connections','acc-i'),'Friendship Compatibility','Shared values and support',`<p>${el[0][1]}</p><p>${el[4][1]}</p>`)}${acc(pic('cats','career','acc-i'),'Work Compatibility','How you collaborate',`<p>${el[3][1]}</p>`)}${acc(pic('cats','moon','acc-i'),'Detailed Analysis','Strengths, challenges and advice',matchBody(a,b))}</div>
   <div class="acts"><button class="btn" data-act="saveconn" data-kind="zodiac">${saved?'Saved to your journal':'Save connection'}</button><button class="btn ghost" data-act="kasask" data-q="What do ${A1.name} and ${B1.name} traditionally bring out in each other?">Ask Kassandra</button><button class="btn ghost" data-go="discover" data-t="synastry">Compare birth charts</button></div></div>`}
  return `<div class="mnp af">${mnHead('Zodiac Affinity')}<p class="mn-sub">Love • Friendship • Connection</p>${mbox(`<p class="lead">Explore the natural flow between two signs and discover your strengths, challenges and unique connection.</p>
@@ -1433,13 +1436,13 @@ function calendarView(){
   body=`<div class="jcal" role="grid">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="jc-d" role="columnheader">${d}</div>`).join('')}${Array.from({length:lead},()=>'<div></div>').join('')}${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,es=byDay[k]||[],ph=es.find(e=>e.type==='moon');if(k<today)return `<div class="jc-c past" aria-hidden="true"><span>${i+1}</span></div>`;return `<button class="jc-c${k===today?' today':''}${k===sel?' sel':''}" data-act="calday" data-k="${k}" aria-label="${ymdLong(k)}${es.length?', '+es.length+' event'+(es.length>1?'s':''):''}"><span>${i+1}</span>${ph?pic('moons',phaseSlug(ph.name),'jc-moon'):es.length?'<i class="jc-star">✦</i>':''}</button>`}).join('')}</div>
   ${sel?`<h3 class="sec-h">${ymdLong(sel)}</h3><div class="list">${(byDay[sel]||[]).map(e=>evRow(e)).join('')||'<p class="muted center">Nothing notable in the sky this day.</p>'}</div>`:'<p class="muted center small">Tap a day to see its events.</p>'}`;
  }else{
-  const start=new Date(today+'T00:00:00'),ahead=K.events(new Date(+start-14*36e5),new Date(+start+31*DAY)).filter(e=>evDay(e)>=today),days={};
+  const start=new Date(today+'T00:00:00'),ahead=K.events(new Date(+start-14*36e5),ahead3()).filter(e=>evDay(e)>=today),days={};
   ahead.forEach(e=>(days[evDay(e)]=days[evDay(e)]||[]).push(e));
   body=`<div class="cal-list">${[today,...Object.keys(days).filter(k=>k!==today).sort()].map(k=>`<div class="cal-day${k===today?' today':''}"><h3>${k===today?'<b>Today</b> · ':''}${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</h3><div class="list">${(days[k]||[]).map(e=>evRow(e)).join('')||'<p class="muted center small">Nothing notable in the sky today.</p>'}</div></div>`).join('')}</div>`;
  }
  return `<div class="sub">${hdr('Cosmic Calendar',{right:iconBtn('refresh','data-act="calmonth" data-k=""','Back to this month')})}
  ${seg([['list','List'],['month','Month']],V.cal.view,'calview')}
- ${V.cal.view==='month'?`<div class="mnav">${mk>cur?`<button class="ibtn" data-act="calmonth" data-k="${prev}" aria-label="Previous month">${IC.back}</button>`:'<span></span>'}<h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-act="calmonth" data-k="${next}" aria-label="Next month">${IC.back}</button></div>`:'<p class="mn-note">From today, the month ahead</p>'}${body}${weather}
+ ${V.cal.view==='month'?`<div class="mnav">${mk>cur?`<button class="ibtn" data-act="calmonth" data-k="${prev}" aria-label="Previous month">${IC.back}</button>`:'<span></span>'}<h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2>${next<=ahead3().toISOString().slice(0,7)?`<button class="ibtn flip" data-act="calmonth" data-k="${next}" aria-label="Next month">${IC.back}</button>`:'<span></span>'}</div>`:'<p class="mn-note">From today, the next three months</p>'}${body}${weather}
  <div class="list">${lrow(pic('moons','full-moon','th round'),'The Moon','Phases, signs and rituals','data-go="discover" data-t="moon"')}${lrow(ui('ev-planet','th round'),'Planets','Positions and retrogrades','data-go="discover" data-t="planets"')}${lrow(ui('ev-eclipse','th round'),'Celestial Events','Eclipses, seasons and meteors','data-go="discover" data-t="events"')}</div></div>`;
 }
 const evDay=e=>e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date);

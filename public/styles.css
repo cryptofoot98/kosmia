@@ -2056,3 +2056,9 @@ body{background-attachment:scroll}
 .hsp{background:none}
 .hsp>.hsp-hero{-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
 .hsp-hero::before{background:transparent}
+/* the sign's name on its horoscope page shown whole: the gold lettering is painted only inside the title's own box, so the
+   box now takes the width of the word instead of the narrow column (long names are sized down to fit) */
+.hsp .hsp-t h1{width:max-content;max-width:none;white-space:nowrap;font-size:min(7.4cqw,50cqw / var(--nl,6))}
+/* the Journal's New Entry over its dark painting: the clear glass with gold lettering */
+.jend .btn{color:#FCEBB8!important;border:1px solid rgba(226,190,115,.75)!important;background:linear-gradient(180deg,rgba(255,240,205,.09),rgba(255,240,205,0) 45%),rgba(8,12,28,.35)!important;
+ text-shadow:0 1px 3px rgba(0,0,0,.95)!important;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}

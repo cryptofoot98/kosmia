@@ -179,18 +179,19 @@ const ymdIn=(tz,d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:tz,year
 const ymdUTC=t=>new Date(t).toISOString().slice(0,10);
 const parseYmd=s=>{const [y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d)};
 function isoWeek(ymd){const t=parseYmd(ymd),wd=(new Date(t).getUTCDay()+6)%7,thu=t+(3-wd)*DAY,y=new Date(thu).getUTCFullYear(),w=1+Math.floor((thu-Date.UTC(y,0,1))/DAY/7);return {y,w,mon:ymdUTC(t-wd*DAY)}}
-/* Rollover rules, all in the reader's own time zone: a day runs midnight to midnight, a week Monday to Sunday (ISO weeks),
-   a month and a year by the calendar. Returns the period's key and its first and last dates. */
+/* Rollover rules, all in the reader's own time zone: a day runs midnight to midnight, a week Sunday to Saturday (so a new
+   week begins every Sunday at midnight; its key is W and the Sunday's date), a month from the 1st and a year from
+   1 January. Returns the period's key and its first and last dates. */
 function period(p,tz,now=new Date()){
  const ymd=ymdIn(tz,now);
  if(p==='daily')return {key:ymd,start:ymd,end:ymd};
- if(p==='weekly'){const w=isoWeek(ymd);return {key:`${w.y}-W${String(w.w).padStart(2,'0')}`,start:w.mon,end:ymdUTC(parseYmd(w.mon)+6*DAY)}}
+ if(p==='weekly'){const t=parseYmd(ymd),sun=ymdUTC(t-new Date(t).getUTCDay()*DAY);return {key:'W'+sun,start:sun,end:ymdUTC(parseYmd(sun)+6*DAY)}}
  if(p==='monthly'){const [y,m]=ymd.split('-').map(Number);return {key:ymd.slice(0,7),start:ymd.slice(0,7)+'-01',end:ymdUTC(Date.UTC(y,m,0))}}
  return {key:ymd.slice(0,4),start:ymd.slice(0,4)+'-01-01',end:ymd.slice(0,4)+'-12-31'};
 }
 function periodFromKey(p,key){
  if(p==='daily'&&/^\d{4}-\d\d-\d\d$/.test(key))return {key,start:key,end:key};
- if(p==='weekly'&&/^\d{4}-W\d\d$/.test(key)){const [y,w]=key.split('-W').map(Number),jan4=Date.UTC(y,0,4),mon=jan4-((new Date(jan4).getUTCDay()+6)%7)*DAY+(w-1)*7*DAY;return {key,start:ymdUTC(mon),end:ymdUTC(mon+6*DAY)}}
+ if(p==='weekly'&&/^W\d{4}-\d\d-\d\d$/.test(key)){const sun=key.slice(1);if(new Date(parseYmd(sun)).getUTCDay())return null;return {key,start:sun,end:ymdUTC(parseYmd(sun)+6*DAY)}}
  if(p==='monthly'&&/^\d{4}-\d\d$/.test(key)){const [y,m]=key.split('-').map(Number);return {key,start:key+'-01',end:ymdUTC(Date.UTC(y,m,0))}}
  if(p==='yearly'&&/^\d{4}$/.test(key))return {key,start:key+'-01-01',end:key+'-12-31'};
  return null;

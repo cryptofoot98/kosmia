@@ -1,4 +1,4 @@
-// GET /api/horoscope?sign=leo&cat=love&period=weekly&key=2026-W44 -> {body, focus, reflection, start, end, sky, written}
+// GET /api/horoscope?sign=leo&cat=love&period=weekly&key=W2026-11-01 -> {body, focus, reflection, start, end, sky, written}
 // One reading per sign, category and period, written once by OpenAI from that period's real sky (lib: public/sky.js)
 // and kept in Netlify Blobs, so every reader of that sign sees the same text and it never changes mid-period.
 import { createRequire } from 'node:module';
