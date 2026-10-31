@@ -1803,3 +1803,18 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.rh>.sec-h{margin:6px 0 -6px;font-family:var(--font-serif);font-weight:700;font-size:1.8rem;-webkit-text-stroke:.6px #E9C67E;paint-order:stroke fill;
  background:linear-gradient(180deg,#FCEBB8 10%,#D9AE5E 55%,#F2D592 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px rgba(0,0,0,.9)) drop-shadow(0 0 8px rgba(0,0,0,.7))}
 .mnp.rh>p{color:#EFE2C2}
+/* Birth Chart as a night page: the owner's sun in its circle over the Milky Way, the title centred beneath the sun */
+.mnp.ch{--mn-bg:url(/art/atlas/chart-bg.webp)}
+.mnp.ch .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 62cqw)}
+.mnp.ch .mn-t{position:relative;top:0;left:0}
+.mnp.ch .mn-t h1{white-space:normal;text-align:center}
+.mnp.ch .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 2%;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 60%,transparent)}
+.mnp.ch>:is(.list,.btn,.big3,.acc,[role=group],.note){align-self:stretch}
+.mnp.ch .seg{border-color:var(--k-gold);background:rgba(244,232,206,.85)}
+.mnp.ch .mbox .lead{font-family:var(--font-serif);font-weight:600;font-size:1.1rem;line-height:1.45;color:var(--k-ink)}
+.mnp.ch>.note{color:var(--k-ink);text-shadow:none;background:var(--mb-bg)}
+.mnp.ch>p.small{font-size:.85rem}
+.mnp.ch .seg button:not([aria-selected=true]){color:#4A3826}
+.mnp.ch .mn-sub+p{margin-top:-8px;font-size:.95rem}
+.mnp.ch>:is(.big3,.acc){border-color:var(--k-gold);background:rgba(244,232,206,.92)}
+.mnp.ch>.btn.ghost{color:#FCEBB8;border-color:#D9AE5E;background:rgba(8,12,28,.55);text-shadow:0 1px 2px #000}

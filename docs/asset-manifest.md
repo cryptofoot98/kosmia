@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 474 |
-| In use, provisional | 430 |
+| Images | 475 |
+| In use, provisional | 431 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -69,6 +69,18 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/banner-calendar.webp` | 760×506 | 1.50:1 | no | 129 | provisional |  |
 | `public/art/atlas/banner-library.webp` | 760×506 | 1.50:1 | no | 131 | provisional |  |
+
+## The Birth Chart page’s backdrop: a golden sun face in a circle over the Milky Way, crescent moons and planets, clouds, and lilies, roses and daisies around a gilded arch (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Birth Chart (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/chart-bg.webp` | 850×1850 | 0.46:1 | no | 420 | provisional |  |
 
 ## The My Cycles page’s backdrop: a golden wheel of the year under an arc of the Moon’s phases, an hourglass of stardust, a lily terrace over a sea at dusk (painted in the style of the owner’s backdrops)
 
@@ -638,7 +650,7 @@ their space before they load.
 | `public/art/cards/kassandra.webp` | 480×480 | 1:1 | no | 86 | provisional | below the 600 px it needs at 2×; should be transparent |
 | `public/art/cards/ornament.webp` | 144×53 | 2.72:1 | yes | 4 | provisional | below the 600 px it needs at 2× |
 | `public/art/cards/plaque.webp` | 1024×432 | 2.37:1 | yes | 134 | provisional |  |
-| `public/art/cards/tarot-back.webp` | 600×900 | 2:3 | no | 65 | provisional | should be transparent |
+| `public/art/cards/tarot-back.webp` | 600×900 | 2:3 | yes | 141 | provisional |  |
 
 ## Older category icon (settings and a few lists)
 
