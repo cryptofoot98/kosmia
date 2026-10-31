@@ -652,7 +652,7 @@ function horoSign(){
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p></div></div>
  <div class="hsp-body"><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p>${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-track hc-read" aria-label="Your horoscope by area of life">${HCATS.map(([k])=>`<div class="hc-slide" data-k="${k}"${k===cat?'':' aria-hidden="true"'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
+ <div class="hc-track hc-read" aria-label="Your horoscope by area of life">${HCATS.map(([k])=>`<div class="hc-slide" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' aria-hidden="true"'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -1877,33 +1877,38 @@ let enT=0;
 function hcarFit(){const R=$('.hc-read');if(!R)return;const i=Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));R.style.height=R.children[i].offsetHeight+'px'}
 const hcarStick=()=>{const t=$('.hc-cats');if(t)t.classList.toggle('stuck',t.getBoundingClientRect().top<1)};
 addEventListener('scroll',hcarStick,{passive:true});
-addEventListener('resize',()=>hcarFit());
 /* the sign page's carousel: the readings (one per area, full width) swipe sideways under the row of areas, whose gold
-   line follows; when the swipe comes to rest the page takes that area as its own. */
+   line follows. Changing area never redraws the page (a redraw would throw the scrolling about): the reading area takes
+   the new reading's height, the heart follows the new reading, and if the reader was further down the page the new
+   reading opens at its start, under the menu. */
 function hcar(){
  const c=$('.hcar');if(!c)return;
- const R=c.querySelector('.hc-read'),T=c.querySelector('.hc-cats'),ul=c.querySelector('.hc-ul'),n=HCATS.length;
+ const R=c.querySelector('.hc-read'),T=c.querySelector('.hc-cats'),n=HCATS.length;
  const pos=()=>R.scrollLeft/Math.max(1,R.clientWidth);
  const put=(j,smooth)=>R.scrollTo({left:j*R.clientWidth,behavior:smooth?'smooth':'auto'});
  // the gold line glides under the icons as the reading is swiped
- const line=p=>{T.style.setProperty('--p',p);T.querySelectorAll('.hc-ic').forEach((b,j)=>b.classList.toggle('on',j===Math.round(p)))};
+ const line=p=>{T.style.setProperty('--p',p);T.querySelectorAll('.hc-ic').forEach((b,j)=>{const on=j===Math.round(p);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})};
  const i0=Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
- hcarFit();put(i0);line(i0);
- // changed from the menu at the top: the new reading opens at its start, just under the menu
- if(V.hcStuck){V.hcStuck=false;window.scrollTo(0,c.getBoundingClientRect().top+scrollY)}
- hcarStick();
+ hcarFit();put(i0);line(i0);hcarStick();
+ const take=j=>{const k=HCATS[j][0];if(k===V.hcat)return;
+  const below=c.getBoundingClientRect().top<0,was=V.say;V.hcat=k;stopAudio();
+  [...R.children].forEach((sl,x)=>sl.toggleAttribute('aria-hidden',x!==j));
+  const sl=R.children[j],hb=$('.hsp-bar [data-act=bookhoro]');
+  if(hb){const on=isSaved('horoscope',sl.dataset.ref);hb.dataset.ref=sl.dataset.ref;hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);hb.setAttribute('aria-label',on?'Saved to your journal':'Save to your journal')}
+  R.style.height=sl.offsetHeight+'px';syncUrl();
+  if(below)window.scrollTo(0,c.getBoundingClientRect().top+scrollY);
+  if(was)render()};
  let touch=false,tm;
- const settle=()=>{clearTimeout(tm);tm=setTimeout(()=>{if(touch)return settle();const j=Math.round(pos());
-  const k=HCATS[j][0];if(k!==V.hcat){V.hcat=k;V.hcStuck=T.classList.contains('stuck');stopAudio();render()}},180)};
+ const settle=()=>{clearTimeout(tm);tm=setTimeout(()=>{if(touch)return settle();take(Math.round(pos()))},150)};
  R.addEventListener('scroll',()=>{line(pos());settle()},{passive:true});
- // a swipe goes one way only: the browser keeps the up-and-down scrolling, and a sideways swipe moves the readings,
- // then glides on to the next (or back) once it is let go
+ // a swipe goes one way only: up and down is left to the browser; only a clearly sideways swipe moves the readings,
+ // which then glide on to the next (or back) once it is let go
  let sx=0,sy=0,sl=0,dx=0,mode=null;
  R.addEventListener('touchstart',e=>{touch=true;mode=null;dx=0;sx=e.touches[0].clientX;sy=e.touches[0].clientY;sl=R.scrollLeft},{passive:true});
  R.addEventListener('touchmove',e=>{const x=e.touches[0].clientX-sx,y=e.touches[0].clientY-sy;
-  if(!mode&&(Math.abs(x)>8||Math.abs(y)>8))mode=Math.abs(x)>Math.abs(y)?'h':'v';
+  if(!mode&&(Math.abs(x)>12||Math.abs(y)>8))mode=Math.abs(x)>2*Math.abs(y)?'h':'v';
   if(mode==='h'){dx=x;R.scrollLeft=Math.min(Math.max(0,sl-x),R.scrollWidth-R.clientWidth)}},{passive:true});
- const end=()=>{touch=false;if(mode==='h'){const j0=Math.round(sl/Math.max(1,R.clientWidth));put(Math.min(n-1,Math.max(0,j0+(dx<-40?1:dx>40?-1:0))),true)}mode=null;settle()};
+ const end=()=>{touch=false;if(mode==='h'){const j0=Math.round(sl/Math.max(1,R.clientWidth));put(Math.min(n-1,Math.max(0,j0+(dx<-50?1:dx>50?-1:0))),true)}mode=null;settle()};
  R.addEventListener('touchend',end,{passive:true});R.addEventListener('touchcancel',end,{passive:true});
  c.go=j=>{put(j,true);settle()};
 }
