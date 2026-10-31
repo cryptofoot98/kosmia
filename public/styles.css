@@ -2009,3 +2009,10 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
  text-shadow:0 1px 3px rgba(0,0,0,.95)!important}
 /* Cosmic Profile: the invitation line before the form */
 .mnp.cp>.cp-intro{font-family:var(--font-serif);font-size:1.05rem;line-height:1.45}
+/* Tarot, Discover and Horoscope: the garden behind the parchment holds still too; only the parchment scrolls */
+.land:is(.tland,.dland,.hland){isolation:isolate;background:none}
+.land:is(.tland,.dland,.hland)::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,480px);transform:translateX(-50%);
+ background:var(--k-midnight) url(/art/atlas/home-vines.webp) 50% 100%/cover no-repeat}
+.dscenic>.ksc-bg{display:none}
+/* Horoscope: the same framed parchment panel as Tarot, risen over the painting with the garden at its sides */
+.hland>.sheet{margin:-21% 3.5% 0;padding:16px 12px 14px;border:1px solid var(--k-gold);border-radius:18px}

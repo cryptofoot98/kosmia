@@ -625,7 +625,7 @@ views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
  const sign=sg(S.sign);
- return `<div class="land">${hero('hero-horoscope',iconBtn('back','data-act="back"','Back'),'tall','Horoscope','Guidance for every path you walk')}<div class="sheet">
+ return `<div class="land hland">${hero('hero-horoscope',iconBtn('back','data-act="back"','Back'),'tall','Horoscope','Guidance for every path you walk')}<div class="sheet card gilt">
  <div class="tiles6">${HCATS.map(([k])=>`<button class="tile" data-act="tohoroscope" data-cat="${k}" data-period="daily">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${CAT_INFO[k][1]}</span></button>`).join('')}</div>
  ${Kit.divider('Your Zodiac Sign')}
  <div class="list hsign">${lrow(glyphMed(sign.id),`<span class="big">${sign.name}</span>`,sign.dates,'data-act="tohoroscope" data-period="daily"',`<span class="lr-m">${keys(SIGN_KEYS[sign.id])}</span>`)}</div>
