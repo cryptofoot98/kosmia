@@ -658,11 +658,11 @@ views.tarot=()=>{
 };
 function whisperView(){
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
- return `<div class="sub">${hdr('Daily Whisper',{right:iconBtn('help','data-act="whelp"','About the Daily Whisper')})}
- ${V.whelp?panel(`<p>One card a day, drawn from ${ORACLE.length} Whispers. You will not see the same card again until you have met them all. Read it, sit with it, and write what it stirs in you: every reflection is kept in your Journal.</p>`,'note-card'):''}
+ return `<div class="mnp wh">${mnHead('Daily Whisper',iconBtn('help','data-act="whelp"','About the Daily Whisper'))}
+ ${V.whelp?mbox(`<p>One card a day, drawn from ${ORACLE.length} Whispers. You will not see the same card again until you have met them all. Read it, sit with it, and write what it stirs in you: every reflection is kept in your Journal.</p>`):''}
  ${cardScene(c,rev,'fortuneCard')}
- ${rev?`<p class="kpills">${keys(wKeys(c))}</p><p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p>
-  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Write Your Reflection'}</button><button class="ibtn sq" data-act="share" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`
+ ${rev?mbox(`<p class="kpills">${keys(wKeys(c))}</p><p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p>
+  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Write Your Reflection'}</button><button class="ibtn sq" data-act="share" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
  :`<button class="btn" data-act="reveal">Reveal My Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}</div>`;
 }
 function tarotView(){

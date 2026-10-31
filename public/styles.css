@@ -1764,3 +1764,13 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mn-r{gap:2px;padding:0 4px;border-radius:22px;background:radial-gradient(closest-side,rgba(8,12,28,.6),rgba(8,12,28,.3) 70%,transparent)}
 .mn-r>.hsave{font-size:1.15rem;color:#FCEBB8;filter:drop-shadow(0 1px 2px #000) drop-shadow(0 0 6px rgba(0,0,0,.8))}
 .mnp.jn .mn-t::before{background:radial-gradient(closest-side,rgba(8,12,28,.85),rgba(8,12,28,.55) 60%,transparent)}
+/* Daily Whisper as a night page: the owner's Moon phases over the Milky Way behind it, the title centred under the phases */
+.mnp.wh{--mn-bg:url(/art/atlas/whisper-bg.webp)}
+.mnp.wh .mn-hd{height:calc(env(safe-area-inset-top,0px) + 56cqw)}
+.mnp.wh .mn-t{left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 37cqw)}
+.mnp.wh .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 2%;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 60%,transparent)}
+.mnp.wh>.btn{align-self:stretch}
+.mnp.wh .mbox .w-msg{font-family:var(--font-serif);font-weight:600;font-size:1.2rem;line-height:1.4;color:var(--k-ink)}
+.mnp.wh .mbox .row-acts{gap:8px}
+.mnp.wh .mbox .row-acts .btn{min-width:0;padding:0 10px;letter-spacing:.06em;font-size:.86rem}
+.mnp.wh .mbox .row-acts .ibtn.sq{flex:none;width:46px;height:46px}

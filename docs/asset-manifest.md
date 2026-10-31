@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 471 |
-| In use, provisional | 427 |
+| Images | 472 |
+| In use, provisional | 428 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -584,6 +584,18 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/welcome.webp` | 640×960 | 2:3 | no | 174 | provisional | below the 960 px it needs at 2× |
+
+## The Daily Whisper page’s backdrop: an arc of the Moon’s phases over the Milky Way, golden clouds, a lake under mountains, framed by lilies (supplied by the owner)
+
+- Mockup: `docs/mockups/tarot-journal.webp`
+- Screen: Tarot › Daily Whisper (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/whisper-bg.webp` | 850×1850 | 0.46:1 | no | 316 | provisional |  |
 
 ## Card furniture: backs, plaque, crest, ornament
 
