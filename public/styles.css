@@ -1842,3 +1842,47 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.rs>:is(.btn,.list,.acts){align-self:stretch}
 .mnp.rs .mbox .lead{font-family:var(--font-serif);font-weight:600;font-size:1.1rem;line-height:1.45;color:var(--k-ink)}
 .mnp.rs .mbox .field label{color:var(--k-ink);font-weight:600}
+/* the remaining pages under the beige title bar, now night pages (nightSub), each on its own painting in the owner's
+   engraved style: the subject at the top, the title centred in the sky beneath it */
+.mnp.nm{--mn-bg:url(/art/atlas/name-bg.webp)}
+.mnp.lp{--mn-bg:url(/art/atlas/lifepath-bg.webp)}
+.mnp.lb{--mn-bg:url(/art/atlas/library-bg.webp)}
+.mnp.nd{--mn-bg:url(/art/atlas/newdream-bg.webp)}
+.mnp.dm{--mn-bg:url(/art/atlas/dream-bg.webp)}
+.mnp.dj{--mn-bg:url(/art/atlas/dreamjournal-bg.webp)}
+.mnp.cc{--mn-bg:url(/art/atlas/calendar-bg.webp)}
+.mnp.jc{--mn-bg:url(/art/atlas/jcal-bg.webp)}
+.mnp.nb{--mn-bg:url(/art/atlas/journal-bg.webp)}
+.mnp.bd{--mn-bg:url(/art/atlas/birth-bg.webp)}
+.mnp.st{--mn-bg:url(/art/atlas/settings-bg.webp)}
+.mnp.ks{--mn-bg:url(/art/atlas/kassandra-bg.webp)}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + var(--mn-top,56cqw))}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .mn-t{position:relative;top:0;left:0}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .mn-t h1{white-space:normal;text-align:center;line-height:1}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 2%;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 60%,transparent)}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks)>:not(.mn-hd,.mn-sub,p){align-self:stretch}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .mbox :is(.lead,p){font-family:var(--font-serif);font-weight:600;color:var(--k-ink)}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks)>p.lead{font-family:var(--font-serif);font-weight:600;font-size:1.1rem}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks)>:is(.field,.note)>label{color:#F1DFB4;text-shadow:0 1px 3px #000}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .btn.ghost:not(.mbox .btn){color:#FCEBB8;border-color:#D9AE5E;background:rgba(8,12,28,.55);text-shadow:0 1px 2px #000}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .seg{border-color:var(--k-gold);background:rgba(244,232,206,.88)}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .seg button:not([aria-selected=true]){color:#4A3826}
+.mnp.nm{--mn-top:62cqw}.mnp.lp{--mn-top:60cqw}.mnp.lb{--mn-top:67cqw}.mnp.nd{--mn-top:65cqw}.mnp.dm{--mn-top:71cqw}.mnp.dj{--mn-top:62cqw}
+.mnp.cc{--mn-top:63cqw}.mnp.jc{--mn-top:70cqw}.mnp.nb{--mn-top:50cqw}.mnp.bd{--mn-top:59cqw}.mnp.st{--mn-top:66cqw}.mnp.ks{--mn-top:72cqw}
+.mnp .mnav{color:#F1DFB4}
+.mnp .mnav h2{font-family:var(--font-serif);font-weight:700;color:#FCEBB8;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.8)}
+.mnp .mnav .ibtn{color:#F1DFB4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
+.mnp>p.muted,.mnp>p.small{color:#EFE2C2;opacity:1}
+.mnp:is(.nm,.lp,.lb,.nd,.dm,.dj,.cc,.jc,.nb,.bd,.st,.ks) .mbox .field label{color:var(--k-ink);text-shadow:none;font-weight:600}
+.mnp.nd textarea{background:rgba(250,241,222,.94)}
+.mnp.nd>.field>label,.mnp.nd>label,.mnp.nd .sec-h{color:#F1DFB4;text-shadow:0 1px 3px #000}
+.mnp:is(.nm,.lp) .mbox details.more summary{color:var(--k-ink-soft)}
+.mnp>.list>p.muted{color:#EFE2C2;font-size:1rem;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.9)}
+.mnp.nd>.field>label.kicker,.mnp.nd>.field>label{padding-left:4px}
+.mnp .mbox .orn h2{font-family:var(--font-serif);font-size:.9rem;line-height:1.2;letter-spacing:.12em;white-space:nowrap}
+/* each painting is its own scene, so each title sits where that scene leaves open sky */
+.mnp.nm{--mn-top:52cqw}.mnp.lp{--mn-top:16cqw}.mnp.lb{--mn-top:64cqw}.mnp.nd{--mn-top:16cqw}.mnp.dm{--mn-top:60cqw}.mnp.dj{--mn-top:16cqw}
+.mnp.cc{--mn-top:60cqw}.mnp.jc{--mn-top:50cqw}.mnp.bd{--mn-top:14cqw}.mnp.st{--mn-top:16cqw}.mnp.ks{--mn-top:60cqw}
+.mnp.cc{--mn-top:52cqw}
+.mnp.nd{--mn-top:46cqw}.mnp.dj{--mn-top:46cqw}.mnp.bd{--mn-top:48cqw}.mnp.st{--mn-top:72cqw}
+.mnp.lp{--mn-top:66cqw}

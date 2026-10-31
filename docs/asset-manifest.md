@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 477 |
-| In use, provisional | 433 |
+| Images | 488 |
+| In use, provisional | 444 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -82,6 +82,30 @@ their space before they load.
 | `public/art/atlas/banner-calendar.webp` | 760×506 | 1.50:1 | no | 129 | provisional |  |
 | `public/art/atlas/banner-library.webp` | 760×506 | 1.50:1 | no | 131 | provisional |  |
 
+## The Birth Details page’s backdrop: a star of birth shining down on a village on a cloud at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Birth Details (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/birth-bg.webp` | 850×1842 | 0.46:1 | no | 274 | provisional |  |
+
+## The Cosmic Calendar page’s backdrop: an arc of Moon phases over a golden astronomical clock at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Cosmic Calendar (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/calendar-bg.webp` | 850×1842 | 0.46:1 | no | 303 | provisional |  |
+
 ## The Birth Chart page’s backdrop: a golden sun face in a circle over the Milky Way, crescent moons and planets, clouds, and lilies, roses and daisies around a gilded arch (supplied by the owner)
 
 - Mockup: `docs/mockups/discover.webp`
@@ -105,6 +129,30 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/cycles-bg.webp` | 850×1842 | 0.46:1 | no | 417 | provisional |  |
+
+## The Your Dream Meaning page’s backdrop: a sleeping woman on a golden crescent moon with moths drifting up at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Your Dream Meaning (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/dream-bg.webp` | 850×1842 | 0.46:1 | no | 303 | provisional |  |
+
+## The Dream Journal page’s backdrop: an open book with a crescent moon and moths rising from it at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Dream Journal (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/dreamjournal-bg.webp` | 850×1842 | 0.46:1 | no | 291 | provisional |  |
 
 ## Dream symbol medallion
 
@@ -347,6 +395,18 @@ their space before they load.
 | `public/art/atlas/ico-money.webp` | 262×320 | 0.82:1 | yes | 37 | provisional |  |
 | `public/art/atlas/ico-overview.webp` | 282×320 | 0.88:1 | yes | 37 | provisional |  |
 
+## The Journal Calendar page’s backdrop: a lunar calendar wheel round a full moon face with a ribbon bookmark at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Journal Calendar (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/jcal-bg.webp` | 850×1842 | 0.46:1 | no | 294 | provisional |  |
+
 ## The Journal Entry page’s backdrop: a night sky with a large Moon and arcs of the Moon’s phases over an open parchment, framed by white blossoms and leaves, a lake under mountains at the foot (supplied by the owner)
 
 - Mockup: `docs/mockups/tarot-journal.webp`
@@ -383,6 +443,18 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/kassandra-banner.webp` | 1100×733 | 1.50:1 | no | 215 | provisional |  |
 
+## The Kassandra and Past Conversations page’s backdrop: a crystal ball between two candles under burgundy velvet curtains at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Kassandra and Past Conversations (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/kassandra-bg.webp` | 850×1842 | 0.46:1 | no | 319 | provisional |  |
+
 ## Kassandra’s portrait
 
 - Mockup: `docs/mockups/overview.webp`
@@ -406,6 +478,30 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/landscape.webp` | 1100×733 | 1.50:1 | no | 271 | provisional |  |
+
+## The Astrology Library page’s backdrop: an armillary sphere on a stack of old books at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Astrology Library (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/library-bg.webp` | 850×1842 | 0.46:1 | no | 296 | provisional |  |
+
+## The Life Path page’s backdrop: a radiant eight-pointed star above a winding path of stepping stones at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Life Path (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/lifepath-bg.webp` | 850×1842 | 0.46:1 | no | 264 | provisional |  |
 
 ## Round medallion of the sign
 
@@ -442,6 +538,18 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/moon-bg.webp` | 850×1850 | 0.46:1 | no | 368 | provisional |  |
 
+## The The Name Within page’s backdrop: an open book with a golden quill and a spiral of golden sparks at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: The Name Within (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/name-bg.webp` | 850×1842 | 0.46:1 | no | 296 | provisional |  |
+
 ## Bottom navigation icon (raster, keyed from ivory)
 
 - Mockup: `docs/mockups/home.webp`
@@ -470,6 +578,18 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/ne-card.webp` | 230×320 | 23:32 | yes | 31 | provisional |  |
 | `public/art/atlas/ne-free.webp` | 269×320 | 0.84:1 | yes | 37 | provisional |  |
+
+## The New Dream page’s backdrop: an owl with a quill on a golden crescent moon in blue dream clouds at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: New Dream (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/newdream-bg.webp` | 850×1842 | 0.46:1 | no | 321 | provisional |  |
 
 ## Bottom menu medallion: a round night-blue painting in a thin gold rim (sun, crescent and lilies, tarot card, compass star, crystal ball), cut free of its night disc with alpha, motif only (supplied by the owner)
 
@@ -569,6 +689,18 @@ their space before they load.
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
 | `public/art/atlas/resonance-bg.webp` | 850×1850 | 0.46:1 | no | 360 | provisional |  |
+
+## The Settings pages page’s backdrop: a glowing lantern on a vine with a golden key at the top, over the Milky Way with golden clouds, lilies, roses and daisies (painted with gpt-image-2 in the style of the owner’s backgrounds)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Settings pages (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/settings-bg.webp` | 850×1842 | 0.46:1 | no | 278 | provisional |  |
 
 ## The sign’s glyph medallion: engraved antique-gold rim, night-blue starry field, the glyph in gold (keyed from green)
 

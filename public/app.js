@@ -646,9 +646,9 @@ views.tarot=()=>{
  if(t==='history')return historyView();
  if(t==='journal')return journalLib();
  if(t==='entry')return entryView();
- if(t==='calendar')return journalCal();
+ if(t==='calendar')return nightSub(journalCal(),'jc');
  if(t==='insights')return journalInsights();
- if(t==='notebook')return `<div class="sub">${hdr('Notebook',{sub:'Your journal as a book'})}${journalView()}</div>`;
+ if(t==='notebook')return nightSub(`<div class="sub">${hdr('Notebook',{sub:'Your journal as a book'})}${journalView()}</div>`,'nb');
  return `<div class="land tland">${hero('hero-tarot','','tall','Tarot','Insights for a more aligned you')}<div class="tpanel card gilt"><div class="list big">
  ${lrow(ui('t-whisper','th oval'),'Daily Whisper','A card, a message, a moment for you, and a space to reflect.','data-go="tarot" data-t="whisper"')}
  ${lrow(ui('t-reading','th oval'),'Card Reading','Single card, three cards, love, career and the Celtic Cross.','data-go="tarot" data-t="reading"')}
@@ -1187,11 +1187,14 @@ const STAR4='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l1.5 8.5L
 const mrule=(cls='')=>`<div class="mrule ${cls}"><i></i>${STAR4}<i></i></div>`;
 const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map(c=>`<i class="mb-c ${c}">${STAR4}</i>`).join('')}${h}</section>`;
 // the gold title set in the painting's sky, with its line, circles and star beneath
-const mnHead=(t,right='')=>`<header class="mn-hd">${iconBtn('back','data-act="back"','Back')}${right?`<div class="mn-r">${right}</div>`:''}<div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
+const mnHead=(t,right='',back=true)=>`<header class="mn-hd">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}<div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
 // a page built as a stack of parchment panels, set as a night page instead: its painting behind (cls picks it), the
 // gold title in the sky, and each panel a gilded see-through box with a star at each corner
-const nightPage=(h,cls)=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="mnp ${cls}">${mnHead(t)}`)
- .replace(/<section class="card([^"]*)"([^>]*)>/g,(_,c,a)=>`<section class="mbox${c}"${a}>${['tl','tr','bl','br'].map(k=>`<i class="mb-c ${k}">${STAR4}</i>`).join('')}`);
+const gild=h=>h.replace(/<section class="card([^"]*)"([^>]*)>/g,(_,c,a)=>`<section class="mbox${c}"${a}>${['tl','tr','bl','br'].map(k=>`<i class="mb-c ${k}">${STAR4}</i>`).join('')}`);
+const nightPage=(h,cls)=>gild(h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="mnp ${cls}">${mnHead(t)}`));
+// a page under the old beige title bar (hdr), set as a night page the same way: the bar's title, line and buttons move into the sky
+const nightSub=(h,cls)=>gild(h.replace(/^\s*<div class="sub([^"]*)">\s*<header class="phd"><div class="ph-l">([\s\S]*?)<\/div><div class="ph-t"><h1>([\s\S]*?)<\/h1>(?:<p class="ph-sub">([\s\S]*?)<\/p>)?<\/div><div class="ph-r">([\s\S]*?)<\/div><\/header>/,
+ (_,c,l,t,sub,r)=>`<div class="mnp ${cls}${c}">${mnHead(t,r,!!l)}${sub?`<p class="mn-sub">${sub}</p>`:''}`));
 function moonView(now){
  const m=K.moon(now),ing=K.moonIngress(now),ph=K.lunarPhases(now,new Date(+now+120*DAY)),nn=ph.find(e=>e.k==='new_moon'),nf=ph.find(e=>e.k==='full_moon');
  const next=(l,e)=>`<div><div class="label">${l}</div><p>${e?evt(e.date)+'<br><span class="muted">in '+sIdx(e.sign).name+'</span>':''}</p></div>`;
@@ -1226,8 +1229,8 @@ function eventsView(){
 const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="sub">${hdr(t)}`);
 views.discover=()=>{
  const t=tab();
- const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>nightPage(synastryView(),'sy'),'life-path':lifePathView,'name-within':nameView,cycles:()=>nightPage(cyclesView(),'cy'),
-  calendar:calendarView,moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:eventsView,dreams:dreamsView,'new-dream':newDreamView,dream:dreamView,'dream-journal':dreamJournalView,library:libraryView};
+ const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>nightPage(synastryView(),'sy'),'life-path':()=>nightSub(lifePathView(),'lp'),'name-within':()=>nightSub(nameView(),'nm'),cycles:()=>nightPage(cyclesView(),'cy'),
+  calendar:()=>nightSub(calendarView(),'cc'),moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:eventsView,dreams:dreamsView,'new-dream':()=>nightSub(newDreamView(),'nd'),dream:()=>nightSub(dreamView(),'dm'),'dream-journal':()=>nightSub(dreamJournalView(),'dj'),library:()=>nightSub(libraryView(),'lb')};
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  V.chartOpen=false;
  // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners
@@ -1327,8 +1330,8 @@ const LPX={1:['Courage, originality and the drive to begin what others only imag
  33:['Selfless love, healing and the gift of teaching through example.','Over-responsibility and neglecting your own needs.','Serve from fullness, not depletion; your care heals best when it includes you.']};
 function lifePathView(){
  const d=V.lpDate||S.birth.date,H=hdr('Life Path',{sub:'Your soul’s journey'});
- const form=`${ui('hero-lifepath','plate-img')}<p class="lead">Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.</p>
- <div class="field"><label for="lpd">Your date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd" value="${esc(d||'')}"></div></div><button class="btn" data-act="lpgo">Discover My Life Path →</button>`;
+ const form=`${mbox(`<p class="lead">Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.</p>
+ <div class="field"><label for="lpd">Your date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd" value="${esc(d||'')}"></div></div>`)}<button class="btn" data-act="lpgo">Discover My Life Path →</button>`;
  if(!/^\d{4}-\d\d-\d\d$/.test(d||''))return `<div class="sub">${H}${form}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
  return `<div class="sub">${H}${form}
@@ -1349,9 +1352,9 @@ function nameView(){
   +acc(pic('cats','insights','acc-i'),'Personality Number',`How you show up to the world ${one(x,'personality')}`,numBlock('Personality: how others first meet you',x.personality,true))
   +(L&&x.expression.r.n?(()=>{const m=N.reduce(L.r.n+x.expression.r.n);return acc(pic('cats','lifepath','acc-i'),'Maturity Number',`Who you grow into · <span class="num">${m.n}</span>`,`<p>Your Life Path (${L.r.n}) and Expression (${x.expression.r.n}) together: ${L.r.n} + ${x.expression.r.n} = ${L.r.n+x.expression.r.n}${m.chain.length>1?' → '+m.chain.slice(1).join(' → '):''}. <strong>${N.MEANING[m.n][0]}</strong>: ${N.MEANING[m.n][1]}, the qualities that tend to ripen in the second half of life.</p>`)})():'')
   +acc('','Your letters','Vowels are highlighted',letters(x));
- return `<div class="sub">${hdr('The Name Within',{sub:'Name numerology'})}${ui('hero-name','plate-img')}<p class="lead">Your name carries a vibration and a story. Discover what your name reveals about your personality, purpose and life path.</p>
+ return `<div class="sub">${hdr('The Name Within',{sub:'Name numerology'})}${mbox(`<p class="lead">Your name carries a vibration and a story. Discover what your name reveals about your personality, purpose and life path.</p>
  <div class="field"><label for="fn">Your full name at birth</label><div class="inp">${IC.star}<input type="text" id="fn" value="${esc(S.fullName)}" autocomplete="name" placeholder="Enter your full name"></div></div>
- <details class="more"><summary>More options</summary><div class="field"><label for="an">Name you use now (optional)</label><input type="text" id="an" value="${esc(S.altName)}" placeholder="A married name, a chosen name, a nickname"></div><div class="field"><label for="ym">The letter Y counts as</label><select id="ym"><option value="auto" ${S.settings.yMode==='auto'?'selected':''}>Vowel when no other vowel is beside it</option><option value="vowel" ${S.settings.yMode==='vowel'?'selected':''}>Always a vowel</option><option value="consonant" ${S.settings.yMode==='consonant'?'selected':''}>Always a consonant</option></select></div></details>
+ <details class="more"><summary>More options</summary><div class="field"><label for="an">Name you use now (optional)</label><input type="text" id="an" value="${esc(S.altName)}" placeholder="A married name, a chosen name, a nickname"></div><div class="field"><label for="ym">The letter Y counts as</label><select id="ym"><option value="auto" ${S.settings.yMode==='auto'?'selected':''}>Vowel when no other vowel is beside it</option><option value="vowel" ${S.settings.yMode==='vowel'?'selected':''}>Always a vowel</option><option value="consonant" ${S.settings.yMode==='consonant'?'selected':''}>Always a consonant</option></select></div></details>`)}
  <button class="btn" data-act="savenames">Reveal My Numbers →</button>
  ${nm?`<div class="list">${rows(nm)}</div>`:`<div class="list dim">${[['general','Expression Number','Your natural abilities'],['love','Soul Urge Number','Your inner desires'],['insights','Personality Number','How you show up to the world'],['lifepath','Destiny Number','Your life purpose']].map(([i,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div>`}
  ${alt?`<h3 class="sec-h">The name you use now</h3><div class="list">${rows(alt)}</div><p class="muted small">Your birth name is read as the blueprint you arrived with; the name you use now as the way you have chosen to express it.</p>`:''}
@@ -1630,9 +1633,9 @@ function dreamView(){
  if(!d)return `<div class="sub">${hdr('Your Dream Meaning')}${empty('This dream is no longer in your journal','It may have been removed on another device.',linkBtn('Dream Journal','discover','dream-journal','btn'))}</div>`;
  const I=d.interp||{};
  return `<div class="sub">${hdr('Your Dream Meaning',{sub:ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'})})}
- <div class="dm-art">${dreamArt(d,'dm-img')}</div><h2 class="center dm-t">${esc(I.title||'Your Dream')}</h2><p class="keys">${keys((I.keywords||[]).slice(0,3))}</p>
+ <div class="dm-art">${dreamArt(d,'dm-img')}</div>${mbox(`<h2 class="center dm-t">${esc(I.title||'Your Dream')}</h2><p class="keys">${keys((I.keywords||[]).slice(0,3))}</p>
  <div class="read">${paras(I.meaning)}</div>
- ${(I.symbols||[]).length?`${orn('Other Symbols in Your Dream')}<div class="symrow">${I.symbols.map(s=>{const x=dsym(s.id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(s.name)}">${x?artOf(x.art,'sym-i sq'):ui('d-dream','sym-i sq')}<strong>${esc(s.name)}</strong><span>${esc(s.meaning||'')}</span></button>`}).join('')}</div>`:''}
+ ${(I.symbols||[]).length?`${orn('Other Symbols in Your Dream')}<div class="symrow">${I.symbols.map(s=>{const x=dsym(s.id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(s.name)}">${x?artOf(x.art,'sym-i sq'):ui('d-dream','sym-i sq')}<strong>${esc(s.name)}</strong><span>${esc(s.meaning||'')}</span></button>`}).join('')}</div>`:''}`)}
  ${panel(`<p class="kick">A question to sit with</p><p class="quote">“${esc(I.reflection||PROMPTS.d[2])}”</p><button class="btn" data-act="jopen" data-k="bk:dream:${esc(d.id)}">${d.note?'Continue Your Reflection':'Write a Reflection'}</button>`,'ornate')}
  <details class="acc plain"><summary><span class="lr-t"><strong>Your dream, as you wrote it</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><p class="pre">${esc(d.text)}</p></div></details>
  <p class="muted small center">${I.ai?'Read by Kassandra with AI. ':'Read with Kosmia’s dream dictionary. '}Dream meanings are symbolic and subjective, offered for reflection rather than as scientifically established predictions.</p>
@@ -1711,6 +1714,8 @@ views.kassandra=()=>{
  <button class="btn" data-act="toauth">Sign in to talk with Kassandra</button><p class="muted small center">Kassandra’s readings are written by AI, so she listens once you are signed in.</p>`}
  <p class="muted small center">Kassandra speaks in symbols, not certainties. She cannot give medical, legal or financial advice.</p></div>`;
 };
+// Kassandra and her past conversations as night pages, on her crystal ball
+{const kas=views.kassandra;views.kassandra=()=>nightSub(kas(),'ks')}
 function kasKeep(){S.kcur=KS.msgs.slice(-40);save()}
 function kasSend(q){
  q=String(q||'').trim();if(!q||KS.busy)return;if(!C.user)return render();
@@ -1745,9 +1750,9 @@ function kasStopRec(cancel){if(KS.rec&&KS.rec.state!=='inactive'){KS.cancel=!!ca
 /* ---------- Your Profile (from the avatar on Home): the account, sign, birth details, notifications, display, privacy and plan ---------- */
 views.settings=()=>{
  const t=tab();
- if(t==='birth')return `<div class="sub">${hdr('Birth Details',{sub:'For your chart, Life Path and cycles'})}${birthForm()}</div>`;
- if(t==='subscription')return `<div class="sub">${hdr('Subscription')}${panel(`<p class="kick">Your plan</p><h2>Kosmia · Early Access</h2><p>Every part of Kosmia is open to you while it is in early access: horoscopes, Whispers and tarot, your Journal, Dream Interpretation, Discover and Kassandra.</p><p class="muted">No subscription is needed and nothing is charged. If that ever changes, you will be told well in advance and nothing will be charged without your clear agreement.</p>`,'ornate')}</div>`;
- if(t!=='account')return subPage(settingsPage(t));
+ if(t==='birth')return nightSub(`<div class="sub">${hdr('Birth Details',{sub:'For your chart, Life Path and cycles'})}${birthForm()}</div>`,'bd');
+ if(t==='subscription')return nightSub(`<div class="sub">${hdr('Subscription')}${panel(`<p class="kick">Your plan</p><h2>Kosmia · Early Access</h2><p>Every part of Kosmia is open to you while it is in early access: horoscopes, Whispers and tarot, your Journal, Dream Interpretation, Discover and Kassandra.</p><p class="muted">No subscription is needed and nothing is charged. If that ever changes, you will be told well in advance and nothing will be charged without your clear agreement.</p>`,'ornate')}</div>`,'st');
+ if(t!=='account')return nightSub(subPage(settingsPage(t)),'st');
  const s=sg(S.sign),acct=!C.enabled?'<p class="muted">Accounts are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
  // the night garden runs the length of the page: the title set in its sky, the sign's figure whole before its moon with the
