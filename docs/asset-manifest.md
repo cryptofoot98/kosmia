@@ -433,11 +433,11 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/nvm-discover.webp` | 160×160 | 1:1 | yes | 16 | provisional |  |
-| `public/art/atlas/nvm-home.webp` | 160×160 | 1:1 | yes | 20 | provisional |  |
-| `public/art/atlas/nvm-horoscope.webp` | 160×160 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/nvm-discover.webp` | 160×160 | 1:1 | yes | 8 | provisional |  |
+| `public/art/atlas/nvm-home.webp` | 160×160 | 1:1 | yes | 16 | provisional |  |
+| `public/art/atlas/nvm-horoscope.webp` | 160×160 | 1:1 | yes | 15 | provisional |  |
 | `public/art/atlas/nvm-kassandra.webp` | 160×160 | 1:1 | yes | 10 | provisional |  |
-| `public/art/atlas/nvm-tarot.webp` | 160×160 | 1:1 | yes | 16 | provisional |  |
+| `public/art/atlas/nvm-tarot.webp` | 160×160 | 1:1 | yes | 6 | provisional |  |
 
 ## Snowy owl on a branch before a crescent
 
