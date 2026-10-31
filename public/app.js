@@ -683,7 +683,7 @@ function tarotView(){
 function historyView(){
  const rs=S.readings.slice().sort((a,b)=>(b.at||b.date)>(a.at||a.date)?1:-1);
  const ws=Object.keys(S.revealed).filter(d=>S.revealed[d]).sort().reverse().slice(0,30);
- return `<div class="sub">${hdr('Reading History',{sub:'Your past readings and notes'})}
+ return `<div class="mnp rh">${mnHead('Reading History')}<p class="mn-sub">Your past readings and notes</p>
  <h3 class="sec-h">Tarot readings</h3><div class="list">${rs.length?rs.map(r=>lrow(`<span class="fan">${r.cards.slice(0,3).map(x=>pic('deck',x.id,'fan-c'+(x.rev?' rev':''))).join('')}</span>`,esc((SPREADS[r.spread]||{s:r.spread}).s),r.cards.map(x=>esc(x.name)).join(', '),`data-act="jopen" data-k="reading:${esc(r.id)}"`,`<span class="lr-m">${relDay(r.date)}${r.note?' • Reflection added':''}</span>`)).join('')
   :`<p class="muted center">No saved readings yet.</p>`}</div><button class="btn" data-go="tarot" data-t="reading">New Reading</button>
  <h3 class="sec-h">Daily Whispers</h3><div class="list">${ws.length?ws.map(d=>{const c=cardFor(d);return lrow(pic('whispers',c.id,'th'),esc(c.title),keys(wKeys(c)),`data-act="jopen" data-k="fortune:${d}"`,`<span class="lr-m">${relDay(d)}${S.notes[d]?' • Reflection added':''}</span>`)}).join(''):'<p class="muted center">Your first Whisper is waiting.</p>'}</div></div>`;

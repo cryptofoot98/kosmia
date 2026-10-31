@@ -1792,3 +1792,14 @@ body.reduce #nav .in::before,body.reduce #nav .in::after{animation:none}
 .mnp.trd .mbox p{font-family:var(--font-serif);font-weight:600;font-size:1.1rem;line-height:1.45;color:var(--k-ink)}
 .mnp.trd>.list{align-self:stretch}
 .mnp.trd>.field label{color:#F1DFB4;text-shadow:0 1px 3px #000}
+/* Reading History as a night page: the owner's window on the Moon phases above a reading table, the title centred under the phases */
+.mnp.rh{--mn-bg:url(/art/atlas/history-bg.webp)}
+.mnp.rh .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 40cqw)}
+.mnp.rh .mn-t{position:relative;top:0;left:0}
+.mnp.rh .mn-t h1{white-space:normal;text-align:center}
+.mnp.rh .mn-t::before{content:'';position:absolute;z-index:-1;inset:-10% 2%;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 60%,transparent)}
+.mnp.rh .mbox .sec-h{margin:0}
+.mnp.rh>:is(.list,.btn){align-self:stretch}
+.mnp.rh>.sec-h{margin:6px 0 -6px;font-family:var(--font-serif);font-weight:700;font-size:1.8rem;-webkit-text-stroke:.6px #E9C67E;paint-order:stroke fill;
+ background:linear-gradient(180deg,#FCEBB8 10%,#D9AE5E 55%,#F2D592 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px rgba(0,0,0,.9)) drop-shadow(0 0 8px rgba(0,0,0,.7))}
+.mnp.rh>p{color:#EFE2C2}

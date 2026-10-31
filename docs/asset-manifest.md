@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 473 |
-| In use, provisional | 429 |
+| Images | 474 |
+| In use, provisional | 430 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -198,6 +198,18 @@ their space before they load.
 | `public/art/atlas/hero-insights.webp` | 1100×733 | 1.50:1 | no | 213 | provisional |  |
 | `public/art/atlas/hero-journal.webp` | 1024×1024 | 1:1 | no | 302 | provisional |  |
 | `public/art/atlas/hero-tarot.webp` | 1024×1024 | 1:1 | no | 275 | provisional |  |
+
+## The Reading History page’s backdrop: Moon phases over the Milky Way seen through a curtained window, a lakeside town, a velvet table with a tarot deck, a crystal ball, candles and a sun-faced zodiac cloth (supplied by the owner)
+
+- Mockup: `docs/mockups/tarot-journal.webp`
+- Screen: Tarot › Reading History (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 850 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/history-bg.webp` | 850×1850 | 0.46:1 | no | 296 | provisional |  |
 
 ## Sunset lake, mountains and flowers, edge to edge
 
