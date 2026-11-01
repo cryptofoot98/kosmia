@@ -2211,3 +2211,20 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 /* Home: For You, the doors that follow the reader */
 .hsheet .card.hfor{margin:0}
 .hfor .list{gap:1.8cqw}
+/* Horoscope landing: the reader's own sign first, then their areas of life, then every sign for someone else */
+.hmine{display:flex;flex-direction:column;gap:12px;padding:14px 14px 16px;border:1px solid rgba(var(--k-gold-rgb),.7);border-radius:14px;background:linear-gradient(rgba(var(--k-surface-hi-rgb),.55),transparent),var(--k-parchment-light) var(--paper-img) center/cover;box-shadow:inset 0 0 0 3px rgba(var(--k-surface-hi-rgb),.5),inset 0 0 0 4px rgba(var(--k-gold-rgb),.3),var(--sh-1)}
+.hm-top{display:flex;align-items:center;gap:14px}
+.hm-top .gmed{width:66px;height:66px;font-size:2rem;flex:none}
+.hm-top h2{margin:0;font-family:var(--serif);font-size:1.7rem;font-weight:500;line-height:1}
+.hm-d{margin:4px 0 2px;color:var(--ink2);font-size:.9rem}
+.hm-top .lr-m{margin:0}
+.hm-q{margin:0;font-family:var(--serif);font-style:italic;font-size:1.02rem;line-height:1.4;color:var(--ink);text-align:center}
+.hm-go{align-self:stretch}
+.btn.hm-go.on{background:linear-gradient(#F6DA97,#C9963F)!important;color:#2A1C0B;border-color:#C9963F;box-shadow:0 0 12px rgba(246,210,140,.55)}
+.hso{margin:-4px 0 10px;font-size:.85rem}
+.signs12{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 4px}
+.signs12 .sgn{flex:none;width:auto}
+.signs12 .sgn-i{width:min(66px,17cqw);height:min(66px,17cqw)}
+.signs12 .sgn.me .sgn-i{box-shadow:0 0 0 2px #F6DA97,0 0 12px rgba(246,210,140,.75)}
+.signs12 .sgn.me span{color:#8A5F1C;font-weight:700}
+.hland .hero-t .hgreet{display:block;margin:2px 0 4px;font-family:'Cinzel',var(--serif);font-size:1.25em;letter-spacing:.08em;text-transform:uppercase;color:#F1D79A}

@@ -633,7 +633,8 @@ function playText(txt){
   .then(u=>{if(V.say!==txt)return;player=new Audio(u);player.onended=()=>{player=null;V.say=null;render()};return player.play()})
   .catch(e=>{if(V.say===txt){V.say=null;render()}toast(e.message||'Could not play the reading')});
 }
-/* ----- Horoscope: the landing (the six areas of life and the signs), then a sign's own
+/* ----- Horoscope: the landing (the reader's own sign first with the period and a glimpse of its reading, then their
+   six areas of life with each one's theme, then every sign to read for someone else), then a sign's own
    page: its illustration, its words, the period, a row of the areas of life with a gold line under the chosen one, and
    the chosen area's reading; tapping an area, or swiping sideways, brings its reading in ----- */
 const PLABEL={daily:['Today','Today’s'],weekly:['This Week','This Week’s'],monthly:['This Month','This Month’s'],yearly:['This Year','This Year’s']};
@@ -641,13 +642,21 @@ const periodSeg=()=>`<div role="group" aria-label="Time period">${seg(PERIODS.ma
 views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
- const sign=sg(S.sign);
- return `<div class="land hland">${hero('hero-horoscope',jdoor(),'tall','Horoscope','Guidance for every path you walk')}<div class="sheet card gilt">
- <div class="tiles6">${HCATS.map(([k])=>`<button class="tile" data-act="tohoroscope" data-cat="${k}" data-period="daily">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${CAT_INFO[k][1]}</span></button>`).join('')}</div>
- ${Kit.divider('Your Zodiac Sign')}
- <div class="list hsign">${lrow(glyphMed(sign.id),`<span class="big">${sign.name}</span>`,sign.dates,'data-act="tohoroscope" data-period="daily"',`<span class="lr-m">${keys(SIGN_KEYS[sign.id])}</span>`)}</div>
- ${Kit.divider('Explore Every Sign')}
- <div class="hscroll signs-row">${SIGNS.map(s=>`<button class="sgn" data-act="tohoroscope" data-sign="${s.id}" data-period="daily">${med(s.id,'sgn-i')}<span>${s.name}</span></button>`).join('')}</div>
+ const sign=sg(S.sign),nm=firstName(),pl=PLABEL[V.period],pw=PWORD[V.period];
+ const ov=horoscope(S.sign,'overview',V.period),first=(String(ov.body||'').match(/^[^.!?]*[.!?]/)||[''])[0].trim();
+ const read=V.period==='daily'&&S.readDay===dkey();
+ return `<div class="land hland">${hero('hero-horoscope',jdoor(),'tall','Horoscope',`<span class="hgreet">${nm?esc(nm)+', your sky':'Your sky'}</span>${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}`)}<div class="sheet card gilt">
+ <div class="hmine">
+  <div class="hm-top">${glyphMed(sign.id)}<div><h2>${sign.name}</h2><p class="hm-d">${sign.dates}</p><p class="lr-m">${keys(SIGN_KEYS[sign.id])}</p></div></div>
+  ${periodSeg()}
+  ${first?`<p class="hm-q">“${esc(first)}”</p>`:''}
+  <button class="btn hm-go${read?' on':''}" data-act="tohoroscope">${read?'✦ Read again':`Read your ${pw}`}</button>
+ </div>
+ ${Kit.divider(`${sign.name} · ${pl[0]}, by area of life`)}
+ <div class="tiles6">${HCATS.map(([k])=>{const x=horoscope(S.sign,k,V.period);return `<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||CAT_INFO[k][1])}</span></button>`}).join('')}</div>
+ ${Kit.divider('Read for Someone Else')}
+ <p class="muted center hso">A partner, a friend, a child: open the sky they were born beneath.</p>
+ <div class="signs12">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
  </div></div>`;
 };
 function horoSign(){
