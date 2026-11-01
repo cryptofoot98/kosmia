@@ -2228,3 +2228,46 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .signs12 .sgn.me .sgn-i{box-shadow:0 0 0 2px #F6DA97,0 0 12px rgba(246,210,140,.75)}
 .signs12 .sgn.me span{color:#8A5F1C;font-weight:700}
 .hland .hero-t .hgreet{display:block;margin:2px 0 4px;font-family:'Cinzel',var(--serif);font-size:1.25em;letter-spacing:.08em;text-transform:uppercase;color:#F1D79A}
+/* Horoscope landing over the night bay: the painting holds still behind the whole page, from the top of the screen
+   to the menu; the title sits in its sky, and each part of the page is its own delicate card, framed in gold like an old
+   tarot card, with the night showing between them */
+.land.hnight::before{bottom:var(--navh,0px);background:#0E1428 url(/art/atlas/hland-night.webp) 50% 45%/cover no-repeat}
+.hl-top{position:relative;padding:calc(30vw + env(safe-area-inset-top,0px)) 24px 22px;text-align:center}
+.hl-top>.jdoor{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;color:#F1DFB4;background:rgba(var(--k-night-rgb),.45)}
+.hl-top h1{margin:0;font-size:clamp(2rem,10.5vw,2.9rem);line-height:1.05;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
+.hl-top .hgreet{margin:10px 0 0;font-family:'Cinzel',var(--serif);font-size:clamp(1rem,4.6vw,1.2rem);letter-spacing:.1em;text-transform:uppercase;color:#F1D79A;text-shadow:0 1px 8px #000}
+.hl-top .hl-line{margin:6px 0 0;font-family:var(--font-serif);font-style:italic;font-size:clamp(.95rem,4.2vw,1.08rem);color:#F4E6C2;text-shadow:0 1px 8px #000}
+.hl-top::after{content:'✦';display:block;margin-top:14px;color:#E9C985;font-size:.8rem;text-shadow:0 0 8px rgba(233,201,133,.7)}
+.hl-cards{display:flex;flex-direction:column;gap:26px;padding:0 5% 26px}
+/* the card: dusk glass, a hairline of gold and a second one inside it, small stars at its corners */
+.hnight .hl-card{position:relative;padding:18px 16px;border:1px solid rgba(233,201,133,.75);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.72),rgba(10,14,32,.6));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.35),inset 0 0 0 5px rgba(233,201,133,.35),0 8px 24px rgba(0,0,0,.45);color:#F1E2BC}
+.hnight .hl-card::before,.hnight .hl-card::after{content:'✦';position:absolute;top:-8px;left:50%;transform:translateX(-50%);padding:0 6px;font-size:.7rem;line-height:16px;color:#E9C985;background:transparent;text-shadow:0 0 6px rgba(233,201,133,.8)}
+.hnight .hl-card::after{top:auto;bottom:-8px}
+.hnight .hmine{gap:14px}
+.hnight .hm-top h2{color:#F6E3B0}
+.hnight .hm-d{color:rgba(241,226,188,.8)}
+.hnight .lr-m{color:#E0C487!important}
+.hnight .hm-q{color:#F4E6C2}
+.hnight .gmed{box-shadow:0 0 0 1px rgba(233,201,133,.8),0 0 14px rgba(233,201,133,.25)}
+.hnight .seg{gap:2px;padding:3px;border:.75px solid rgba(233,201,133,.6);border-radius:999px;background:rgba(6,10,24,.45)}
+.hnight .seg button{min-height:34px;border-radius:999px;font-family:'Cinzel',var(--serif);font-weight:600;font-size:clamp(.58rem,2.5vw,.68rem);letter-spacing:.05em;text-transform:uppercase;color:rgba(241,223,180,.62);padding:0 2px}
+.hnight .seg button[aria-selected=true]{background:radial-gradient(ellipse at 50% 120%,rgba(233,203,134,.3),rgba(233,203,134,.08) 70%);color:#F3DC9E;box-shadow:inset 0 0 0 .75px rgba(233,201,133,.75)}
+.hnight .btn.hm-go:not(.on){background:rgba(6,10,24,.35)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E;box-shadow:0 0 14px rgba(233,201,133,.2)}
+/* the section titles stand in the open sky between the cards */
+.hnight .k-div{color:#E9C985}
+.hnight .k-div span{color:#F1D79A;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.8)}
+.hnight .hl-sec>.k-div{margin:0 0 12px}
+/* the areas of life: six small cards of their own, the sky between them */
+.hnight .tiles6{gap:10px}
+.hnight .tile{padding:12px 4px 10px;border:1px solid rgba(233,201,133,.7);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.7),rgba(10,14,32,.58));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+ box-shadow:inset 0 0 0 3px rgba(10,14,32,.3),inset 0 0 0 4px rgba(233,201,133,.28),0 6px 16px rgba(0,0,0,.4);color:#F1E2BC}
+.hnight .tile strong{color:#F6E3B0}
+.hnight .tile span{color:rgba(241,226,188,.78)}
+.hnight .hso{margin:-4px 0 14px;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:.92rem;color:rgba(241,226,188,.85)}
+.hnight .signs12 .sgn{color:#F1E2BC}
+.hnight .signs12 .sgn-i{box-shadow:0 0 0 1px rgba(233,201,133,.85),0 3px 10px rgba(0,0,0,.5)}
+.hnight .signs12 .sgn.me .sgn-i{box-shadow:0 0 0 2px #F6DA97,0 0 14px rgba(246,210,140,.8)}
+.hnight .signs12 .sgn.me span{color:#F6DA97}
+.hnight .hl-sec:not(.hl-card)>.k-div{padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 70%,transparent)}
+.hnight .btn.hm-go{border:1px solid #D9B66E!important}

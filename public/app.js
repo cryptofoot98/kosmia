@@ -645,19 +645,22 @@ views.horoscope=()=>{
  const sign=sg(S.sign),nm=firstName(),pl=PLABEL[V.period],pw=PWORD[V.period];
  const ov=horoscope(S.sign,'overview',V.period),first=(String(ov.body||'').match(/^[^.!?]*[.!?]/)||[''])[0].trim();
  const read=V.period==='daily'&&S.readDay===dkey();
- return `<div class="land hland">${hero('hero-horoscope',jdoor(),'tall','Horoscope',`<span class="hgreet">${nm?esc(nm)+', your sky':'Your sky'}</span>${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}`)}<div class="sheet card gilt">
- <div class="hmine">
+ // the night over the bay holds still behind the whole page; the title in its sky, then three framed cards apart
+ return `<div class="land hland hnight"><header class="hl-top">${jdoor()}<h1 class="cz">Horoscope</h1><p class="hgreet">${nm?esc(nm)+', your sky':'Your sky'}</p><p class="hl-line">${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}</p></header>
+ <div class="hl-cards">
+ <div class="hmine hl-card">
   <div class="hm-top">${glyphMed(sign.id)}<div><h2>${sign.name}</h2><p class="hm-d">${sign.dates}</p><p class="lr-m">${keys(SIGN_KEYS[sign.id])}</p></div></div>
   ${periodSeg()}
   ${first?`<p class="hm-q">“${esc(first)}”</p>`:''}
   <button class="btn hm-go${read?' on':''}" data-act="tohoroscope">${read?'✦ Read again':`Read your ${pw}`}</button>
  </div>
- ${Kit.divider(`${sign.name} · ${pl[0]}, by area of life`)}
+ <section class="hl-sec">${Kit.divider(`${sign.name} · ${pl[0]}, by area of life`)}
  <div class="tiles6">${HCATS.map(([k])=>{const x=horoscope(S.sign,k,V.period);return `<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||CAT_INFO[k][1])}</span></button>`}).join('')}</div>
- ${Kit.divider('Read for Someone Else')}
- <p class="muted center hso">A partner, a friend, a child: open the sky they were born beneath.</p>
+ </section>
+ <section class="hl-sec hl-card">${Kit.divider('Read for Someone Else')}
+ <p class="hso">A partner, a friend, a child: open the sky they were born beneath.</p>
  <div class="signs12">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
- </div></div>`;
+ </section></div></div>`;
 };
 function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);
