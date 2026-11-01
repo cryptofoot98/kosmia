@@ -2167,3 +2167,19 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
    to the top of the screen and the top of the menu (not a height), so it follows Safari's bars as they shrink and grow */
 .hsp::before{top:0;bottom:var(--navh,0px);height:auto}
 .hsp{background:var(--k-midnight)}
+/* Home: today's ritual under the greeting, three steps that fill with a gold star as they are done */
+.hh-rit{position:relative;z-index:var(--zs-content);display:flex;align-items:center;justify-content:center;margin:3.2cqw 0 0 20cqw;width:72cqw}
+.hh-rit .rit{display:flex;flex-direction:column;align-items:center;gap:1cqw;min-width:0;padding:0;border:0;background:none;color:#F1E2BC;cursor:pointer;font:inherit}
+.hh-rit .rit i{display:grid;place-items:center;width:max(24px,6.6cqw);height:max(24px,6.6cqw);border-radius:50%;border:1px solid rgba(var(--k-gold-rgb),.85);background:rgba(10,14,30,.55);
+ font-style:normal;font-family:var(--font-display);font-size:max(11px,3cqw);color:#EBCB86;box-shadow:0 0 8px rgba(0,0,0,.6)}
+.hh-rit .rit.on i{background:radial-gradient(circle,#F6DA97,#C9963F);color:#2A1C0B;border-color:#F6DA97;box-shadow:0 0 10px rgba(246,210,140,.55)}
+.hh-rit .rit span{font-family:var(--font-serif);font-size:max(11px,2.9cqw);line-height:1.1;text-align:center;white-space:nowrap;text-shadow:0 1px 5px #000}
+.hh-rit .rit-j{flex:1;max-width:8cqw;height:1px;margin:0 1cqw;align-self:flex-start;margin-top:calc(max(24px,6.6cqw)/2);background:linear-gradient(90deg,transparent,rgba(var(--k-gold-rgb),.85),transparent)}
+/* the Daily Whisper as one compact row: the card small on the left, its title, message and one button beside it */
+.hsheet .card.hwhisper{margin:0}
+.dw.dw-row{display:grid;grid-template-columns:30% 1fr;gap:4cqw;align-items:center}
+.dw-row .scene.mini-w{width:100%}
+.dw-side{display:flex;flex-direction:column;gap:2cqw;min-width:0;text-align:left}
+.dw-t{margin:0;font-family:var(--font-serif);font-weight:600;font-size:max(17px,4.8cqw);line-height:1.15}
+.dw-side .dw-msg{margin:0;font-size:max(13px,3.5cqw);line-height:1.35;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.dw-side .btn{align-self:flex-start;min-height:max(38px,9.4cqw);padding:0 6cqw;font-size:max(10px,2.7cqw)}

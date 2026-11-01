@@ -572,21 +572,23 @@ views.home=()=>{
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
  const nm=firstName(),short=hShort(h.body),fig='atlas/fg-'+sign.id;
  const quick=['love','health','career','money','family'].map(cat=>{const x=horoscope(sign.id,cat,'daily');return `<button class="qt" data-act="tohoroscope" data-cat="${cat}">${catIco(cat,'qt-i')}<strong>${CAT_INFO[cat][0]}</strong><span>${TILE[cat][x.rel]||''}</span></button>`}).join('');
- const note=S.notes[k],wbtn=!rev?`<button class="btn" data-act="reveal">Reveal Today’s Message</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Your Reflection':'Reflect in Your Journal'} →</button>`;
+ const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
+ const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
+ const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`;
  return `<div class="home"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`
   ${((history.state&&history.state.d)||0)>0?`<button class="ibtn hh-back" data-act="back" aria-label="Back">${IC.back}</button>`:''}<div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
    <div class="hh-acts"><button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div></div>
-  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-sub">Here’s your cosmic overview for today.</p>
+  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1>${ritual}
   <div class="hh-stage s-${sign.id}">
    <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
   </div>
   <div class="qrow">${quick}</div>`})}
  ${scenic(`
-  ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-big"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-   ${rev?`<p class="dw-msg">${esc(c.msg)}</p><p class="dw-ref">${Kit.icon('star')}${esc(c.ref)}</p>`:''}${wbtn}</div>`,'gilt hwhisper')}
   ${energyCarousel(energySlides(now,m,sign,h))}
+  ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${wbtn}</div></div>`,'gilt hwhisper')}
 
  `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
@@ -636,6 +638,7 @@ views.horoscope=()=>{
 };
 function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);
+ if(ex===S.sign&&V.period==='daily'&&S.readDay!==dkey()){S.readDay=dkey();save()}
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
  const tiles=HCATS.map(([k])=>{const x=horoscope(ex,k,V.period);
   return `<button class="hc-ic t-${k}${k===cat?' on':''}" data-act="hcat" data-k="${k}" aria-pressed="${k===cat}" title="${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||'')}"><span class="hc-i">${catIco(k,'acc-i')}</span><span class="hc-l">${CAT_INFO[k][0]}</span></button>`}).join('');
