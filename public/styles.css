@@ -2796,3 +2796,54 @@ body.scrolled .enight .mn-bar{background:linear-gradient(#080C1C 72%,rgba(8,12,2
 .mnp.lp .mn-t{width:52%;margin-left:-1cqw}
 .mnp.lp .mn-t h1{font-size:10.5cqw}
 .mnp.lp .mn-hd{padding-bottom:58cqw}
+/* a tarot card keeps its own engraved plaques: the number and name in ink on cream, whatever page it sits on */
+.k-tarot .kt-num,.k-tarot .kt-name,.mnp .mbox .k-tarot .kt-num,.mnp .mbox .k-tarot .kt-name{color:#2C2016!important;-webkit-text-fill-color:#2C2016;font-weight:600!important;text-shadow:none!important}
+.entry .et-art{cursor:pointer;transition:transform .2s,filter .2s}
+.entry .et-art:hover,.entry .et-art:focus-visible{transform:translateY(-2px);filter:drop-shadow(0 0 12px rgba(243,210,140,.45))}
+/* ---------- the bottom menu, three designs for choosing (body.nv-a / nv-b / nv-c) ---------- */
+/* A · Night Glass: the bar as the cards, night glass with a fine gold double rule along its top, cream words, the chosen
+   one glowing gold with a small star beneath its name */
+body.nv-a #nav .in{background:linear-gradient(180deg,rgba(12,16,34,.94),rgba(6,9,22,.98))!important;border-top:1px solid rgba(233,201,133,.85)!important;border-radius:0!important;
+ box-shadow:inset 0 4px 0 -3px rgba(233,201,133,.45),0 -6px 18px rgba(0,0,0,.5)!important}
+body.nv-a #nav .in button{color:rgba(241,226,188,.72)!important;font-family:'Cinzel',var(--serif)!important;font-weight:600!important;font-size:10px!important;letter-spacing:.08em;text-transform:uppercase}
+body.nv-a #nav .in button::before{width:40px!important;height:40px!important;filter:drop-shadow(0 0 3px rgba(0,0,0,.6)) brightness(1.05)!important;opacity:.82!important}
+body.nv-a #nav .in button[aria-current=page]{color:#F6DA97!important}
+body.nv-a #nav .in button[aria-current=page]::before{opacity:1!important;filter:drop-shadow(0 0 5px rgba(246,210,140,.95)) drop-shadow(0 0 12px rgba(246,210,140,.6))!important}
+body.nv-a #nav .in button[aria-current=page] span::after{content:'✦';display:block;margin-top:2px;font-size:7px;color:#F3D896;text-align:center}
+body.nv-a #nav .in button::after{background:none!important}
+body.nv-a #nav .in::before,body.nv-a #nav .in::after{display:none}
+/* B · Floating Frame: a capsule of night floating above the foot of the screen, framed in gold like a card, the
+   medallions alone, the chosen one lifted in a ring of gold light with its name beneath */
+body.nv-b #nav .in{margin:0 12px calc(10px + env(safe-area-inset-bottom,0px))!important;height:66px!important;padding:0 8px!important;border:1px solid rgba(233,201,133,.85)!important;border-radius:999px!important;
+ background:linear-gradient(180deg,rgba(14,18,38,.92),rgba(6,9,22,.96))!important;box-shadow:inset 0 0 0 4px rgba(6,9,22,.6),inset 0 0 0 5px rgba(233,201,133,.3),0 10px 26px rgba(0,0,0,.6)!important}
+body.nv-b #nav .in button{height:66px!important;padding-top:7px!important;color:transparent!important;font-family:'Cinzel',var(--serif)!important;font-size:9px!important;letter-spacing:.08em;text-transform:uppercase}
+body.nv-b #nav .in button::before{width:38px!important;height:38px!important;opacity:.75!important;filter:drop-shadow(0 0 3px rgba(0,0,0,.6))!important}
+body.nv-b #nav .in button[aria-current=page]{color:#F6DA97!important}
+body.nv-b #nav .in button[aria-current=page]::before{opacity:1!important;border-radius:50%;box-shadow:0 0 0 1px rgba(243,216,150,.9),0 0 14px 3px rgba(243,210,140,.45)!important;filter:none!important;transform:translateY(-2px)!important}
+body.nv-b #nav .in button::after{background:none!important}
+body.nv-b #nav .in::before,body.nv-b #nav .in::after{display:none}
+/* C · Tarot Arch: a deep night band whose top edge is an engraved gold arch with a star at its crown; the chosen
+   medallion rises into the arch, haloed, its name in gold */
+body.nv-c #nav .in{height:calc(78px + env(safe-area-inset-bottom,0px))!important;border:0!important;border-radius:0!important;background:linear-gradient(180deg,#0E1328,#070A18)!important;box-shadow:0 -8px 20px rgba(0,0,0,.55)!important;overflow:visible}
+body.nv-c #nav .in::before{display:block!important;content:''!important;position:absolute;left:0!important;right:0;top:-14px!important;width:auto!important;height:16px!important;animation:none!important;
+ background:radial-gradient(60% 200% at 50% 100%,transparent 49%,rgba(233,201,133,.9) 49.5%,rgba(233,201,133,.9) 50.5%,#0E1328 51%)!important}
+body.nv-c #nav .in::after{display:block!important;content:'✦'!important;position:absolute;left:50%!important;right:auto!important;top:-24px!important;width:auto!important;height:auto!important;transform:translateX(-50%);font-size:14px;line-height:1;color:#F3D896;text-shadow:0 0 8px rgba(243,210,140,.9);background:none!important;animation:none!important}
+body.nv-c #nav .in button{height:78px!important;padding-top:8px!important;color:rgba(241,226,188,.7)!important;font-family:var(--font-serif)!important;font-weight:600!important;font-size:12px!important}
+body.nv-c #nav .in button::before{width:42px!important;height:42px!important;opacity:.8!important;filter:drop-shadow(0 0 3px rgba(0,0,0,.7))!important}
+body.nv-c #nav .in button[aria-current=page]{color:#F6DA97!important}
+body.nv-c #nav .in button[aria-current=page]::before{opacity:1!important;transform:translateY(-12px) scale(1.12)!important;filter:drop-shadow(0 0 6px rgba(246,210,140,.95)) drop-shadow(0 0 14px rgba(246,210,140,.55))!important}
+body.nv-c #nav .in button[aria-current=page] span{transform:translateY(-8px)}
+body.nv-c #nav .in button::after{top:30px!important;background:var(--nv-star) 100% 0/8px 8px no-repeat!important;opacity:.7}
+/* D · the floating frame with names: a capsule of night floating above the foot of the screen, framed in gold like a
+   card, the five medallions each with its name in small gold capitals; the chosen one glowing gold, a star beneath it */
+body.nv-d #nav .in{margin:0 10px calc(8px + env(safe-area-inset-bottom,0px))!important;height:70px!important;padding:0 6px!important;border:1px solid rgba(233,201,133,.85)!important;border-radius:26px!important;
+ background:linear-gradient(180deg,rgba(14,18,38,.93),rgba(6,9,22,.97))!important;box-shadow:inset 0 0 0 4px rgba(6,9,22,.6),inset 0 0 0 5px rgba(233,201,133,.3),0 10px 26px rgba(0,0,0,.6)!important}
+body.nv-d #nav .in button{height:70px!important;padding-top:6px!important;gap:2px!important;color:rgba(241,226,188,.72)!important;font-family:'Cinzel',var(--serif)!important;font-weight:600!important;font-size:9.5px!important;letter-spacing:.07em;text-transform:uppercase}
+body.nv-d #nav .in button::before{width:38px!important;height:38px!important;opacity:.82!important;filter:drop-shadow(0 0 3px rgba(0,0,0,.6)) brightness(1.05)!important}
+body.nv-d #nav .in button[aria-current=page]{color:#F6DA97!important}
+body.nv-d #nav .in button[aria-current=page]::before{opacity:1!important;transform:none!important;filter:drop-shadow(0 0 5px rgba(246,210,140,.95)) drop-shadow(0 0 12px rgba(246,210,140,.6))!important}
+body.nv-d #nav .in button[aria-current=page] span::after{content:'✦';display:block;margin-top:1px;font-size:7px;line-height:1;color:#F3D896;text-align:center}
+body.nv-d #nav .in button::after{background:none!important}
+body.nv-d #nav .in::before,body.nv-d #nav .in::after{display:none}
+html:has(body.nv-d),body.nv-d{background:#0A0E1F!important}
+body.nv-d #app{background:#0A0E1F!important}

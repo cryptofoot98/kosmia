@@ -561,7 +561,7 @@ const energyCarousel=sl=>`<div class="energy en-car"><span class="en-in"><span c
 // the Daily Whisper's card enlarged, to see it in detail
 // the Daily Whisper's card opened from Home on the parchment sheet a tarot card opens on: its name, the card, its message
 // and its question
-function whisperPop(c){const k=dkey();
+function whisperPop(c,k=dkey()){
  return `<div class="cpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
  <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
@@ -1584,7 +1584,7 @@ const grow=el=>{el.style.height='auto';el.style.height=Math.max(150,el.scrollHei
 const intents=key=>{const h=hash(key);return [0,1,2].map(i=>AFFIRM[(h+i*5)%AFFIRM.length])};
 function entryTop(p){
  const date=`<p class="et-date">${ymdLong(p.day,{day:'numeric',month:'long',year:'numeric'})}</p>`;
- if(p.t==='n')return `<div class="et"><div class="et-art">${Kit.tarot({art:'whispers/'+p.o.id,num:wNum(p.o),name:p.o.title})}</div><div>${date}<h2>${esc(p.o.title)}</h2><p class="et-keys">${keys(wKeys(p.o))}</p><p class="et-q">“${esc(p.o.msg)}”</p></div></div>`;
+ if(p.t==='n')return `<div class="et"><div class="et-art" role="button" tabindex="0" data-act="wpop" data-k="${p.day}" aria-label="Open ${esc(p.o.title)}">${Kit.tarot({art:'whispers/'+p.o.id,num:wNum(p.o),name:p.o.title})}</div><div>${date}<h2>${esc(p.o.title)}</h2><p class="et-keys">${keys(wKeys(p.o))}</p><p class="et-q">“${esc(p.o.msg)}”</p></div></div>`;
  if(p.t==='r'){const r=p.r;return `<div class="et col">${date}<h2>${esc((SPREADS[r.spread]||{n:r.spread}).n)}</h2>${r.q?`<p class="et-q">“${esc(r.q)}”</p>`:''}<div class="et-cards">${r.cards.map(x=>`<figure>${pic('deck',x.id,'et-card'+(x.rev?' rev':''))}<figcaption><strong>${esc(x.pos||'')}</strong>${esc(x.name)}${x.rev?' (reversed)':''}</figcaption></figure>`).join('')}</div></div>`}
  if(p.t==='h'){const d=p.b.data||{};return `<div class="et">${med(d.sign,'et-med')}<div>${date}<h2>${jHeading(p)}</h2><p class="et-keys">${sg(d.sign).name} · ${d.start?rangeTxt({start:d.start,end:d.end}):''}</p>${d.focus?`<p class="et-q">${esc(d.focus)}</p>`:''}</div></div><details class="acc plain"><summary><span class="lr-t"><strong>The forecast</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b read">${paras(d.body)}</div></details>`}
  if(p.t==='e'){const d=p.b.data||{},ev=findEvent(p.b.ref,d.date),x=ev?evInfo(ev):null,ph=phaseSlug(d.name||'');return `<div class="et">${ph?pic('moons',ph,'et-med'):ui('ev-planet','et-med')}<div>${date}<h2>${esc(d.name||'')}</h2><p class="et-keys">${esc(d.when||'')}</p>${x?`<p class="et-q">${x.sym}</p>`:''}</div></div>${x?`<p class="muted small">${x.fact}</p>`:''}`}
@@ -1646,6 +1646,7 @@ function entryView(){
  <div class="je-box"><div class="je-tools" role="toolbar" aria-label="Writing tools">${JTOOLS.map(([k,l,g])=>`<button type="button" data-act="jfmt" data-k="${k}" aria-label="${l}" title="${l}">${g}</button>`).join('')}</div>
  <label class="sr-only" for="je">My reflection</label><textarea id="je" class="je" placeholder="${esc(pr[0])}">${esc(txt)}</textarea></div>`)}
  ${mbox(`<div class="prompts"><p class="kick">Guiding prompts <span class="muted">(optional)</span></p>${pr.map((q,i)=>`<button class="pr" data-act="jprompt" data-i="${i}">${ui(['t-whisper','t-reading','t-journal'][i],'pr-i')}<span>${esc(q)}</span>${IC.chev}</button>`).join('')}</div>`)}
+ ${V.wpop&&p.t==='n'?whisperPop(p.o,p.day):''}
  ${p.t!=='j'?mbox(`<div class="intent"><h3>Today I’m taking with me…</h3>${intents(key).map((x,i)=>`<label class="ck"><input type="checkbox" class="cb" data-act="jint" data-i="${i}" ${on[i]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`):''}</div>`;
 }
 // a small engraved Moon for a calendar day: the lit part drawn from how much of the Moon is lit that night
@@ -1953,7 +1954,7 @@ function render(){
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
- $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
+ $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d');
  if(authed)$('#navin').innerHTML=Kit.nav(MAIN.map(k=>({key:k,label:SECTIONS[k].label})),sec);
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
@@ -2219,7 +2220,7 @@ document.addEventListener('click',e=>{
  if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
- if(a==='wpop'){V.wpop=true;return render()}
+ if(a==='wpop'){V.wpop=t.dataset.k||true;return render()}
  if(a==='wpopclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.wpop=false;return render()}
  if(a==='cpedit'){V.cpEdit=true;V.birthDraft=null;return render()}
  if(a==='cpopen'){go('discover','profile');V.cpEdit=true;V.birthDraft=null;return render()}
