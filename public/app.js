@@ -536,7 +536,14 @@ const nextEvent=now=>upcoming().find(e=>e.date>now);
 const greet=()=>{const h=Number(fmt({hour:'numeric',hour12:false},new Date()));return h<5||h>=18?'Good evening':h<12?'Good morning':'Good afternoon'};
 const firstName=()=>(S.name||S.fullName||'').trim().split(/\s+/)[0]||'';
 // the reader's own medallion, at the top right of Home: their profile, birth details, notifications and plan
-const avatar=()=>`<button class="avatar" data-go="settings" data-t="account" aria-label="Your profile and settings">${med(S.sign||'aries','av-i')}</button>`;
+const myFace=(cls='av-i')=>S.photo?`<img class="${cls}" src="${S.photo}" alt="">`:med(S.sign||'aries',cls);
+const avatar=()=>`<button class="avatar" data-go="settings" data-t="account" aria-label="Your profile and settings">${myFace()}</button>`;
+// a picture chosen from the device, cut to a square at its centre and kept small (320 px) on this device and in the account
+function setPhoto(file){
+ if(!file||!/^image\//.test(file.type))return toast('Please choose a picture.');
+ const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const n=320,c=document.createElement('canvas');c.width=c.height=n;const s0=Math.min(im.width,im.height);
+  c.getContext('2d').drawImage(im,(im.width-s0)/2,(im.height-s0)/2,s0,s0,0,0,n,n);S.photo=c.toDataURL('image/jpeg',.82);save();render();toast('Your picture is in place.')};
+  im.onerror=()=>toast('That picture could not be opened.');im.src=r.result};r.readAsDataURL(file)}
 // a whisper's number in the deck of 100, as the numeral on its card
 const ROMAN=n=>[[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']].reduce((s,[v,r])=>{while(n>=v){s+=r;n-=v}return s},'');
 const wNum=c=>{const i=(globalThis.KOSMIA_WHISPERS||[]).findIndex(w=>w[0]===c.id);return i<0?'':ROMAN(i+1)};
@@ -1915,7 +1922,8 @@ views.settings=()=>{
  return `<div class="pfp">${iconBtn('back','data-act="back"','Back')}<div class="pf-hero stay">${ui('home-sky','pf-sky','',true)}
  <div class="hero-t"><h1 class="cz">Your Profile</h1><p>Your cosmic identity</p></div>
  <div class="pf-row"><span class="pf-fig" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo')}</span>${Kit.size('atlas/fg-'+s.id)?Kit.img('atlas/fg-'+s.id,{cls:'hh-fig'}):''}</span>
- <div class="pf-card"><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} <span class="muted">${SHORT_DATES(s)}</span></p><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="pf-meta">${s.el} · ${s.mod||''}${s.mod?' · ':''}ruled by ${s.ruler}</p>${hasBirthDate()?`<p class="pf-meta">Born ${ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})}${S.birth.place?' · '+esc(S.birth.place.split(',')[0]):''}</p>`:''}</div></div></div>
+ <div class="pf-card"><div class="pf-ph"><label class="pf-pic" aria-label="${S.photo?'Change':'Add'} your profile picture">${myFace('pf-img')}<span class="pf-cam" aria-hidden="true">${IC.plus}</span><input type="file" id="pfphoto" accept="image/*" class="sr-only"></label>
+ ${S.photo?'<button class="link pf-rm" data-act="rmphoto">Remove picture</button>':'<span class="pf-hint">Add your picture</span>'}</div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} <span class="muted">${SHORT_DATES(s)}</span></p><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="pf-meta">${s.el} · ${s.mod||''}${s.mod?' · ':''}ruled by ${s.ruler}</p>${hasBirthDate()?`<p class="pf-meta">Born ${ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})}${S.birth.place?' · '+esc(S.birth.place.split(',')[0]):''}</p>`:''}</div></div></div>
  <div class="pf-body">${acct}
  <div class="list">
  ${acc(glyphMed(s.id),'Your sign',s.name,`${signGrid('My sign',S.sign)}`)}
@@ -2105,6 +2113,7 @@ document.addEventListener('click',e=>{
  if(a==='back')return goBack();
  if(a==='chartopen'){V.chartOpen=true;V.chartInterp=t.dataset.k==='interp';V.chartTab=V.chartInterp?'chart':t.dataset.k;render();return window.scrollTo(0,0)}
  if(a==='reveal')return reveal();
+ if(a==='rmphoto'){delete S.photo;save();render();return toast('Your picture has been removed.')}
  if(a==='gtab'){if(t.dataset.k!==tab())go('discover',t.dataset.k,{replace:true});return}
  // onboarding
  if(a==='obnext'||a==='obstep'){const to=t.dataset.to;
@@ -2252,6 +2261,7 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('change',e=>{
  const i=e.target,id=i.id;
+ if(id==='pfphoto'){setPhoto(i.files&&i.files[0]);i.value='';return}
  if(i.dataset.act==='jint'){S.intent=S.intent||{};const a=S.intent[V.jkey]||[];a[+i.dataset.i]=i.checked;S.intent[V.jkey]=a;save();return}
  if(id==='obd'){const s=signFromDate(i.value);if(s){V.joinSign=s;V.bdayOpen=true;render()}return}
  if(id==='za'||id==='zb'){V.love[id==='za'?'a':'b']=i.value;V.love.done=false;return render()}
