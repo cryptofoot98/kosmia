@@ -3003,3 +3003,6 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .ob.ob3-wb{padding-bottom:calc(var(--u) * 321)!important}
 .ob3-acct .ob3-head{padding-top:calc(var(--u) * 150);margin-left:calc(var(--u) * 78)}
 .ob3-acct .ob3-head{margin-left:calc(var(--u) * 108);width:calc(var(--u) * 360)}
+/* the pictures set over the edge of the Cosmic Energy card: the single gold line, and outside it a ring of night that
+   hides the card's frame where the two meet */
+.en-moon{box-shadow:0 0 0 1.5px #C9A253,0 0 0 8px #0A0E1F!important}
