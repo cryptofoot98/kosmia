@@ -2163,3 +2163,6 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
  background:url(/art/atlas/hsp-garland-l.webp) 0 0/22cqw auto repeat-y,url(/art/atlas/hsp-garland-r.webp) 100% 0/22cqw auto repeat-y}
 .hsp>.hsp-hero{z-index:2}
 .hsp>.hsp-body{z-index:3}
+/* the night behind a sign's page ends where the menu begins, so its lilies and clouds sit in view above the menu */
+.hsp::before{height:calc(100svh - var(--navh,0px))}
+.hsp{background:var(--k-midnight)}
