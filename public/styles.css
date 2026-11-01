@@ -2470,3 +2470,60 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .hsp .card.hread{background:linear-gradient(180deg,rgba(10,14,32,.58),rgba(10,14,32,.48))!important;-webkit-backdrop-filter:none;backdrop-filter:none}
 .hsp .hread .read p,.hsp .hread h2,.hsp .hread .muted,.hsp .hread .h-focus,.hsp .hread .h-ref{text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.7)}
 .hsp .hsp-body>[role=group]{margin:0 -5.5cqw}.hsp .hread .hd h2{font-size:1.5rem}
+/* the Journal over the night under the arc of the Moon's phases (art/atlas/jrn-night): its head at the top of the page,
+   its middle (art/atlas/jrn-mid, the starry sky between the vines and its mirror) down the length, its dawn at the foot */
+.jnight{--w:min(100vw,var(--appw));position:relative;isolation:isolate;padding-bottom:calc(var(--w) * .62);background:#0B0F1E url(/art/atlas/jrn-mid.webp) 50% calc(var(--w) * .4235)/100% auto repeat-y}
+.jnight::before,.jnight::after{content:'';position:absolute;z-index:-1;left:0;right:0;pointer-events:none;background:url(/art/atlas/jrn-night.webp) no-repeat;background-size:100% auto}
+.jnight::before{top:0;height:calc(var(--w) * 1.35);background-position:50% 0;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
+.jnight::after{bottom:0;height:calc(var(--w) * .824);background-position:50% 100%;-webkit-mask-image:linear-gradient(transparent,#000 14%);mask-image:linear-gradient(transparent,#000 14%)}
+.jnight .hl-top{padding:calc(var(--w) * .33 + env(safe-area-inset-top,0px)) 0 24px;margin:0 auto;width:62%;text-align:center;position:static}
+.jnight .hl-top>.ibtn,.jnight .jl-acts{position:absolute;top:calc(env(safe-area-inset-top,0px) + var(--w) * .2);z-index:2}
+.jnight .hl-top>.ibtn{left:calc(var(--w) * .07)}
+.jnight .jl-acts{right:calc(var(--w) * .07);display:flex;gap:8px}
+.jnight .hl-top .ibtn{background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+.jnight .hl-top h1{margin:0;font-size:clamp(2rem,10.5vw,2.8rem);line-height:1.05;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
+.jnight .hl-top .hgreet{margin:10px 0 0;font-family:'Cinzel',var(--serif);font-size:clamp(.85rem,3.9vw,1rem);letter-spacing:.08em;text-transform:uppercase;color:#F1D79A;text-shadow:0 1px 8px #000}
+.jnight .hl-top .hl-line{margin:6px 0 0;font-family:var(--font-serif);font-style:italic;font-size:clamp(.92rem,4vw,1.05rem);line-height:1.35;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.jnight .hl-top::after{content:'✦';display:block;margin-top:12px;color:#E9C985;font-size:.8rem;text-shadow:0 0 8px rgba(233,201,133,.7)}
+.jnight .hl-cards{display:flex;flex-direction:column;gap:24px;padding:calc(var(--w) * .3) 10% 0}
+.jnight .hl-card{position:relative;padding:18px 16px;border:1px solid rgba(233,201,133,.75);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.66),rgba(10,14,32,.54));color:#F1E2BC;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)}
+.jnight .hl-card::before,.jnight .hl-card::after{content:'✦';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:.7rem;line-height:16px;color:#E9C985;text-shadow:0 0 6px rgba(233,201,133,.8)}
+.jnight .hl-card::after{top:auto;bottom:-8px}
+.jnight .hl-sec>.k-div{margin:0 0 12px;padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 70%,transparent)}
+.jnight .k-div{color:#E9C985}.jnight .k-div span{color:#F1D79A;text-shadow:0 1px 6px #000}
+.jnight .btn{width:100%;background:rgba(6,10,24,.35)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.2)!important}
+.jnight .jprompt{text-align:center}
+.jnight .jp-k{margin:0 0 8px;font-family:'Cinzel',var(--serif);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#E0C487}
+.jnight .jp-q{margin:0 0 16px;font-family:var(--font-serif);font-style:italic;font-size:1.2rem;line-height:1.4;color:#F6E3B0}
+.jnight .jp-new{display:inline-flex;align-items:center;gap:4px;margin-top:12px;border:0;background:none;cursor:pointer;font-family:var(--font-serif);font-size:.95rem;color:#E9D6AA}
+.jnight .jp-new svg{width:14px;height:14px}
+.jnight .js3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.jnight .js3 strong{display:block;font-family:var(--font-display);font-size:1.9rem;line-height:1;color:#F6DA97;text-shadow:0 0 12px rgba(246,210,140,.35)}
+.jnight .js3 span{display:block;margin-top:6px;font-size:.75rem;line-height:1.2;color:rgba(241,226,188,.8)}
+.jnight .js-th{margin:14px 0 0;text-align:center;font-family:var(--font-serif);font-style:italic;color:#F4E8CC}
+.jnight .js-th b{font-style:normal;color:#F6DA97}
+.jnight .jlinks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.jnight .jl-b{display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:0 6px;border:1px solid rgba(233,201,133,.55);border-radius:999px;background:rgba(6,10,24,.4);cursor:pointer;font-family:var(--font-serif);font-size:.9rem;color:#F1D79A}
+.jnight .jl-b svg{width:16px;height:16px}
+.jnight .lrow{background:rgba(6,10,24,.35)!important;border:1px solid rgba(233,201,133,.45)!important;box-shadow:none!important;color:#F1E2BC}
+.jnight .lr-t strong{color:#F6E3B0}.jnight .lr-t span{color:rgba(241,226,188,.8)}.jnight .lrow svg{color:#E9C985}
+.jnight .jp-empty{margin:0;text-align:center;font-family:var(--font-serif);font-style:italic;color:#F4E8CC}
+/* the Moon calendar on the night */
+.jnight .jmoon .mnav h2{color:#F6E3B0}.jnight .jmoon .mnav .ibtn{color:#F1D79A}
+.jnight .jc-d{color:#E0C487}
+.jnight .jc-c{color:#F1E2BC;background:rgba(6,10,24,.3);border-color:rgba(233,201,133,.25)}
+.jnight .jc-c.today{box-shadow:inset 0 0 0 1px #F3D896,0 0 10px rgba(243,210,140,.4)}
+.jnight .jc-c.sel{background:rgba(233,201,133,.2)}
+.jnight .jc-drop .sec-h{color:#F1D79A}
+.jnight .inp{background:rgba(6,10,24,.5);border-color:rgba(233,201,133,.6);color:#F1E2BC}.jnight .inp input{color:#F1E2BC}
+.jnight .jcal{padding:4px 0;border:0;background:none!important;box-shadow:none}
+.jnight .jc-c{background:none;border-radius:0;border-top:1px solid rgba(233,201,133,.22)}
+.jnight .jc-c:not(:nth-child(7n)){border-right:1px solid rgba(233,201,133,.16)}
+.jnight .jc-c.today{box-shadow:none}
+.jnight .jc-c.sel{background:rgba(233,201,133,.14)}
+.jnight .jc-d{font-family:'Cinzel',var(--serif);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase}
+.jnight .hl-top>.ibtn,.jnight .jl-acts{top:calc(env(safe-area-inset-top,0px) + 10px)}
+.jnight .hl-cards{padding-top:calc(var(--w) * .12)}
+.jnight .btn{font-size:.76rem;letter-spacing:.1em}
+.jnight .jl-b{font-size:.84rem;white-space:nowrap}
+.jnight{margin-bottom:-18px;padding-bottom:calc(var(--w) * .62 + 18px)}

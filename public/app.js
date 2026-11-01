@@ -1514,15 +1514,31 @@ function jrow(p){
  const x=jText(p),K2=JKIND[p.t];
  return `<button class="jrow" data-act="jopen" data-k="${esc(jKey(p))}"><span class="jr-i">${jThumb(p)}</span><span class="jr-t"><strong>${jHeading(p)}</strong><span class="jr-s">${jSub(p)}</span>${x?`<span class="jr-x">${esc(x)}</span>`:''}</span><span class="jr-d">${ymdLong(p.day,{day:'numeric',month:'short'})}<br>${p.day.slice(0,4)}<i class="jr-star ${K2[1]}">${p.t==='j'?IC.mark:IC.star}</i></span></button>`;
 }
+/* the Journal: the night under the arc of the Moon's phases runs the length of the page (its head, its middle repeated,
+   its dawn at the foot); the title and the reader's name in its sky; then tonight's question, drawn from today's card when
+   it has been turned and from today's horoscope otherwise, the path so far, the latest pages and the Moon calendar, each
+   on night glass framed in gold */
 function journalLib(){
- const q=(V.jsearch||'').trim().toLowerCase();
- const items=q?journalItems().filter(p=>plain(jHeading(p)+' '+jSub(p)+' '+jText(p)).toLowerCase().includes(q)).sort((a,b)=>(b.day+(b.at||''))>(a.day+(a.at||''))?1:-1):[];
- return `<div class="land jlib">${hero('hero-journal',`${iconBtn('back','data-act="back"','Back')}<div class="hero-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="fab" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>`,'mid','Journal','Your space to reflect, integrate and grow')}
- <div class="sheet">${V.jsearch!=null?`<div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>`:''}
- ${q?`<div class="list jlist">${items.length?items.map(jrow).join(''):'<p class="muted center">Nothing found.</p>'}</div>`:''}
- ${journalCal()}
- <div class="jlinks"><button class="link jins" data-act="inspop">${IC.chart} Insights &amp; Themes</button><button class="link jins" data-go="discover" data-t="dreams">${IC.eye} Your Dreams</button></div>
- <div class="jend">${ui('journal-end','je-i')}<p class="je-t">Every thought you write<br>is a star you place<br>in your own sky.</p><button class="btn gold" data-act="sheet" data-k="new">New Entry</button></div>
+ const q=(V.jsearch||'').trim().toLowerCase(),it=journalItems(),byNew=(a,b)=>(b.day+(b.at||''))>(a.day+(a.at||''))?1:-1;
+ const items=q?it.filter(p=>plain(jHeading(p)+' '+jSub(p)+' '+jText(p)).toLowerCase().includes(q)).sort(byNew):[];
+ const k=dkey(),nm=firstName(),c=todayCard(),rev=!!S.revealed[k],note=S.notes[k],m=K?K.moon(new Date()):null;
+ const h=A&&K?horoscope(S.sign,'overview','daily'):null;
+ const [ask,act,lab]=rev?[c.ref,`data-act="jopen" data-k="fortune:${k}"`,note?'Continue your reflection':'Write about '+esc(c.title)]
+  :h?[h.reflection||'What do you want to remember about today?',`data-act="hreflect" data-ref="${S.sign}/overview/daily/${h.per.key}"`,'Write tonight’s reflection']
+  :['What do you want to remember about today?','data-act="sheet" data-k="new"','Begin a new page'];
+ const days=new Set(it.map(p=>p.day));let streak=0;for(let d=new Date();days.has(dkey(d));d=new Date(+d-DAY))streak++;
+ const month=new Set(it.filter(p=>p.day.slice(0,7)===k.slice(0,7)).map(p=>p.day)).size;
+ const theme=THEMES.map(([l,,re])=>[l,it.reduce((n,p)=>n+((jText(p)||'').toLowerCase().match(re)||[]).length,0)]).sort((a,b)=>b[1]-a[1])[0];
+ const recent=it.slice().sort(byNew).slice(0,3);
+ const sec=(t,h,cls='')=>`<section class="hl-sec">${Kit.divider(t)}<div class="hl-card ${cls}">${h}</div></section>`;
+ return `<div class="land jlib jnight"><header class="hl-top">${iconBtn('back','data-act="back"','Back')}<div class="jl-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="ibtn" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>
+ <h1 class="cz">Journal</h1><p class="hgreet">${nm?esc(nm)+', your own sky':'Your own sky'}</p><p class="hl-line">Every thought you write is a star you place in it</p></header>
+ <div class="hl-cards">
+ ${V.jsearch!=null?`<div class="hl-card jsrch"><div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>${q?`<div class="list">${items.length?items.map(p=>lrow(jThumb(p),jHeading(p),ymdLong(p.day,{day:'numeric',month:'short',year:'numeric'}),`data-act="jopen" data-k="${esc(jKey(p))}"`)).join(''):'<p class="muted center">Nothing found.</p>'}</div>`:''}</div>`:''}
+ ${sec('Tonight’s Reflection',`${m?`<p class="jp-k">${esc(m.name)} in ${sIdx(m.sign).name}${rev?' · '+esc(c.title):''}</p>`:''}<p class="jp-q">“${esc(ask)}”</p><button class="btn" ${act}>${lab}</button><button class="jp-new" data-act="sheet" data-k="new">Or begin a new page ${IC.chev}</button>`,'jprompt')}
+ ${sec('Your Path So Far',`<div class="js3">${[[it.length,it.length===1?'Page':'Pages'],[streak,streak===1?'Day in a row':'Days in a row'],[month,'Days this month']].map(([v,l])=>`<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>${theme&&theme[1]?`<p class="js-th">Lately your words keep returning to <b>${theme[0]}</b>.</p>`:''}<div class="jlinks"><button class="jl-b" data-act="inspop">${IC.chart} Insights &amp; Themes</button><button class="jl-b" data-go="discover" data-t="dreams">${IC.eye} Your Dreams</button></div>`,'jpath')}
+ ${sec('Your Latest Pages',recent.length?`<div class="list">${recent.map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]} · ${relDay(p.day)}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')}</div>`:'<p class="jp-empty">Your first page is waiting. Whatever you write tonight will be kept here.</p>','jrecent')}
+ ${sec('Your Moon Calendar',journalCal(),'jmoon')}
  </div></div>${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><h2 class="center">Insights &amp; Themes</h2>${journalInsights()}</div></div>`:''}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
