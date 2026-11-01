@@ -3011,3 +3011,47 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .sh-acts{display:flex;flex-direction:column;gap:10px;width:min(78vw,340px)}
 .sh-acts .btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(6,10,24,.45)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;text-decoration:none}
 .sh-acts .btn svg{width:18px;height:18px}
+/* ---------- share and keep: a share icon beside the heart, as small round icons of night and gold ---------- */
+.hsp-r{display:flex;gap:6px}
+.cp-icons,.int-ic{display:flex;gap:10px;justify-content:center}
+.int-hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+:is(.hsp-r,.cp-icons,.int-ic) .ibtn{width:44px;height:44px;border-radius:50%;background:rgba(8,12,28,.6)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F1D79A!important}
+:is(.hsp-r,.cp-icons,.int-ic) .ibtn svg{width:20px;height:20px}
+:is(.hsp-r,.cp-icons,.int-ic) .ibtn.on{color:#F2A7A0!important;border-color:#F3D896!important}
+.mnp .btn svg{width:18px;height:18px;flex:none}
+/* ---------- onboarding holds still: every page fits the screen, its painting fixed, nothing scrolls ---------- */
+html:has(body.obfit),body.obfit{overflow:hidden;overscroll-behavior:none;height:100%}
+body.obfit #app{padding-bottom:0!important;min-height:0}
+/* the paintings with their words in place (welcome, Ancient Wisdom, the zodiac): the painting scaled whole to the screen,
+   its own night blurred behind it at the sides */
+.ob.ob2{--w:min(100vw,var(--appw),calc(100svh * .4597));--u:calc(var(--w) / 850);height:100svh;min-height:0;overflow:hidden;isolation:isolate}
+.ob.ob2::before{content:'';position:absolute;inset:-30px;z-index:-1;background:var(--ob2bg) 50% 50%/cover no-repeat;filter:blur(18px) brightness(.55)}
+.ob2-wel{--ob2bg:url(/art/atlas/ob-welcome2.webp)}.ob2-intro{--ob2bg:url(/art/atlas/ob-intro2.webp)}.ob2-sign{--ob2bg:url(/art/atlas/zs-night.webp)}
+.ob2 .ob2-bg{position:absolute;top:50%;left:50%;width:var(--w);transform:translate(-50%,-50%)}
+.ob2 .ob2-in{left:50%;right:auto;top:50%;bottom:auto;width:var(--w);height:calc(var(--w) * 2.1753);transform:translate(-50%,-50%);right:auto;bottom:auto}
+.ob2>.ibtn{top:calc(50% - var(--w) * 1.0877 + var(--u) * 50);left:calc(50% - var(--w) / 2 + var(--u) * 28)}
+/* Create Your Account and Welcome Back: the painting's head and dawn fixed to the top and foot of the screen, the form
+   filling the space between them */
+.ob.ob3{height:100svh;min-height:0;padding:0!important;overflow:hidden}
+.ob.ob3>.ob3-panel{position:absolute;left:calc(var(--u) * 64);right:calc(var(--u) * 62);top:calc(var(--u) * 440);bottom:calc(var(--u) * 205);margin:0!important;min-height:0!important;
+ justify-content:space-evenly;gap:4px;padding:12px 16px;overflow:hidden}
+.ob3-panel label{margin-bottom:3px;font-size:.88rem}
+.ob3-panel .inp input{min-height:38px;height:38px;font-size:.95rem}
+.ob3-panel .pw-rules{grid-template-columns:repeat(3,auto);justify-content:space-between;gap:4px}
+.ob3-panel .pw-rules li{font-size:.7rem;gap:4px}.ob3-panel .pw-rules li::before{width:11px;height:11px}
+.ob3-panel .btn{min-height:42px;margin:0}
+.ob3-panel .auth-alt{font-size:.92rem}
+.ob3-panel .ob-rule{margin:0 auto}
+.ob3-panel .auth-err:empty{display:none}
+.ob.ob3>.ob3-panel{top:calc(var(--u) * 425);bottom:calc(var(--u) * 190);padding:10px 14px;gap:2px}
+.ob3-panel .field{display:flex;flex-direction:column}
+/* small screens: the labels give way to their placeholders, the ornament to space */
+@media (max-height:640px){
+ .ob3-panel label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+ .ob3-panel .ob-rule{display:none}
+ .ob3-panel .inp input{min-height:36px;height:36px}
+ .ob3-panel .btn{min-height:38px}
+ .ob3-acct .ob3-head h1{font-size:calc(var(--u) * 42)}
+}
+.ob.ob3>.ob3-panel{overflow:visible}
+.ob.ob3-wb>.ob3-panel{top:calc(var(--u) * 482)}
