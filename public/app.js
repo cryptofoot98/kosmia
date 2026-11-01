@@ -1601,12 +1601,40 @@ function jfmt(k){
  else{ins=k==='star'?(a>ls?'\n':'')+'✦ ':k==='time'?(a>ls?' ':'')+fmt({hour:'2-digit',minute:'2-digit'},new Date())+' — ':(a>0?'\n':'')+'~ ✦ ~\n';x.value=v.slice(0,a)+ins+v.slice(b);pos=a+ins.length}
  x.dispatchEvent(new Event('input',{bubbles:true}));x.focus();x.setSelectionRange(pos,pos);
 }
+/* the entry's own words: what kind of page it is, its title in the sky, and a line spoken to the reader about it */
+function entryHead(p){
+ const nm=firstName(),to=x=>nm?`${esc(nm)}, ${x}`:x.charAt(0).toUpperCase()+x.slice(1);
+ if(p.t==='n')return ['Daily Whisper · Your Reflection',esc(p.o.title),to(`what is ${esc(p.o.title)} stirring in you?`)];
+ if(p.t==='r')return ['Tarot · Your Reflection',esc((SPREADS[p.r.spread]||{s:'Your Reading'}).s),to('the cards have spoken. What did they say to you?')];
+ if(p.t==='h'){const d=p.b.data||{};return ['Horoscope · Your Reflection',sg(d.sign).name,to(d.sign===S.sign?'how did your sky move you?':`what did ${sg(d.sign).name}’s sky show you?`)]}
+ if(p.t==='e')return ['The Sky · Your Reflection',esc((p.b.data||{}).name||'A Cosmic Event'),to('the heavens are turning. What turns in you?')];
+ if(p.t==='c')return ['Between Two Souls',esc(connTitle(p.c)),to('what does this bond ask of you?')];
+ if(p.t==='d')return ['Your Dreams',esc((p.d.interp||{}).title||'A Dream'),to('what was the night telling you?')];
+ return ['Free Write','A Page of Your Own',to('this page is yours. Write whatever the night brings.')];
+}
+// the night a page was written under: its Moon and the sign it stood in
+const entrySky=day=>{try{const m=K.moon(new Date(day+'T21:00:00'));return `Written under ${/^(New|Full)/.test(m.name)?'the ':'a '}${esc(m.name)} in ${sIdx(m.sign).name}`}catch(e){return ymdLong(day,{day:'numeric',month:'long',year:'numeric'})}};
+// the prompts, the first drawn from the page itself: the card's own question, the forecast's focus, the first card drawn,
+// the dream's strongest symbol, or the question of the reader's card that day
+function entryPrompts(p){
+ const pr=(PROMPTS[p.t]||PROMPTS.j).slice();let own='';
+ if(p.t==='n')own=p.o.ref;
+ else if(p.t==='h'){const d=p.b.data||{};own=d.reflection||''}
+ else if(p.t==='r'&&p.r.cards[0])own=`What is ${p.r.cards[0].name} asking of me as my ${(p.r.cards[0].pos||'first card').toLowerCase()}?`;
+ else if(p.t==='d'){const sy=((p.d.interp||{}).symbols||[])[0];if(sy)own=`What does ${sy.name.toLowerCase()} mean in my waking life?`}
+ else if(p.t==='j'&&S.revealed[p.day]){own=cardFor(p.day).ref}
+ if(own&&!pr.includes(own))pr.splice(0,1,own);
+ return pr;
+}
 function entryView(){
  const p=jFind(V.jkey);
  if(!p)return `<div class="sub">${hdr('Journal Entry')}${empty('This page is no longer in your journal','It may have been torn out on another device.',linkBtn('Back to the journal','tarot','journal','btn'))}</div>`;
  if(!JE||jKey(JE)!==jKey(p)){jeLeave();JE=p}
- const key=jKey(p),pr=PROMPTS[p.t]||PROMPTS.j,on=(S.intent||{})[key]||[],txt=jText(p);
- return `<div class="mnp jn entry">${mnHead('Journal Entry',`<button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}`)}
+ const key=jKey(p),on=(S.intent||{})[key]||[],txt=jText(p),pr=entryPrompts(p),hd=entryHead(p);
+ // the page over the night with the armillary sphere, the candle and the lily, under the arc of the Moon's phases: what
+ // the page belongs to and a line for the reader in its sky, the night the page was written under, then the page itself
+ return `<div class="mnp jn entry enight"><div class="mn-bar">${iconBtn('back','data-act="back"','Back')}<div class="mn-r"><button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}</div></div>
+ <header class="en-top"><p class="en-k">${hd[0]}</p><h1 class="cz">${hd[1]}</h1><p class="en-l">${hd[2]}</p><p class="en-sky">${entrySky(p.day)}</p></header>
  ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button></div>`:''}
  ${mbox(entryTop(p))}
  ${mbox(`<h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>

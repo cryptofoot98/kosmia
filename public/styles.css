@@ -2551,3 +2551,61 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .dnight .dft.night{min-height:26cqw}
 .dnight .dft.night .dft-art{opacity:.9}
 .dnight .dprof strong{color:#F6E3B0}.dnight .dprof span span{color:rgba(241,226,188,.82)}.dnight .dprof svg{color:#E9C985}
+/* a journal page over the night with the armillary sphere, the candle and the lily (art/atlas/jen-night): its head at the
+   top of the page, its middle (art/atlas/jen-mid, the Milky Way between the gold frame, and its mirror) down the length,
+   its dawn at the foot; the page's parts on night glass framed in gold, as Home, the Horoscope and the Journal */
+.mnp.enight{--w:min(100vw,var(--appw));gap:22px;padding:0 9% calc(var(--navh,0px) + var(--w) * .62);color:#F1E2BC;background:#0B0F1E url(/art/atlas/jen-mid.webp) 50% calc(var(--w) * .659)/100% auto repeat-y}
+.mnp.enight::before{position:absolute;inset:0 0 auto;transform:none;left:0;width:auto;height:calc(var(--w) * 1.32);background:url(/art/atlas/jen-night.webp) 50% 0/100% auto no-repeat;-webkit-mask-image:linear-gradient(#000 85%,transparent);mask-image:linear-gradient(#000 85%,transparent)}
+.mnp.enight::after{content:'';position:absolute;z-index:-1;left:0;right:0;bottom:var(--navh,0px);height:calc(var(--w) * .86);pointer-events:none;background:url(/art/atlas/jen-night.webp) 50% 100%/100% auto no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 16%);mask-image:linear-gradient(transparent,#000 16%)}
+.enight .mn-bar .ibtn,.enight .mn-r>.ibtn{background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4;filter:none}
+.enight .mn-bar>.ibtn{position:absolute;left:12px;top:calc(env(safe-area-inset-top,0px) + 10px);pointer-events:auto}
+.enight .mn-r{top:calc(env(safe-area-inset-top,0px) + 10px)}
+.enight .mn-r>.hsave{padding:0 14px;border:1px solid rgba(233,201,133,.6);border-radius:999px;background:rgba(8,12,28,.6);font-family:'Cinzel',var(--serif);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#F1D79A;filter:none}
+/* the head: under the Moon's phases and the star, between the sphere and the candle */
+.enight .en-top{margin:0 -4%;padding:calc(var(--w) * .37 + env(safe-area-inset-top,0px)) 0 4px;text-align:center}
+.enight .en-k{margin:0;font-family:'Cinzel',var(--serif);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#E0C487;text-shadow:0 1px 6px #000}
+.enight .en-top h1{margin:6px 0 0;font-size:clamp(1.8rem,9vw,2.5rem);line-height:1.08;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.9))}
+.enight .en-l{margin:10px 0 0;font-family:var(--font-serif);font-style:italic;font-size:clamp(1rem,4.4vw,1.15rem);line-height:1.4;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.enight .en-sky{margin:10px 0 0;font-family:var(--font-serif);font-size:.86rem;color:rgba(241,226,188,.75);text-shadow:0 1px 6px #000}
+.enight .en-sky::before,.enight .en-sky::after{content:' ✦ ';color:#E9C985}
+/* the boxes: night glass, a fine gold double frame */
+.enight .mbox{padding:20px 16px;border:1px solid rgba(233,201,133,.75);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.68),rgba(10,14,32,.56));-webkit-backdrop-filter:none;backdrop-filter:none;
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45);color:#F1E2BC}
+.enight .mbox::before{display:none}
+.enight .mb-c{color:#E9C985;width:12px;height:12px}
+.enight .mbox p,.enight .mbox .lr-t strong,.enight .mbox h2,.enight .mbox h3{color:#F4E8CC}
+.enight .mbox .muted,.enight .mbox .lr-t span,.enight .et-date,.enight .et-keys{color:rgba(241,226,188,.78)}
+.enight .et h2{color:#F6E3B0}
+.enight .et-q{color:#F1D79A}
+.enight .mbox .link{color:#F1D79A}
+.enight .sec-h{color:#F1D79A;font-family:'Cinzel',var(--serif);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase}
+.enight .saved{color:rgba(241,226,188,.6)}
+/* the writing: a page of night with gold lines */
+.enight .je-box{border-color:rgba(233,201,133,.55);background:rgba(6,10,24,.45)}
+.enight .je-tools{background:rgba(6,10,24,.5);border-bottom-color:rgba(233,201,133,.35)}
+.enight .je-tools button{color:#E9C985}
+.enight textarea.je{color:#F4E8CC;background-image:repeating-linear-gradient(transparent 0 29px,rgba(233,201,133,.18) 29px 30px)!important}
+.enight textarea.je::placeholder{color:rgba(241,226,188,.55)}
+.enight .je-box:not(:focus-within) .je:not(:placeholder-shown){color:#F4E8CC}
+.enight .et-title{color:#F6E3B0;background:rgba(6,10,24,.45);border-color:rgba(233,201,133,.55)}
+/* the prompts and the intentions */
+.enight .kick{color:#F1D79A}
+.enight .pr{background:rgba(6,10,24,.4);border-color:rgba(233,201,133,.45);color:#F4E8CC}
+.enight .pr svg{color:#E9C985}
+.enight .pr:first-of-type{border-color:rgba(243,216,150,.85);box-shadow:0 0 12px rgba(233,201,133,.2)}
+.enight .intent h3{color:#F1D79A}
+.enight .ck span{color:#F4E8CC}
+.enight .menu-pop{background:#0E1328;border:1px solid rgba(233,201,133,.6)}
+.enight .menu-pop button{color:#F1E2BC}
+.enight details.acc{border-color:rgba(233,201,133,.4);background:rgba(6,10,24,.35)}
+.enight details.acc summary strong{color:#F1D79A}
+.enight .en-top{padding-top:calc(var(--w) * .55 + env(safe-area-inset-top,0px))}
+.enight .mn-bar{height:calc(env(safe-area-inset-top,0px) + 66px);transition:background .25s}
+body.scrolled .enight .mn-bar{background:linear-gradient(#080C1C 72%,rgba(8,12,28,0))}
+.enight .cb{accent-color:#D9B66E;width:20px;height:20px;filter:drop-shadow(0 0 4px rgba(233,201,133,.35))}
+.enight input.cb{appearance:none;-webkit-appearance:none;border:1px solid #D9B66E;border-radius:4px;background:rgba(6,10,24,.5);display:grid;place-items:center;flex:none;margin-top:4px}
+.enight input.cb:checked{background:radial-gradient(circle,#F6DA97,#C9963F)}
+.enight input.cb:checked::after{content:'✦';font-size:12px;color:#2A1C0B}
+.enight details.acc,.enight details.acc>summary{background:rgba(6,10,24,.4)!important;border-color:rgba(233,201,133,.45)!important;color:#F1E2BC;box-shadow:none!important}
+.enight details.acc .read,.enight details.acc p{color:#F4E8CC}
+.enight details.acc svg{color:#E9C985}

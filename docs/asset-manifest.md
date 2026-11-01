@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 507 |
-| In use, provisional | 463 |
+| Images | 509 |
+| In use, provisional | 465 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -50,6 +50,8 @@ their space before they load.
 | `public/art/atlas/hz-love.webp` | 360×360 | 1:1 | yes | 26 | provisional |  |
 | `public/art/atlas/hz-money.webp` | 360×360 | 1:1 | yes | 37 | provisional |  |
 | `public/art/atlas/hz-overview.webp` | 360×360 | 1:1 | yes | 41 | provisional |  |
+| `public/art/atlas/jen-mid.webp` | 850×1120 | 0.76:1 | no | 120 | provisional |  |
+| `public/art/atlas/jen-night.webp` | 850×1850 | 0.46:1 | no | 250 | provisional |  |
 | `public/art/atlas/jrn-mid.webp` | 850×1580 | 0.54:1 | no | 166 | provisional |  |
 | `public/art/atlas/jrn-night.webp` | 850×1850 | 0.46:1 | no | 269 | provisional |  |
 | `public/art/atlas/nvi-discover.webp` | 512×512 | 1:1 | yes | 52 | provisional |  |
