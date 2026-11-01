@@ -2527,3 +2527,27 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .jnight .btn{font-size:.76rem;letter-spacing:.1em}
 .jnight .jl-b{font-size:.84rem;white-space:nowrap}
 .jnight{margin-bottom:-18px;padding-bottom:calc(var(--w) * .62 + 18px)}
+/* Discover over the lake under the crescent Moon (art/atlas/disc-night): the painting holds still behind the page by its
+   top edge, so its Moon, lake and zodiac wheel stay in view; its lilies and roses rise at the foot of the page; the title in
+   its sky and the shelves on night glass framed in gold */
+.dnight{--w:min(100vw,var(--appw));position:relative;margin-bottom:-18px;padding-bottom:calc(var(--w) * .42 + 18px)}
+.land.dnight::before{bottom:var(--navh,0px);background:#0B0F1E url(/art/atlas/disc-night.webp) 50% 0/cover no-repeat}
+.dnight::after{content:'';position:absolute;z-index:-1;left:0;right:0;bottom:0;height:calc(var(--w) * .56);pointer-events:none;background:url(/art/atlas/disc-night.webp) 50% 100%/100% auto no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 30%);mask-image:linear-gradient(transparent,#000 30%)}
+.dnight .hl-top{position:relative;padding:calc(var(--w) * .3 + env(safe-area-inset-top,0px)) 0 0;margin:0 auto;width:72%;text-align:center}
+.dnight .hl-top>.jdoor{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:calc(8px - var(--w) * .14);background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+.dnight .hl-top h1{margin:0;font-size:clamp(2rem,10.5vw,2.8rem);line-height:1.05;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.9))}
+.dnight .hl-top .hgreet{margin:8px 0 0;font-family:var(--font-serif);font-style:italic;font-size:clamp(.95rem,4.2vw,1.1rem);color:#F4E6C2;text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.9)}
+.dnight .dlib{padding:calc(var(--w) * .36) 6% 0;gap:12px}
+/* the shelves' titles in the open night, a soft dark halo behind them */
+.dnight .dshelf{margin:14px 0 2px;padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 70%,transparent)}
+.dnight .dshelf h2{color:#F1D79A;text-shadow:0 1px 6px #000}
+.dnight .dshelf p{color:#F4E6C2;text-shadow:0 1px 6px #000}
+/* every door: night glass with a fine gold double frame */
+.dnight .dft,.dnight .dprof{border:1px solid rgba(233,201,133,.75)!important;border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.7),rgba(10,14,32,.58))!important;color:#F1E2BC;
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)!important}
+.dnight .dft-t strong{color:#F6E3B0}
+.dnight .dft-t span{color:rgba(241,226,188,.82)}
+.dnight .dft.round .dft-art{box-shadow:0 0 0 1px rgba(233,201,133,.8),0 0 14px rgba(233,201,133,.25)}
+.dnight .dft.night{min-height:26cqw}
+.dnight .dft.night .dft-art{opacity:.9}
+.dnight .dprof strong{color:#F6E3B0}.dnight .dprof span span{color:rgba(241,226,188,.82)}.dnight .dprof svg{color:#E9C985}

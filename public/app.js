@@ -1296,21 +1296,25 @@ views.discover=()=>{
  if(map[t]&&GROUPS[t])return groupTabs(t,(!A&&['synastry','calendar','moon','planets','events'].includes(t))?`<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`:map[t]());
  if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
  V.chartOpen=false;
- // each feature in its own shape of picture, as the mockup draws them: medallions, arches, and two night banners
+ // the lake under the crescent Moon with the zodiac wheel in its water holds still behind the page, its lilies and roses
+ // rising at the foot; the title in its sky, then three shelves of night glass, each door telling the reader what it
+ // already knows of them
  const nm=firstName(),shelf=(t,sub)=>`<div class="dshelf"><h2>${t}</h2><p>${sub}</p></div>`;
+ const bd=hasBirthDate()?S.birth.date:'',yr=Number(dkey().slice(0,4));
+ let chSub='Your cosmic blueprint';try{if(bd&&S.fullName&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(q=>q.n===n);return x?sIdx(x.sign).name:''};chSub=[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon'].filter(Boolean).join(' · ')||chSub}}catch(e){}
+ let lpSub='Your soul’s journey',cySub='Your personal year, month and day';try{if(bd&&N){const l=N.lifePath(bd).r.n;lpSub=`Your number ${l} · ${N.MEANING[l][0]}`;cySub=`Your Personal Year ${N.personalYear(bd,yr).r.n}`}}catch(e){}
  const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
- return `<div class="land dland">${hero('hero-discover',jdoor()+`<p class="dl-intro">${firstName()?esc(firstName())+', the':'The'} sky has more<br>to tell you.</p>`,'tall','Discover','Explore • Learn • Align')}
- ${scenic(`<div class="dlib">
+ return `<div class="land dland dnight"><header class="hl-top">${jdoor()}<h1 class="cz">Discover</h1><p class="hgreet">${nm?esc(nm)+', the sky':'The sky'} has more to tell you</p></header>
+ <div class="dlib">
   ${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Cosmic Profile</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
   ${shelf('Written in You',`${nm?esc(nm)+', the':'The'} sky you were born beneath`)}
-  ${ft('ex-chart','Birth Chart','Your cosmic blueprint','birth-chart','round')}${ft('ex-lifepath','Life Path','Your soul’s journey','life-path','round')}
-  ${ft('ex-name','The Name Within','The numbers in your name','name-within','round')}${ft('m-'+S.sign,'My Cycles','Your personal year, month and day','cycles','round')}
+  ${ft('ex-chart','Birth Chart',esc(chSub),'birth-chart','round')}${ft('ex-lifepath','Life Path',esc(lpSub),'life-path','round')}
+  ${ft('ex-name','The Name Within','The numbers in your name','name-within','round')}${ft('m-'+S.sign,'My Cycles',esc(cySub),'cycles','round')}
   ${shelf('Between Two Souls','You and another, by sign, name or chart')}
   ${ft('hero-affinity','Compatibility','Signs · Names · Birth charts','affinity','night wide')}
   ${shelf('The Sky Above','What the heavens are doing now')}
   ${ft('banner-calendar','Cosmic Calendar','The Moon, the planets and every event','calendar','night wide')}${ft('banner-library','Astrology Library','Signs, planets, houses and tarot','library','night wide')}
- </div>
-</div>`,'dscenic')}</div>`;
+ </div></div>`;
 };
 const GROUP_COMPAT=[['affinity','Signs'],['resonance','Names'],['synastry','Birth Charts']],GROUP_SKY=[['calendar','Calendar'],['moon','Moon'],['planets','Planets'],['events','Events']];
 const GROUPS={};GROUP_COMPAT.forEach(([k])=>GROUPS[k]=GROUP_COMPAT);GROUP_SKY.forEach(([k])=>GROUPS[k]=GROUP_SKY);
