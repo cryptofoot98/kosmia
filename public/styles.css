@@ -3055,3 +3055,49 @@ body.obfit #app{padding-bottom:0!important;min-height:0}
 }
 .ob.ob3>.ob3-panel{overflow:visible}
 .ob.ob3-wb>.ob3-panel{top:calc(var(--u) * 482)}
+/* ---------- Dream Interpretation: the night with the crescent among clouds and lilies, held still behind the page ---------- */
+.land.drm{position:relative;isolation:isolate;min-height:100svh;padding-bottom:30px;background:none}
+.land.drm::before{content:'';position:fixed;z-index:-1;top:0;bottom:var(--navh,0px);left:50%;width:min(100%,var(--appw));transform:translateX(-50%);background:#0B0F1E url(/art/atlas/dream-night.webp) 50% 0/cover no-repeat}
+.drm>.ibtn{position:fixed;z-index:45;top:calc(env(safe-area-inset-top,0px) + 10px);left:max(10px,calc(50% - var(--appw) / 2 + 10px));background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+.drm .hl-top{padding:calc(env(safe-area-inset-top,0px) + 44vw) 24px 18px;text-align:center}
+@media (min-width:440px){.drm .hl-top{padding-top:180px}}
+.drm .hl-top h1{margin:0;font-size:clamp(1.9rem,9.5vw,2.6rem);line-height:1.08;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.9))}
+.drm .hl-top .hgreet{margin:10px 0 0;font-family:var(--font-serif);font-style:italic;font-size:1.1rem;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.drm .hl-cards{display:flex;flex-direction:column;gap:22px;padding:0 9%}
+.drm .hl-card{position:relative;display:flex;flex-direction:column;gap:12px;padding:18px 16px;border:1px solid rgba(233,201,133,.75);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.74),rgba(10,14,32,.62));color:#F1E2BC;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)}
+.drm .hl-sec>.k-div{margin:0 0 12px;padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 70%,transparent)}
+.drm .k-div span{color:#F1D79A;text-shadow:0 1px 6px #000}.drm .k-div{color:#E9C985}
+.drm .dr-lead{margin:0;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:1.05rem;line-height:1.45;color:#F4E8CC}
+.drm .btn{width:100%;background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.18)!important}
+.drm .btn.ghost{border-color:rgba(217,182,110,.6)!important;box-shadow:none!important}
+.drm .symrow button{color:#F1E2BC;background:none;border:0}.drm .symrow strong{color:#F6E3B0}.drm .symrow span{color:rgba(241,226,188,.75)}
+.drm .lrow{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.45)!important;box-shadow:none!important;color:#F1E2BC}
+.drm .lrow strong{color:#F6E3B0}.drm .lrow span{color:rgba(241,226,188,.8)}.drm .see{color:#F1D79A;align-self:center}
+.drm .hl-card :is(h2,h3,.sec-h){color:#F1D79A}.drm .hl-card p{color:#F4E8CC}
+.drm .dr-note{margin:0;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:.9rem;color:rgba(244,232,204,.8);text-shadow:0 1px 6px #000}
+/* the dreams' own pages under the same night */
+.mnp:is(.nd,.dm,.dj){--mn-bg:url(/art/atlas/dream-night.webp)}
+/* a page's share icon in its corner */
+.mn-r .pg-share{width:42px;height:42px;border-radius:50%;background:rgba(8,12,28,.6)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F1D79A!important;filter:none!important}
+.mn-r .pg-share svg{width:19px;height:19px}
+/* ---------- every pop-up (New Entry, Insights & Themes, the rest) on night glass framed in gold over the blurred page ---------- */
+.pop{background:rgba(6,9,22,.62)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.pop-box{background:linear-gradient(180deg,rgba(12,16,36,.96),rgba(8,12,28,.96))!important;border:1px solid rgba(233,201,133,.75)!important;border-bottom:0!important;border-radius:14px 14px 0 0!important;color:#F1E2BC!important;
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.4),inset 0 0 0 5px rgba(233,201,133,.3),0 -10px 30px rgba(0,0,0,.55)!important}
+.pop-box::before,.pop-box::after{display:none}
+.pop-box h2{color:#F6E3B0!important;font-family:var(--font-serif)}
+.pop-box .cp-k{text-align:center}
+.pop-box :is(p,span,li,label){color:#F1E2BC}
+.pop-box .muted{color:rgba(241,226,188,.75)!important}
+.pop-box .pop-x{color:#F1D79A;background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.55);border-radius:50%}
+.pop-box .lrow{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.45)!important;box-shadow:none!important;color:#F1E2BC}
+.pop-box .lrow strong{color:#F6E3B0!important}.pop-box .lrow .lr-t span{color:rgba(241,226,188,.8)!important}.pop-box .lrow svg{color:#E9C985}
+.pop-box .th{border-radius:50%;box-shadow:0 0 0 1.5px #C9A253}
+.pop-box .stat{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.45)!important;color:#F1E2BC}
+.pop-box .stat strong{color:#F6DA97!important;font-family:var(--font-display)}.pop-box .stat span{color:rgba(241,226,188,.8)!important}
+.pop-box .sec-h{color:#F1D79A!important;font-family:'Cinzel',var(--serif);font-size:.85rem;letter-spacing:.12em;text-transform:uppercase}
+.pop-box .tbar span,.pop-box .tbar em{color:#F1E2BC!important}
+.pop-box .tbar i{background:rgba(233,201,133,.15)!important}.pop-box .tbar i b{background:linear-gradient(90deg,#B98A4E,#F3D896)!important}
+.pop-box .pill{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.5)!important;color:#F1D79A!important}.pop-box .pill b{color:#F6DA97!important}
+.pop-box .btn:not(.danger){background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important}
+.drm .hl-top h1{font-size:clamp(1.6rem,8vw,2.2rem)}.drm .hl-top .hgreet{text-transform:none;letter-spacing:0}

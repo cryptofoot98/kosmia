@@ -647,15 +647,98 @@ async function renderShare(kind,d){
   shFit(x,txt,T.text,{k,max:many?13:15,min:many?8.5:11,weight:600})}
  return new Promise(r=>c.toBlob(r,'image/png'));
 }
+/* ----- the keepsake: a reading shared as one moment of the reader's sky, 1080 × 1920 (a phone's story): the night
+   painting behind, a fine gold double frame, the sign's medallion or the drawn cards glowing at the centre, an
+   inscription with the reader's name, sign, the day and the Moon over it, the heart of the reading in large gold italic,
+   and its question, offered to whoever receives it ----- */
+const KEEP_BG={page:'/art/atlas/dream-night.webp',horo:'/art/atlas/sign-sky.webp',whisper:'/art/atlas/jrn-night.webp',reading:'/art/atlas/reading-night.webp'};
+const kGold='#F1D79A',kCream='#F4E8CC';
+function kMoonLine(day){try{const m=K.moon(new Date(day+'T21:00:00'));return `under ${/^(New|Full)/.test(m.name)?'the':'a'} ${m.name} in ${sIdx(m.sign).name}`}catch(e){return ''}}
+function kFirst(t,n=2){const s=String(t||'').match(/[^.!?]+[.!?]+/g)||[String(t||'')];return s.slice(0,n).join(' ').trim()}
+function kGlow(x,cx,cy,r,a=.55){const g=x.createRadialGradient(cx,cy,r*.2,cx,cy,r);g.addColorStop(0,`rgba(246,210,140,${a})`);g.addColorStop(1,'rgba(246,210,140,0)');x.fillStyle=g;x.fillRect(cx-r,cy-r,2*r,2*r)}
+function kRule(x,cy,w=360){x.strokeStyle='rgba(233,201,133,.8)';x.lineWidth=2;x.beginPath();x.moveTo(540-w/2,cy);x.lineTo(540-18,cy);x.moveTo(540+18,cy);x.lineTo(540+w/2,cy);x.stroke();
+ x.font='26px "Cormorant Garamond"';x.fillStyle='#F3D896';x.textAlign='center';x.textBaseline='middle';x.fillText('✦',540,cy+1)}
+async function kCardFace(x,src,X,Y,W,H,rot,rv,name){
+ const im=await shImg(src);x.save();x.translate(X+W/2,Y+H/2);x.rotate(rot);
+ x.shadowColor='rgba(246,200,120,.55)';x.shadowBlur=60;x.fillStyle='#0E1430';x.beginPath();x.roundRect(-W/2,-H/2,W,H,18);x.fill();x.shadowBlur=0;
+ x.save();x.beginPath();x.roundRect(-W/2,-H/2,W,H,18);x.clip();if(im){if(rv)x.rotate(Math.PI);const s=Math.max(W/im.width,H/im.height);x.drawImage(im,-im.width*s/2,-im.height*s/2,im.width*s,im.height*s)}x.restore();
+ x.lineWidth=4;x.strokeStyle='#D9B66E';x.beginPath();x.roundRect(-W/2,-H/2,W,H,18);x.stroke();
+ if(name){x.fillStyle='rgba(246,233,207,.95)';x.fillRect(-W*.4,H/2-H*.15,W*.8,H*.1);x.strokeStyle='#C9A253';x.lineWidth=2;x.strokeRect(-W*.4,H/2-H*.15,W*.8,H*.1);
+  x.font=`600 ${Math.round(H*.042)}px Cinzel`;x.fillStyle='#3B2412';x.textAlign='center';x.textBaseline='middle';x.fillText(name.toUpperCase(),0,H/2-H*.1)}
+ x.restore()}
+async function renderKeep(kind,d){
+ await Promise.all(SH_FONTS.map(f=>document.fonts.load(f).catch(()=>{})));
+ const c=document.createElement('canvas');c.width=1080;c.height=1920;const x=c.getContext('2d'),k=1;
+ const bg=await shImg(KEEP_BG[kind]);if(bg){const s=Math.max(1080/bg.width,1920/bg.height);x.drawImage(bg,(1080-bg.width*s)/2,0,bg.width*s,bg.height*s)}
+ // the night deepened toward the words, so they read clearly
+ let g=x.createLinearGradient(0,0,0,1920);g.addColorStop(0,'rgba(6,9,22,.35)');g.addColorStop(.45,'rgba(6,9,22,.25)');g.addColorStop(.62,'rgba(6,9,22,.78)');g.addColorStop(1,'rgba(6,9,22,.9)');x.fillStyle=g;x.fillRect(0,0,1080,1920);
+ // the gold double frame
+ x.strokeStyle='rgba(233,201,133,.9)';x.lineWidth=3;x.strokeRect(36,36,1008,1848);x.strokeStyle='rgba(233,201,133,.45)';x.lineWidth=1.5;x.strokeRect(50,50,980,1820);
+ shCaps(x,'KOSMIA',540,118,40,k,{color:kGold,track:.3,weight:600});
+ x.font='italic 500 30px "Cormorant Garamond"';x.fillStyle='rgba(244,232,204,.85)';x.textAlign='center';x.fillText('your cosmic guide',540,166);
+ const day=d.day||dkey(),nm=firstName(),date=ymdLong(day,{day:'numeric',month:'long',year:'numeric'});
+ let title,sub,heart,ask,signName;
+ if(kind==='horo'){const s=sg(d.sign),h=horoscope(d.sign,d.cat,d.period);signName=s.name;
+  kGlow(x,540,560,380,.5);const m=await shImg(`/art/atlas/zm-${d.sign}.webp`);
+  x.save();x.beginPath();x.arc(540,560,250,0,7);x.clip();if(m)x.drawImage(m,290,310,500,500);x.restore();
+  x.beginPath();x.arc(540,560,250,0,7);x.lineWidth=4;x.strokeStyle='#D9B66E';x.stroke();
+  title=s.name.toUpperCase();sub=d.cat==='overview'?`${PLABEL[d.period][1]} Horoscope`:`${CAT_INFO[d.cat][0]} · ${PLABEL[d.period][0]}`;
+  heart=kFirst(h.body,2);ask=h.reflection||'What is the sky asking of you?'}
+ if(kind==='whisper'){const cd=d.card;kGlow(x,540,560,420,.55);await kCardFace(x,`/art/whispers/${cd.id}.webp`,350,275,380,570,0,false,cd.title);
+  title=cd.title.toUpperCase();sub='Today’s Whisper';heart=cd.msg;ask=cd.ref;signName=sg(S.sign).name}
+ if(kind==='reading'){const cs=d.cards,n=cs.length,sp=SPREADS[d.spread]||{s:'Tarot',n:'Tarot Reading'};signName=sg(S.sign).name;kGlow(x,540,560,460,.5);
+  const W=n===1?380:n<=3?300:n<=5?210:150,H=W*1.5,step=n===1?0:Math.min(W*.82,820/(n-1)),spread=n===1?0:Math.min(.5,.11*(n-1));
+  for(let i=0;i<n;i++){const t=n===1?0:i/(n-1)-.5,cx=540+(i-(n-1)/2)*step,cy=560+Math.abs(t)*70;await kCardFace(x,`/art/deck/${cs[i].id}.webp`,cx-W/2,cy-H/2,W,H,t*spread,cs[i].rv)}
+  title=sp.s.toUpperCase();sub=n===1?cs[0].name+(cs[0].rv?' · reversed':''):n<=5?cs.map(c=>c.name).join(' · '):`${n} cards · ${cs[0].name} at its heart`;
+  heart=n===1?`${cs[0].rv?cs[0].revm:cs[0].upm} ${cs[0][SPREAD_CTX[d.spread]||'growth']||''}`.trim():d.ai&&d.ai.whole?kFirst(d.ai.whole,2):cs.slice(0,5).map(c=>`${c.pos}: ${(c.rv?c.rev:c.up).split(/,\s*/)[0].toLowerCase()}`).join(' · ');
+  ask=d.q?`“${d.q}”`:'Which card spoke to you first, and why?'}
+ if(kind==='page'){signName=sg(S.sign).name;kGlow(x,540,560,400,.5);const im=d.img?await shImg(d.img):null;
+  if(d.round){x.save();x.beginPath();x.arc(540,560,250,0,7);x.clip();if(im){const s=Math.max(500/im.width,500/im.height);x.drawImage(im,540-im.width*s/2,560-im.height*s/2,im.width*s,im.height*s)}x.restore();x.beginPath();x.arc(540,560,250,0,7);x.lineWidth=4;x.strokeStyle='#D9B66E';x.stroke()}
+  else if(im){const W=560,H=W*im.height/im.width>620?620:W*im.height/im.width;await kCardFace(x,d.img,540-W/2,560-H/2,W,H,0,false)}
+  title=(d.title||'Kosmia').toUpperCase();sub=d.sub||'';heart=d.heart||'';ask=d.ask}
+ // the title and what it is
+ shCaps(x,title,540,930,kind==='reading'&&title.length>16?52:62,k,{color:kGold,max:900,track:.08,weight:600});
+ shFit(x,sub,[120,975,960,1045],{k,max:34,min:22,italic:true,color:kCream,lh:1.2});
+ // the inscription: who, and under which sky
+ kRule(x,1080,420);
+ shFit(x,`${nm?nm+' · ':''}${signName} · ${date}`,[120,1105,960,1150],{k,max:34,min:24,color:kGold,weight:600,lh:1.1});
+ shFit(x,kMoonLine(day),[120,1150,960,1195],{k,max:30,min:22,italic:true,color:'rgba(244,232,204,.85)',lh:1.1});
+ // the heart of the reading
+ shFit(x,heart,[110,1250,970,1560],{k,max:58,min:36,italic:true,color:kCream,weight:500,lh:1.24});
+ kRule(x,1600,300);
+ shFit(x,ask,[150,1630,930,1760],{k,max:38,min:26,italic:true,color:kGold,weight:500,lh:1.25});
+ shCaps(x,'KOSMIA · YOUR COSMIC GUIDE',540,1818,20,k,{color:'rgba(233,201,133,.75)',track:.24,weight:600});
+ return new Promise(r=>c.toBlob(r,'image/png'));
+}
 // a share button's work: the card drawn, then shown with the phone's share sheet one tap away (the sheet must open
 // from a tap, so it is offered on the picture rather than opened while the picture is still being drawn)
+// a page's keepsake from what the page shows: its title, its picture, its first words and its question
+const PAGE_ART={'birth-chart':'ex-chart','life-path':'ex-lifepath','name-within':'ex-name',affinity:'hero-affinity',resonance:'hero-affinity',synastry:'ex-chart',profile:'ex-chart'};
+function pageShare(){
+ const q=sel=>document.querySelector(sel),txt=e=>e?e.textContent.replace(/\s+/g,' ').trim():'',t=tab();
+ const ps=[...document.querySelectorAll('.mnp .mbox p,.mnp .mbox .read p,.mnp .card p')].map(txt).filter(x=>x.length>50&&!/^For reflection|not as scientific|not predictions/i.test(x));
+ const img=q('.dm-art img')||q('.mnp .mbox img.dm-img');let src=img&&img.src;
+ if(!src){const id=t==='cycles'?'zm-'+S.sign:t==='moon'?null:PAGE_ART[t];if(id)src=(ui(id).match(/src="([^"]+)"/)||[])[1]}
+ if(!src&&t==='moon'){const m=q('.mnp img');src=m&&m.src}
+ const score=txt(q('.score strong'));
+ // the reader's own findings first, where the page knows them; otherwise the page's first words that are not its welcome
+ let own='',sub2='';
+ try{const bd=hasBirthDate()?S.birth.date:'';
+  if(t==='birth-chart'&&bd&&S.fullName&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(p=>p.n===n);return x?sIdx(x.sign).name:''},asc=ch.ang&&!S.birth.unk?sIdx(Math.floor(ch.ang.asc/30)).name:'';
+   sub2=[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon',asc&&asc+' Rising'].filter(Boolean).join(' · ');own=placement(ch.pl[0])}
+  if(t==='life-path'&&bd&&N){const l=N.lifePath(bd).r.n;sub2=`Life Path ${l} · ${N.MEANING[l][0]}`;own=`As a Life Path ${l}, ${N.MEANING[l][0]}, you walk with ${N.MEANING[l][1].replace(/, ([^,]*)$/,' and $1')}.`}
+  if(t==='name-within'&&S.fullName&&N){const e=N.name(S.fullName,S.settings.yMode).expression.r.n;sub2=`Expression ${e} · ${N.MEANING[e][0]}`;own=`Your name carries the music of ${N.MEANING[e][0]}: ${N.MEANING[e][1].replace(/, ([^,]*)$/,' and $1')}.`}
+ }catch(e){}
+ const fresh=ps.filter(x=>!/^(Discover|Explore|Your name carries|Find anyone|Compare)/.test(x));
+ return {title:txt(q('.mn-t h1')),sub:score?`${score} overall compatibility`:sub2||txt(q('.mn-t .mn-sub'))||txt(q('.mn-greet')),heart:kFirst(own||fresh[0]||ps[0]||'',2),ask:txt(q('.mnp .quote'))||'What does this stir in you?',img:src,round:t!=='dream'}}
 async function shareCard(t){
  const k=t.dataset.k;let d,caption='';
+ if(k==='page'){d=pageShare();caption=`${d.title} · from Kosmia ✦`}
  if(k==='horo'){d={sign:t.dataset.s,cat:t.dataset.cat,period:V.period};caption=`My ${sg(d.sign).name} horoscope from Kosmia ✦`}
- if(k==='whisper'){const day=t.dataset.day||dkey();d={card:cardFor(day)};caption=`“${d.card.msg}” My Whisper from Kosmia ✦`}
- if(k==='reading'){const T=V.tarot;if(!T.drawn)return;d={spread:T.spread,cards:T.drawn,ai:T.ai};caption=`My ${(SPREADS[T.spread]||{s:'tarot'}).s} reading from Kosmia ✦`}
+ if(k==='whisper'){const day=t.dataset.day||dkey();d={card:cardFor(day),day};caption=`“${d.card.msg}” My Whisper from Kosmia ✦`}
+ if(k==='reading'){const T=V.tarot;if(!T.drawn)return;d={spread:T.spread,cards:T.drawn,ai:T.ai,q:T.q};caption=`My ${(SPREADS[T.spread]||{s:'tarot'}).s} reading from Kosmia ✦`}
  toast('Preparing your card…');
- const blob=await renderShare(k==='horo'||k==='whisper'?k:'reading',d);if(!blob)return toast('The card could not be drawn.');
+ const blob=await renderKeep(k==='horo'||k==='whisper'||k==='page'?k:'reading',d);if(!blob)return toast('The card could not be drawn.');
  if(V.share&&V.share.url)URL.revokeObjectURL(V.share.url);
  V.share={url:URL.createObjectURL(blob),file:new File([blob],`kosmia-${k}.png`,{type:'image/png'}),caption};render();
 }
@@ -1353,7 +1436,9 @@ const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map
 // the gold title set in the painting's sky, with its line, circles and star beneath
 // the title stays in place with the painting while the boxes scroll up over it; Back and the page's own buttons float
 // above everything in a bar of their own, so they can always be reached
-const mnHead=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg>${mnGreet()}</div></header>`;
+const SHARE_PAGES=['affinity','resonance','synastry','birth-chart','life-path','name-within','cycles','dream','moon','profile'];
+const mnHead=(t,right='',back=true)=>{if(V.sec==='discover'&&SHARE_PAGES.includes(tab()))right=`<button class="ibtn pg-share" data-act="sharecard" data-k="page" aria-label="Share this">${IC.share}</button>`+right;return mnHead0(t,right,back)};
+const mnHead0=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg>${mnGreet()}</div></header>`;
 // a line for the reader beneath the title of each inner page, in the voice of the page
 const MN_GREET={whisper:'the card that found you today',affinity:'you and another, beneath the same sky',resonance:'the music two names make together',synastry:'two skies, read side by side',calendar:'the sky above you, night by night',moon:'the Moon above you tonight',planets:'the wanderers that move through your sky',events:'what the heavens are preparing',
  'birth-chart':'the sky you were born beneath','life-path':'the road your soul chose','name-within':'the music in your name',cycles:'the season you are walking through',library:'the old knowledge, open to you',dreams:'what the night left with you','dream-journal':'every dream you have kept',profile:'the sky that is yours alone',notifications:'what the stars will whisper to you',settings:'your Kosmia, as you wish it'};
@@ -1422,6 +1507,8 @@ views.discover=()=>{
   ${ft('hero-affinity','Compatibility','Signs · Names · Birth charts','affinity','night wide')}
   ${shelf('The Sky Above','What the heavens are doing now')}
   ${ft('banner-calendar','Cosmic Calendar','The Moon, the planets and every event','calendar','night wide')}${ft('banner-library','Astrology Library','Signs, planets, houses and tarot','library','night wide')}
+  ${shelf('What the Night Brings','The dreams you carry back with you')}
+  ${ft('hero-dream','Dream Interpretation','Symbols, meanings and your Dream Journal','dreams','night wide')}
  </div></div>`;
 };
 const GROUP_COMPAT=[['affinity','Signs'],['resonance','Names'],['synastry','Birth Charts']],GROUP_SKY=[['calendar','Calendar'],['moon','Moon'],['planets','Planets'],['events','Events']];
@@ -1651,12 +1738,12 @@ function journalLib(){
  ${sec('Your Path So Far',`<div class="js3">${[[it.length,it.length===1?'Page':'Pages'],[streak,streak===1?'Day in a row':'Days in a row'],[month,'Days this month']].map(([v,l])=>`<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>${theme&&theme[1]?`<p class="js-th">Lately your words keep returning to <b>${theme[0]}</b>.</p>`:''}<div class="jlinks"><button class="jl-b" data-act="inspop">${IC.chart} Insights &amp; Themes</button><button class="jl-b" data-go="discover" data-t="dreams">${IC.eye} Your Dreams</button></div>`,'jpath')}
  ${sec('Your Latest Pages',recent.length?`<div class="list">${recent.map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]} · ${relDay(p.day)}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')}</div>`:'<p class="jp-empty">Your first page is waiting. Whatever you write tonight will be kept here.</p>','jrecent')}
  ${sec('Your Moon Calendar',journalCal(),'jmoon')}
- </div></div>${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><h2 class="center">Insights &amp; Themes</h2>${journalInsights()}</div></div>`:''}`;
+ </div></div>${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><p class="cp-k">Insights &amp; Themes</p><h2 class="center">${firstName()?esc(firstName())+', your words so far':'Your words so far'}</h2>${journalInsights()}</div></div>`:''}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
 function sheetView(){
  if(!V.sheet)return '';
- let body='',title='New Entry';
+ let body='',title=firstName()?`${esc(firstName())}, what will you keep?`:'New Entry';
  if(V.sheet==='new')body=[['ne-card','Today’s Card','Reflect on your Daily Whisper','card'],['ne-tarot','Tarot Reading','Write about a recent reading','reading'],['ne-horoscope','Horoscope','Journal your astrological insights','horoscope'],['ne-event','Cosmic Event','Reflect on a moon, eclipse or transit','event'],['d-dream','Dream','Record a dream and its meaning','dream'],['ne-free','Free Write','A space for anything on your mind','free']]
   .map(([i,t,s,k])=>lrow(ui(i,'th'),t,s,`data-act="ne" data-k="${k}"`)).join('');
  if(V.sheet==='event'){title='Cosmic Event';const now=new Date(),m=K.moon(now);
@@ -1862,14 +1949,15 @@ function dreamPatterns(list){
  return panel(`<p class="kick">Dream patterns</p><h3>What keeps returning</h3>${top.length?`<div class="bars">${top.map(([k,v],i)=>`<div class="tbar">${artOf((dsym(k)||{}).art,'tb-i round')}<span>${esc((dsym(k)||{name:k}).name)}</span><i class="tb${i}"><b style="width:${Math.round(v/mx*100)}%"></b></i><em>${v}×</em></div>`).join('')}</div>`:''}${Object.keys(mood).length?`<p class="muted small">Feelings you wake with: ${Object.entries(mood).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${MOODS.find(m=>m[0]===k)[1].toLowerCase()} (${v})`).join(', ')}.</p>`:''}`,'ornate');
 }
 function dreamsView(){
- const list=dreams();
- return `<div class="land">${hero('hero-dream',iconBtn('back','data-act="back"','Back'),'mid','Dream Interpretation','Unlock the messages within')}<div class="sheet">
- <p class="lead center">Your dreams are a bridge between your conscious and subconscious mind. Discover their meaning, explore symbols and uncover the guidance your dreams are offering you.</p>
- <div class="two"><button class="btn" data-go="discover" data-t="new-dream">Interpret a Dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Dream Journal</button></div>
- ${orn('Common Symbols')}<div class="symrow">${['water','flying','snake','house','death'].map(id=>{const s=dsym(id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(s.name.replace(/^(The|A|An) /,''))}">${artOf(s.art,'sym-i')}<strong>${s.name.replace(/^The /,'')}</strong><span>${s.keys[0]}</span></button>`}).join('')}</div>
- ${dreamPatterns(list)}
- ${list.length?`${orn('Recent Dreams',seeAll('discover','dream-journal'))}<div class="list">${list.slice(0,3).map(dreamRow).join('')}</div>`:''}
- <p class="muted small center">Dream meanings are symbolic and personal. They are offered for reflection, not as scientifically established predictions.</p></div></div>`;
+ const list=dreams(),nm=firstName();
+ return `<div class="land drm">${iconBtn('back','data-act="back"','Back')}<header class="hl-top stay"><h1 class="cz">Dream<br>Interpretation</h1><p class="hgreet">${nm?esc(nm)+', what':'What'} the night left with you</p></header>
+ <div class="hl-cards">
+ <div class="hl-card"><p class="dr-lead">Your dreams are a bridge between your waking mind and the deeper one. Tell Kassandra what you saw, and uncover what it is asking you to notice.</p>
+  <button class="btn" data-go="discover" data-t="new-dream">Interpret a Dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Your Dream Journal</button></div>
+ <section class="hl-sec">${Kit.divider('Common Symbols')}<div class="hl-card"><div class="symrow">${['water','flying','snake','house','death'].map(id=>{const x=dsym(id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(x.name.replace(/^(The|A|An) /,''))}">${artOf(x.art,'sym-i')}<strong>${x.name.replace(/^The /,'')}</strong><span>${x.keys[0]}</span></button>`}).join('')}</div></div></section>
+ ${dreamPatterns(list)?`<div class="hl-card">${dreamPatterns(list)}</div>`:''}
+ ${list.length?`<section class="hl-sec">${Kit.divider('Your Recent Dreams')}<div class="hl-card"><div class="list">${list.slice(0,3).map(dreamRow).join('')}</div>${seeAll('discover','dream-journal','All your dreams')}</div></section>`:''}
+ <p class="dr-note">Dream meanings are symbolic and personal, offered for reflection rather than prediction.</p></div></div>`;
 }
 const dreamRow=d=>lrow(dreamArt(d),esc((d.interp||{}).title||'A Dream'),esc((d.text||'').slice(0,70))+((d.text||'').length>70?'…':''),`data-act="dreamopen" data-id="${esc(d.id)}"`,`<span class="lr-m">${relDay(d.day)}${d.note?' • Reflection added':''}</span>`);
 function newDreamView(){
