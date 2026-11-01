@@ -2847,3 +2847,21 @@ body.nv-d #nav .in button::after{background:none!important}
 body.nv-d #nav .in::before,body.nv-d #nav .in::after{display:none}
 html:has(body.nv-d),body.nv-d{background:#0A0E1F!important}
 body.nv-d #app{background:#0A0E1F!important}
+/* a round picture set over the edge of its row: a ring of night around it, then a fine gold rim, so the row's frame
+   meets it cleanly instead of showing its corners above and below */
+.en-moon{position:relative;z-index:2;box-shadow:0 0 0 1.5px #D9B66E,0 0 0 6px #0A0E1F,0 0 16px rgba(0,0,0,.6)!important}
+.hbay .en-go{background:rgba(6,10,24,.55)!important;border:1px solid rgba(233,201,133,.5);color:#F1D79A!important}
+/* the back of the cards, three designs for choosing (body.cb-a / cb-b / cb-c) */
+/* A · Midnight Engraving: the same engraved back, turned to night, its lines in gold */
+body.cb-a :is(.mini,.trd .face.back){background:#101834 url(/art/cards/tarot-back-night.webp) center/100% 100%!important;border:1px solid rgba(233,201,133,.7)!important;box-shadow:0 4px 12px rgba(0,0,0,.55)!important;border-radius:5px}
+/* B · Gilded Night: deep night with a gold double frame, the Sun and Moon at its heart and a star in each corner */
+body.cb-b :is(.mini,.trd .face.back){position:relative;background:radial-gradient(circle at 50% 50%,rgba(233,201,133,.28) 0 12%,transparent 13%),radial-gradient(circle at 50% 50%,transparent 0 20%,rgba(233,201,133,.65) 20.5% 21.5%,transparent 22%),radial-gradient(ellipse at 50% 40%,#1B2448,#0A0F24 70%)!important;
+ border:1px solid #D9B66E!important;box-shadow:inset 0 0 0 3px #0A0F24,inset 0 0 0 4px rgba(233,201,133,.7),0 4px 12px rgba(0,0,0,.55)!important;border-radius:6px}
+body.cb-b :is(.mini,.trd .face.back)::before{content:'✦';position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(14px,30%,40px);color:#F3D896;text-shadow:0 0 8px rgba(243,210,140,.9)}
+body.cb-b :is(.mini,.trd .face.back)::after{content:'✧          ✧';position:absolute;left:0;right:0;top:8%;text-align:center;font-size:clamp(6px,9%,11px);letter-spacing:0;white-space:pre;color:rgba(233,201,133,.75)}
+/* C · Wine and Gold: the engraved back in deep burgundy, its lines in gold, like the roses of the paintings */
+body.cb-c :is(.mini,.trd .face.back){background:#3E0E1A url(/art/cards/tarot-back-wine.webp) center/100% 100%!important;border:1px solid rgba(233,201,133,.7)!important;box-shadow:0 4px 12px rgba(0,0,0,.55)!important;border-radius:5px}
+body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shadow:0 0 0 2px #F3D896,0 0 16px 4px rgba(243,210,140,.6)!important}
+/* Card Reading under the night with the crescent Moon over the lake, framed in gold with lilies and roses */
+.mnp.trd{--mn-bg:url(/art/atlas/reading-night.webp)}
+.mnp.trd::before{bottom:var(--navh,0px)!important;background-position:50% 0!important}

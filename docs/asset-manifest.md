@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 509 |
-| In use, provisional | 465 |
+| Images | 512 |
+| In use, provisional | 468 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -70,6 +70,7 @@ their space before they load.
 | `public/art/atlas/obm-star.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/obm-sun.webp` | 192×192 | 1:1 | no | 11 | provisional |  |
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
+| `public/art/atlas/reading-night.webp` | 850×1850 | 0.46:1 | no | 239 | provisional |  |
 | `public/art/atlas/sign-mid.webp` | 849×1580 | 0.54:1 | no | 190 | provisional |  |
 | `public/art/atlas/sign-night.webp` | 850×1850 | 0.46:1 | no | 218 | provisional |  |
 | `public/art/atlas/sign-sky.webp` | 849×1853 | 0.46:1 | no | 295 | provisional |  |
@@ -827,6 +828,8 @@ their space before they load.
 | `public/art/cards/kassandra.webp` | 480×480 | 1:1 | no | 86 | provisional | below the 600 px it needs at 2×; should be transparent |
 | `public/art/cards/ornament.webp` | 144×53 | 2.72:1 | yes | 4 | provisional | below the 600 px it needs at 2× |
 | `public/art/cards/plaque.webp` | 1024×432 | 2.37:1 | yes | 134 | provisional |  |
+| `public/art/cards/tarot-back-night.webp` | 600×900 | 2:3 | no | 206 | provisional | should be transparent |
+| `public/art/cards/tarot-back-wine.webp` | 600×900 | 2:3 | no | 186 | provisional | should be transparent |
 | `public/art/cards/tarot-back.webp` | 600×900 | 2:3 | yes | 141 | provisional |  |
 
 ## Older category icon (settings and a few lists)

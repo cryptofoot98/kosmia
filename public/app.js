@@ -620,7 +620,7 @@ const phaseSlug=n=>/^New Moon/.test(n)?'new-moon':/^Full Moon|Lunar Eclipse/.tes
 const tarotFace=c=>`${pic('deck',c.id,'tarot-art')}<div class="tf-num">${c.arcana==='major'?c.num:''}</div><div class="tf-plate"><span>${c.name}</span></div>`;
 function cardScene(c,flipped,id){
  const sp=Array.from({length:10},(_,i)=>`<i class="spark" style="left:${10+i*8}%;top:${30+(i%4)*14}%;--dx:${(i%2?1:-1)*(10+i*4)}px;--dy:${-30-i*6}px"></i>`).join('');
- return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title+'. '+c.msg):'Today’s whisper, face down. Press to reveal.'}" data-act="reveal"><div class="card3d"><div class="face back"></div><div class="face front daily kt">${whisperFace(c)}</div></div>${sp}</div>`;
+ return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title)+'. Open the card':'Today’s whisper, face down. Press to reveal.'}" data-act="${flipped?'wpop':'reveal'}"><div class="card3d"><div class="face back"></div><div class="face front daily kt">${whisperFace(c)}</div></div>${sp}</div>`;
 }
 // a whisper's face: its artwork (art/whispers) and the engraved plaque with title and message
 const whisperFace=c=>(ART.whispers||[]).includes(c.id)?Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title}):`<div class="ph">${symbol(c.sym)}</div><div class="card-banner"><div class="cb-in"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div>`;
@@ -723,7 +723,7 @@ function whisperView(){
  ${cardScene(c,rev,'fortuneCard')}
  ${rev?mbox(`<p class="kpills">${keys(wKeys(c))}</p><p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p>
   <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Write Your Reflection'}</button><button class="ibtn sq" data-act="share" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
- :`<button class="btn" data-act="reveal">Reveal My Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}</div>`;
+ :`<button class="btn" data-act="reveal">Reveal My Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}${V.wpop?whisperPop(c):''}</div>`;
 }
 function tarotView(){
  const T=V.tarot,sp=SPREADS[T.spread];
@@ -1954,7 +1954,7 @@ function render(){
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
- $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d');
+ $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d','cb-c');
  if(authed)$('#navin').innerHTML=Kit.nav(MAIN.map(k=>({key:k,label:SECTIONS[k].label})),sec);
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
