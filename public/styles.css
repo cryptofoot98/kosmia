@@ -1542,7 +1542,7 @@ html:has(.ob-acct),html:has(.ob-acct) body{background:var(--k-midnight);overscro
  -webkit-mask-image:linear-gradient(#000 calc(100% - 3cqw),transparent);mask-image:linear-gradient(#000 calc(100% - 3cqw),transparent)}
 .hsp-hero::before{content:'';position:absolute;inset:0;background:var(--k-midnight)}
 .hsp-hero>*{position:absolute}
-.hsp-vine{z-index:1;left:0;top:calc(var(--st) + 6cqw);width:20cqw;height:auto;pointer-events:none}
+.hsp-vine{z-index:1;left:0;top:calc(var(--st) + 6cqw);width:21cqw;height:auto;pointer-events:none}
 .hsp-c{z-index:1;left:16cqw;top:var(--st);width:30cqw;height:auto;pointer-events:none;overflow:visible}
 .hsp-cl line{stroke:rgba(236,200,122,.72);stroke-width:.5;stroke-linecap:round}
 .hsp-cs path{fill:#F2CF7A;filter:drop-shadow(0 0 1.2px rgba(255,214,120,.95))}
@@ -2052,7 +2052,7 @@ body{background-attachment:scroll}
 /* a sign's horoscope page: the garden behind the reading held still on the screen like every other page (it had scrolled
    with the page), and the sign's painting fading into it so the two read as one picture */
 .hsp::before{position:fixed;inset:auto;top:0;left:0;right:0;margin:0 auto;width:100%;max-width:var(--appw);height:100vh;height:100lvh;
- background:var(--k-midnight) url(/art/atlas/home-vines.webp) 50% 100%/cover no-repeat}
+ background:var(--k-midnight) url(/art/atlas/sign-night.webp) 50% 100%/cover no-repeat;filter:none}
 .hsp{background:none}
 .hsp>.hsp-hero{-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
 .hsp-hero::before{background:transparent}
@@ -2157,3 +2157,9 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .hsp .hc-cats.stuck .hc-i .acc-i{width:min(32px,8cqw);height:min(32px,8cqw)}
 /* Birth Chart: the reader's details, with the way to look up someone else's chart beside them */
 .ch-ns{display:block;margin:-6px auto 4px;font-family:var(--serif);font-weight:600;color:#F3DC9E;text-shadow:0 1px 3px #000}
+/* a sign's page: gold lilies climb both sides of the screen from top to foot, held still over the sign's painting and the
+   night, beneath the words and the reading */
+.hsp::after{content:'';position:fixed;z-index:1;top:0;left:0;right:0;margin:0 auto;width:100%;max-width:var(--appw);height:100vh;height:100lvh;pointer-events:none;
+ background:url(/art/atlas/hsp-garland-l.webp) 0 0/22cqw auto repeat-y,url(/art/atlas/hsp-garland-r.webp) 100% 0/22cqw auto repeat-y}
+.hsp>.hsp-hero{z-index:2}
+.hsp>.hsp-body{z-index:3}
