@@ -561,11 +561,12 @@ const energyCarousel=sl=>`<div class="energy en-car"><span class="en-in"><span c
 // the Daily Whisper's card enlarged, to see it in detail
 // the Daily Whisper's card opened from Home on the parchment sheet a tarot card opens on: its name, the card, its message
 // and its question
-function whisperPop(c){
- return `<div class="pop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="pop-box wp-box"><button class="pop-x" data-act="wpopclose" aria-label="Close">×</button>
- <div class="label center">Daily Whisper · ${ymdLong(dkey(),{day:'numeric',month:'long'})}</div><h2 class="center">${esc(c.title)}</h2>
- <div class="wp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
- <p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p><button class="btn" data-act="jopen" data-k="fortune:${dkey()}">${S.notes[dkey()]?'Continue Your Reflection':'Reflect in Your Journal'}</button></div></div>`}
+function whisperPop(c){const k=dkey();
+ return `<div class="cpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
+ <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
+ <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
+ <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p><div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
+ <button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Reflect in Your Journal'}</button></div></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -578,10 +579,10 @@ views.home=()=>{
  const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
  const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`;
  return `<div class="home hbay"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
+ <div class="hh-acts hh-fix">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
+ <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div></div>
+  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1>${ritual}</header>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`
-  <div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div>
-   <div class="hh-acts">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div></div>
-  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1>${ritual}
   <div class="hh-stage s-${sign.id}">
    <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
@@ -646,7 +647,7 @@ views.horoscope=()=>{
  const ov=horoscope(S.sign,'overview',V.period),first=(String(ov.body||'').match(/^[^.!?]*[.!?]/)||[''])[0].trim();
  const read=V.period==='daily'&&S.readDay===dkey();
  // the night over the bay holds still behind the whole page; the title in its sky, then three framed cards apart
- return `<div class="land hland hnight"><header class="hl-top">${jdoor()}<h1 class="cz">Horoscope</h1><p class="hgreet">${nm?esc(nm)+', your sky':'Your sky'}</p><p class="hl-line">${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}</p></header>
+ return `<div class="land hland hnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Horoscope</h1><p class="hgreet">${nm?esc(nm)+', your sky':'Your sky'}</p><p class="hl-line">${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}</p></header>
  <div class="hl-cards">
  <div class="hmine hl-card">
   <div class="hm-top">${glyphMed(sign.id)}<div><h2>${sign.name}</h2><p class="hm-d">${sign.dates}</p><p class="lr-m">${keys(SIGN_KEYS[sign.id])}</p></div></div>
@@ -677,7 +678,7 @@ function horoSign(){
  // the sign's painting dissolved into the night sky at the head of the page, its name, dates and soul in the open sky at
  // its left; then the
  // reading on a card of night glass framed in gold over the night sky edged with lilies, the next area at its foot
- return `<div class="hsp s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}${heart}</div><div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
+ return `<div class="hsp s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}${heart}</div><div class="hsp-hero stay">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
  <div class="hsp-body">${periodSeg()}
@@ -706,7 +707,7 @@ views.tarot=()=>{
  // the night with the old card and the lilies holds still behind the page; the title under the arc, then today's card
  // (the daily step, the same Whisper as on Home) and the readings, each way of reading one tap from its own spread
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],note=S.notes[k],nm=firstName();
- return `<div class="land tland hnight tnight"><header class="hl-top">${jdoor()}<h1 class="cz">Tarot</h1><p class="hgreet">${nm?esc(nm)+', the cards':'The cards'}<br>are listening</p><p class="hl-line">Turn today’s card, or ask them a question</p></header>
+ return `<div class="land tland hnight tnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Tarot</h1><p class="hgreet">${nm?esc(nm)+', the cards':'The cards'}<br>are listening</p><p class="hl-line">Turn today’s card, or ask them a question</p></header>
  <div class="hl-cards">
  <section class="hl-sec">${Kit.divider('Today’s Whisper')}<div class="hl-card tw"><div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">One card for today, face down. Turn it over for its message.</p>'}
@@ -741,12 +742,12 @@ function tarotView(){
 }
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
 function tarotPop(c){const k=V.tctx||'love';
- return `<div class="pop" role="dialog" aria-modal="true" aria-label="${esc(c.name)}" data-act="tpopclose"><div class="pop-box"><button class="pop-x" data-act="tpopclose" aria-label="Close">×</button>
- <div class="label center">${c.arcana==='major'?'Major Arcana · '+c.num:'Minor Arcana · '+c.suit}${c.rv?' · reversed':''}</div><h2 class="center">${c.name}</h2>
- <div class="scene flat ${c.rv?'rev':''}" role="img" aria-label="${esc(c.name)}"><div class="face front tarot-face">${tarotFace(c)}</div></div>
- <div class="label">Upright · ${c.up}</div><p>${c.upm}</p><div class="label">Reversed · ${c.rev}</div><p>${c.revm}</p><div class="rule"></div>
- <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="quote">${c[k]}</p>
- <button class="btn ghost sm" data-act="kasask" data-q="What does ${esc(c.name)}${c.rv?' reversed':''} suggest in the ${esc(c.pos)} position of my reading?">Ask Kassandra about this card</button></div></div>`}
+ return `<div class="cpop" role="dialog" aria-modal="true" aria-label="${esc(c.name)}" data-act="tpopclose"><button class="cp-x" data-act="tpopclose" aria-label="Close">×</button><div class="cp-in">
+ <p class="cp-k">${esc(c.pos||'')}${c.pos?' · ':''}${c.arcana==='major'?'Major Arcana · '+c.num:'Minor Arcana · '+c.suit}${c.rv?' · reversed':''}</p><h2 class="cp-t">${c.name}</h2>
+ <div class="cp-card ${c.rv?'rev':''}"><div class="scene flat ${c.rv?'rev':''}" role="img" aria-label="${esc(c.name)}"><div class="face front tarot-face">${tarotFace(c)}</div></div></div>
+ <div class="cp-box"><p class="cp-lab">Upright · ${c.up}</p><p class="cp-msg">${c.upm}</p><p class="cp-lab">Reversed · ${c.rev}</p><p class="cp-msg">${c.revm}</p><div class="cp-rule" aria-hidden="true"></div>
+ <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="cp-ref">${c[k]}</p>
+ <button class="btn" data-act="kasask" data-q="What does ${esc(c.name)}${c.rv?' reversed':''} suggest in the ${esc(c.pos)} position of my reading?">Ask Kassandra about this card</button></div></div></div>`}
 // once every card is face up, ask the server for a personal interpretation (signed-in only)
 function interpret(){const T=V.tarot;if(!C.user||T.aiState)return;T.aiState='loading';
  C.interpret(T.spread,T.q,T.drawn.map(c=>({id:c.id,reversed:c.rv}))).then(r=>{if(V.tarot===T&&(r.cards||r.whole)){T.ai=r}},e=>console.warn('interpret',e&&e.message)).then(()=>{T.aiState='done';render()})}
@@ -1249,7 +1250,7 @@ const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map
 // the gold title set in the painting's sky, with its line, circles and star beneath
 // the title stays in place with the painting while the boxes scroll up over it; Back and the page's own buttons float
 // above everything in a bar of their own, so they can always be reached
-const mnHead=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd"><div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
+const mnHead=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg></div></header>`;
 // a page built as a stack of parchment panels, set as a night page instead: its painting behind (cls picks it), the
 // gold title in the sky, and each panel a gilded see-through box with a star at each corner
 const gild=h=>h.replace(/<section class="card([^"]*)"([^>]*)>/g,(_,c,a)=>`<section class="mbox${c}"${a}>${['tl','tr','bl','br'].map(k=>`<i class="mb-c ${k}">${STAR4}</i>`).join('')}`);
@@ -1304,7 +1305,7 @@ views.discover=()=>{
  let chSub='Your cosmic blueprint';try{if(bd&&S.fullName&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(q=>q.n===n);return x?sIdx(x.sign).name:''};chSub=[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon'].filter(Boolean).join(' · ')||chSub}}catch(e){}
  let lpSub='Your soul’s journey',cySub='Your personal year, month and day';try{if(bd&&N){const l=N.lifePath(bd).r.n;lpSub=`Your number ${l} · ${N.MEANING[l][0]}`;cySub=`Your Personal Year ${N.personalYear(bd,yr).r.n}`}}catch(e){}
  const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
- return `<div class="land dland dnight"><header class="hl-top">${jdoor()}<h1 class="cz">Discover</h1><p class="hgreet">${nm?esc(nm)+', the sky':'The sky'} has more to tell you</p></header>
+ return `<div class="land dland dnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Discover</h1><p class="hgreet">${nm?esc(nm)+', the sky':'The sky'} has more to tell you</p></header>
  <div class="dlib">
   ${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Cosmic Profile</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
   ${shelf('Written in You',`${nm?esc(nm)+', the':'The'} sky you were born beneath`)}
@@ -1535,8 +1536,8 @@ function journalLib(){
  const theme=THEMES.map(([l,,re])=>[l,it.reduce((n,p)=>n+((jText(p)||'').toLowerCase().match(re)||[]).length,0)]).sort((a,b)=>b[1]-a[1])[0];
  const recent=it.slice().sort(byNew).slice(0,3);
  const sec=(t,h,cls='')=>`<section class="hl-sec">${Kit.divider(t)}<div class="hl-card ${cls}">${h}</div></section>`;
- return `<div class="land jlib jnight"><header class="hl-top">${iconBtn('back','data-act="back"','Back')}<div class="jl-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="ibtn" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div>
- <h1 class="cz">Journal</h1><p class="hgreet">${nm?esc(nm)+', your own sky':'Your own sky'}</p><p class="hl-line">Every thought you write is a star you place in it</p></header>
+ return `<div class="land jlib jnight"><div class="jl-bar">${iconBtn('back','data-act="back"','Back')}<div class="jl-acts">${iconBtn('search','data-act="jsearch"','Search your journal')}<button class="ibtn" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div></div>
+ <header class="hl-top stay"><h1 class="cz">Journal</h1><p class="hgreet">${nm?esc(nm)+', your own sky':'Your own sky'}</p><p class="hl-line">Every thought you write is a star you place in it</p></header>
  <div class="hl-cards">
  ${V.jsearch!=null?`<div class="hl-card jsrch"><div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>${q?`<div class="list">${items.length?items.map(p=>lrow(jThumb(p),jHeading(p),ymdLong(p.day,{day:'numeric',month:'short',year:'numeric'}),`data-act="jopen" data-k="${esc(jKey(p))}"`)).join(''):'<p class="muted center">Nothing found.</p>'}</div>`:''}</div>`:''}
  ${sec('Tonight’s Reflection',`${m?`<p class="jp-k">${esc(m.name)} in ${sIdx(m.sign).name}${rev?' · '+esc(c.title):''}</p>`:''}<p class="jp-q">“${esc(ask)}”</p><button class="btn" ${act}>${lab}</button><button class="jp-new" data-act="sheet" data-k="new">Or begin a new page ${IC.chev}</button>`,'jprompt')}
@@ -1634,7 +1635,7 @@ function entryView(){
  // the page over the night with the armillary sphere, the candle and the lily, under the arc of the Moon's phases: what
  // the page belongs to and a line for the reader in its sky, the night the page was written under, then the page itself
  return `<div class="mnp jn entry enight"><div class="mn-bar">${iconBtn('back','data-act="back"','Back')}<div class="mn-r"><button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}</div></div>
- <header class="en-top"><p class="en-k">${hd[0]}</p><h1 class="cz">${hd[1]}</h1><p class="en-l">${hd[2]}</p><p class="en-sky">${entrySky(p.day)}</p></header>
+ <header class="en-top stay"><p class="en-k">${hd[0]}</p><h1 class="cz">${hd[1]}</h1><p class="en-l">${hd[2]}</p><p class="en-sky">${entrySky(p.day)}</p></header>
  ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button></div>`:''}
  ${mbox(entryTop(p))}
  ${mbox(`<h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>
@@ -1945,7 +1946,7 @@ function render(){
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
  app.innerHTML=html;
- jxRender();enCar();hcar();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();hcar();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
@@ -2009,8 +2010,10 @@ const navH=()=>{const n=$('#nav');document.documentElement.style.setProperty('--
 addEventListener('resize',navH);
 // living details: a hero's picture drifts more slowly than the page (parallax), and Home's header folds into a slim bar
 let driftF=0;
+// a page's head stands still while the page rises over it, fading as the first card reaches it
+function stayFade(y=scrollY){document.querySelectorAll('.stay').forEach(e=>{e.style.opacity=Math.max(0,1-y/Math.max(1,e.offsetHeight*.8)).toFixed(3);e.style.pointerEvents=y>e.offsetHeight*.5?'none':''})}
 function drift(){
- const y=scrollY;document.body.classList.toggle('scrolled',y>120);
+ const y=scrollY;document.body.classList.toggle('scrolled',y>120);stayFade(y);
  if(S.settings.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  document.querySelectorAll('.parallax').forEach(el=>{el.style.transform=`translate3d(0,${(Math.min(y,700)*.22).toFixed(1)}px,0)`});
 }
@@ -2211,11 +2214,11 @@ document.addEventListener('click',e=>{
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
  if(a==='wpop'){V.wpop=true;return render()}
- if(a==='wpopclose'){V.wpop=false;return render()}
+ if(a==='wpopclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.wpop=false;return render()}
  if(a==='cpedit'){V.cpEdit=true;V.birthDraft=null;return render()}
  if(a==='cpopen'){go('discover','profile');V.cpEdit=true;V.birthDraft=null;return render()}
  if(a==='cpclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.cpEdit=false;V.birthDraft=null;return render()}
- if(a==='tpopclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.tpop=null;return render()}
+ if(a==='tpopclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.tpop=null;return render()}
  if(a==='saveread'){const r={id:uuid(),spread:T.spread,q:T.q,date:dkey(),at:new Date().toISOString(),note:'',cards:T.drawn.map(c=>({id:c.id,pos:c.pos,name:c.name,rev:c.rv}))};
   S.readings.push(r);T.savedId=r.id;save();C.saveReading&&C.saveReading(r).then(id=>{if(id){r.rid=id;r.id=id;r.sy=true;T.savedId=id;save()}});toast('Saved to your journal');return render()}
  if(a==='tctx'){V.tctx=t.dataset.k;return render()}

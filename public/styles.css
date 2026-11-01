@@ -2609,3 +2609,79 @@ body.scrolled .enight .mn-bar{background:linear-gradient(#080C1C 72%,rgba(8,12,2
 .enight details.acc,.enight details.acc>summary{background:rgba(6,10,24,.4)!important;border-color:rgba(233,201,133,.45)!important;color:#F1E2BC;box-shadow:none!important}
 .enight details.acc .read,.enight details.acc p{color:#F4E8CC}
 .enight details.acc svg{color:#E9C985}
+/* ---------- every page's head stands still (.stay): its title and greeting hold their place while the page rises over
+   them, fading as the first card reaches them (stayFade); the buttons keep the corners of the screen ---------- */
+.stay{position:sticky!important;top:0;z-index:0!important}
+.hbay>.hhero,.hbay>.hsheet,.hl-top.stay~:is(.hl-cards,.dlib),.en-top.stay~.mbox,.mn-hd.stay~:not(.pop,.cpop,.jx,.menu-pop,.mn-bar){position:relative;z-index:1}
+.en-top.stay~.mbox{z-index:1}
+/* Home: the wordmark, greeting and ritual in the sky; the quill, bell and portrait in the corner; no folding bar */
+.hbay .hh-head{padding:calc(env(safe-area-inset-top,0px) + 7cqw) var(--hpad) 2cqw;color:var(--k-on-dark)}
+.hbay .hhero{padding-top:0}
+.hbay .hh-fix{position:fixed;z-index:45;top:calc(env(safe-area-inset-top,0px) + 2.4cqw);right:max(2.5cqw,calc(50% - var(--appw) / 2 + 2.5cqw));display:flex;align-items:center;gap:6px}
+.hbay .hh-fix .ibtn{background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.45);color:#F1DFB4}
+.hbay .hbar{display:none}
+/* the landings: the quill in the corner of the screen */
+.land>.jdoor{position:fixed;z-index:45;top:calc(env(safe-area-inset-top,0px) + 8px);right:max(10px,calc(50% - var(--appw) / 2 + 10px));left:auto;background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+/* Discover: the painting alone, no second picture at the foot */
+.dnight::after{display:none}
+.dnight{padding-bottom:24px;margin-bottom:0}
+/* the Journal: its bar of buttons in the corners; the head of its painting holds still with the title */
+.jnight .jl-bar{position:fixed;z-index:45;top:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);height:0;pointer-events:none}
+.jnight .jl-bar>.ibtn,.jnight .jl-bar .jl-acts{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);pointer-events:auto}
+.jnight .jl-bar>.ibtn{left:12px}.jnight .jl-bar .jl-acts{right:12px;display:flex;gap:8px}
+.jnight .jl-bar .ibtn{background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+.jnight::before{position:fixed;left:50%;right:auto;width:var(--w);transform:translateX(-50%)}
+.jnight .hl-top{padding-top:calc(var(--w) * .36 + env(safe-area-inset-top,0px))}
+/* a journal page and a sign's page: the head of the painting holds still with the title */
+.mnp.enight::before{position:fixed;left:50%;width:var(--w);transform:translateX(-50%)}
+.hsp{--w:min(100vw,var(--appw))}
+.hsp::before{position:fixed;left:50%;right:auto;width:var(--w);transform:translateX(-50%);height:calc(var(--w) * 1.28)}
+.hsp>.hsp-hero.stay{z-index:2!important}
+/* the pages with a painted head (.mnp): the title holds still too */
+.mnp>.mn-hd.stay{z-index:0}
+
+/* ---------- a card opened: the card itself over the blurred page, its words on night glass beneath ---------- */
+.cpop{position:fixed;inset:0;z-index:var(--z-pop);overflow-y:auto;overscroll-behavior:contain;background:rgba(6,9,22,.5);-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);animation:cpFade .3s ease}
+.cp-in{max-width:var(--appw);margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 54px) 8% calc(var(--navh,0px) + 34px);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.cp-x{position:fixed;z-index:2;top:calc(env(safe-area-inset-top,0px) + 10px);right:max(12px,calc(50% - var(--appw) / 2 + 12px));width:44px;height:44px;border-radius:50%;border:1px solid rgba(233,201,133,.6);background:rgba(8,12,28,.6);color:#F1D79A;font-size:1.6rem;line-height:1;cursor:pointer}
+.cp-k{margin:0;font-family:'Cinzel',var(--serif);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#E0C487;text-shadow:0 1px 6px #000}
+.cp-t{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(1.8rem,9vw,2.4rem);line-height:1.08;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.9))}
+.cp-card{width:min(66vw,280px);filter:drop-shadow(0 0 22px rgba(243,210,140,.45)) drop-shadow(0 14px 30px rgba(0,0,0,.6));animation:cpRise .55s cubic-bezier(.2,.8,.2,1)}
+.cp-card .k-tarot{width:100%}
+.cp-card .scene{width:100%}
+.cp-box{position:relative;width:100%;margin-top:8px;padding:20px 16px;border:1px solid rgba(233,201,133,.75);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.82),rgba(10,14,32,.72));color:#F1E2BC;
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 10px 26px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:10px}
+.cp-box::before,.cp-box::after{content:'✦';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:.7rem;line-height:16px;color:#E9C985;text-shadow:0 0 6px rgba(233,201,133,.8)}
+.cp-box::after{top:auto;bottom:-8px}
+.cp-keys{margin:0;font-family:'Cinzel',var(--serif);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:#E0C487}
+.cp-lab{margin:6px 0 0;font-family:'Cinzel',var(--serif);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:#E0C487}
+.cp-msg{margin:0;font-family:var(--font-serif);font-size:1.12rem;line-height:1.45;color:#F4E8CC}
+.cp-ref{margin:0;font-family:var(--font-serif);font-style:italic;font-size:1.08rem;line-height:1.45;color:#F1D79A}
+.cp-rule{height:9px;margin:4px 15%;background:linear-gradient(90deg,transparent,rgba(233,201,133,.8) 30%,rgba(233,201,133,.8) 70%,transparent) 0 50%/100% 1px no-repeat;position:relative}
+.cp-rule::after{content:'✦';position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);font-size:10px;line-height:1;color:#F3D896}
+.cp-box .btn{margin-top:6px;background:rgba(6,10,24,.35)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.2)!important}
+.cp-box .seg{gap:2px;padding:3px;border:.75px solid rgba(233,201,133,.6);border-radius:999px;background:rgba(6,10,24,.5)}
+.cp-box .seg button{min-height:32px;border-radius:999px;font-family:'Cinzel',var(--serif);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(241,223,180,.75)}
+.cp-box .seg button[aria-selected=true]{color:#F6DA97;background:linear-gradient(180deg,rgba(120,84,32,.55),rgba(60,40,14,.55));box-shadow:inset 0 0 0 1px #D9B66E}
+@keyframes cpFade{from{opacity:0}}
+@keyframes cpRise{from{opacity:0;transform:translateY(24px) scale(.94)}}
+@media (prefers-reduced-motion:reduce){.cpop,.cp-card{animation:none}}
+
+/* ---------- Card Reading: the title beside the crescent Moon of its painting; every part on night glass ---------- */
+.mnp.trd .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 24cqw);padding-bottom:6cqw}
+.mnp.trd .mn-t{position:relative;top:0;left:0;right:auto;width:62%;align-items:center}
+.mnp.trd .mn-t h1{font-size:min(10.5cqw,62cqw / max(6,var(--tl,8)) * 1.6);white-space:normal;text-align:center;line-height:1.02}
+.mnp.trd .mn-t::before{inset:-14% -4%}
+.mnp.trd>.mn-sub{margin-top:-4px;font-family:var(--font-serif);font-style:italic;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.mnp.trd .list.spreads .lrow{background:linear-gradient(180deg,rgba(10,14,32,.72),rgba(10,14,32,.6))!important;border:1px solid rgba(233,201,133,.6)!important;border-radius:6px;box-shadow:inset 0 0 0 3px rgba(10,14,32,.3),inset 0 0 0 4px rgba(233,201,133,.25),0 6px 16px rgba(0,0,0,.4)!important;color:#F1E2BC}
+.mnp.trd .list.spreads .lrow strong{color:#F6E3B0}.mnp.trd .list.spreads .lrow .sp-n{color:rgba(241,226,188,.75)}
+.mnp.trd .list.spreads .lrow.on{border-color:#F3D896!important;box-shadow:0 0 0 1px #F3D896,0 0 18px rgba(243,210,140,.45)!important}
+.mnp.trd .list.spreads .lrow .th{filter:drop-shadow(0 0 6px rgba(233,201,133,.35));background:none}
+.mnp.trd>.field input,.mnp.trd .field input{background:rgba(6,10,24,.55)!important;border:1px solid rgba(233,201,133,.6)!important;color:#F4E8CC}
+.mnp.trd .field input::placeholder{color:rgba(241,226,188,.55)}
+.mnp.trd>.btn,.mnp.trd .mbox .btn{background:rgba(6,10,24,.35)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.2)!important}
+.mnp.trd .mbox{border:1px solid rgba(233,201,133,.75);border-radius:6px;background:linear-gradient(180deg,rgba(10,14,32,.72),rgba(10,14,32,.6));-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45);color:#F1E2BC}
+.mnp.trd .mbox::before{display:none}.mnp.trd .mb-c{color:#E9C985}
+.mnp.trd .mbox h2{color:#F6E3B0}.mnp.trd .mbox p,.mnp.trd .mbox .read p{color:#F4E8CC}.mnp.trd .mbox .kick{color:#F1D79A}.mnp.trd .mbox .muted,.mnp.trd .mbox .quote{color:rgba(241,226,188,.8)}
+.mnp.trd>.muted,.mnp.trd>.quote{color:#F4E6C2!important;text-shadow:0 1px 6px #000}
+.cpop{background:rgba(6,9,22,.68)}
