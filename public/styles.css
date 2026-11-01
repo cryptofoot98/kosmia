@@ -2685,3 +2685,85 @@ body.scrolled .enight .mn-bar{background:linear-gradient(#080C1C 72%,rgba(8,12,2
 .mnp.trd .mbox h2{color:#F6E3B0}.mnp.trd .mbox p,.mnp.trd .mbox .read p{color:#F4E8CC}.mnp.trd .mbox .kick{color:#F1D79A}.mnp.trd .mbox .muted,.mnp.trd .mbox .quote{color:rgba(241,226,188,.8)}
 .mnp.trd>.muted,.mnp.trd>.quote{color:#F4E6C2!important;text-shadow:0 1px 6px #000}
 .cpop{background:rgba(6,9,22,.68)}
+/* ---------- every inner page (.mnp) on night glass framed in gold, as Home, the Horoscope, Tarot, Discover and the
+   Journal: its own painted head above, then each part a card of dusk with a fine gold double frame and a small star at
+   its corners; the words in candlelight; the fields, lists and buttons of the night ---------- */
+.mnp{--mb-bg:linear-gradient(180deg,rgba(10,14,32,.76),rgba(10,14,32,.64));color:#F1E2BC}
+.mnp .mbox{border:1px solid rgba(233,201,133,.75);border-radius:6px;-webkit-backdrop-filter:none;backdrop-filter:none;color:#F1E2BC;
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)}
+.mnp .mbox::before{display:none}
+.mnp .mb-c{color:#E9C985;width:12px;height:12px}
+.mnp .mbox :is(p,li,dd,td,span,em,strong,b,label,summary,figcaption){color:inherit}
+.mnp .mbox p,.mnp .mbox .lr-t strong{font-weight:500;color:#F4E8CC}
+.mnp .mbox :is(h2,h3,h4){color:#F6E3B0}
+.mnp .mbox :is(.muted,.lr-t span,.label,dt,th,.small,.sp-n){color:rgba(241,226,188,.78)!important}
+.mnp .mbox :is(.kick,.sec-h,.quote,.w-ref,.h-focus){color:#F1D79A}
+.mnp .mbox .label,.mnp .mbox th,.mnp .mbox dt{font-family:'Cinzel',var(--serif);letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.mnp .mbox .rule,.mnp .mbox hr{border-color:rgba(233,201,133,.4);color:#D9B66E}
+.mnp .mbox td,.mnp .mbox th{border-color:rgba(233,201,133,.2)}
+.mnp .mbox a,.mnp .mbox .link,.mnp .link{color:#F1D79A}
+/* lists and rows */
+.mnp .lrow,.mnp .mbox .lrow,.mnp .pr{background:rgba(6,10,24,.45)!important;border:1px solid rgba(233,201,133,.45)!important;box-shadow:none!important;color:#F1E2BC}
+.mnp .lrow .lr-t strong{color:#F6E3B0}.mnp .lrow .lr-t span{color:rgba(241,226,188,.8)}
+.mnp .lrow svg,.mnp .lr-c{color:#E9C985}
+.mnp .lrow.on{border-color:#F3D896!important;box-shadow:0 0 0 1px #F3D896,0 0 16px rgba(243,210,140,.4)!important}
+/* pills and words */
+.mnp .kpills,.mnp .pill{background:rgba(6,10,24,.45);border-color:rgba(233,201,133,.5);color:#F1D79A}
+.mnp .pill b{color:#F6DA97}
+/* fields */
+.mnp :is(.field,.mbox) label{color:rgba(241,226,188,.85)}
+.mnp :is(input[type=text],input[type=search],input[type=date],input[type=time],input:not([type]),textarea,select){background-color:rgba(6,10,24,.55)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F4E8CC!important}
+.mnp :is(input,textarea)::placeholder{color:rgba(241,226,188,.5)}
+.mnp select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23E9C985' stroke-width='1.6'/%3E%3C/svg%3E")!important}
+.mnp select option{color:#1A1F33}
+.mnp .inp svg{color:#E9C985}
+.mnp input[type=checkbox]{accent-color:#C9963F}
+/* buttons: outlined in gold on the night */
+.mnp .btn:not(.danger){background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.18)!important;-webkit-text-stroke:0}
+.mnp .btn.ghost{border-color:rgba(217,182,110,.6)!important;box-shadow:none!important}
+.mnp .mbox .ibtn,.mnp .ibtn.sq{background:rgba(6,10,24,.45);border:1px solid rgba(233,201,133,.55);color:#F1D79A}
+.mnp .ibtn.sq.on{color:#F6A3A0;border-color:#F3D896}
+.mnp .pill-b{background:rgba(6,10,24,.45);border-color:rgba(233,201,133,.6);color:#F1D79A}
+/* tabs and segments */
+.mnp .seg{gap:2px;padding:3px;border:.75px solid rgba(233,201,133,.6);border-radius:999px;background:rgba(6,10,24,.5)}
+.mnp .seg button{border-radius:999px;font-family:'Cinzel',var(--serif);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(241,223,180,.78);background:none}
+.mnp .seg button[aria-selected=true]{color:#F6DA97;background:linear-gradient(180deg,rgba(120,84,32,.55),rgba(60,40,14,.55));box-shadow:inset 0 0 0 1px #D9B66E}
+/* accordions */
+.mnp details.acc{background:rgba(6,10,24,.4)!important;border-color:rgba(233,201,133,.45)!important}
+.mnp details.acc>summary strong{color:#F1D79A}
+/* the line beneath each page's title, and the words that sit on the painting */
+.mnp>.mn-sub,.mnp>p.muted,.mnp>p.center{color:#F4E6C2;text-shadow:0 1px 8px #000}
+.mnp .mn-greet{margin:-6px 0 2px;text-align:center;font-family:'Cinzel',var(--serif);font-size:.86rem;letter-spacing:.1em;text-transform:uppercase;color:#F1D79A;text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.85)}
+.mnp .mbox p,.mnp .mbox label,.mnp .mbox li,.mnp .mbox dd,.mnp .mbox td,.mnp .mbox .lr-t strong,.mnp .mbox .w-msg,.mnp .mbox .read{color:#F4E8CC!important;font-weight:500}
+.mnp .mbox :is(.kick,.sec-h,.quote,.w-ref,.h-focus,.kpills){color:#F1D79A!important}
+.mnp .mbox :is(.muted,.lr-t span,.label,dt,th,.small,.sp-n){color:rgba(241,226,188,.78)!important}
+.mnp .mbox :is(h2,h3,h4){color:#F6E3B0!important}
+.mnp .lrow .lr-t strong{color:#F6E3B0!important}.mnp .lrow .lr-t span{color:rgba(241,226,188,.82)!important}
+.mnp .lrow{background:rgba(6,10,24,.55)!important}
+.mnp .mn-greet{font-size:.74rem;letter-spacing:.06em;white-space:nowrap}
+/* the last pieces of parchment on the inner pages turn to night glass: the accordions and their bodies, the filter chips,
+   the Big Three, the workings of a number, Kassandra's words, Dream Interpretation's sheet and Settings */
+.mnp details.acc>summary,.mnp .acc>summary,.mnp .acc-b,.pfp details.acc>summary,.pfp .acc-b{background:rgba(6,10,24,.55)!important;color:#F1E2BC!important;border-color:rgba(233,201,133,.4)!important}
+.mnp .acc{background:rgba(6,10,24,.45)!important;border:1px solid rgba(233,201,133,.45)!important;box-shadow:none!important}
+.mnp .acc :is(strong,h3,h4){color:#F6E3B0!important}.mnp .acc :is(span,p,li){color:#F1E2BC!important}.mnp .acc .muted,.mnp .acc .lr-t span{color:rgba(241,226,188,.78)!important}
+.mnp .acc svg{color:#E9C985}
+.mnp p.calc{background:rgba(233,201,133,.12)!important;color:#F1D79A!important}
+.mnp .fchip{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.5)!important;color:#F1D79A!important}
+.mnp .fchip[aria-pressed=true],.mnp .fchip.on{background:linear-gradient(180deg,rgba(120,84,32,.6),rgba(60,40,14,.6))!important;color:#F6DA97!important;border-color:#D9B66E!important}
+.mnp .big3{background:rgba(6,10,24,.55)!important;border-color:rgba(233,201,133,.5)!important;color:#F1E2BC}.mnp .big3 *{color:inherit}
+.mnp .kp-bub{background:linear-gradient(180deg,rgba(10,14,32,.82),rgba(10,14,32,.72))!important;border:1px solid rgba(233,201,133,.75)!important;color:#F4E8CC!important;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)!important}
+.mnp .kp-bub *{color:#F4E8CC}.mnp .kp-bub::after,.mnp .kp-bub::before{border-bottom-color:rgba(10,14,32,.85)!important;background:rgba(10,14,32,.85)!important}
+/* Dream Interpretation's sheet */
+.land:has(.hero-dream) .sheet,.land .sheet:has(.dsym),.land>.sheet{background:linear-gradient(180deg,rgba(10,14,32,.86),rgba(10,14,32,.8))!important;border:1px solid rgba(233,201,133,.7)!important;color:#F1E2BC;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 -8px 22px rgba(0,0,0,.4)!important}
+.land>.sheet :is(p,span,label,li){color:#F1E2BC}.land>.sheet :is(h2,h3,strong){color:#F6E3B0}.land>.sheet .muted{color:rgba(241,226,188,.75)!important}
+.land>.sheet .btn:not(.danger){background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.18)!important}
+.land>.sheet :is(textarea,input){background:rgba(6,10,24,.55)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F4E8CC!important}
+.land>.sheet .lrow{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.45)!important;color:#F1E2BC}
+/* Settings and the profile */
+.pfp .pf-card,.pfp .lrow,.pfp .acc{background:linear-gradient(180deg,rgba(10,14,32,.78),rgba(10,14,32,.66))!important;border:1px solid rgba(233,201,133,.6)!important;color:#F1E2BC!important;box-shadow:inset 0 0 0 3px rgba(10,14,32,.3),inset 0 0 0 4px rgba(233,201,133,.25),0 6px 16px rgba(0,0,0,.4)!important}
+.pfp .pf-card *,.pfp .lrow *{color:inherit}.pfp .pf-card :is(strong,h2,h3),.pfp .lrow strong{color:#F6E3B0!important}
+.pfp .pf-card :is(.muted,small,span),.pfp .lrow .lr-t span{color:rgba(241,226,188,.8)!important}
+.pfp .lrow svg{color:#E9C985}
+.pfp input,.pfp select,.pfp textarea{background-color:rgba(6,10,24,.55)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F4E8CC!important}
+.pfp .btn:not(.danger){background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important}
+.pf-card{background:linear-gradient(180deg,rgba(10,14,32,.8),rgba(10,14,32,.68))!important;border-color:rgba(233,201,133,.75)!important;color:#F1E2BC!important;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)!important}.pf-card::before,.pf-card::after{display:none}.pf-card h2{color:#F6E3B0!important}.pf-card *{color:inherit}.pf-card .keys{color:#E0C487!important}
