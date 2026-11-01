@@ -588,7 +588,7 @@ views.home=()=>{
    ${rev?`<p class="dw-msg">${esc(c.msg)}</p><p class="dw-ref">${Kit.icon('star')}${esc(c.ref)}</p>`:''}${wbtn}</div>`,'gilt hwhisper')}
   ${energyCarousel(energySlides(now,m,sign,h))}
 
- `,'hsheet',ui('home-night','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
+ `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
 function connSigns(c){
