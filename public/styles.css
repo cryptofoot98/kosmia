@@ -2767,3 +2767,32 @@ body.scrolled .enight .mn-bar{background:linear-gradient(#080C1C 72%,rgba(8,12,2
 .pfp input,.pfp select,.pfp textarea{background-color:rgba(6,10,24,.55)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F4E8CC!important}
 .pfp .btn:not(.danger){background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important}
 .pf-card{background:linear-gradient(180deg,rgba(10,14,32,.8),rgba(10,14,32,.68))!important;border-color:rgba(233,201,133,.75)!important;color:#F1E2BC!important;box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)!important}.pf-card::before,.pf-card::after{display:none}.pf-card h2{color:#F6E3B0!important}.pf-card *{color:inherit}.pf-card .keys{color:#E0C487!important}
+/* the score of two signs: each part a pill of night with its own coloured glow and gold words */
+.mnp .pills4 span{background:rgba(6,10,24,.6)!important;border:1px solid rgba(233,201,133,.5)!important;color:#F4E8CC!important;box-shadow:inset 0 0 12px var(--pg,rgba(233,201,133,.2))}
+.mnp .pills4 span b{color:#F6DA97!important}
+.mnp .pills4 .p-love{--pg:rgba(214,110,125,.45)}.mnp .pills4 .p-friend{--pg:rgba(110,150,210,.45)}.mnp .pills4 .p-comm{--pg:rgba(170,110,190,.45)}.mnp .pills4 .p-val{--pg:rgba(225,185,80,.45)}
+/* Compatibility by names and by birth charts under the same sky as by signs */
+.mnp.rs,.mnp.sy{--mn-bg:url(/art/atlas/affinity-bg.webp)}
+/* every menu of choices across the app (a page's tabs and a group's tabs) as the Horoscope's period bar: a pill of night
+   with a fine gold rim, gold hairlines between the choices, the chosen one a warm pill of gold */
+.seg,.gtabs{position:relative;display:flex;gap:0!important;padding:4px!important;border:1px solid rgba(233,201,133,.75)!important;border-radius:999px!important;background:rgba(6,10,24,.62)!important;box-shadow:0 4px 14px rgba(0,0,0,.45)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.seg button,.gtabs button{position:relative;flex:1;min-height:36px;padding:0 6px!important;border:0!important;border-radius:999px!important;background:none!important;box-shadow:none!important;font-family:'Cinzel',var(--serif)!important;font-weight:600!important;font-size:clamp(.6rem,2.7vw,.72rem)!important;letter-spacing:.06em!important;text-transform:uppercase;color:#F1E2BC!important;-webkit-text-fill-color:#F1E2BC;-webkit-text-stroke:0!important;text-shadow:0 1px 2px #000!important;white-space:nowrap}
+.seg button+button::before,.gtabs button+button::before{content:'';position:absolute;left:0;top:30%;bottom:30%;width:1px;background:rgba(233,201,133,.5)}
+.seg button[aria-selected=true]::before,.seg button[aria-selected=true]+button::before,.gtabs button.on::before,.gtabs button.on+button::before{display:none}
+.seg button[aria-selected=true],.gtabs button.on{color:#F6DA97!important;-webkit-text-fill-color:#F6DA97;background:linear-gradient(180deg,rgba(120,84,32,.55),rgba(60,40,14,.55))!important;box-shadow:inset 0 0 0 1px #D9B66E,0 0 12px rgba(233,201,133,.35)!important}
+.gtabs{width:auto!important;margin:0 0 14px!important}
+/* Life Path: the title in the open sky at the upper left, beside the Milky Way, clear of the winged figure and the peak */
+.mnp.lp .mn-hd{height:auto;padding-top:calc(env(safe-area-inset-top,0px) + 16cqw);padding-bottom:52cqw}
+.mnp.lp .mn-t{position:relative;top:0;left:0;width:58%;align-items:center}
+.mnp.lp .mn-t h1{font-size:11cqw;white-space:normal;text-align:center}
+.mnp.lp .mn-greet{white-space:normal;line-height:1.4}
+
+/* the line beneath a title, held in the title's head */
+.mn-t .mn-sub{margin:4px 0 0;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:1rem;color:#F4E6C2;text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.85);white-space:normal}
+/* Settings: the head holds still, Back stays in the corner, the rows rise over it */
+.pfp>.ibtn{position:fixed;z-index:45;top:calc(env(safe-area-inset-top,0px) + 10px);left:max(10px,calc(50% - var(--appw) / 2 + 10px));background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+.pfp>.pf-body{position:relative;z-index:1}
+/* Life Path: the title, its line and its words further left, in the open sky beside the Milky Way */
+.mnp.lp .mn-t{width:52%;margin-left:-1cqw}
+.mnp.lp .mn-t h1{font-size:10.5cqw}
+.mnp.lp .mn-hd{padding-bottom:58cqw}

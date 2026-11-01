@@ -1911,7 +1911,7 @@ views.settings=()=>{
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
  // the night garden runs the length of the page: the title set in its sky, the sign's figure whole before its moon with the
  // identity on parchment beside it, and the settings on parchment rows over the lilies and roses below
- return `<div class="pfp"><div class="pf-hero">${ui('home-sky','pf-sky','',true)}${iconBtn('back','data-act="back"','Back')}
+ return `<div class="pfp">${iconBtn('back','data-act="back"','Back')}<div class="pf-hero stay">${ui('home-sky','pf-sky','',true)}
  <div class="hero-t"><h1 class="cz">Your Profile</h1><p>Your cosmic identity</p></div>
  <div class="pf-row"><span class="pf-fig" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo')}</span>${Kit.size('atlas/fg-'+s.id)?Kit.img('atlas/fg-'+s.id,{cls:'hh-fig'}):''}</span>
  <div class="pf-card"><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} <span class="muted">${SHORT_DATES(s)}</span></p><p class="keys">${keys(SIGN_KEYS[s.id])}</p><p class="pf-meta">${s.el} · ${s.mod||''}${s.mod?' · ':''}ruled by ${s.ruler}</p>${hasBirthDate()?`<p class="pf-meta">Born ${ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'})}${S.birth.place?' · '+esc(S.birth.place.split(',')[0]):''}</p>`:''}</div></div></div>
@@ -1950,7 +1950,7 @@ function render(){
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
  app.innerHTML=html;
- jxRender();enCar();hcar();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
@@ -2015,6 +2015,8 @@ addEventListener('resize',navH);
 // living details: a hero's picture drifts more slowly than the page (parallax), and Home's header folds into a slim bar
 let driftF=0;
 // a page's head stands still while the page rises over it, fading as the first card reaches it
+// a page's line beneath its title belongs to its head, so it holds still with it
+function stayHeads(){document.querySelectorAll('.mnp>.mn-sub').forEach(e=>{const t=e.parentElement.querySelector(':scope>.mn-hd .mn-t');if(t)t.appendChild(e)})}
 function stayFade(y=scrollY){document.querySelectorAll('.stay').forEach(e=>{e.style.opacity=Math.max(0,1-y/Math.max(1,e.offsetHeight*.8)).toFixed(3);e.style.pointerEvents=y>e.offsetHeight*.5?'none':''})}
 function drift(){
  const y=scrollY;document.body.classList.toggle('scrolled',y>120);stayFade(y);
