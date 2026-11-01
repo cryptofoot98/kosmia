@@ -2231,7 +2231,7 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 /* Horoscope landing over the night bay: the painting holds still behind the whole page, from the top of the screen
    to the menu; the title sits in its sky, and each part of the page is its own delicate card, framed in gold like an old
    tarot card, with the night showing between them */
-.land.hnight::before{bottom:var(--navh,0px);background:#0E1428 url(/art/atlas/hland-night.webp) 50% 45%/cover no-repeat}
+.land.hnight::before{bottom:var(--navh,0px);background:#0E1428 url(/art/atlas/hland-night.webp) 50% 0/cover no-repeat}
 .hl-top{position:relative;padding:calc(30vw + env(safe-area-inset-top,0px)) 24px 22px;text-align:center}
 .hl-top>.jdoor{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;color:#F1DFB4;background:rgba(var(--k-night-rgb),.45)}
 .hl-top h1{margin:0;font-size:clamp(2rem,10.5vw,2.9rem);line-height:1.05;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
