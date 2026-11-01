@@ -2271,3 +2271,56 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .hnight .signs12 .sgn.me span{color:#F6DA97}
 .hnight .hl-sec:not(.hl-card)>.k-div{padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 70%,transparent)}
 .hnight .btn.hm-go{border:1px solid #D9B66E!important}
+/* Home over the night bay framed in lilies: one painting held still behind the whole page, from the top of the screen to
+   the menu (held by its top edge, so its star and lilies are never cut); the header's own sky and the lower garden give way
+   to it, and every box becomes a delicate card of night glass framed in fine gold, like the Horoscope page */
+.home.hbay{position:relative;isolation:isolate;--glass:linear-gradient(180deg,rgba(10,14,32,.74),rgba(10,14,32,.62));--gline:rgba(233,201,133,.75)}
+.home.hbay::before{content:'';position:fixed;z-index:-1;top:0;bottom:var(--navh,0px);left:50%;width:min(100%,var(--appw));transform:translateX(-50%);background:#0B1022 url(/art/atlas/home-bay.webp) 50% 0/cover no-repeat}
+.hbay .hhero>.ks-bg,.hbay .hhero .stars,.hbay .hsheet>.ksc-bg{display:none}
+.hbay .hsheet{margin-top:0;padding-top:0}
+.hbay .hhero{padding-top:calc(env(safe-area-inset-top,0px) + 7cqw)}
+.hbay .hh-greet,.hbay .hh-top small{text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.8)}
+/* the forecast card, the areas of life, the Cosmic Energy, the Whisper and For You: night glass, a gold hairline with a
+   second one inside it */
+.hbay .hh-card,.hbay .qt,.hbay .en-row,.hbay .card.hwhisper,.hbay .card.hfor{background:var(--glass)!important;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);border:1px solid var(--gline)!important;color:#F1E2BC;
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.3),inset 0 0 0 5px rgba(233,201,133,.3),0 8px 22px rgba(0,0,0,.45)!important}
+.hbay .hh-card::before,.hbay .hh-card::after,.hbay .card.hwhisper::before,.hbay .card.hwhisper::after,.hbay .card.hfor::before,.hbay .card.hfor::after{display:none}
+.hbay .hh-card{border-radius:6px}
+.hbay .hh-card h2,.hbay .hh-card .glyph{color:#F6E3B0}
+.hbay .hh-card p,.hbay .hh-card .hh-text{color:#F1E2BC}
+.hbay .hh-card .keys{color:#E0C487}
+.hbay .home .qrow,.hbay .qrow{background:none;box-shadow:none;border:0}
+.hbay .qt{border-radius:6px}
+.hbay .qt strong{color:#F6E3B0}.hbay .qt span{color:rgba(241,226,188,.78)}
+.hbay .en-row strong{color:#F6E3B0}.hbay .en-row span span{color:rgba(241,226,188,.8)}
+.hbay .en-go{color:#F1D79A}
+.hbay .card.hwhisper,.hbay .card.hfor{position:relative;border-radius:6px}
+.hbay .card.hwhisper .orn,.hbay .card.hfor .orn,.hbay .card .orn h2{color:#F1D79A}
+.hbay .dw-t{color:#F6E3B0}.hbay .dw-msg{color:#F1E2BC}
+.hbay .hfor .lrow{background:rgba(6,10,24,.35);border:1px solid rgba(233,201,133,.45);box-shadow:none;color:#F1E2BC}
+.hbay .hfor .lr-t strong{color:#F6E3B0}.hbay .hfor .lr-t span,.hbay .hfor .lrow p{color:rgba(241,226,188,.8)}
+.hbay .hfor .lrow svg{color:#E9C985}
+/* the buttons on the night glass: outlined in gold */
+.hbay .hh-card .btn,.hbay .hwhisper .btn{background:rgba(6,10,24,.35)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;box-shadow:0 0 14px rgba(233,201,133,.2)!important}
+.hbay .hh-card,.hbay .hh-card *{text-shadow:0 1px 3px rgba(0,0,0,.55)!important;filter:none}
+.hbay .hh-acts .ibtn{background:rgba(8,12,28,.55);border:1px solid rgba(233,201,133,.45);color:#F1DFB4}
+/* the cards carry a small gold star at the top and foot of their frame, as on the Horoscope page */
+.hbay .card.hwhisper::before,.hbay .card.hfor::before,.hbay .card.hwhisper::after,.hbay .card.hfor::after{display:block;content:'✦';position:absolute;top:-8px;left:50%;right:auto;bottom:auto;width:auto;height:auto;transform:translateX(-50%);background:none;border:0;font-size:.7rem;line-height:16px;color:#E9C985;text-shadow:0 0 6px rgba(233,201,133,.8)}
+.hbay .card.hwhisper::after,.hbay .card.hfor::after{top:auto;bottom:-8px}
+/* the bar that slides in on scrolling: night glass with a gold line, the painting showing faintly through it */
+.hbay .hbar{z-index:60;background:linear-gradient(#080C1C,#0C1126);border-bottom:1px solid rgba(233,201,133,.6);height:calc(env(safe-area-inset-top,0px) + 58px)}
+.hbay .hbar .hb-art{display:none}
+.hbay .hbar .hb-logo{position:absolute;left:50%;bottom:10px;transform:translateX(-50%)}
+.hbay .hbar .avatar{bottom:29px;width:40px;height:40px}
+/* Home's header fitted to the painting's frame: the wordmark under the top star between the two lilies, its line beneath,
+   the greeting under the arc between the crescent moons, and the ritual below them; the quill, bell and portrait keep the
+   top right corner */
+.hbay .hhero{padding-top:env(safe-area-inset-top,0px)}
+.hbay .hh-top{display:block}
+.hbay .hh-acts{position:absolute;top:2.4cqw;right:0}
+.hbay .brand{padding-top:16.5cqw}
+.hbay .hh-word{font-size:8.6cqw}
+.hbay .brand small{margin-top:1.3cqw;font-size:max(8px,2.1cqw);letter-spacing:.08em}
+.hbay .hh-greet{margin:6.4cqw auto 0;width:auto;font-size:max(20px,5.8cqw)}
+.hbay .hh-rit{margin:3.4cqw auto 0}
+.hbay .hsheet .energy .orn-s{padding:4px 18px;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 70%,transparent)}
