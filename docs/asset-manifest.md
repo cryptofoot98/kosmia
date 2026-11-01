@@ -7,27 +7,19 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 512 |
-| In use, provisional | 468 |
+| Images | 522 |
+| In use, provisional | 478 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
-
-## The Zodiac Affinity page’s backdrop: a golden sun with a woman’s face and a crescent moon with a man’s face facing each other over the Milky Way, clouds, lilies, roses and daisies (supplied by the owner)
-
-- Mockup: `docs/mockups/discover.webp`
-- Screen: Discover › Zodiac Affinity (whole screen)
-- Crop: fixed behind the page, cover
-- Background: opaque
-- Wanted width at 2×: 780 px
-
-| Asset | Size | Ratio | Alpha | KB | Status | Notes |
-|---|---|---|---|---|---|---|
-| `public/art/atlas/affinity-bg.webp` | 780×1386 | 0.56:1 | no | 222 | provisional |  |
 
 ## Unclassified
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
+| `public/art/atlas/acct-foot.webp` | 850×295 | 2.88:1 | no | 61 | provisional |  |
+| `public/art/atlas/acct-mid.webp` | 850×120 | 7.08:1 | no | 4 | provisional |  |
+| `public/art/atlas/acct-night.webp` | 850×1475 | 0.58:1 | no | 169 | provisional |  |
+| `public/art/atlas/acct-top.webp` | 850×511 | 1.66:1 | no | 76 | provisional |  |
 | `public/art/atlas/aw-clouds.webp` | 960×134 | 7.16:1 | yes | 34 | provisional |  |
 | `public/art/atlas/aw-foot.webp` | 850×1004 | 0.85:1 | no | 74 | provisional |  |
 | `public/art/atlas/aw-top.webp` | 1269×846 | 3:2 | no | 284 | provisional |  |
@@ -61,9 +53,11 @@ their space before they load.
 | `public/art/atlas/nvi-tarot.webp` | 512×512 | 1:1 | yes | 85 | provisional |  |
 | `public/art/atlas/ob-crescent.webp` | 1200×800 | 3:2 | no | 221 | provisional |  |
 | `public/art/atlas/ob-final.webp` | 1200×800 | 3:2 | no | 305 | provisional |  |
+| `public/art/atlas/ob-intro2.webp` | 850×1850 | 0.46:1 | no | 263 | provisional |  |
 | `public/art/atlas/ob-sunset-blooms.webp` | 960×1440 | 2:3 | yes | 73 | provisional |  |
 | `public/art/atlas/ob-sunset.webp` | 960×1440 | 2:3 | no | 378 | provisional |  |
 | `public/art/atlas/ob-welcome.webp` | 1024×1536 | 2:3 | no | 464 | provisional |  |
+| `public/art/atlas/ob-welcome2.webp` | 851×1849 | 0.46:1 | no | 384 | provisional |  |
 | `public/art/atlas/ob-woman.webp` | 1200×800 | 3:2 | no | 238 | provisional |  |
 | `public/art/atlas/obm-dream.webp` | 192×192 | 1:1 | no | 8 | provisional |  |
 | `public/art/atlas/obm-moon.webp` | 192×192 | 1:1 | no | 9 | provisional |  |
@@ -75,21 +69,37 @@ their space before they load.
 | `public/art/atlas/sign-night.webp` | 850×1850 | 0.46:1 | no | 218 | provisional |  |
 | `public/art/atlas/sign-sky.webp` | 849×1853 | 0.46:1 | no | 295 | provisional |  |
 | `public/art/atlas/tarot-night.webp` | 850×1850 | 0.46:1 | no | 380 | provisional |  |
+| `public/art/atlas/wb-foot.webp` | 850×341 | 2.49:1 | no | 74 | provisional |  |
+| `public/art/atlas/wb-mid.webp` | 850×120 | 7.08:1 | no | 5 | provisional |  |
+| `public/art/atlas/wb-night.webp` | 850×1475 | 0.58:1 | no | 168 | provisional |  |
 | `public/art/atlas/wb-sun.webp` | 1400×933 | 1.50:1 | no | 387 | provisional |  |
-| `public/art/atlas/wb-top.webp` | 1024×1857 | 0.55:1 | no | 358 | provisional |  |
-| `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
-| `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
-| `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
-| `public/art/atlas/zm-capricorn.webp` | 400×400 | 1:1 | no | 48 | provisional |  |
-| `public/art/atlas/zm-gemini.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
-| `public/art/atlas/zm-leo.webp` | 400×400 | 1:1 | no | 53 | provisional |  |
-| `public/art/atlas/zm-libra.webp` | 400×400 | 1:1 | no | 47 | provisional |  |
-| `public/art/atlas/zm-pisces.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
-| `public/art/atlas/zm-sagittarius.webp` | 400×400 | 1:1 | no | 45 | provisional |  |
-| `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 54 | provisional |  |
-| `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 51 | provisional |  |
-| `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 50 | provisional |  |
+| `public/art/atlas/wb-top.webp` | 850×538 | 1.58:1 | no | 64 | provisional |  |
+| `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 36 | provisional |  |
+| `public/art/atlas/zm-aries.webp` | 400×400 | 1:1 | no | 38 | provisional |  |
+| `public/art/atlas/zm-cancer.webp` | 400×400 | 1:1 | no | 35 | provisional |  |
+| `public/art/atlas/zm-capricorn.webp` | 400×400 | 1:1 | no | 38 | provisional |  |
+| `public/art/atlas/zm-gemini.webp` | 400×400 | 1:1 | no | 36 | provisional |  |
+| `public/art/atlas/zm-leo.webp` | 400×400 | 1:1 | no | 41 | provisional |  |
+| `public/art/atlas/zm-libra.webp` | 400×400 | 1:1 | no | 33 | provisional |  |
+| `public/art/atlas/zm-pisces.webp` | 400×400 | 1:1 | no | 36 | provisional |  |
+| `public/art/atlas/zm-sagittarius.webp` | 400×400 | 1:1 | no | 35 | provisional |  |
+| `public/art/atlas/zm-scorpio.webp` | 400×400 | 1:1 | no | 36 | provisional |  |
+| `public/art/atlas/zm-taurus.webp` | 400×400 | 1:1 | no | 37 | provisional |  |
+| `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 37 | provisional |  |
 | `public/art/atlas/zs-bg.webp` | 780×1698 | 0.46:1 | no | 199 | provisional |  |
+| `public/art/atlas/zs-night.webp` | 850×1850 | 0.46:1 | no | 254 | provisional |  |
+
+## The Zodiac Affinity page’s backdrop: a golden sun with a woman’s face and a crescent moon with a man’s face facing each other over the Milky Way, clouds, lilies, roses and daisies (supplied by the owner)
+
+- Mockup: `docs/mockups/discover.webp`
+- Screen: Discover › Zodiac Affinity (whole screen)
+- Crop: fixed behind the page, cover
+- Background: opaque
+- Wanted width at 2×: 780 px
+
+| Asset | Size | Ratio | Alpha | KB | Status | Notes |
+|---|---|---|---|---|---|---|
+| `public/art/atlas/affinity-bg.webp` | 780×1386 | 0.56:1 | no | 222 | provisional |  |
 
 ## Wide dark banner for a Discover tile
 
@@ -232,10 +242,10 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/ex-chart.webp` | 560×560 | 1:1 | no | 95 | provisional |  |
+| `public/art/atlas/ex-chart.webp` | 560×560 | 1:1 | no | 103 | provisional |  |
 | `public/art/atlas/ex-compat.webp` | 560×560 | 1:1 | no | 107 | provisional |  |
-| `public/art/atlas/ex-lifepath.webp` | 560×560 | 1:1 | no | 101 | provisional |  |
-| `public/art/atlas/ex-name.webp` | 560×560 | 1:1 | no | 96 | provisional |  |
+| `public/art/atlas/ex-lifepath.webp` | 560×560 | 1:1 | no | 106 | provisional |  |
+| `public/art/atlas/ex-name.webp` | 560×560 | 1:1 | no | 106 | provisional |  |
 | `public/art/atlas/ex-resonance.webp` | 560×560 | 1:1 | no | 102 | provisional |  |
 
 ## The sign’s figure alone, cut out (scripts/cutout.py): stands before the halo and over the forecast card’s margin and foot
@@ -535,18 +545,18 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/med-aquarius.webp` | 560×560 | 1:1 | no | 92 | provisional |  |
-| `public/art/atlas/med-aries.webp` | 560×560 | 1:1 | no | 97 | provisional |  |
-| `public/art/atlas/med-cancer.webp` | 560×560 | 1:1 | no | 98 | provisional |  |
-| `public/art/atlas/med-capricorn.webp` | 560×560 | 1:1 | no | 94 | provisional |  |
-| `public/art/atlas/med-gemini.webp` | 560×560 | 1:1 | no | 101 | provisional |  |
-| `public/art/atlas/med-leo.webp` | 560×560 | 1:1 | no | 103 | provisional |  |
-| `public/art/atlas/med-libra.webp` | 560×560 | 1:1 | no | 95 | provisional |  |
-| `public/art/atlas/med-pisces.webp` | 560×560 | 1:1 | no | 100 | provisional |  |
-| `public/art/atlas/med-sagittarius.webp` | 560×560 | 1:1 | no | 86 | provisional |  |
-| `public/art/atlas/med-scorpio.webp` | 560×560 | 1:1 | no | 78 | provisional |  |
-| `public/art/atlas/med-taurus.webp` | 560×560 | 1:1 | no | 88 | provisional |  |
-| `public/art/atlas/med-virgo.webp` | 560×560 | 1:1 | no | 97 | provisional |  |
+| `public/art/atlas/med-aquarius.webp` | 560×560 | 1:1 | no | 49 | provisional |  |
+| `public/art/atlas/med-aries.webp` | 560×560 | 1:1 | no | 52 | provisional |  |
+| `public/art/atlas/med-cancer.webp` | 560×560 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/med-capricorn.webp` | 560×560 | 1:1 | no | 53 | provisional |  |
+| `public/art/atlas/med-gemini.webp` | 560×560 | 1:1 | no | 50 | provisional |  |
+| `public/art/atlas/med-leo.webp` | 560×560 | 1:1 | no | 58 | provisional |  |
+| `public/art/atlas/med-libra.webp` | 560×560 | 1:1 | no | 46 | provisional |  |
+| `public/art/atlas/med-pisces.webp` | 560×560 | 1:1 | no | 52 | provisional |  |
+| `public/art/atlas/med-sagittarius.webp` | 560×560 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/med-scorpio.webp` | 560×560 | 1:1 | no | 50 | provisional |  |
+| `public/art/atlas/med-taurus.webp` | 560×560 | 1:1 | no | 53 | provisional |  |
+| `public/art/atlas/med-virgo.webp` | 560×560 | 1:1 | no | 51 | provisional |  |
 
 ## The Moon page’s backdrop: a full moon and the Milky Way over a moonlit bay and lakeside town, a balustrade and lilies below (supplied by the owner)
 

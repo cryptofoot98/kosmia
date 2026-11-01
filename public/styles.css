@@ -2875,3 +2875,131 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .pf-hint{font-family:'Cinzel',var(--serif);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#E0C487}
 .pf-card .pf-rm{padding:0;border:0;background:none;cursor:pointer;font-size:.8rem;color:#E0C487!important;text-decoration:underline}
 .avatar img.av-i{border-radius:50%}
+/* ---------- onboarding: the welcome and Ancient Wisdom set on their paintings (ob-welcome2, ob-intro2), each 850 wide;
+   every word and button placed in the painting's own measure (--u, one of its pixels) so they land where it leaves room ---------- */
+.ob.ob2{--w:min(100vw,var(--appw));--u:calc(var(--w) / 850);position:relative;min-height:100svh;padding:0;background:#0A0E1F;color:#F1E2BC;overflow:hidden}
+.ob2 .ob2-bg{display:block;width:100%;height:auto}
+.ob2 .ob2-in{position:absolute;inset:0;text-align:center}
+.ob2 .ob2-in>*{position:absolute;left:0;right:0;margin:0}
+.ob2>.ibtn{position:absolute;z-index:3;top:calc(var(--u) * 50);left:calc(var(--u) * 28);color:#F1DFB4;background:rgba(8,12,28,.55)}
+/* the night button: deep night glass in a gold rim, its word in gold capitals, a warm light along its edges */
+.ob2-btn{display:flex;align-items:center;justify-content:center;gap:.5em;margin:0 auto!important;border:1.5px solid #E7BF6E;border-radius:999px;cursor:pointer;
+ background:radial-gradient(120% 140% at 50% 50%,rgba(40,46,86,.92),rgba(12,16,38,.96) 70%);font-family:var(--font-display);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#F3D896;
+ box-shadow:0 0 0 1px rgba(10,14,32,.9),inset 0 0 18px rgba(233,180,90,.35),0 0 22px rgba(246,190,100,.55),0 0 46px rgba(246,170,80,.3);text-shadow:0 0 8px rgba(246,210,140,.5);transition:filter .2s,transform .1s}
+.ob2-btn:hover{filter:brightness(1.12)}.ob2-btn:active{transform:translateY(1px)}
+.ob2-btn span{font-family:var(--font-serif);font-weight:400;font-size:1.15em}
+.ob2-btn:focus-visible{outline:2px solid #F6DA97;outline-offset:4px}
+/* the welcome */
+.ob2-wel .ob2-logo{top:calc(var(--u) * 488);font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 132);line-height:1;letter-spacing:.04em;text-transform:uppercase;
+ background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
+.ob2-wel .ob2-tag{top:calc(var(--u) * 668);font-family:var(--font-display);font-size:calc(var(--u) * 31);line-height:1.3;letter-spacing:.12em;text-transform:uppercase;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-wel .ob2-tags{top:calc(var(--u) * 1308);font-family:var(--font-display);font-size:calc(var(--u) * 28);line-height:1.55;letter-spacing:.1em;text-transform:uppercase;color:#F4E6C2;text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.9)}
+.ob2-wel .ob2-tags i{font-style:normal;color:#E9C985;margin:0 .45em}
+.ob2-wel .ob2-begin{top:calc(var(--u) * 1445);width:calc(var(--u) * 650);height:calc(var(--u) * 108);font-size:calc(var(--u) * 38)}
+.ob2-wel .ob2-alt{top:calc(var(--u) * 1590);font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 34);color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-wel .ob2-alt .link{font:inherit;color:#F3D896;text-decoration:underline;text-underline-offset:3px}
+/* Ancient Wisdom */
+.ob2-intro .ob2-h{top:calc(var(--u) * 112);font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 54);line-height:1.12;letter-spacing:.04em;text-transform:uppercase;
+ background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
+.ob2-intro .ob2-lead{top:calc(var(--u) * 252);font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 31);line-height:1.3;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-intro .ob2-list{top:calc(var(--u) * 843);left:calc(var(--u) * 46);right:calc(var(--u) * 46);display:flex;flex-direction:column;gap:calc(var(--u) * 7);padding:0;list-style:none}
+.ob2-intro .ob2-list li{position:relative;display:flex;align-items:center;gap:calc(var(--u) * 34);height:calc(var(--u) * 118);padding:0 calc(var(--u) * 20) 0 calc(var(--u) * 36);text-align:left;border:1.5px solid #C9A25C;border-radius:calc(var(--u) * 18);
+ background:linear-gradient(180deg,#F6E9CF,#EAD6AE);box-shadow:inset 0 0 0 3px rgba(255,248,232,.5),0 3px 10px rgba(0,0,0,.35)}
+.ob2-intro .ob2-list li+li::before{content:'✦';position:absolute;left:50%;top:calc(var(--u) * -14);transform:translateX(-50%);font-size:calc(var(--u) * 20);line-height:1;color:#C9963F}
+.ob2-intro .obi-med{flex:none;width:calc(var(--u) * 106);height:calc(var(--u) * 106);border-radius:50%;overflow:hidden;background:#0E1430;box-shadow:0 0 0 2px #C9A25C,0 2px 6px rgba(0,0,0,.4)}
+.ob2-intro .obi-k{width:100%;height:100%;object-fit:cover;display:block}
+.ob2-intro .ob2-list strong{display:block;font-family:var(--font-serif);font-weight:700;font-size:calc(var(--u) * 35);line-height:1.15;color:#2A1C0E}
+.ob2-intro .ob2-list li>span:last-child>span{display:block;margin-top:calc(var(--u) * 4);font-family:var(--font-serif);font-size:calc(var(--u) * 27);color:#5A4630}
+.ob2-intro .ob2-go{top:calc(var(--u) * 1622);width:calc(var(--u) * 428);height:calc(var(--u) * 92);font-size:calc(var(--u) * 36)}
+.ob2-intro .ob2-list strong{color:#24170B!important;font-weight:700!important;-webkit-text-fill-color:#24170B}.ob2-intro .ob2-list li>span:last-child>span{color:#4A3824!important;-webkit-text-fill-color:#4A3824;font-weight:500}
+.ob2-intro .ob2-list strong{-webkit-text-stroke:.7px #24170B;paint-order:stroke fill;letter-spacing:.005em}
+/* the onboarding's buttons as the app's own: night glass in a fine gold rim, gold capitals, a soft gold light */
+.ob2-btn,.ob .btn:not(.ghost):not(.danger){background:rgba(6,10,24,.42)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid #D9B66E!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;
+ box-shadow:inset 0 1px 0 rgba(255,240,205,.12),0 0 14px rgba(233,201,133,.22)!important;text-shadow:0 1px 4px rgba(0,0,0,.6)!important;-webkit-text-stroke:0!important}
+.ob .btn.ghost{background:rgba(6,10,24,.3)!important;border:1px solid rgba(217,182,110,.6)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;box-shadow:none!important}
+/* the zodiac on its painting */
+.ob2-sign .ob2-h{top:calc(var(--u) * 312);font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 60);line-height:1.12;letter-spacing:.04em;text-transform:uppercase;
+ background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
+.ob2-sign .ob2-lead{top:calc(var(--u) * 478);font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 31);line-height:1.3;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-sign .ob2-z{top:calc(var(--u) * 564);left:calc(var(--u) * 82);right:auto;width:calc(var(--u) * 684);display:grid!important;grid-template-columns:repeat(3,1fr);grid-auto-rows:calc(var(--u) * 230);gap:0!important;padding:0!important;margin:0!important;background:none!important}
+.ob2-sign .zg-s{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:calc(var(--u) * 4);padding:0!important;border:0!important;background:none!important;box-shadow:none!important;cursor:pointer;opacity:1!important;filter:none!important}
+.ob2-sign .zg-m{width:calc(var(--u) * 182)!important;height:calc(var(--u) * 182)!important;border-radius:50%;box-shadow:0 0 0 1px rgba(233,201,133,.5),0 4px 12px rgba(0,0,0,.55)!important;transition:box-shadow .2s,transform .2s}
+.ob2-sign .zg-s span{font-family:var(--font-serif)!important;font-weight:600;font-size:calc(var(--u) * 34)!important;line-height:1.1;color:#F4E6C2!important;text-shadow:0 1px 6px #000;letter-spacing:0;text-transform:none}
+.ob2-sign .zg-s[aria-checked=true] .zg-m{transform:scale(1.04);box-shadow:0 0 0 2px #F3D896,0 0 22px 6px rgba(243,210,140,.6)!important}
+.ob2-sign .zg-s[aria-checked=true] span{color:#F6DA97!important}
+.ob2-sign .zgrid.has .zg-s:not([aria-checked=true]) .zg-m{opacity:.62}
+.ob2-sign .ob2-bday{top:calc(var(--u) * 1496);left:calc(var(--u) * 150);right:calc(var(--u) * 150);border:0;background:none;padding:0}
+.ob2-sign .ob2-bday summary{list-style:none;cursor:pointer;font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 32);color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-sign .ob2-bday summary::-webkit-details-marker{display:none}
+.ob2-sign .ob2-bday[open]{padding:12px;border:1px solid rgba(233,201,133,.7);border-radius:8px;background:rgba(8,12,28,.88)}
+.ob2-sign .ob2-bday label,.ob2-sign .ob-hint{color:#F1E2BC}
+.ob2-sign .ob2-bday input{background:rgba(6,10,24,.6);border:1px solid rgba(233,201,133,.6);color:#F4E8CC}
+/* ---------- every round picture across the app wears one fine solid gold line and nothing else: no pale outline, no
+   halo, no second ring; the medallions with a painted rim are trimmed so that rim sits under the line ---------- */
+:is(.obi-med,.zg-m,.en-moon,.th.round,.ev-r,.gmed,.sgn-i,.dft.round .dft-art,.ce-moon,.sym-i,.pf-pic,.avatar,.acc-i.round,.sign-ico,.et-med,.et-m2,.dp-i,.hm-top .gmed){border:0!important;box-shadow:0 0 0 1.5px #C9A253!important;outline:0}
+.avatar{background:#0A0E1F!important}
+.kp-mic{border:0!important;box-shadow:0 0 0 1.5px #C9A253,0 8px 20px rgba(0,0,0,.45)!important}
+.num,.num.big{border:1.5px solid #C9A253!important;box-shadow:none!important}
+.pf-cam{box-shadow:none!important}
+/* the chosen ones keep their gold light, outside the line */
+.ob2-sign .zg-s[aria-checked=true] .zg-m{box-shadow:0 0 0 1.5px #F3D896,0 0 20px 5px rgba(243,210,140,.55)!important}
+.signs12 .sgn.me .sgn-i,.hnight .signs12 .sgn.me .sgn-i{box-shadow:0 0 0 1.5px #F3D896,0 0 14px 3px rgba(243,210,140,.6)!important}
+.pill-b{border:1px solid #C9A253!important;box-shadow:none!important;background:rgba(6,10,24,.5)!important;color:#F1D79A!important}
+/* ---------- Create Your Account and Welcome Back: the painting's head at the top of the screen, its dawn at the foot,
+   the night between (its middle repeated), and the form on night glass framed in gold over it ---------- */
+.ob.ob3{--w:min(100vw,var(--appw));--u:calc(var(--w) / 850);position:relative;display:flex;flex-direction:column;min-height:100svh;padding:0 0 calc(var(--u) * 300);color:#F1E2BC;
+ background:url(/art/atlas/acct-top.webp) 50% 0/100% auto no-repeat,url(/art/atlas/acct-foot.webp) 50% 100%/100% auto no-repeat,url(/art/atlas/acct-mid.webp) 50% 0/100% auto repeat-y,#0E1226}
+.ob.ob3-wb{background:url(/art/atlas/wb-top.webp) 50% 0/100% auto no-repeat,url(/art/atlas/wb-foot.webp) 50% 100%/100% auto no-repeat,url(/art/atlas/wb-mid.webp) 50% 0/100% auto repeat-y,#0E1226}
+.ob3>.ibtn{position:absolute;z-index:3;top:calc(var(--u) * 52);left:calc(var(--u) * 40);color:#F1DFB4;background:rgba(8,12,28,.55);border:1px solid rgba(233,201,133,.45)}
+.ob3-head{text-align:center}
+.ob3-head h1{margin:0;font-family:var(--font-display);font-weight:600;line-height:1.1;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
+.ob3-head .ob-rule{display:block;margin:calc(var(--u) * 14) auto;color:#E9C985}
+.ob3-lead{margin:0;font-family:var(--font-serif);font-style:italic;line-height:1.35;color:#F4E6C2;text-shadow:0 1px 8px #000}
+/* the account's words at the left of the woman under the Moon; Welcome Back's under its crescent */
+.ob3-acct .ob3-head{width:calc(var(--u) * 470);margin:calc(var(--u) * 118) 0 0 calc(var(--u) * 80)}
+.ob3-acct .ob3-head h1{font-size:calc(var(--u) * 52)}
+.ob3-acct .ob3-lead{font-size:calc(var(--u) * 30)}
+.ob3-wb .ob3-head{margin:calc(var(--u) * 285) calc(var(--u) * 80) 0}
+.ob3-wb .ob3-head h1{font-size:calc(var(--u) * 60)}
+.ob3-wb .ob3-lead{font-size:calc(var(--u) * 30)}
+/* the form: night glass framed in gold, as the cards across the app */
+.ob3-panel{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px;margin:calc(var(--u) * 42) calc(var(--u) * 72) 0;padding:22px 18px;border:1px solid rgba(233,201,133,.8);border-radius:8px;
+ background:linear-gradient(180deg,rgba(12,16,36,.82),rgba(8,12,28,.74));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 4px rgba(10,14,32,.35),inset 0 0 0 5px rgba(233,201,133,.32),0 10px 30px rgba(0,0,0,.55)}
+.ob3-panel::before,.ob3-panel::after{content:'✦';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:.7rem;line-height:16px;color:#E9C985;text-shadow:0 0 6px rgba(233,201,133,.8)}
+.ob3-panel::after{top:auto;bottom:-8px}
+.ob3-wb .ob3-panel{margin-top:calc(var(--u) * 40)}
+.ob3-acct .ob3-panel{margin-top:calc(var(--u) * 92)}
+.ob3-panel .field{margin:0}
+.ob3-panel label{display:block;margin-bottom:6px;font-family:var(--font-serif);font-weight:600;font-size:1rem;color:#F4E6C2}
+.ob3-panel .inp{border:1px solid rgba(233,201,133,.55);border-radius:10px;background:rgba(6,10,24,.55)}
+.ob3-panel .inp input{background:none!important;border:0!important;color:#F4E8CC!important;font-family:var(--font-serif)}
+.ob3-panel .inp input::placeholder{color:rgba(241,226,188,.5);font-style:italic}
+.ob3-panel .inp svg,.ob3-panel .eye{color:#E9C985}
+.ob3-panel .pw-rules{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin:0;padding:0;list-style:none}
+.ob3-panel .pw-rules li{display:flex;align-items:center;gap:8px;font-size:.88rem;color:rgba(241,226,188,.8)}
+.ob3-panel .pw-rules li::before{content:'';width:15px;height:15px;flex:none;border:1px solid #C9A253;border-radius:50%}
+.ob3-panel .pw-rules li.ok{color:#F6DA97}.ob3-panel .pw-rules li.ok::before{background:radial-gradient(circle,#F6DA97 40%,transparent 45%)}
+.ob3-panel .auth-err{margin:0;min-height:0;color:#F2A7A0;font-size:.9rem}
+.ob3-panel .btn{width:100%;margin-top:4px}
+.ob3-panel .auth-alt{margin:0;text-align:center;font-family:var(--font-serif);font-style:italic;color:#F4E6C2}
+.ob3-panel .auth-alt .link{font:inherit;font-style:italic;color:#F3D896;text-decoration:underline;text-underline-offset:3px}
+.ob3-panel .ob-rule{display:block;margin:0 auto;color:#E9C985}
+/* the panel set exactly over the space the painting leaves for it */
+.ob3 .ob3-head{box-sizing:border-box;flex:none}
+.ob3-acct .ob3-head{width:calc(var(--u) * 380);height:calc(var(--u) * 451);margin:0 0 0 calc(var(--u) * 70);padding-top:calc(var(--u) * 108)}
+.ob3-acct .ob3-head h1{font-size:calc(var(--u) * 46)}
+.ob3-acct .ob3-lead{font-size:calc(var(--u) * 28)}
+.ob3-wb .ob3-head{height:calc(var(--u) * 478);margin:0 calc(var(--u) * 80);padding-top:calc(var(--u) * 285)}
+.ob3 .ob3-panel{margin:0 calc(var(--u) * 62) 0 calc(var(--u) * 64)!important;box-sizing:border-box}
+.ob3-acct .ob3-panel{min-height:calc(var(--u) * 750)}
+.ob3-wb .ob3-panel{min-height:calc(var(--u) * 677);justify-content:center}
+.ob.ob3{align-items:stretch!important;gap:0!important;padding-left:0!important;padding-right:0!important;padding-top:0!important}
+.ob.ob3>.ob3-head{align-self:flex-start}
+.ob.ob3-wb>.ob3-head{align-self:stretch}
+.ob.ob3>.ob3-panel{width:auto!important;max-width:none!important;align-self:stretch}
+/* the panel reaches from the painting's head down to its dawn, whatever the height of the screen */
+.ob.ob3>.ob3-panel{flex:1 0 auto}
+.ob.ob3-acct{padding-bottom:calc(var(--u) * 275)!important}
+.ob.ob3-wb{padding-bottom:calc(var(--u) * 321)!important}
+.ob3-acct .ob3-head{padding-top:calc(var(--u) * 150);margin-left:calc(var(--u) * 78)}
+.ob3-acct .ob3-head{margin-left:calc(var(--u) * 108);width:calc(var(--u) * 360)}
