@@ -667,21 +667,22 @@ function horoSign(){
  if(ex===S.sign&&V.period==='daily'&&S.readDay!==dkey()){S.readDay=dkey();save()}
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
  const tiles=HCATS.map(([k])=>{const x=horoscope(ex,k,V.period);
-  return `<button class="hc-ic t-${k}${k===cat?' on':''}" data-act="hcat" data-k="${k}" aria-pressed="${k===cat}" title="${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||'')}"><span class="hc-i">${catIco(k,'acc-i')}</span><span class="hc-l">${CAT_INFO[k][0]}</span></button>`}).join('');
+  return `<button class="hc-ic t-${k}${k===cat?' on':''}" data-act="hcat" data-k="${k}" aria-pressed="${k===cat}" title="${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||'')}"><span class="hc-i">${ui('hz-'+k,'acc-i')}</span><span class="hc-l">${CAT_INFO[k][0]}</span></button>`}).join('');
  const reading=k=>{const h=horoscope(ex,k,V.period),playing=V.say===h.body;
   return panel(`<div class="hd"><div><h2>${k==='overview'?pl[1]+' Horoscope':`${CAT_INFO[k][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')};
- const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`;
+ const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
- // the sign's painting across the head of the page, its name, dates and words in the open sky at its left; then the
- // reading and the key themes on two parchment panels over the night edged with lilies and roses
+ // the sign's painting dissolved into the night sky at the head of the page, its name, dates and soul in the open sky at
+ // its left; then the
+ // reading on a card of night glass framed in gold over the night sky edged with lilies, the next area at its foot
  return `<div class="hsp s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}${heart}</div><div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
-  <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p></div></div>
- <div class="hsp-body"><p class="hsp-desc">${SIGN_DESC[s.id]} This is your horoscope, written for the energy of ${V.period==='daily'?'today’s':'this '+PWORD[V.period]+'’s'} skies.</p>${periodSeg()}
+  <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
+ <div class="hsp-body">${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
+ <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}${HCATS[i+1]?`<button class="hnext" data-act="hcat" data-k="${HCATS[i+1][0]}">Next: ${CAT_INFO[HCATS[i+1][0]][0]}, ${pl[0].toLowerCase()} ${IC.chev}</button>`:''}</div>`).join('')}</div></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's

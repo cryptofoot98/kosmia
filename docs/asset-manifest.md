@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 495 |
-| In use, provisional | 451 |
+| Images | 502 |
+| In use, provisional | 458 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -43,6 +43,12 @@ their space before they load.
 | `public/art/atlas/hsp-garland-l.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
 | `public/art/atlas/hsp-garland-r.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
 | `public/art/atlas/hsp-lily.webp` | 520×1600 | 0.33:1 | yes | 239 | provisional |  |
+| `public/art/atlas/hz-career.webp` | 360×360 | 1:1 | yes | 36 | provisional |  |
+| `public/art/atlas/hz-family.webp` | 360×360 | 1:1 | yes | 29 | provisional |  |
+| `public/art/atlas/hz-health.webp` | 360×360 | 1:1 | yes | 41 | provisional |  |
+| `public/art/atlas/hz-love.webp` | 360×360 | 1:1 | yes | 26 | provisional |  |
+| `public/art/atlas/hz-money.webp` | 360×360 | 1:1 | yes | 37 | provisional |  |
+| `public/art/atlas/hz-overview.webp` | 360×360 | 1:1 | yes | 41 | provisional |  |
 | `public/art/atlas/nvi-discover.webp` | 512×512 | 1:1 | yes | 52 | provisional |  |
 | `public/art/atlas/nvi-home.webp` | 512×512 | 1:1 | yes | 118 | provisional |  |
 | `public/art/atlas/nvi-horoscope.webp` | 512×512 | 1:1 | yes | 86 | provisional |  |
@@ -60,6 +66,7 @@ their space before they load.
 | `public/art/atlas/obm-sun.webp` | 192×192 | 1:1 | no | 11 | provisional |  |
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/sign-night.webp` | 850×1850 | 0.46:1 | no | 218 | provisional |  |
+| `public/art/atlas/sign-sky.webp` | 849×1853 | 0.46:1 | no | 295 | provisional |  |
 | `public/art/atlas/wb-sun.webp` | 1400×933 | 1.50:1 | no | 387 | provisional |  |
 | `public/art/atlas/wb-top.webp` | 1024×1857 | 0.55:1 | no | 358 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |
@@ -371,7 +378,7 @@ their space before they load.
 | `public/art/atlas/hsh-sagittarius.webp` | 1100×733 | 1.50:1 | no | 196 | provisional |  |
 | `public/art/atlas/hsh-scorpio.webp` | 1100×733 | 1.50:1 | no | 167 | provisional |  |
 | `public/art/atlas/hsh-taurus.webp` | 1100×733 | 1.50:1 | no | 175 | provisional |  |
-| `public/art/atlas/hsh-virgo.webp` | 1100×733 | 1.50:1 | no | 174 | provisional |  |
+| `public/art/atlas/hsh-virgo.webp` | 1100×733 | 1.50:1 | no | 199 | provisional |  |
 
 ## The column of lilies and roses cut out of home-vines, laid over the left edge of a sign’s Horoscope painting
 
