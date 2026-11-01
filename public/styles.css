@@ -2183,3 +2183,31 @@ body.still .tland .tpanel:not(.lift){position:relative;left:auto;right:auto;bott
 .dw-t{margin:0;font-family:var(--font-serif);font-weight:600;font-size:max(17px,4.8cqw);line-height:1.15}
 .dw-side .dw-msg{margin:0;font-size:max(13px,3.5cqw);line-height:1.35;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .dw-side .btn{align-self:flex-start;min-height:max(38px,9.4cqw);padding:0 6cqw;font-size:max(10px,2.7cqw)}
+/* the Journal's door: a quill in the top corner of every section's first page */
+.hero>.jdoor{left:auto;right:8px}
+.ph-r .jdoor{margin-left:2px}
+/* the Journal: its insights and its dreams side by side beneath the calendar */
+.jlinks{display:flex;justify-content:center;gap:22px;margin:4px 0 16px}
+.jlinks .jins{margin:0}
+/* Discover: three shelves, each with a title in gold and a line spoken to the reader */
+.dshelf{grid-column:1/-1;margin:3.4cqw 0 .4cqw;text-align:center}
+.dshelf h2{margin:0;font-family:var(--font-display);font-weight:600;font-size:max(15px,4.6cqw);letter-spacing:.08em;text-transform:uppercase;color:#EDD3A0;text-shadow:0 1px 6px #000}
+.dshelf h2::before,.dshelf h2::after{content:'✦';margin:0 2.4cqw;font-size:.6em;vertical-align:.25em;color:#D9B06A}
+.dshelf p{margin:.6cqw 0 0;font-family:var(--font-serif);font-style:italic;font-size:max(13px,3.5cqw);color:#E9D9B4;text-shadow:0 1px 6px #000}
+.dft.wide{grid-column:1/-1}
+.dft.night.wide{min-height:28cqw}
+.dprof{grid-column:1/-1;display:flex;align-items:center;gap:3cqw;margin-top:1cqw;padding:2.6cqw 3cqw;border:1px solid var(--k-gold);border-radius:3cqw;cursor:pointer;text-align:left;color:var(--k-ink);
+ background:var(--paper) var(--paper-img) center/cover;box-shadow:inset 0 0 0 .8cqw rgba(var(--k-surface-hi-rgb),.55),inset 0 0 0 calc(.8cqw + 1px) rgba(var(--k-gold-rgb),.45),0 1.4cqw 4cqw rgba(0,0,0,.5)}
+.dprof .dp-i{flex:none;width:14cqw;height:14cqw;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px var(--k-gold-deep)}
+.dprof>span{display:flex;flex-direction:column;gap:.6cqw;min-width:0}
+.dprof strong{font-family:var(--font-serif);font-weight:600;font-size:max(15px,4.4cqw)}
+.dprof>span>span{font-size:max(12px,3.2cqw);color:var(--k-ink-muted)}
+.dprof>svg{flex:none;width:18px;height:18px;color:var(--goldd)}
+/* pages that belong together (Compatibility; the Cosmic Calendar): one row of tabs under the title */
+.gtabs{display:flex;justify-content:center;gap:4px;margin:0 auto 14px;padding:4px;max-width:100%;width:max-content;border:1px solid rgba(var(--k-gold-rgb),.75);border-radius:999px;background:rgba(10,14,30,.55);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.gtabs button{padding:7px 14px;border:0;border-radius:999px;background:none;font-family:var(--font-display);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:#E9D9B4;cursor:pointer;white-space:nowrap}
+.gtabs button.on{background:linear-gradient(#F3DDA6,#D2A75A);color:#2A1C0B;box-shadow:0 0 10px rgba(246,210,140,.4)}
+.sub .gtabs,.mnp .gtabs{position:relative;z-index:2}
+/* Home: For You, the doors that follow the reader */
+.hsheet .card.hfor{margin:0}
+.hfor .list{gap:1.8cqw}
