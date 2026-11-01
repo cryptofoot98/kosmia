@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 502 |
-| In use, provisional | 458 |
+| Images | 503 |
+| In use, provisional | 459 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -67,6 +67,7 @@ their space before they load.
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/sign-night.webp` | 850×1850 | 0.46:1 | no | 218 | provisional |  |
 | `public/art/atlas/sign-sky.webp` | 849×1853 | 0.46:1 | no | 295 | provisional |  |
+| `public/art/atlas/tarot-night.webp` | 850×1850 | 0.46:1 | no | 380 | provisional |  |
 | `public/art/atlas/wb-sun.webp` | 1400×933 | 1.50:1 | no | 387 | provisional |  |
 | `public/art/atlas/wb-top.webp` | 1024×1857 | 0.55:1 | no | 358 | provisional |  |
 | `public/art/atlas/zm-aquarius.webp` | 400×400 | 1:1 | no | 49 | provisional |  |

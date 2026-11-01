@@ -703,10 +703,17 @@ views.tarot=()=>{
  // the Notebook, the Reading History and the Journal Calendar page were removed (the calendar now opens the Journal);
  // an old link to any of them opens the Journal, and one to the insights opens them over it
  if(['notebook','history','calendar','insights'].includes(t)){if(t==='insights')V.insPop=true;V.tab.tarot='journal';history.replaceState(history.state,'',pathFor('tarot','journal',viewQuery()));return journalLib()}
- return `<div class="land tland">${hero('hero-tarot',jdoor(),'tall','Tarot','Insights for a more aligned you')}<div class="tpanel card gilt"><div class="list big">
- ${lrow(ui('t-reading','th oval'),'Card Reading','Ask a question and draw: one card, three, love, career or the Celtic Cross.','data-go="tarot" data-t="reading"')}
- ${lrow(ui('t-whisper','th oval'),'Today’s Whisper',S.revealed[dkey()]?`Today’s card: ${esc(todayCard().title)}. Open it again and reflect.`:'One card is waiting for you today, face down.','data-go="tarot" data-t="whisper"')}
- </div></div></div>`;
+ // the night with the old card and the lilies holds still behind the page; the title under the arc, then today's card
+ // (the daily step, the same Whisper as on Home) and the readings, each way of reading one tap from its own spread
+ const k=dkey(),c=todayCard(),rev=!!S.revealed[k],note=S.notes[k],nm=firstName();
+ return `<div class="land tland hnight tnight"><header class="hl-top">${jdoor()}<h1 class="cz">Tarot</h1><p class="hgreet">${nm?esc(nm)+', the cards':'The cards'}<br>are listening</p><p class="hl-line">Turn today’s card, or ask them a question</p></header>
+ <div class="hl-cards">
+ <section class="hl-sec">${Kit.divider('Today’s Whisper')}<div class="hl-card tw"><div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+  <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">One card for today, face down. Turn it over for its message.</p>'}
+  ${!rev?'<button class="btn" data-act="reveal">Reveal</button>':`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`}</div></div></div></section>
+ <section class="hl-sec">${Kit.divider('Ask the Cards')}<div class="hl-card tr"><p class="tr-in">Hold a question in your heart, then choose how deeply to look.</p>
+  <div class="tr-sp">${Object.entries(SPREADS).map(([sk,x])=>`<button class="tr-s" data-act="tspreadgo" data-k="${sk}">${pic('spreads',sk,'tr-i')}<strong>${x.s}</strong><span>${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div></div></section>
+ </div>${V.wpop?whisperPop(c):''}</div>`;
 };
 function whisperView(){
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
@@ -1896,7 +1903,7 @@ function render(){
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);
  if(authed)$('#navin').innerHTML=Kit.nav(MAIN.map(k=>({key:k,label:SECTIONS[k].label})),sec);
  document.body.classList.toggle('onboarding',!authed);
- document.body.dataset.sec=sec;document.body.classList.toggle('still',authed&&sec==='tarot'&&tab()==='home');
+ document.body.dataset.sec=sec;document.body.classList.remove('still');
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
  navH();tarotFit();
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
@@ -2151,6 +2158,7 @@ document.addEventListener('click',e=>{
  if(a==='setpw'){const v=$('#npw').value;if(v.length<8)return toast('Use at least 8 characters');
   t.disabled=true;C.updatePassword(v).then(()=>{toast('Password updated');if(V.sec==='reset')go('home','today',{replace:true});else{t.disabled=false;$('#npw').value=''}},x=>{t.disabled=false;toast(authMsg(x))});return}
  const T=V.tarot;
+ if(a==='tspreadgo'){newReading();V.tarot.spread=t.dataset.k;return go('tarot','reading')}
  if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
