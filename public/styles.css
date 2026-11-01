@@ -3006,3 +3006,8 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 /* the pictures set over the edge of the Cosmic Energy card: the single gold line, and outside it a ring of night that
    hides the card's frame where the two meet */
 .en-moon{box-shadow:0 0 0 1.5px #C9A253,0 0 0 8px #0A0E1F!important}
+/* the share preview: the card itself over the blurred page, the share and save buttons beneath */
+.sh-pop .sh-img{display:block;width:min(78vw,340px);height:auto;border-radius:10px;box-shadow:0 0 0 1px rgba(233,201,133,.6),0 14px 34px rgba(0,0,0,.6),0 0 26px rgba(243,210,140,.3)}
+.sh-acts{display:flex;flex-direction:column;gap:10px;width:min(78vw,340px)}
+.sh-acts .btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(6,10,24,.45)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;text-decoration:none}
+.sh-acts .btn svg{width:18px;height:18px}

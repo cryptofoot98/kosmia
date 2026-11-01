@@ -578,12 +578,97 @@ const energyCarousel=sl=>`<div class="energy en-car"><span class="en-in"><span c
 // the Daily Whisper's card enlarged, to see it in detail
 // the Daily Whisper's card opened from Home on the parchment sheet a tarot card opens on: its name, the card, its message
 // and its question
+/* ----- shareable cards: a reading drawn onto its approved design (art/share/*, 1080 px wide) on a canvas, the words set
+   in the space each design leaves for them and shrunk until they fit; then the phone's own share sheet (WhatsApp,
+   Telegram, Instagram…), or the picture to save where sharing files is not offered. Places are in the design's own
+   pixels (w wide) and scaled to the canvas. ----- */
+const SHARE_T={
+ horo:{w:402,med:[202,190,78],glyph:[201,234,24],name:[203,278],label:[202,309],body:[58,333,344,415]},
+ whisper:{w:403,card:[58,272,90,135],text:[164,284,336,404],q:[118,464,292,516]},
+ tarot:{w:402,cards:[[139,167,124,215]],plate:[202,403],text:[64,463,340,511]},
+ t3:{w:297,cards:[[30,125,74,126],[111,125,75,126],[193,125,75,126]],plate:[150,102],labels:265,text:[50,321,250,395]},
+ t5:{w:298,cards:[[19,137,49,95],[72,137,49,95],[125,137,49,95],[178,137,49,95],[232,137,49,95]],plate:[150,101],text:[50,321,250,395]},
+ t10:{w:297,cards:[30,78,127,175,224].map(x=>[x,120,44,72]).concat([30,78,127,175,224].map(x=>[x,196,44,73])),plate:[149,101],text:[50,321,250,395]}
+};
+const INK='#3B2412',SH_FONTS=['600 40px Cinzel','500 40px "Cormorant Garamond"','italic 500 40px "Cormorant Garamond"'];
+const shImg=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src});
+// words wrapped into a box, the largest size from max down to min at which they fit; failing that the last sentences
+// give way, and at the end the last words
+function shFit(x,txt,[x0,y0,x1,y1],o){
+ const k=o.k,W=(x1-x0)*k,H=(y1-y0)*k,face=s=>`${o.italic?'italic ':''}${o.weight||500} ${s}px ${o.family||'"Cormorant Garamond"'}`;
+ const wrap=(t,s)=>{x.font=face(s);const out=[];let line='';for(const w of t.split(/\s+/)){const tr=line?line+' '+w:w;if(x.measureText(tr).width>W&&line){out.push(line);line=w}else line=tr}if(line)out.push(line);return out};
+ let t=String(txt||'').replace(/\s+/g,' ').trim(),s,lines;
+ for(;;){for(s=o.max*k;s>=o.min*k;s-=k*.5){lines=wrap(t,s);if(lines.length*s*(o.lh||1.28)<=H)break}
+  if(lines.length*s*(o.lh||1.28)<=H)break;
+  const sent=t.match(/[^.!?]+[.!?]+/g);if(sent&&sent.length>1){t=sent.slice(0,-1).join('').trim();continue}
+  s=o.min*k;lines=wrap(t,s);const n=Math.max(1,Math.floor(H/(s*(o.lh||1.28))));lines=lines.slice(0,n);lines[n-1]=lines[n-1].replace(/\s*\S*$/,'')+'…';break}
+ x.font=face(s);x.fillStyle=o.color||INK;x.textAlign='center';x.textBaseline='middle';
+ const lh=s*(o.lh||1.28),top=y0*k+(H-lines.length*lh)/2+lh/2;
+ lines.forEach((l,i)=>x.fillText(l,(x0+x1)/2*k,top+i*lh));
+}
+function shCaps(x,t,cx,cy,size,k,o={}){x.font=`${o.weight||600} ${size*k}px Cinzel`;x.fillStyle=o.color||INK;x.textAlign='center';x.textBaseline='middle';
+ if(x.letterSpacing!==undefined)x.letterSpacing=`${(o.track||.08)*size*k}px`;let s=size;
+ while(x.measureText(t).width>(o.max||999)*k&&s>5){s-=.25;x.font=`${o.weight||600} ${s*k}px Cinzel`}
+ x.fillText(t,cx*k,cy*k);if(x.letterSpacing!==undefined)x.letterSpacing='0px'}
+// a card's face laid over its place in the design, framed in fine gold; reversed cards turned
+async function shCard(x,src,[cx,cy,w,h],k,rv,name){
+ const im=await shImg(src);x.save();const X=cx*k,Y=cy*k,Wp=w*k,Hp=h*k,r=Math.min(Wp,Hp)*.06;
+ x.beginPath();x.roundRect(X,Y,Wp,Hp,r);x.fillStyle='#0E1430';x.fill();x.clip();
+ if(im){const s=Math.max(Wp/im.width,Hp/im.height),iw=im.width*s,ih=im.height*s;if(rv){x.translate(X+Wp/2,Y+Hp/2);x.rotate(Math.PI);x.translate(-X-Wp/2,-Y-Hp/2)}x.drawImage(im,X+(Wp-iw)/2,Y+(Hp-ih)/2,iw,ih)}
+ x.restore();x.beginPath();x.roundRect(X,Y,Wp,Hp,r);x.lineWidth=Math.max(2,k*1.1);x.strokeStyle='#C9A253';x.stroke();
+ if(name){const ph=Hp*.13;x.fillStyle='rgba(246,233,207,.94)';x.fillRect(X+Wp*.08,Y+Hp-ph-Hp*.04,Wp*.84,ph);x.strokeStyle='#C9A253';x.lineWidth=k*.6;x.strokeRect(X+Wp*.08,Y+Hp-ph-Hp*.04,Wp*.84,ph);
+  shCaps(x,name.toUpperCase(),(X+Wp/2)/k,(Y+Hp-ph/2-Hp*.04)/k,6.4,k,{max:w*.78,track:.06})}
+}
+async function renderShare(kind,d){
+ await Promise.all(SH_FONTS.map(f=>document.fonts.load(f).catch(()=>{})));
+ const tpl=kind==='reading'?({one:'tarot',ppf:'t3',scg:'t3',love:'t5',career:'t5',celtic:'t10'}[d.spread]||'t3'):kind,T=SHARE_T[tpl];
+ const bg=await shImg(`/art/share/${tpl}.webp`),c=document.createElement('canvas');c.width=bg.width;c.height=bg.height;const x=c.getContext('2d'),k=c.width/T.w;
+ x.drawImage(bg,0,0);
+ if(kind==='horo'){const s=sg(d.sign),h=horoscope(d.sign,d.cat,d.period),[mx,my,mr]=T.med,[gx,gy,gr]=T.glyph;
+  const m=await shImg(`/art/atlas/zm-${d.sign}.webp`);x.save();x.beginPath();x.arc(mx*k,my*k,mr*k,0,7);x.clip();if(m)x.drawImage(m,(mx-mr)*k,(my-mr)*k,2*mr*k,2*mr*k);x.restore();
+  x.beginPath();x.arc(mx*k,my*k,mr*k,0,7);x.lineWidth=k*1.4;x.strokeStyle='#C9A253';x.stroke();
+  const gm=await shImg(`/art/atlas/sgm-${d.sign}.webp`);if(gm)x.drawImage(gm,(gx-gr*1.12)*k,(gy-gr*1.12)*k,gr*2.24*k,gr*2.24*k);
+  shCaps(x,s.name.toUpperCase(),T.name[0],T.name[1],17,k,{max:96,weight:700});
+  const per={daily:'Daily',weekly:'Weekly',monthly:'Monthly',yearly:'Yearly'}[d.period],lab=d.cat==='overview'?`${per} Horoscope`:`${CAT_INFO[d.cat][0]} · ${PLABEL[d.period][0]}`;
+  shCaps(x,lab.toUpperCase(),T.label[0],T.label[1],9,k,{max:160,track:.14,weight:700});
+  shFit(x,h.body,T.body,{k,max:15.5,min:12.5,weight:600})}
+ if(kind==='whisper'){const cd=d.card;await shCard(x,`/art/whispers/${cd.id}.webp`,T.card,k,false,cd.title);
+  shFit(x,`“${cd.msg}”`,T.text,{k,max:16,min:9,italic:true,weight:600});
+  shFit(x,cd.ref,T.q,{k,max:13,min:8,italic:true,lh:1.22})}
+ if(kind==='reading'){const cards=d.cards,many=cards.length>1;
+  for(let i=0;i<cards.length&&i<T.cards.length;i++)await shCard(x,`/art/deck/${cards[i].id}.webp`,T.cards[i],k,cards[i].rv);
+  if(tpl==='tarot')shCaps(x,'YOUR CARD',T.plate[0],T.plate[1],9.4,k,{max:96});
+  else shCaps(x,`${cards.length} CARD READING`,T.plate[0],T.plate[1],8.6,k,{max:110});
+  if(T.labels)cards.slice(0,3).forEach((cd,i)=>{const [cx,,w]=T.cards[i];shCaps(x,(cd.pos||'').toUpperCase(),cx+w/2,T.labels,7.6,k,{color:'#F3E2B8',max:w+8,track:.04})});
+  const txt=!many?`${cards[0].name}${cards[0].rv?' (reversed)':''}: ${cards[0].rv?cards[0].revm:cards[0].upm}`
+   :d.ai&&d.ai.whole?d.ai.whole
+   :cards.length<=5?cards.map(c=>`${c.pos}: ${c.name}${c.rv?' (reversed)':''}, ${(c.rv?c.rev:c.up).split(/,\s*/)[0].toLowerCase()}`).join('. ')+'.'
+   :cards.map(c=>c.name+(c.rv?' (rev.)':'')).join(' · ');
+  shFit(x,txt,T.text,{k,max:many?13:15,min:many?8.5:11,weight:600})}
+ return new Promise(r=>c.toBlob(r,'image/png'));
+}
+// a share button's work: the card drawn, then shown with the phone's share sheet one tap away (the sheet must open
+// from a tap, so it is offered on the picture rather than opened while the picture is still being drawn)
+async function shareCard(t){
+ const k=t.dataset.k;let d,caption='';
+ if(k==='horo'){d={sign:t.dataset.s,cat:t.dataset.cat,period:V.period};caption=`My ${sg(d.sign).name} horoscope from Kosmia ✦`}
+ if(k==='whisper'){const day=t.dataset.day||dkey();d={card:cardFor(day)};caption=`“${d.card.msg}” My Whisper from Kosmia ✦`}
+ if(k==='reading'){const T=V.tarot;if(!T.drawn)return;d={spread:T.spread,cards:T.drawn,ai:T.ai};caption=`My ${(SPREADS[T.spread]||{s:'tarot'}).s} reading from Kosmia ✦`}
+ toast('Preparing your card…');
+ const blob=await renderShare(k==='horo'||k==='whisper'?k:'reading',d);if(!blob)return toast('The card could not be drawn.');
+ if(V.share&&V.share.url)URL.revokeObjectURL(V.share.url);
+ V.share={url:URL.createObjectURL(blob),file:new File([blob],`kosmia-${k}.png`,{type:'image/png'}),caption};render();
+}
+function sharePop(){const s=V.share,can=navigator.canShare&&navigator.canShare({files:[s.file]});
+ return `<div class="cpop sh-pop" role="dialog" aria-modal="true" aria-label="Share your card" data-act="shareclose"><button class="cp-x" data-act="shareclose" aria-label="Close">×</button><div class="cp-in">
+ <p class="cp-k">Share your insight</p><img class="sh-img" src="${s.url}" alt="Your card, ready to share">
+ <div class="sh-acts">${can?`<button class="btn" data-act="sharego">${IC.share} Share</button>`:''}<a class="btn${can?' ghost':''}" href="${s.url}" download="${s.file.name}">Save image</a></div></div></div>`}
 function whisperPop(c,k=dkey()){
  return `<div class="cpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
  <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
  <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p><div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
- <button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Reflect in Your Journal'}</button></div></div></div>`}
+ <button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Reflect in Your Journal'}</button><button class="btn ghost" data-act="sharecard" data-k="whisper" data-day="${k}">${IC.share} Share this Whisper</button></div></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -690,7 +775,7 @@ function horoSign(){
   return panel(`<div class="hd"><div><h2>${k==='overview'?pl[1]+' Horoscope':`${CAT_INFO[k][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
   <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')};
- const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`;
+ const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button><button class="btn ghost" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${k}">${IC.share}Share this reading</button></div>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the sign's painting dissolved into the night sky at the head of the page, its name, dates and soul in the open sky at
  // its left; then the
@@ -739,7 +824,7 @@ function whisperView(){
  ${V.whelp?mbox(`<p>One card a day, drawn from ${ORACLE.length} Whispers. You will not see the same card again until you have met them all. Read it, sit with it, and write what it stirs in you: every reflection is kept in your Journal.</p>`):''}
  ${cardScene(c,rev,'fortuneCard')}
  ${rev?mbox(`<p class="kpills">${keys(wKeys(c))}</p><p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p>
-  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Write Your Reflection'}</button><button class="ibtn sq" data-act="share" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
+  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Write Your Reflection'}</button><button class="ibtn sq" data-act="sharecard" data-k="whisper" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
  :`<button class="btn" data-act="reveal">Reveal My Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}${V.wpop?whisperPop(c):''}</div>`;
 }
 function tarotView(){
@@ -754,7 +839,7 @@ function tarotView(){
  const cards=T.drawn,done=cards.every(c=>c.shown);
  return `<div class="mnp trd">${mnHead(sp.s.replace(/ · /g,' · '))}<p class="mn-sub">${sp.n}</p>${T.q?`<p class="quote center">“${esc(T.q)}”</p>`:''}<p class="muted center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p><div class="rd-grid${cards.length===1?' solo':''}">${cards.map((c,i)=>`<div class="rd-cell"><div class="label">${c.pos}</div><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face bare">${pic('deck',c.id,'tarot-art')}</div></div></div></div>`).join('')}</div>
  ${done?mbox(`<h2>Interpretation</h2>${T.ai?`<div class="ai-read read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<p class="kick">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</p><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><p class="kick">The reading as a whole</p>${paras(T.ai.whole)}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`<div class="read">${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}</div><p class="quote">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted small">Symbols for reflection, not predictions.</p>
- ${T.savedId?`<p class="center"><strong>Saved to your journal.</strong></p><button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write Your Reflection</button>`:`<button class="btn" data-act="saveread">Save to My Journal</button>`}<button class="btn ghost" data-act="newread">New Reading</button>`):''}
+ ${T.savedId?`<p class="center"><strong>Saved to your journal.</strong></p><button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write Your Reflection</button>`:`<button class="btn" data-act="saveread">Save to My Journal</button>`}<button class="btn ghost" data-act="sharecard" data-k="reading">${IC.share} Share this Reading</button><button class="btn ghost" data-act="newread">New Reading</button>`):''}
  ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
 }
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
@@ -1968,7 +2053,7 @@ function render(){
  const html=(views[sec]||views.home)().replace(/<\/header>(\s*)(<p class="mn-sub">[\s\S]*?<\/p>)/g,'$2</header>$1');
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
- app.innerHTML=html;
+ app.innerHTML=html+(V.share?sharePop():'');
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
@@ -2146,6 +2231,9 @@ document.addEventListener('click',e=>{
  if(a==='setsign'){S.sign=t.dataset.sign;V.exploreSign=null;save();syncProfile();toast('Your sign is now '+sg(S.sign).name);return render()}
  // whispers and tarot
  if(a==='whelp'){V.whelp=!V.whelp;return render()}
+ if(a==='sharecard')return shareCard(t);
+ if(a==='sharego'){const s=V.share;if(s)navigator.share({files:[s.file],title:'Kosmia',text:s.caption}).catch(()=>{});return}
+ if(a==='shareclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;URL.revokeObjectURL(V.share.url);V.share=null;return render()}
  if(a==='share'){const c=todayCard(),txt=`“${c.msg}” (${c.title}, my Whisper from Kosmia)`;
   if(navigator.share)return navigator.share({title:'Kosmia',text:txt,url:location.origin}).catch(()=>{});
   return (navigator.clipboard?navigator.clipboard.writeText(txt+' '+location.origin):Promise.reject()).then(()=>toast('Copied to share'),()=>toast('Sharing is not available here'))}

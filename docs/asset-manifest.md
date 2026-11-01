@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 522 |
-| In use, provisional | 478 |
+| Images | 528 |
+| In use, provisional | 484 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -88,6 +88,12 @@ their space before they load.
 | `public/art/atlas/zm-virgo.webp` | 400×400 | 1:1 | no | 37 | provisional |  |
 | `public/art/atlas/zs-bg.webp` | 780×1698 | 0.46:1 | no | 199 | provisional |  |
 | `public/art/atlas/zs-night.webp` | 850×1850 | 0.46:1 | no | 254 | provisional |  |
+| `public/art/share/horo.webp` | 1080×1521 | 0.71:1 | no | 381 | provisional |  |
+| `public/art/share/t10.webp` | 1080×1676 | 0.64:1 | no | 290 | provisional |  |
+| `public/art/share/t3.webp` | 1080×1676 | 0.64:1 | no | 289 | provisional |  |
+| `public/art/share/t5.webp` | 1080×1671 | 0.65:1 | no | 300 | provisional |  |
+| `public/art/share/tarot.webp` | 1080×1521 | 0.71:1 | no | 409 | provisional |  |
+| `public/art/share/whisper.webp` | 1080×1517 | 0.71:1 | no | 365 | provisional |  |
 
 ## The Zodiac Affinity page’s backdrop: a golden sun with a woman’s face and a crescent moon with a man’s face facing each other over the Milky Way, clouds, lilies, roses and daisies (supplied by the owner)
 
@@ -1069,14 +1075,14 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/moons/first-quarter.webp` | 420×420 | 1:1 | yes | 61 | provisional |  |
-| `public/art/moons/full-moon.webp` | 420×420 | 1:1 | yes | 57 | provisional |  |
-| `public/art/moons/last-quarter.webp` | 420×420 | 1:1 | yes | 63 | provisional |  |
-| `public/art/moons/new-moon.webp` | 420×420 | 1:1 | yes | 60 | provisional |  |
-| `public/art/moons/waning-crescent.webp` | 420×420 | 1:1 | yes | 59 | provisional |  |
-| `public/art/moons/waning-gibbous.webp` | 420×420 | 1:1 | yes | 60 | provisional |  |
-| `public/art/moons/waxing-crescent.webp` | 420×420 | 1:1 | yes | 60 | provisional |  |
-| `public/art/moons/waxing-gibbous.webp` | 420×420 | 1:1 | yes | 62 | provisional |  |
+| `public/art/moons/first-quarter.webp` | 420×420 | 1:1 | yes | 48 | provisional |  |
+| `public/art/moons/full-moon.webp` | 420×420 | 1:1 | yes | 44 | provisional |  |
+| `public/art/moons/last-quarter.webp` | 420×420 | 1:1 | yes | 49 | provisional |  |
+| `public/art/moons/new-moon.webp` | 420×420 | 1:1 | yes | 41 | provisional |  |
+| `public/art/moons/waning-crescent.webp` | 420×420 | 1:1 | yes | 43 | provisional |  |
+| `public/art/moons/waning-gibbous.webp` | 420×420 | 1:1 | yes | 47 | provisional |  |
+| `public/art/moons/waxing-crescent.webp` | 420×420 | 1:1 | yes | 48 | provisional |  |
+| `public/art/moons/waxing-gibbous.webp` | 420×420 | 1:1 | yes | 47 | provisional |  |
 
 ## Journal paper, cover and page edges
 
