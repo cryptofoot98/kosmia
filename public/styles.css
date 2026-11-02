@@ -3133,3 +3133,9 @@ body.obfit #app{padding-bottom:0!important;min-height:0}
 :is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::after{background:var(--fbg) 50% 100%/100% auto no-repeat!important;-webkit-mask-image:linear-gradient(transparent 38%,#000 56%)!important;mask-image:linear-gradient(transparent 38%,#000 56%)!important}
 /* the night between head and foot, behind both */
 html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)),body:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)) #app{background:#0B0F1E!important}
+/* the paintings reach the foot of the screen, behind the floating menu */
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::before,
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::after,.home.hbay::before{bottom:0!important}
+/* the strip of painting behind the menu, over the cards that scroll beneath it (--navbg is the page's own foot) */
+#nav::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);background:var(--navbg,none);
+ clip-path:inset(calc(100% - var(--navh,0px) + 4px) 0 0 0);pointer-events:none}

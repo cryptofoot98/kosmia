@@ -2143,6 +2143,10 @@ function render(){
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
  app.innerHTML=html+(V.share?sharePop():'');
+ // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
+ // what scrolls under the menu disappears into the art instead of showing through
+ {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const f=pg.matches('.home.hbay')?'url(/art/atlas/home-bay.webp) 50% 0/cover no-repeat':(getComputedStyle(pg).getPropertyValue('--fbg').trim());
+  nav.style.setProperty('--navbg',f&&f!=='none'?(pg.matches('.home.hbay')?f:f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
