@@ -3101,3 +3101,17 @@ body.obfit #app{padding-bottom:0!important;min-height:0}
 .pop-box .pill{background:rgba(6,10,24,.5)!important;border:1px solid rgba(233,201,133,.5)!important;color:#F1D79A!important}.pop-box .pill b{color:#F6DA97!important}
 .pop-box .btn:not(.danger){background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important}
 .drm .hl-top h1{font-size:clamp(1.6rem,8vw,2.2rem)}.drm .hl-top .hgreet{text-transform:none;letter-spacing:0}
+/* Home's head given room: the ritual, the sign's figure and the forecast card sit lower, clear of the wordmark and greeting */
+.hbay .hh-rit{margin-top:10cqw}
+.hbay .hhero{padding-top:9cqw}
+/* the wordmark up on the first line under the star, its line of words between the two crescent moons */
+.hbay .brand{padding-top:11cqw}
+.hbay .brand small{margin-top:6.4cqw}
+.hbay .brand{padding-top:4.4cqw}
+.hbay .brand small{margin-top:13.6cqw}
+.hbay .hh-greet{margin-top:12cqw}
+.hbay .brand small{margin-top:9cqw}
+.hbay .hh-greet{margin-top:8.2cqw}
+.hbay .brand{padding-top:7cqw}
+.hbay .brand small{margin-top:4.8cqw}
+.hbay .hh-greet{margin-top:10.8cqw}
