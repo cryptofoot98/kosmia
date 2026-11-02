@@ -3211,3 +3211,46 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 @keyframes kzThin{0%,60%{opacity:1}100%{opacity:0}}
 .kz.fog .kz-box{animation-duration:2.2s}
 #kzveil{z-index:90}
+
+/* the fog made magical: an iridescent shimmer turning slowly within it, and gold glitter rising and twinkling, with a
+   few four-pointed stars flaring, as the fog gathers and thins */
+#kzveil::before{background:radial-gradient(circle at 50% 45%,rgba(222,206,240,.95),rgba(150,128,190,.93) 45%,rgba(70,52,110,.96) 80%,rgba(36,26,62,.98))}
+#kzveil .kz-shim{position:absolute;inset:-25%;background:conic-gradient(from 0deg,rgba(255,226,160,.0),rgba(255,214,150,.35),rgba(190,170,255,.3),rgba(150,220,255,.22),rgba(255,190,220,.3),rgba(255,226,160,0));
+ filter:blur(40px);mix-blend-mode:screen;animation:kzShim 6s linear infinite;opacity:.9}
+@keyframes kzShim{to{transform:rotate(360deg)}}
+#kzveil b{position:absolute;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;
+ background:radial-gradient(circle,#FFF6DA 0,#F6D88E 35%,rgba(246,200,120,0) 70%);box-shadow:0 0 6px 1px rgba(255,226,160,.8);opacity:0;
+ animation:kzGlit var(--t) ease-in-out var(--d) infinite}
+#kzveil b.st{border-radius:0;background:none;box-shadow:none}
+#kzveil b.st::before,#kzveil b.st::after{content:'';position:absolute;left:50%;top:50%;width:100%;height:16%;transform:translate(-50%,-50%);border-radius:50%;
+ background:linear-gradient(90deg,transparent,#FFF3D0,transparent);box-shadow:0 0 8px 2px rgba(255,220,150,.7)}
+#kzveil b.st::after{transform:translate(-50%,-50%) rotate(90deg)}
+@keyframes kzGlit{0%{opacity:0;transform:translate(0,0) scale(.3)}35%{opacity:1;transform:translate(calc(var(--x) * .4),calc(var(--y) * .4)) scale(1)}60%{opacity:.35}80%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.4)}}
+#kzveil.out b{animation-duration:calc(var(--t) * .8)}
+#kzveil.out .kz-shim{animation:kzShim 6s linear infinite,kzVeilOut 2.4s ease-out both}
+@media (prefers-reduced-motion:reduce){#kzveil b,#kzveil .kz-shim{animation:none;opacity:.6}}
+/* richer: drifting wisps of cloud through the fog, brighter glitter, and a slower parting */
+#kzveil .kz-wisp{position:absolute;left:-50%;right:-50%;height:38%;background:url(/art/atlas/aw-clouds.webp) 0 50%/60% auto repeat-x;opacity:.55;mix-blend-mode:screen;filter:blur(2px) saturate(.6) brightness(1.4)}
+#kzveil .kz-wisp.a{top:18%;animation:kzWisp 9s linear infinite}
+#kzveil .kz-wisp.b{top:58%;animation:kzWisp 12s linear infinite reverse;opacity:.45}
+@keyframes kzWisp{to{transform:translateX(30%)}}
+#kzveil b{box-shadow:0 0 10px 3px rgba(255,226,160,.85)}
+#kzveil b.st::before,#kzveil b.st::after{box-shadow:0 0 12px 3px rgba(255,226,170,.85)}
+#kzveil.in::before{animation-duration:1.3s}
+#kzveil.out{animation:kzThin 3.2s ease-out both}
+#kzveil.out::before{animation:kzVeilOut 3.2s cubic-bezier(.5,0,.6,1) both}
+#kzveil.out .kz-wisp{animation:kzWisp 9s linear infinite,kzVeilOut 3s ease-out both}
+@keyframes kzThin{0%,55%{opacity:1}100%{opacity:0}}
+.kz.fog .kz-box{animation-duration:3s}
+/* the wisps as soft drifting mist rather than drawn clouds */
+#kzveil .kz-wisp{left:-40%;right:-40%;height:70%;background:radial-gradient(ellipse 40% 30% at 30% 50%,rgba(255,244,230,.55),transparent 70%),radial-gradient(ellipse 35% 25% at 75% 40%,rgba(236,220,255,.5),transparent 70%),radial-gradient(ellipse 30% 22% at 55% 70%,rgba(255,230,190,.35),transparent 70%)!important;
+ filter:blur(26px)!important;opacity:.9!important;mix-blend-mode:screen}
+#kzveil .kz-wisp.a{top:-10%}
+#kzveil .kz-wisp.b{top:40%}
+@keyframes kzWisp{0%{transform:translateX(-8%) scale(1)}50%{transform:translateX(8%) scale(1.08)}100%{transform:translateX(-8%) scale(1)}}
+/* Kassandra with her hands over the crystal ball (art/atlas/kas-scene2, 1086 × 1448; the ball at (541,883) r 169): the
+   painting from the top of the screen, fading into the night beneath, the ball near the middle of the screen */
+.kz{--u:calc(var(--w) / 1086);--top:min(0px,calc(46svh - var(--w) * .813))}
+.kz-img{-webkit-mask-image:linear-gradient(#000 84%,transparent);mask-image:linear-gradient(#000 84%,transparent)}
+.kz-glow,.kz-sweep{left:calc(var(--u) * 372);top:calc(var(--u) * 714);width:calc(var(--u) * 338);height:calc(var(--u) * 338)}
+.kz-talk{padding-top:calc(var(--top) + var(--w) * 1.0 + 6px)}

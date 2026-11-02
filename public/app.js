@@ -2086,12 +2086,12 @@ function kasGreet(){
 // thins away from the centre
 function kasVeil(open){
  if(S.settings.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches)return open();
- let v=$('#kzveil');if(v)v.remove();v=document.createElement('div');v.id='kzveil';v.className='kz-fog in';v.setAttribute('aria-hidden','true');v.innerHTML='<i></i><i></i><i></i><i></i><i></i>';document.body.appendChild(v);
- setTimeout(()=>{V.kasFogged=true;open();requestAnimationFrame(()=>{v.className='kz-fog out';setTimeout(()=>v.remove(),2600)})},1150)}
+ let v=$('#kzveil');if(v)v.remove();v=document.createElement('div');v.id='kzveil';v.className='kz-fog in';v.setAttribute('aria-hidden','true');v.innerHTML='<i></i><i></i><i></i><i></i><i></i><em class="kz-shim"></em><u class="kz-wisp a"></u><u class="kz-wisp b"></u>'+Array.from({length:130},()=>{const r=Math.random,big=r()<.22;return `<b style="left:${(r()*100).toFixed(1)}%;top:${(r()*100).toFixed(1)}%;--s:${(big?14+r()*16:3+r()*6).toFixed(1)}px;--d:${(r()*2.2).toFixed(2)}s;--t:${(1.2+r()*1.6).toFixed(2)}s;--x:${((r()-.5)*60).toFixed(0)}px;--y:${(-20-r()*70).toFixed(0)}px" class="${big?'st':''}"></b>`}).join('');document.body.appendChild(v);
+ setTimeout(()=>{V.kasFogged=true;open();requestAnimationFrame(()=>{v.className='kz-fog out';setTimeout(()=>v.remove(),3400)})},1300)}
 function kasScene(){
  const signed=!!C.user,rec=KS.state,has=KS.msgs.length>0,on=KS.target==='kas',fog=V.prevSec!=='kassandra'&&(V.kasFogged?(V.kasFogged=false,'veil'):true),[greet,prs]=kasGreet();V.kasGreet=greet;
  const words=greet.split(' ').map((w,i)=>`<span style="--d:${(fog?3.1:.2)+i*.07}s">${esc(w)}</span>`).join(' ');
- return `<div class="kz${fog?' fog':''}"><div class="kz-sky" aria-hidden="true"></div><div class="kz-box" aria-hidden="true">${ui('kas-scene','kz-img','',true)}<i class="kz-glow"></i><i class="kz-sweep"></i></div>
+ return `<div class="kz${fog?' fog':''}"><div class="kz-sky" aria-hidden="true"></div><div class="kz-box" aria-hidden="true">${ui('kas-scene2','kz-img','',true)}<i class="kz-glow"></i><i class="kz-sweep"></i></div>
  ${fog===true?'<div class="kz-fog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>':''}
  <div class="kz-corner">${iconBtn('history','data-go="kassandra" data-t="history"','Past conversations')}${jdoor()}</div>
  <div class="kz-talk"><div class="kz-card">
