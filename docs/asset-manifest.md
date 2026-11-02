@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 529 |
-| In use, provisional | 485 |
+| Images | 530 |
+| In use, provisional | 486 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -47,6 +47,7 @@ their space before they load.
 | `public/art/atlas/jen-night.webp` | 850×1850 | 0.46:1 | no | 250 | provisional |  |
 | `public/art/atlas/jrn-mid.webp` | 850×1580 | 0.54:1 | no | 166 | provisional |  |
 | `public/art/atlas/jrn-night.webp` | 850×1850 | 0.46:1 | no | 269 | provisional |  |
+| `public/art/atlas/kas-scene.webp` | 780×1690 | 6:13 | no | 373 | provisional |  |
 | `public/art/atlas/nvi-discover.webp` | 512×512 | 1:1 | yes | 52 | provisional |  |
 | `public/art/atlas/nvi-home.webp` | 512×512 | 1:1 | yes | 118 | provisional |  |
 | `public/art/atlas/nvi-horoscope.webp` | 512×512 | 1:1 | yes | 86 | provisional |  |

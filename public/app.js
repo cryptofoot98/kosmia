@@ -746,7 +746,7 @@ function sharePop(){const s=V.share,can=navigator.canShare&&navigator.canShare({
  return `<div class="cpop sh-pop" role="dialog" aria-modal="true" aria-label="Share your card" data-act="shareclose"><button class="cp-x" data-act="shareclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Share your insight</p><img class="sh-img" src="${s.url}" alt="Your card, ready to share">
  <div class="sh-acts">${can?`<button class="btn" data-act="sharego">${IC.share} Share</button>`:''}<a class="btn${can?' ghost':''}" href="${s.url}" download="${s.file.name}">Save image</a></div></div></div>`}
-function whisperPop(c,k=dkey()){
+function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t:'whisper'}});
  return `<div class="cpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
  <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
@@ -850,7 +850,7 @@ views.horoscope=()=>{
  </section></div></div>`;
 };
 function horoSign(){
- const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);
+ const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);markRead({k:'horo',sign:ex,cat,period:V.period,from:{sec:'horoscope',t:'sign'}});
  if(ex===S.sign&&V.period==='daily'&&S.readDay!==dkey()){S.readDay=dkey();save()}
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
  const tiles=HCATS.map(([k])=>{const x=horoscope(ex,k,V.period);
@@ -920,7 +920,7 @@ function tarotView(){
  // 2. pick face-down cards; the reveal opens by itself once enough are chosen
  if(T.stage==='pick')return `<div class="mnp trd">${mnHead(`Choose ${sp.p.length} card${sp.p.length>1?'s':''}`)}<p class="mn-sub">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
- const cards=T.drawn,done=cards.every(c=>c.shown);
+ const cards=T.drawn,done=cards.every(c=>c.shown);if(done)markRead({k:'reading',cards,from:{sec:'tarot',t:'reading'}});
  return `<div class="mnp trd">${mnHead(sp.s.replace(/ · /g,' · '))}<p class="mn-sub">${sp.n}</p>${T.q?`<p class="quote center">“${esc(T.q)}”</p>`:''}<p class="muted center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p><div class="rd-grid${cards.length===1?' solo':''}">${cards.map((c,i)=>`<div class="rd-cell"><div class="label">${c.pos}</div><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face bare">${pic('deck',c.id,'tarot-art')}</div></div></div></div>`).join('')}</div>
  ${done?mbox(`<div class="int-hd"><h2>Interpretation</h2><span class="int-ic"><button class="ibtn" data-act="sharecard" data-k="reading" aria-label="Share this reading">${IC.share}</button><button class="ibtn${T.savedId?' on':''}" data-act="${T.savedId?'jopen':'saveread'}"${T.savedId?` data-k="reading:${esc(T.savedId)}"`:''} aria-pressed="${!!T.savedId}" aria-label="${T.savedId?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></span></div>${T.ai?`<div class="ai-read read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<p class="kick">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</p><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><p class="kick">The reading as a whole</p>${paras(T.ai.whole)}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`<div class="read">${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}</div><p class="quote">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted small">Symbols for reflection, not predictions.</p>
  ${T.savedId?`<button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write Your Reflection</button>`:''}<button class="btn ghost" data-act="newread">New Reading</button>`):''}
@@ -1825,7 +1825,7 @@ function entryView(){
  const p=jFind(V.jkey);
  if(!p)return `<div class="sub">${hdr('Journal Entry')}${empty('This page is no longer in your journal','It may have been torn out on another device.',linkBtn('Back to the journal','tarot','journal','btn'))}</div>`;
  if(!JE||jKey(JE)!==jKey(p)){jeLeave();JE=p}
- const key=jKey(p),on=(S.intent||{})[key]||[],txt=jText(p),pr=entryPrompts(p),hd=entryHead(p);
+ markRead({k:'entry',p,from:{sec:'tarot',t:'entry'}});const key=jKey(p),on=(S.intent||{})[key]||[],txt=jText(p),pr=entryPrompts(p),hd=entryHead(p);
  // the page over the night with the armillary sphere, the candle and the lily, under the arc of the Moon's phases: what
  // the page belongs to and a line for the reader in its sky, the night the page was written under, then the page itself
  return `<div class="mnp jn entry enight"><div class="mn-bar">${iconBtn('back','data-act="back"','Back')}<div class="mn-r"><button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}</div></div>
@@ -1976,7 +1976,7 @@ function newDreamView(){
 function dreamView(){
  const d=dreams().find(x=>x.id===V.dreamId);
  if(!d)return `<div class="sub">${hdr('Your Dream Meaning')}${empty('This dream is no longer in your journal','It may have been removed on another device.',linkBtn('Dream Journal','discover','dream-journal','btn'))}</div>`;
- const I=d.interp||{};
+ const I=d.interp||{};markRead({k:'dream',d,from:{sec:'discover',t:'dream'}});
  return `<div class="sub">${hdr('Your Dream Meaning',{sub:ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'})})}
  <div class="dm-art">${dreamArt(d,'dm-img')}</div>${mbox(`<h2 class="center dm-t">${esc(I.title||'Your Dream')}</h2><p class="keys">${keys((I.keywords||[]).slice(0,3))}</p>
  <div class="read">${paras(I.meaning)}</div>
@@ -2029,6 +2029,9 @@ function kasContext(){
  if(L.sec==='tarot'&&L.t==='reading'&&T.stage==='read'&&T.drawn)ctx.reading=`Tarot spread ${SPREADS[T.spread].n}${T.q?', question “'+T.q+'”':''}. Cards: `+T.drawn.map(c=>`${c.pos}: ${c.shown?c.name+(c.rv?' (reversed)':''):'face down'}`).join('; ');
  else if(L.sec==='horoscope'){const ex=V.exploreSign||S.sign,h=horoscope(ex,V.hcat,V.period);ctx.reading=`${sg(ex).name} ${CAT_INFO[V.hcat][0]} horoscope, ${V.period}: ${h.body}`}
  else if(L.sec==='discover'&&L.t==='affinity'&&V.love.done&&V.love.b)ctx.reading=`Comparing ${sg(V.love.a||S.sign).name} with ${sg(V.love.b).name}.`;
+ else if(L.sec==='discover'&&L.t==='dream'&&V.lastRead&&V.lastRead.d){const d=V.lastRead.d,I=d.interp||{};ctx.reading=`Their dream: “${String(d.text||'').slice(0,600)}”. Its reading: ${I.title||''}. ${String(I.meaning||'').slice(0,500)}`}
+ else if(L.sec==='tarot'&&L.t==='entry'&&V.lastRead&&V.lastRead.p){ctx.reading=`Their journal page “${jHeading(V.lastRead.p)}”: ${String(jText(V.lastRead.p)||'').slice(0,800)}`}
+ else if(L.sec==='tarot'&&L.t==='whisper'&&V.lastRead&&V.lastRead.card){const c=V.lastRead.card;ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
  else if(S.revealed[k]){const c=todayCard();ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
  if(S.settings.kPersonal){
   const ch=myChart(),p=[`Chosen sign ${sg(S.sign).name}`];
@@ -2060,11 +2063,53 @@ views.kassandra=()=>{
  <p class="muted small center">Kassandra speaks in symbols, not certainties. She cannot give medical, legal or financial advice.</p></div>`;
 };
 // Kassandra and her past conversations as night pages, on her crystal ball
-{const kas=views.kassandra;views.kassandra=()=>nightSub(kas(),'ks')}
+{const kas=views.kassandra;views.kassandra=()=>tab()==='history'?nightSub(kas(),'ks'):kasScene()}
+/* ----- Kassandra's chamber: she is reached through a magic fog that rolls in and clears, revealing her behind the
+   crystal ball (art/atlas/kas-scene); the ball wakes, light passes across it as her hand would, and she greets the
+   reader by name, asking about what they last read (V.lastRead, kept for three hours), with three ways to answer ----- */
+const markRead=o=>{V.lastRead=Object.assign({at:Date.now()},o);V.kasFrom=o.from};
+function kasGreet(){
+ const nm=firstName(),hi=nm?`${nm}… `:'',L=V.lastRead&&Date.now()-V.lastRead.at<3*36e5?V.lastRead:null;
+ if(L&&L.k==='horo'){const s=sg(L.sign),pw={daily:'today',weekly:'this week',monthly:'this month',yearly:'this year'}[L.period],
+  what=L.cat==='overview'?`of your ${pw==='today'?'day':pw.replace('this ','')}`:`of ${CAT_INFO[L.cat][0].toLowerCase()} ${pw}`,mine=L.sign===S.sign;
+  return [`${hi}the stars spoke to you ${what}${mine?'':`, through ${s.name}’s sky`}. Did something in it stir you? I can look closer.`,
+   ['Help me understand my reading',L.cat==='overview'?'What should I focus on?':`What does it mean for my ${CAT_INFO[L.cat][0].toLowerCase()}?`,'I need guidance on something else']]}
+ if(L&&L.k==='whisper'){const c=L.card;return [`${hi}${c.title} found you today. Shall we ask it what door it is opening for you?`,[`What does ${c.title} mean for me?`,'How do I live its message today?','Something else is on my mind']]}
+ if(L&&L.k==='reading'){const cs=L.cards,names=cs.slice(0,3).map(c=>c.name).join(', ');
+  return [`${hi}${cs.length>1?`${names}… a curious path. Which card is still speaking to you?`:`${names} came to you. Shall we listen to it together?`}`,['Read the cards together for me',`Tell me more about ${cs[0].name}`,'What should I do next?']]}
+ if(L&&L.k==='dream')return [`${hi}your dream still lingers around you. Shall we follow where it leads?`,['What is my dream telling me?','Why do I keep dreaming this?','Something else']];
+ if(L&&L.k==='entry')return [`${hi}you have just been writing. Would you like to sit with it a little longer, together?`,['Help me reflect on what I wrote','What is beneath this feeling?','Something else']];
+ let moon='';try{const m=K.moon(new Date());moon=` ${/^(New|Full)/.test(m.name)?`The ${m.name} rests`:`The Moon is ${m.waxing?'growing':'waning'}`} in ${sIdx(m.sign).name} tonight…`}catch(e){}
+ return [`${nm?`Welcome back, ${nm}.`:'Welcome, traveller.'}${moon} What is on your heart?`,['What do I need to know today?','Ask about love','What opportunities are coming?']];
+}
+// the fog rolls in over the page the reader is on; once it hides everything, her chamber is opened behind it and the fog
+// thins away from the centre
+function kasVeil(open){
+ if(S.settings.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches)return open();
+ let v=$('#kzveil');if(v)v.remove();v=document.createElement('div');v.id='kzveil';v.className='kz-fog in';v.setAttribute('aria-hidden','true');v.innerHTML='<i></i><i></i><i></i><i></i><i></i>';document.body.appendChild(v);
+ setTimeout(()=>{V.kasFogged=true;open();requestAnimationFrame(()=>{v.className='kz-fog out';setTimeout(()=>v.remove(),2600)})},1150)}
+function kasScene(){
+ const signed=!!C.user,rec=KS.state,has=KS.msgs.length>0,on=KS.target==='kas',fog=V.prevSec!=='kassandra'&&(V.kasFogged?(V.kasFogged=false,'veil'):true),[greet,prs]=kasGreet();V.kasGreet=greet;
+ const words=greet.split(' ').map((w,i)=>`<span style="--d:${(fog?3.1:.2)+i*.07}s">${esc(w)}</span>`).join(' ');
+ return `<div class="kz${fog?' fog':''}"><div class="kz-sky" aria-hidden="true"></div><div class="kz-box" aria-hidden="true">${ui('kas-scene','kz-img','',true)}<i class="kz-glow"></i><i class="kz-sweep"></i></div>
+ ${fog===true?'<div class="kz-fog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>':''}
+ <div class="kz-corner">${iconBtn('history','data-go="kassandra" data-t="history"','Past conversations')}${jdoor()}</div>
+ <div class="kz-talk"><div class="kz-card">
+  <div class="kz-thread" id="kthread" aria-live="polite"><p class="kz-say">${words}</p>${KS.msgs.map(m=>`<div class="kas-m ${m.role}">${esc(m.content).replace(/\n+/g,'<br>')}</div>`).join('')}${KS.busy?'<div class="kas-m assistant kz-wait">Kassandra gazes into the crystal…</div>':''}</div>
+  ${signed?`${has?'':`<div class="kz-pr" style="--d:${fog?4.2:1}s">${prs.map((p,i)=>i===2&&/^(Something|I need guidance)/.test(p)?`<button class="pill-b" data-act="kasfocus">${esc(p)}</button>`:`<button class="pill-b" data-act="kasask" data-q="${esc(p)}">${esc(p)}</button>`).join('')}</div>`}
+  <form id="kas-f" class="kas-f kz-f"><label class="sr-only" for="kas-in">Your question for Kassandra</label><input type="text" id="kas-in" placeholder="Speak to Kassandra…" maxlength="600" ${rec!=='idle'?'disabled':''}>
+   <button type="button" class="kz-mic${on&&rec==='listening'?' on':''}" data-act="kasmic" aria-label="${on&&rec==='listening'?'Stop recording':'Ask with your voice'}" ${rec==='processing'||KS.busy?'disabled':''}>${on&&rec==='listening'?IC.stop:IC.mic}</button>
+   <button type="submit" class="kas-send" aria-label="Send" ${KS.busy||rec!=='idle'?'disabled':''}>${IC.send}</button></form>
+  ${on&&rec!=='idle'?`<p class="kz-note">${rec==='listening'?'Listening… tap again when you have finished.':'Hearing your question…'}</p>`:''}
+  ${has?'<button class="link kz-new" data-act="kasnew">Begin a new conversation</button>':''}`
+  :`<button class="btn" data-act="toauth">Sign in to speak with Kassandra</button>`}
+  <p class="kz-note">Kassandra speaks in symbols, not certainties. She cannot give medical, legal or financial advice.</p>
+ </div></div></div>`;
+}
 function kasKeep(){S.kcur=KS.msgs.slice(-40);save()}
 function kasSend(q){
  q=String(q||'').trim();if(!q||KS.busy)return;if(!C.user)return render();
- KS.msgs.push({role:'user',content:q});KS.busy=true;kasKeep();render();kasScroll();
+ if(!KS.msgs.length&&V.kasGreet)KS.msgs.push({role:'assistant',content:V.kasGreet});KS.msgs.push({role:'user',content:q});KS.busy=true;kasKeep();render();kasScroll();
  C.kassandra(KS.msgs.slice(-12),kasContext()).then(r=>{KS.msgs.push({role:'assistant',content:r.reply||'…'});if(S.settings.voiceOut&&r.reply)playText(r.reply.slice(0,1400))},e=>{KS.msgs.push({role:'assistant',content:e.message||'The crystal is clouded. Try again in a moment.'})})
   .then(()=>{KS.busy=false;kasKeep();if(V.sec==='kassandra'){render();kasScroll()}});
 }
@@ -2142,7 +2187,7 @@ function render(){
  const html=(views[sec]||views.home)().replace(/<\/header>(\s*)(<p class="mn-sub">[\s\S]*?<\/p>)/g,'$2</header>$1');
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
- app.innerHTML=html+(V.share?sharePop():'');
+ app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const f=pg.matches('.home.hbay')?'url(/art/atlas/home-bay.webp) 50% 0/cover no-repeat':(getComputedStyle(pg).getPropertyValue('--fbg').trim());
@@ -2284,6 +2329,7 @@ document.addEventListener('click',e=>{
  const t=e.target.closest('[data-go],[data-nav],[data-act],[data-sign],[data-sign2],[data-period],[data-pick],[data-planet],[data-calview],[data-ctab],[data-ins]');
  if(!t)return;
  if(t.dataset.go)return go(t.dataset.go,t.dataset.t||null);
+ if(t.dataset.nav==='kassandra'&&V.sec!=='kassandra')return kasVeil(()=>go('kassandra'));
  if(t.dataset.nav)return go(t.dataset.nav);
  if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;return render()}
  if(t.dataset.calview){V.cal.view=t.dataset.calview;return render()}
@@ -2312,7 +2358,8 @@ document.addEventListener('click',e=>{
  if(a==='resend'){if(C.resend)C.resend(S.email).then(()=>toast('A new link is on its way.'),x=>toast(authMsg(x)));return}
  // Kassandra
  if(a==='kasmic')return voiceRec('kas');
- if(a==='kasask'){V.tpop=null;V.kasFrom={sec:V.sec,t:tab()};if(V.sec!=='kassandra')go('kassandra','chat');return kasSend(t.dataset.q)}
+ if(a==='kasfocus'){const i=$('#kas-in');if(i)i.focus();return}
+ if(a==='kasask'){V.tpop=null;if(V.sec!=='kassandra')V.kasFrom={sec:V.sec,t:tab()};if(V.sec!=='kassandra')go('kassandra','chat');return kasSend(t.dataset.q)}
  if(a==='kasnew')return kasNew();
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope

@@ -3139,3 +3139,75 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 /* the strip of painting behind the menu, over the cards that scroll beneath it (--navbg is the page's own foot) */
 #nav::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);background:var(--navbg,none);
  clip-path:inset(calc(100% - var(--navh,0px) + 4px) 0 0 0);pointer-events:none}
+/* ---------- Kassandra's chamber (.kz): the painting in its own measure (--u: one of its 780 pixels), her crystal ball
+   at (395,1083) r 112, placed so the ball sits near the middle of the screen; the words beneath it ---------- */
+.kz{--w:min(100vw,var(--appw));--u:calc(var(--w) / 780);--top:min(0px,calc(50svh - var(--w) * 1.389));--fbg:linear-gradient(#140A10,#0B0F1E);position:relative;min-height:100svh;color:#F1E2BC}
+.kz-sky{position:fixed;inset:0;z-index:-2;background:#0B0F1E}
+.kz-box{position:fixed;z-index:-1;left:50%;top:var(--top);width:var(--w);transform:translateX(-50%);pointer-events:none}
+.kz-img{display:block;width:100%;height:auto}
+/* the ball awake: a soft breathing light, and now and then a passing gleam, as her hand moves over it */
+.kz-glow,.kz-sweep{position:absolute;left:calc(var(--u) * 283);top:calc(var(--u) * 971);width:calc(var(--u) * 224);height:calc(var(--u) * 224);border-radius:50%}
+.kz-glow{background:radial-gradient(circle,rgba(255,226,160,.38),rgba(255,210,140,.12) 45%,transparent 70%);mix-blend-mode:screen;animation:kzBreath 4.5s ease-in-out infinite;box-shadow:0 0 calc(var(--u) * 70) calc(var(--u) * 20) rgba(246,200,120,.28)}
+.kz-sweep{overflow:hidden;mix-blend-mode:screen}
+.kz-sweep::before{content:'';position:absolute;top:-10%;bottom:-10%;width:45%;left:-60%;transform:skewX(-18deg);background:linear-gradient(90deg,transparent,rgba(255,240,205,.75),transparent);filter:blur(6px);animation:kzSweep 7s ease-in-out 2.6s infinite}
+@keyframes kzBreath{50%{opacity:.55;transform:scale(.96)}}
+@keyframes kzSweep{0%{left:-60%;opacity:0}8%{opacity:1}30%{left:120%;opacity:.9}31%,100%{left:120%;opacity:0}}
+/* the scene comes out of the fog: blurred and dim, then clear */
+.kz.fog .kz-box{animation:kzClear 2.6s ease-out both}
+@keyframes kzClear{0%{filter:blur(14px) brightness(.45);transform:translateX(-50%) scale(1.06)}100%{filter:none;transform:translateX(-50%) scale(1)}}
+.kz-fog{position:fixed;inset:0;z-index:50;pointer-events:none;overflow:hidden;animation:kzFogOut 3.2s ease-in both}
+.kz-fog i{position:absolute;width:140vmax;height:140vmax;left:50%;top:50%;margin:-70vmax 0 0 -70vmax;border-radius:50%;
+ background:radial-gradient(circle,rgba(214,206,226,.95) 0,rgba(170,160,190,.85) 25%,rgba(90,80,110,.55) 50%,transparent 70%);filter:blur(30px)}
+.kz-fog i:nth-child(1){animation:kzF1 3.2s ease-out both}
+.kz-fog i:nth-child(2){left:10%;top:30%;animation:kzF2 3.2s ease-out both;background:radial-gradient(circle,rgba(233,201,133,.55),rgba(140,110,90,.35) 45%,transparent 70%)}
+.kz-fog i:nth-child(3){left:90%;top:70%;animation:kzF3 3.2s ease-out both}
+.kz-fog i:nth-child(4){left:20%;top:85%;animation:kzF3 3.4s ease-out both}
+.kz-fog i:nth-child(5){left:80%;top:15%;animation:kzF2 3.4s ease-out both;background:radial-gradient(circle,rgba(233,201,133,.45),rgba(120,100,130,.3) 45%,transparent 70%)}
+@keyframes kzF1{0%{transform:scale(.4);opacity:0}25%{transform:scale(1);opacity:1}100%{transform:scale(2.2);opacity:0}}
+@keyframes kzF2{0%{transform:scale(.6) translateX(-20%);opacity:0}30%{opacity:1}100%{transform:scale(1.8) translateX(-60%);opacity:0}}
+@keyframes kzF3{0%{transform:scale(.6) translateX(20%);opacity:0}30%{opacity:1}100%{transform:scale(1.8) translateX(60%);opacity:0}}
+@keyframes kzFogOut{0%,70%{opacity:1}100%{opacity:0;visibility:hidden}}
+.kz-corner{position:fixed;z-index:45;top:calc(env(safe-area-inset-top,0px) + 10px);right:max(10px,calc(50% - var(--appw) / 2 + 10px));display:flex;gap:8px}
+.kz-corner .ibtn{position:static;background:rgba(8,12,28,.6);border:1px solid rgba(233,201,133,.5);color:#F1DFB4}
+/* her words, beneath the ball */
+.kz-talk{padding:calc(var(--top) + var(--w) * 1.545 + 6px) 6% calc(var(--navh,0px) + 18px)}
+.kz-card{position:relative;display:flex;flex-direction:column;gap:12px;padding:16px 16px 12px;border:1px solid rgba(233,201,133,.75);border-radius:8px;background:linear-gradient(180deg,rgba(12,10,24,.84),rgba(10,10,24,.76));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+ box-shadow:inset 0 0 0 4px rgba(10,14,32,.35),inset 0 0 0 5px rgba(233,201,133,.3),0 10px 28px rgba(0,0,0,.55)}
+.kz-say{margin:0;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:1.22rem;line-height:1.42;color:#F6E3B0;text-shadow:0 0 12px rgba(246,210,140,.25)}
+.kz-say span{display:inline-block;opacity:0;filter:blur(4px);animation:kzWord .6s ease-out var(--d) forwards}
+@keyframes kzWord{to{opacity:1;filter:none}}
+.kz-thread{display:flex;flex-direction:column;gap:10px}
+.kz .kas-m{max-width:88%;padding:9px 12px;border-radius:12px;font-family:var(--font-serif);font-size:1.05rem;line-height:1.4}
+.kz .kas-m.user{align-self:flex-end;background:rgba(233,201,133,.16);border:1px solid rgba(233,201,133,.45);color:#F4E8CC}
+.kz .kas-m.assistant{align-self:flex-start;background:rgba(6,10,24,.55);border:1px solid rgba(233,201,133,.3);color:#F4E8CC}
+.kz .kz-say+.kas-m.assistant{display:none}
+.kz-wait{font-style:italic;color:rgba(241,226,188,.7)!important}
+.kz-pr{display:flex;flex-direction:column;gap:8px;opacity:0;animation:kzWord .8s ease-out var(--d) forwards}
+.kz-pr .pill-b{width:100%;min-height:40px;font-family:var(--font-serif);font-size:1rem}
+.kz-f{display:flex;align-items:center;gap:6px;padding:4px 4px 4px 14px;border:1px solid rgba(233,201,133,.6);border-radius:999px;background:rgba(6,10,24,.6)}
+.kz-f input{flex:1;min-width:0;border:0!important;background:none!important;color:#F4E8CC!important;font-family:var(--font-serif);font-size:1rem}
+.kz-f input::placeholder{color:rgba(241,226,188,.5);font-style:italic}
+.kz-f button{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(233,201,133,.55);background:rgba(8,12,28,.6);color:#F1D79A;cursor:pointer}
+.kz-f button svg{width:18px;height:18px}.kz-f .kz-mic.on{background:rgba(233,201,133,.25)}
+.kz-note{margin:0;text-align:center;font-size:.78rem;color:rgba(241,226,188,.6)}
+.kz-new{align-self:center;font-size:.92rem;color:#F1D79A}
+.kz .btn{background:rgba(6,10,24,.38)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important}
+@media (prefers-reduced-motion:reduce){.kz-fog{display:none}.kz.fog .kz-box,.kz-glow,.kz-sweep::before{animation:none}.kz-say span,.kz-pr{animation:none;opacity:1;filter:none}}
+.kz{isolation:isolate}
+.kz .kz-f{position:static!important;box-shadow:none}
+/* the fog as a veil: it rolls in over the page (in), the chamber opens behind it, and it thins from the centre (out) */
+#kzveil{animation:none;opacity:1}
+#kzveil::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(200,192,214,.96),rgba(120,110,140,.94) 60%,rgba(60,52,80,.96));animation:kzVeilIn 1.15s ease-in both}
+#kzveil.in i{animation:kzRoll 1.15s ease-in both}
+#kzveil.in i:nth-child(2n){animation-delay:.1s}
+@keyframes kzVeilIn{0%{opacity:0}100%{opacity:1}}
+@keyframes kzRoll{0%{transform:scale(.3);opacity:0}100%{transform:scale(1.1);opacity:1}}
+#kzveil.out::before{animation:kzVeilOut 2.4s ease-out both}
+#kzveil.out{animation:kzThin 2.4s ease-out both}
+#kzveil.out i{animation:kzF1 2.4s ease-out both}
+#kzveil.out i:nth-child(2),#kzveil.out i:nth-child(5){animation:kzF2 2.4s ease-out both}
+#kzveil.out i:nth-child(3),#kzveil.out i:nth-child(4){animation:kzF3 2.4s ease-out both}
+@keyframes kzVeilOut{0%{opacity:1}100%{opacity:0}}
+@keyframes kzThin{0%,60%{opacity:1}100%{opacity:0}}
+.kz.fog .kz-box{animation-duration:2.2s}
+#kzveil{z-index:90}
