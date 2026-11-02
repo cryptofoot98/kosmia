@@ -3115,3 +3115,21 @@ body.obfit #app{padding-bottom:0!important;min-height:0}
 .hbay .brand{padding-top:7cqw}
 .hbay .brand small{margin-top:4.8cqw}
 .hbay .hh-greet{margin-top:10.8cqw}
+/* ---------- every page's painting holds still: its head fixed at the top of the screen and its foot (the dawn, the lilies)
+   fixed just above the menu, the night between them; only the cards scroll over it ---------- */
+.hsp{--fbg:url(/art/atlas/sign-sky.webp)}
+.jnight{--fbg:url(/art/atlas/jrn-night.webp)}
+.mnp{--fbg:var(--mn-bg,url(/art/atlas/moon-bg.webp))}
+.mnp.enight{--fbg:url(/art/atlas/jen-night.webp)}
+.land.hnight{--fbg:url(/art/atlas/hland-night.webp)}
+.land.tnight{--fbg:url(/art/atlas/tarot-night.webp)}
+.land.dnight{--fbg:url(/art/atlas/disc-night.webp)}
+.land.drm{--fbg:url(/art/atlas/dream-night.webp)}
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm){background:none!important;isolation:isolate}
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::before,
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::after{content:''!important;display:block!important;position:fixed!important;z-index:-1!important;top:0!important;bottom:var(--navh,0px)!important;left:50%!important;right:auto!important;
+ width:min(100%,var(--appw))!important;height:auto!important;margin:0!important;transform:translateX(-50%)!important;filter:none!important;animation:none!important;pointer-events:none}
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::before{background:#0B0F1E var(--fbg) 50% 0/100% auto no-repeat!important;-webkit-mask-image:linear-gradient(#000 50%,transparent 68%)!important;mask-image:linear-gradient(#000 50%,transparent 68%)!important}
+:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)::after{background:var(--fbg) 50% 100%/100% auto no-repeat!important;-webkit-mask-image:linear-gradient(transparent 38%,#000 56%)!important;mask-image:linear-gradient(transparent 38%,#000 56%)!important}
+/* the night between head and foot, behind both */
+html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)),body:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)) #app{background:#0B0F1E!important}
