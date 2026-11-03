@@ -3279,3 +3279,4 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 .hmoon .hh-word{background:linear-gradient(180deg,#FFF1C8,#E2B868 60%,#F6DDA0)!important;-webkit-background-clip:text!important;background-clip:text!important}
 .hmoon .brand small{font-weight:700!important;font-size:max(9.5px,2.55cqw)!important;color:#F6E3B0!important;-webkit-text-stroke:.35px #F6E3B0;paint-order:stroke fill;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.9)!important}
 .home.hbay.hmoon.hsun::before{background:#0B1022 url(/art/atlas/home-sun.webp) 50% 0/cover no-repeat!important}
+.hbay .hhero::after,.hbay .hhero::before{display:none!important}
