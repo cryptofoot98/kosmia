@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 531 |
-| In use, provisional | 487 |
+| Images | 533 |
+| In use, provisional | 489 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -30,8 +30,10 @@ their space before they load.
 | `public/art/atlas/hland-night.webp` | 850×1850 | 0.46:1 | no | 407 | provisional |  |
 | `public/art/atlas/home-bar.webp` | 1200×321 | 3.74:1 | no | 109 | provisional |  |
 | `public/art/atlas/home-bay.webp` | 941×1672 | 0.56:1 | no | 427 | provisional |  |
+| `public/art/atlas/home-dawn.webp` | 941×1672 | 0.56:1 | no | 272 | provisional |  |
 | `public/art/atlas/home-garden.webp` | 720×1080 | 2:3 | no | 207 | provisional |  |
 | `public/art/atlas/home-lake.webp` | 720×1080 | 2:3 | no | 160 | provisional |  |
+| `public/art/atlas/home-moon.webp` | 941×1671 | 0.56:1 | no | 266 | provisional |  |
 | `public/art/atlas/home-night.webp` | 720×1619 | 0.44:1 | no | 235 | provisional |  |
 | `public/art/atlas/home-night2.webp` | 850×1850 | 0.46:1 | no | 376 | provisional |  |
 | `public/art/atlas/hsp-garland-l.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
@@ -370,7 +372,7 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/home-sun.webp` | 960×640 | 3:2 | no | 161 | provisional |  |
+| `public/art/atlas/home-sun.webp` | 941×1671 | 0.56:1 | no | 266 | provisional |  |
 
 ## Night ground edged with lilies and roses, behind the Daily Whisper
 

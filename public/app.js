@@ -764,7 +764,7 @@ views.home=()=>{
  const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
  const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
  const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`;
- return `<div class="home hbay"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
+ return `<div class="home hbay hmoon hsun"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <div class="hh-acts hh-fix">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div></div>
   <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1>${ritual}</header>
@@ -2190,7 +2190,7 @@ function render(){
  app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
- {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const f=pg.matches('.home.hbay')?'url(/art/atlas/home-bay.webp) 50% 0/cover no-repeat':(getComputedStyle(pg).getPropertyValue('--fbg').trim());
+ {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const f=pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/cover no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(pg.matches('.home.hbay')?f:f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
