@@ -3340,3 +3340,13 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 .hframe .hsp-soul{width:32cqw!important}
 .hframe>.hsp-hero{height:calc(var(--st) + 80cqw)!important}
 .hframe>.hsp-hero{height:calc(var(--st) + 84cqw)!important}
+/* the sign's name, dates and soul in the open night between the corner lily and the figure */
+.hframe .hsp-c{left:23cqw!important;top:calc(var(--st) + 4cqw)!important;width:21cqw!important}
+.hframe .hsp-g{left:40cqw!important;top:calc(var(--st) + 9cqw)!important}
+.hframe .hsp-hero>.hsp-t{left:25cqw!important;top:calc(var(--st) + 27cqw)!important;width:23cqw!important}
+.hframe .hsp-t h1{font-size:min(7.4cqw,31cqw / var(--nl,6))!important;letter-spacing:.01em}
+.hframe .hsp-d{font-size:max(9px,2.3cqw)!important;letter-spacing:.06em;white-space:nowrap}
+.hframe .hsp-star{width:21cqw!important}
+.hframe .hsp-soul{width:23cqw!important;font-size:max(11px,2.85cqw)!important;line-height:1.32!important}
+.hframe .hsp-img{left:auto!important;right:-6cqw!important}
+.hframe>.hsp-hero{height:calc(var(--st) + 84cqw)!important}
