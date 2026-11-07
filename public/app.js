@@ -763,7 +763,6 @@ views.home=()=>{
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
  const nm=firstName(),my=myDay(),short=!my.ai&&my.short||hShort(my.body),fig='atlas/fg-'+sign.id;
- const quick=['love','health','career','money','family'].map(cat=>{const x=horoscope(sign.id,cat,'daily');return `<button class="qt" data-act="tohoroscope" data-cat="${cat}">${catIco(cat,'qt-i')}<strong>${CAT_INFO[cat][0]}</strong><span>${TILE[cat][x.rel]||''}</span></button>`}).join('');
  const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
  const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
  const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`;
@@ -775,8 +774,7 @@ views.home=()=>{
   <div class="hh-stage s-${sign.id}">
    <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
-  </div>
-  <div class="qrow">${quick}</div>`})}
+  </div>`})}
  ${scenic(`
   ${pzCard('hpz')}
   ${energyCarousel(energySlides(now,m,sign,h))}
