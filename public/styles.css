@@ -3280,3 +3280,27 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 .hmoon .brand small{font-weight:700!important;font-size:max(9.5px,2.55cqw)!important;color:#F6E3B0!important;-webkit-text-stroke:.35px #F6E3B0;paint-order:stroke fill;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.9)!important}
 .home.hbay.hmoon.hsun::before{background:#0B1022 url(/art/atlas/home-sun.webp) 50% 0/cover no-repeat!important}
 .hbay .hhero::after,.hbay .hhero::before{display:none!important}
+/* the sign's page under the night framed in lilies (.hframe, a preview): the whole painting held still on the screen */
+.hsp.hframe{--fbg:url(/art/atlas/sign-frame.webp)}
+.hsp.hframe::before{background:#0A0F22 var(--fbg) 50% 50%/cover no-repeat!important;-webkit-mask-image:none!important;mask-image:none!important}
+.hsp.hframe::after{display:none!important}
+/* under the framed night, the sign's name, constellation and soul sit below the corner lily */
+.hframe .hsp-c{top:calc(var(--st) + 24cqw)!important;left:18cqw!important}
+.hframe .hsp-g{top:calc(var(--st) + 27cqw)!important;left:40cqw!important}
+.hframe .hsp-hero>.hsp-t{top:calc(var(--st) + 37cqw)!important;left:9cqw!important}
+.hframe .hsp-soul{margin-left:0!important}
+.hframe>.hsp-hero{min-height:calc(var(--st) + 92cqw)!important}
+/* the figure lower, filling the night down to the period bar; the name, its stars and its words between the small lily
+   and the figure, the name sized to its length so the longest still fits */
+.hframe .hsp-img{top:calc(var(--st) + 15cqw)!important}
+.hframe .hsp-c{left:22cqw!important;top:calc(var(--st) + 22cqw)!important;width:24cqw!important}
+.hframe .hsp-g{left:42cqw!important;top:calc(var(--st) + 26cqw)!important}
+.hframe .hsp-hero>.hsp-t{left:17cqw!important;top:calc(var(--st) + 38cqw)!important;width:30cqw!important}
+.hframe .hsp-t h1{font-size:min(8.4cqw,42cqw / var(--nl,6))!important;white-space:nowrap}
+.hframe .hsp-soul{width:28cqw!important}
+.hframe .hsp-hero>.hsp-t{left:14cqw!important}
+.hframe .hsp-t h1{font-size:min(8.2cqw,35cqw / var(--nl,6))!important;letter-spacing:.02em}
+.hframe .hsp-t h1,.hframe .hsp-d,.hframe .hsp-soul{position:relative;z-index:4}
+/* the period bar, the areas and the reading rise to meet the foot of the sign's figure */
+.hframe>.hsp-hero{min-height:0!important;height:calc(var(--st) + 82cqw)!important}
+.hframe .hsp-body{margin-top:-6cqw!important}

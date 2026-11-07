@@ -864,7 +864,7 @@ function horoSign(){
  // the sign's painting dissolved into the night sky at the head of the page, its name, dates and soul in the open sky at
  // its left; then the
  // reading on a card of night glass framed in gold over the night sky edged with lilies, the next area at its foot
- return `<div class="hsp s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r"><button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div><div class="hsp-hero stay">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
+ return `<div class="hsp hframe s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r"><button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div><div class="hsp-hero stay">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
  <div class="hsp-body">${periodSeg()}
@@ -2191,7 +2191,7 @@ function render(){
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const f=pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/cover no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
-  nav.style.setProperty('--navbg',f&&f!=='none'?(pg.matches('.home.hbay')?f:f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
+  nav.style.setProperty('--navbg',f&&f!=='none'?(pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 50%/cover no-repeat':f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
