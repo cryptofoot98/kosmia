@@ -3350,3 +3350,134 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 .hframe .hsp-soul{width:23cqw!important;font-size:max(11px,2.85cqw)!important;line-height:1.32!important}
 .hframe .hsp-img{left:auto!important;right:-6cqw!important}
 .hframe>.hsp-hero{height:calc(var(--st) + 84cqw)!important}
+/* the sign's name and dates centred in the open sky beside the lily, larger; its soul in four lines across the wider
+   night below, where the lily's stem ends, down to the period bar */
+.hframe .hsp-hero>.hsp-t{left:12cqw!important;top:calc(var(--st) + 25cqw)!important;width:37cqw!important;text-align:center}
+.hframe .hsp-t h1{width:auto!important;max-width:none!important;margin:0 0 0 3cqw!important;font-size:min(9cqw,46cqw / var(--nl,6))!important;text-align:center}
+.hframe .hsp-d{margin:1cqw 0 0 3cqw!important;font-size:max(9.5px,2.6cqw)!important;text-align:center}
+.hframe .hsp-star{width:24cqw!important;margin:2cqw auto 0 calc(3cqw + (34cqw - 24cqw) / 2)!important}
+.hframe .hsp-soul{width:37cqw!important;margin:9cqw 0 0!important;text-align:left;font-size:max(12.5px,3.5cqw)!important;line-height:1.55!important}
+.hframe .hsp-hero>.hsp-t{left:25cqw!important;width:24cqw!important}
+.hframe .hsp-t h1{margin:0!important;font-size:min(8.4cqw,30cqw / var(--nl,6))!important}
+.hframe .hsp-d{margin:1cqw 0 0!important}
+.hframe .hsp-star{margin:2cqw auto 0!important;width:22cqw!important}
+.hframe .hsp-soul{position:relative!important;left:-14cqw;width:40cqw!important}
+.hframe .hsp-hero>.hsp-t{left:24cqw!important;width:27cqw!important}
+.hframe .hsp-t h1{font-size:min(9cqw,38cqw / var(--nl,6))!important;letter-spacing:0!important}
+.hframe .hsp-soul{left:-13cqw;width:41cqw!important}
+
+/* ---------- the illuminated atlas: one frame for every card of the app, after the vintage tarot atlas the reader chose
+   as the model (a double gold rule with notched corners, a small four-pointed star and a curl at each); the cards keep
+   their night glass, only their edges change ---------- */
+:root{--atl:url(/art/frame-atlas.svg) 22 / 22px / 0 stretch}
+.hl-card,.hh-card,.kz-card,.card.gilt,.card.ornate,.hnight .card,.jnight .card,.drm .card,.hread,.pz,.sub .card,.tw,.hmine{border:5px solid transparent!important;border-image:var(--atl)!important;border-radius:0!important;
+ box-shadow:0 10px 26px rgba(0,0,0,.45)!important}
+.hl-card::before,.hl-card::after,.hh-card::before,.hh-card::after,.card.gilt::before,.card.gilt::after,.hread::before,.hread::after{border:0!important;box-shadow:none!important}
+/* section titles in carved small capitals between fine rules, like the atlas's panel heads */
+.orn h2,.hl-sec .kdiv,.dshelf h2{font-family:var(--font-display)!important;font-variant:small-caps;letter-spacing:.14em!important}
+
+/* Written for You: the day's personal message */
+.pz{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;margin:0 0 18px;padding:24px 22px 20px!important;text-align:center;color:#F1E2BC;
+ background:radial-gradient(120% 70% at 50% 0,rgba(233,201,133,.14),transparent 60%),linear-gradient(180deg,rgba(10,14,34,.86),rgba(8,11,28,.8))!important;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
+.pz-k{display:flex;align-items:center;gap:8px;margin:0;font-family:var(--font-display);font-size:.72rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#E9C985}
+.pz-k svg{width:9px;height:9px;fill:#E9C985}
+.pz-k::before,.pz-k::after{content:'';width:34px;height:1px;background:linear-gradient(90deg,transparent,#D9B66E)}.pz-k::after{transform:scaleX(-1)}
+.pz-d{margin:0;font-family:var(--font-serif);font-style:italic;font-size:.95rem;color:rgba(241,226,188,.72)}
+.pz-t{margin:2px 0 0;font-family:var(--font-display);font-weight:600;font-size:1.45rem;line-height:1.15;letter-spacing:.04em;color:#F6DA97;text-shadow:0 0 14px rgba(246,210,140,.35)}
+.pz-moon{display:flex;align-items:center;gap:8px;margin:0;font-family:var(--font-serif);font-size:.95rem;color:rgba(241,226,188,.85)}
+.pz-moon .pz-mi{width:22px;height:22px;border-radius:50%;object-fit:cover}
+.pz-b{margin:6px 0 0;font-family:var(--font-text);font-size:1.06rem;line-height:1.55;text-align:left;color:#F4E8CC}
+.pz-b::first-letter{float:left;margin:4px 6px 0 0;font-family:var(--font-display);font-size:2.6rem;line-height:.8;color:#E9C985}
+.pz-q{margin:4px 0 2px;padding:10px 6px 0;border-top:1px solid rgba(233,201,133,.35);font-family:var(--font-serif);font-style:italic;font-size:1.12rem;line-height:1.35;color:#F6E3B0}
+.pz-acts{display:flex;gap:8px;width:100%;margin-top:6px}.pz-acts .btn{flex:1;min-height:42px;font-size:.9rem}
+.pz-n{margin:0;font-size:.8rem;font-style:italic;color:rgba(241,226,188,.6)}
+.spz{margin:0 0 14px}
+/* the Whisper, spoken to the reader */
+.cp-you{margin:10px 0 0;padding:10px 12px;border:1px solid rgba(233,201,133,.4);border-radius:4px;background:rgba(233,201,133,.08);font-family:var(--font-serif);font-style:italic;font-size:1.02rem;line-height:1.4}
+.cp-you span{display:block;margin-bottom:3px;font-family:var(--font-display);font-style:normal;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:#C9A35E}
+/* Stars: the sky the reader was born beneath, four doors under their horoscope */
+.sky4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sk4{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;color:#F1E2BC;font-family:var(--font-serif);font-weight:600;font-size:.86rem;line-height:1.1;text-align:center;cursor:pointer}
+.sk4-a{width:64px;height:64px;border-radius:50%;overflow:hidden;border:1px solid #D9B66E;box-shadow:0 0 0 3px rgba(10,14,32,.6),0 0 0 4px rgba(233,201,133,.4),0 6px 14px rgba(0,0,0,.5)}
+.sk4-i{width:100%;height:100%;object-fit:cover}
+.sky-more{display:flex;align-items:center;justify-content:center;gap:4px;margin:10px auto 0;color:#E9C985;font-family:var(--font-serif);font-size:1rem}
+.sky-more svg{width:14px;height:14px}
+/* the Journal in the menu */
+#nav .in [data-nav=journal]{--ico:url(/art/atlas/nvm-journal.webp)}
+
+/* Kosmia Premium */
+.prem{display:flex;flex-direction:column;gap:14px}
+.prem-h{margin:4px 0 0;text-align:center;font-family:var(--font-display);font-size:1.6rem;letter-spacing:.06em;color:#F6DA97}
+.prem-l{margin:0;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:1.08rem;color:rgba(241,226,188,.85)}
+.prem-now{text-align:center}
+.prem-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prem-col h3{margin:0 0 8px;font-family:var(--font-display);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:#E9C985;text-align:center}
+.prem-col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;font-size:.92rem;line-height:1.3}
+.prem-col li{display:flex;gap:6px}.prem-col li::before{content:'✦';flex:none;color:#D9B66E;font-size:.7rem;margin-top:3px}
+.prem-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.plan{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px 8px 12px;border:1px solid rgba(233,201,133,.6);border-radius:4px;background:rgba(8,12,28,.6);color:#F1E2BC}
+.plan.best{border-color:#F1D79A;background:linear-gradient(180deg,rgba(233,201,133,.2),rgba(8,12,28,.6));box-shadow:0 0 18px rgba(246,210,140,.25)}
+.plan b{font-family:var(--font-display);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#E9C985}
+.plan strong{font-family:var(--font-display);font-size:1.5rem;color:#F6DA97}.plan small{font-size:.78rem;color:rgba(241,226,188,.7)}
+.plan i{position:absolute;top:-10px;padding:2px 8px;border-radius:999px;background:#D9B66E;color:#1A1430;font-style:normal;font-family:var(--font-display);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase}
+.prem .btn[disabled]{opacity:.65}
+
+.pz .btn{background:rgba(6,10,24,.45)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important;font-family:var(--font-display);letter-spacing:.08em}
+.pz .btn:not(.ghost){background:linear-gradient(180deg,rgba(233,201,133,.28),rgba(233,201,133,.12))!important}
+.pz .btn svg{width:16px;height:16px;margin-right:6px}
+
+.pz-k{gap:6px;letter-spacing:.2em;white-space:nowrap}.pz-k::before,.pz-k::after{width:22px}
+.pz-acts .btn{padding:0 8px!important;font-size:.78rem!important;letter-spacing:.05em!important;white-space:nowrap}
+.prem .btn[disabled]{opacity:1!important;background:rgba(8,12,28,.82)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid #D9B66E!important}
+.prem .muted.small.center{color:#F1E2BC!important;text-shadow:0 1px 6px #000,0 0 12px #000}
+
+/* ---------- the atlas, refined: larger corner flourishes; one family of letters (Cinzel for titles, Garamond for
+   reading); one gold button and one quiet one; gold, single-colour area icons; nothing smaller than reads comfortably ---------- */
+:root{--atl:url(/art/frame-atlas.svg) 34 / 34px / 0 stretch;--font-read:'EB Garamond','Garamond Fallback',Georgia,serif;--read:var(--font-read)}
+.hl-card,.hh-card,.kz-card,.card.gilt,.card.ornate,.hnight .card,.jnight .card,.drm .card,.hread,.pz,.sub .card,.tw,.hmine,.cp-box{border:6px solid transparent!important;border-image:var(--atl)!important;border-radius:0!important}
+.cp-box{padding:22px 18px!important}
+/* the buttons */
+.btn:not(.ghost):not(.link),.pz .btn:not(.ghost){background:linear-gradient(180deg,#E9C985,#C59A4E)!important;color:#1A1430!important;-webkit-text-fill-color:#1A1430;border:1px solid #F3DC9E!important;
+ box-shadow:0 0 0 3px rgba(10,14,32,.55),0 0 0 4px rgba(233,201,133,.45),0 6px 16px rgba(0,0,0,.45)!important;text-shadow:none!important;font-family:var(--font-display)!important;font-weight:700!important;letter-spacing:.1em!important}
+.btn:not(.ghost):not(.link) svg{fill:none;stroke:#1A1430}
+.btn.ghost,.pz .btn.ghost,.pill-b{background:rgba(6,10,24,.45)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;border:1px solid rgba(233,201,133,.8)!important;box-shadow:none!important;font-family:var(--font-display)!important;font-weight:600!important;letter-spacing:.08em!important}
+.prem .btn[disabled]{background:rgba(8,12,28,.82)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A}
+/* the areas of life in gold, like the menu */
+.qt-i,.tile-i,.hc-i img,.hc-i .acc-i{filter:grayscale(1) sepia(1) saturate(2.4) hue-rotate(-6deg) brightness(1.08) contrast(1.05) drop-shadow(0 0 4px rgba(233,201,133,.35))!important}
+/* sizes that read */
+.qt span,.tile span{font-size:12px!important;line-height:1.2!important;color:rgba(244,232,204,.9)!important}
+body.nv-d #nav .in button{font-size:10.5px!important;letter-spacing:.03em!important}
+.lr-t span,.muted.small{font-size:13px}
+/* the period bar on Stars, laid out like the sign page's */
+.hmine .seg{position:relative;gap:0!important;padding:4px!important;border:1px solid rgba(233,201,133,.75)!important;border-radius:999px;background:rgba(6,10,24,.62)!important}
+.hmine .seg button{position:relative;flex:1;min-width:0;padding:0 2px!important;font-size:clamp(.6rem,2.7vw,.72rem)!important;letter-spacing:.05em!important;white-space:nowrap;color:#F1E2BC}
+.hmine .seg button+button:not([aria-selected=true])::before{content:'';position:absolute;left:0;top:30%;bottom:30%;width:1px;background:rgba(233,201,133,.5)}
+.hmine .seg button[aria-selected=true]+button::before{display:none}
+/* an engraved sky beneath every page, very faint, so the lower half is never bare */
+html::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:min(100%,var(--appw));transform:translateX(-50%);pointer-events:none;
+ background:url(/art/sky-engraving.svg) 50% 0/100% auto repeat-y}
+/* Today: the greeting and ritual a little higher, so the sign and its message open on the first screen */
+.hbay .hh-rit{margin-top:6cqw!important}
+.hbay .hhero{padding-top:3cqw!important}
+/* the day's message, folded: two lines and the question, the rest a tap away */
+.pz.fold .pz-b{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.pz-more{margin:-2px 0 0;padding:0;border:0;background:none;color:#E9C985;font-family:var(--font-serif);font-style:italic;font-size:1rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(233,201,133,.5)}
+#app .btn:not(.ghost):not(.link):not([disabled]){background:linear-gradient(180deg,#E9C985,#C59A4E)!important;background-image:linear-gradient(180deg,#E9C985,#C59A4E)!important;color:#1A1430!important;-webkit-text-fill-color:#1A1430!important}
+.hmine .seg button{font-size:clamp(.56rem,2.5vw,.66rem)!important;letter-spacing:.02em!important}
+#app .btn:not(.ghost):not(.link):not([disabled]){text-shadow:none!important}
+.hh-card .btn{white-space:nowrap;letter-spacing:.04em!important;padding:0 12px!important}
+
+/* ---------- one night for the whole app: Today's painting (art/atlas/home-sun, the lilies, the Moon's phases, the inner
+   arc and the dawn) held still behind Stars, Tarot, Discover and the Journal too ---------- */
+.land.hnight,.land.tnight,.land.dnight,.jnight{--fbg:url(/art/atlas/home-sun.webp)}
+:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{background:#0B1022 var(--fbg) 50% 0/cover no-repeat!important;-webkit-mask-image:none!important;mask-image:none!important}
+:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::after{display:none!important}
+/* Today's head: the wordmark inside the painting's inner arc, the greeting, the ritual and the sign's figure drawn up beneath it */
+.hmoon .brand{padding-top:31.5cqw!important}
+.hmoon .brand small{margin-top:2.6cqw!important}
+.hmoon .hh-greet{margin-top:4cqw!important}
+.hbay .hh-rit{margin-top:3.6cqw!important}
+.hbay .hhero{padding-top:0!important}
+.hbay .hh-stage{margin-top:1.5cqw!important}
+/* each section's title inside the inner arc too, where Today's wordmark sits */
+:is(.land.hnight,.land.dnight,.jnight)>.hl-top{padding-top:calc(env(safe-area-inset-top,0px) + 37.5cqw)!important}

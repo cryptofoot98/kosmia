@@ -111,6 +111,8 @@ const Cloud={
  // personal interpretation of a finished tarot reading (cards are sent as ids and orientations only)
  interpret(spread,question,cards){return Cloud.api('/api/interpret',{spread,question,cards}).then(r=>r.json())},
  horoscope(sign,cat,period,key){return Cloud.api(`/api/horoscope?sign=${sign}&cat=${cat}&period=${period}&key=${encodeURIComponent(key)}`,null,{method:'GET'}).then(r=>r.json())},
+ // the day's personal message and Whisper note, written once a day from the reader's own portrait
+ daily(o){return Cloud.api('/api/daily',o).then(r=>r.json())},
  kassandra(messages,context){return Cloud.api('/api/kassandra',{messages,context}).then(r=>r.json())},
  // a dream read by Kassandra: its symbols, themes and a question to sit with
  dream(d){return Cloud.api('/api/dream',d).then(r=>r.json())},

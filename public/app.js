@@ -188,6 +188,9 @@ const SECTIONS={
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Subscription']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra'];
+const NAV=[{key:'home',label:'Today'},{key:'horoscope',label:'Stars'},{key:'tarot',label:'Tarot'},{key:'journal',label:'Journal'},{key:'kassandra',label:'Kassandra'}];
+const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','dream-journal'];
+function navCur(){const t=tab();if(V.sec==='tarot'&&JPAGES.includes(t))return 'journal';if(V.sec==='discover')return DPAGES.includes(t)?'journal':'horoscope';return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal',
  'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/dreams':'tarot/journal',
@@ -311,7 +314,7 @@ const IC={
 };
 const iconBtn=(ic,attrs,label)=>`<button class="ibtn" ${attrs} aria-label="${esc(label)}">${IC[ic]}</button>`;
 // the Journal's door, the same quill on every section's first page
-const jdoor=()=>`<button class="ibtn jdoor" data-go="tarot" data-t="journal" aria-label="Your Journal">${IC.quill}</button>`;
+const jdoor=()=>'';
 function hdr(title,o={}){
  return `<header class="phd"><div class="ph-l">${o.back===false?'':iconBtn('back','data-act="back"','Back')}</div><div class="ph-t"><h1>${title}</h1>${o.sub?`<p class="ph-sub">${o.sub}</p>`:''}</div><div class="ph-r">${o.right||''}</div></header>`;
 }
@@ -751,7 +754,7 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
  <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
  <div class="cp-icons"><button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button>${k===dkey()?`<button class="ibtn${S.saved.some(x=>x.date===k)?' on':''}" data-act="savecard" aria-pressed="${S.saved.some(x=>x.date===k)}" aria-label="Save to your journal">${IC.heart}</button>`:''}</div>
- <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p><div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
+ <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
  <button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Reflect in Your Journal'}</button></div></div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
@@ -759,7 +762,7 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
 views.home=()=>{
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
- const nm=firstName(),short=hShort(h.body),fig='atlas/fg-'+sign.id;
+ const nm=firstName(),my=myDay(),short=!my.ai&&my.short||hShort(my.body),fig='atlas/fg-'+sign.id;
  const quick=['love','health','career','money','family'].map(cat=>{const x=horoscope(sign.id,cat,'daily');return `<button class="qt" data-act="tohoroscope" data-cat="${cat}">${catIco(cat,'qt-i')}<strong>${CAT_INFO[cat][0]}</strong><span>${TILE[cat][x.rel]||''}</span></button>`}).join('');
  const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
  const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
@@ -775,6 +778,7 @@ views.home=()=>{
   </div>
   <div class="qrow">${quick}</div>`})}
  ${scenic(`
+  ${pzCard('hpz')}
   ${energyCarousel(energySlides(now,m,sign,h))}
   ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${wbtn}</div></div>`,'gilt hwhisper')}
@@ -782,6 +786,59 @@ views.home=()=>{
  ${forYou()}
  `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
+
+/* ---------- the personal voice (personal.js): what the reader has written, read on this device and woven into the
+   day's message, the Whisper's note and Kassandra's sense of them. When the AI is available it writes the day's words
+   once from the same portrait (kept in S.daily); otherwise they are written here, so the day is always personal. ---------- */
+const PZ=window.KosmiaPersonal;
+const personalOn=()=>S.settings.personal!==false;
+function myItems(){
+ const out=[],add=(day,text,kind)=>{if(day&&text&&String(text).trim())out.push({day:String(day).slice(0,10),text:plain(String(text)),kind})};
+ S.journal.forEach(j=>add(j.day,[j.title,j.body].filter(Boolean).join('. '),'journal'));
+ Object.entries(S.notes).forEach(([d,n])=>add(d,n,'reflection'));
+ S.readings.forEach(r=>{add(r.date,r.q,'question');add(r.date,r.note,'reflection')});
+ S.bookmarks.forEach(b=>{const d=b.data||{};if(b.kind==='dream')add(d.day||(b.at||'').slice(0,10),d.text,'dream');
+  else if(b.kind==='chat')(d.msgs||[]).filter(m=>m.role==='user').forEach(m=>add((b.at||'').slice(0,10),m.content,'kassandra'));
+  else if(b.note)add((b.at||'').slice(0,10),b.note,'reflection')});
+ (typeof KS!=='undefined'?KS.msgs:[]).filter(m=>m.role==='user').forEach(m=>add(dkey(),m.content,'kassandra'));
+ return out;
+}
+let pzCache={k:'',p:null};
+function myPortrait(){
+ const items=personalOn()?myItems():[],k=dkey()+'|'+items.length+'|'+items.reduce((n,x)=>n+x.text.length,0);
+ if(pzCache.k!==k)pzCache={k,p:PZ.portrait(items,dkey())};
+ return pzCache.p;
+}
+// the day's personal words: the AI's when it has written them today, otherwise Kosmia's own from the same portrait
+function myDay(){
+ const k=dkey(),ch=myChart(),P=myPortrait();
+ const local=PZ.message({K,now:new Date(),today:k,name:firstName(),sign:SIGNS.indexOf(sg(S.sign)),chart:ch,exact:!!(ch&&ch.known),portrait:P,uid:(C.user&&C.user.id)||S.email||''});
+ const ai=(S.daily||{})[k];
+ return ai&&ai.v===P.count?Object.assign({},local,ai,{ai:true}):local;
+}
+function myWhisper(c){const ai=(S.daily||{})[dkey()];if(ai&&ai.whisper&&ai.card===c.id)return ai.whisper;return PZ.whisper(c,wKeys(c),{portrait:myPortrait(),name:firstName(),today:dkey(),uid:(C.user&&C.user.id)||''})}
+// once a day (and again when the reader has written something new), ask the AI to write the day from the portrait
+let dailyAsk='';
+function askDaily(){
+ if(!C.user||!personalOn()||!C.daily)return;
+ const k=dkey(),P=myPortrait(),have=(S.daily||{})[k],key=k+'/'+P.count;
+ if((have&&have.v===P.count)||dailyAsk===key)return;dailyAsk=key;
+ const ch=myChart(),c=todayCard(),loc=myDay();
+ C.daily({day:k,name:firstName(),sign:S.sign,natal:ch?ch.pl.filter(x=>!(x.n==='Moon'&&ch.moonRange)).map(x=>`${x.n} ${sIdx(x.sign).name}${x.house?' house '+x.house:''}`).join(', '):'',
+  sky:`The Moon is ${loc.sky.phase.toLowerCase()} in ${sIdx(loc.sky.moonSign).name}, lighting ${loc.sky.area}.`,portrait:PZ.forKassandra(P),card:{id:c.id,title:c.title,msg:c.msg,words:wKeys(c)}})
+  .then(r=>{if(!r||!r.body)return;S.daily={[k]:{v:P.count,card:c.id,body:r.body,question:r.question||loc.question,focus:r.focus||loc.focus,whisper:r.whisper||''}};save();render()})
+  .catch(()=>{});
+}
+// the day written for this reader: its theme, the Moon, their message, a question, and where to take it next
+function pzCard(cls=''){
+ const d=myDay(),k=dkey(),m=K.moon(new Date()),fold=cls==='hpz'&&!V.pzOpen;
+ return `<section class="pz atl${cls?' '+cls:''}${fold?' fold':''}" aria-label="Written for you today"><p class="pz-k">${Kit.icon('star')}<span>Written for You</span>${Kit.icon('star')}</p>
+ <p class="pz-d">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p><h2 class="pz-t">${esc(d.focus)}</h2>
+ <p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
+ <p class="pz-b">${esc(d.body)}</p>${fold?'<button class="pz-more" data-act="pzmore">Read all of it</button>':''}<p class="pz-q">“${esc(d.question)}”</p>
+ <div class="pz-acts"><button class="btn" data-act="jnew" data-k="pz">${IC.quill}Reflect</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div>
+ ${myPortrait().count?'':'<p class="pz-n">The more you write in your Journal, the more these words become your own.</p>'}</section>`;
+}
 function forYou(){
  const ch=hasBirthDate()&&S.fullName?myChart():null,rows=[];
  if(ch){const pl=n=>{const x=ch.pl.find(p=>p.n===n);return x?sIdx(x.sign).name:''},asc=ch.ang&&!S.birth.unk?sIdx(Math.floor(ch.ang.asc/30)).name:'';
@@ -838,12 +895,14 @@ views.horoscope=()=>{
  <div class="hmine hl-card">
   <div class="hm-top">${glyphMed(sign.id)}<div><h2>${sign.name}</h2><p class="hm-d">${sign.dates}</p><p class="lr-m">${keys(SIGN_KEYS[sign.id])}</p></div></div>
   ${periodSeg()}
-  ${first?`<p class="hm-q">“${esc(first)}”</p>`:''}
+  ${V.period==='daily'?`<p class="hm-q">“${esc((String(myDay().body).match(/^[^.!?]*[.!?]/)||[''])[0])}”</p>`:first?`<p class="hm-q">“${esc(first)}”</p>`:''}
   <button class="btn hm-go${read?' on':''}" data-act="tohoroscope">${read?'✦ Read again':`Read your ${pw}`}</button>
  </div>
  <section class="hl-sec">${Kit.divider(`${sign.name} · ${pl[0]}, by area of life`)}
  <div class="tiles6">${HCATS.map(([k])=>{const x=horoscope(S.sign,k,V.period);return `<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||CAT_INFO[k][1])}</span></button>`}).join('')}</div>
  </section>
+ <section class="hl-sec">${Kit.divider('Written in You')}<div class="sky4">${[['ex-chart','Birth Chart','birth-chart'],['hero-affinity','Compatibility','affinity'],['ex-lifepath','Life Path','life-path'],['ev-full','Cosmic Calendar','calendar']].map(([i,l,t])=>`<button class="sk4" data-go="discover" data-t="${t}"><span class="sk4-a">${ui(i,'sk4-i')}</span><span>${l}</span></button>`).join('')}</div>
+ <button class="link sky-more" data-go="discover">All of your sky ${IC.chev}</button></section>
  <section class="hl-sec hl-card">${Kit.divider('Read for Someone Else')}
  <p class="hso">A partner, a friend, a child: open the sky they were born beneath.</p>
  <div class="signs12">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
@@ -869,7 +928,7 @@ function horoSign(){
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
  <div class="hsp-body">${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}${HCATS[i+1]?`<button class="hnext" data-act="hcat" data-k="${HCATS[i+1][0]}">Next: ${CAT_INFO[HCATS[i+1][0]][0]}, ${pl[0].toLowerCase()} ${IC.chev}</button>`:''}</div>`).join('')}</div></div>
+ <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${k==='overview'&&ex===S.sign&&V.period==='daily'?pzCard('spz'):''}${reading(k)}${acts(k)}${HCATS[i+1]?`<button class="hnext" data-act="hcat" data-k="${HCATS[i+1][0]}">Next: ${CAT_INFO[HCATS[i+1][0]][0]}, ${pl[0].toLowerCase()} ${IC.chev}</button>`:''}</div>`).join('')}</div></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -2033,6 +2092,7 @@ function kasContext(){
  else if(L.sec==='tarot'&&L.t==='entry'&&V.lastRead&&V.lastRead.p){ctx.reading=`Their journal page “${jHeading(V.lastRead.p)}”: ${String(jText(V.lastRead.p)||'').slice(0,800)}`}
  else if(L.sec==='tarot'&&L.t==='whisper'&&V.lastRead&&V.lastRead.card){const c=V.lastRead.card;ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
  else if(S.revealed[k]){const c=todayCard();ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
+ if(personalOn()){const pt=PZ.forKassandra(myPortrait());if(pt)ctx.portrait=pt}
  if(S.settings.kPersonal){
   const ch=myChart(),p=[`Chosen sign ${sg(S.sign).name}`];
   if(S.name)p.push('Name '+S.name);
@@ -2080,7 +2140,8 @@ function kasGreet(){
  if(L&&L.k==='dream')return [`${hi}your dream still lingers around you. Shall we follow where it leads?`,['What is my dream telling me?','Why do I keep dreaming this?','Something else']];
  if(L&&L.k==='entry')return [`${hi}you have just been writing. Would you like to sit with it a little longer, together?`,['Help me reflect on what I wrote','What is beneath this feeling?','Something else']];
  let moon='';try{const m=K.moon(new Date());moon=` ${/^(New|Full)/.test(m.name)?`The ${m.name} rests`:`The Moon is ${m.waxing?'growing':'waning'}`} in ${sIdx(m.sign).name} tonight…`}catch(e){}
- return [`${nm?`Welcome back, ${nm}.`:'Welcome, traveller.'}${moon} What is on your heart?`,['What do I need to know today?','Ask about love','What opportunities are coming?']];
+ const felt=personalOn()?PZ.greeting(myPortrait()):'';
+ return [`${nm?`Welcome back, ${nm}.`:'Welcome, traveller.'}${moon}${felt?' '+felt:''} What is on your heart?`,[...(felt&&myPortrait().themes[0]?[`Guide me with ${PZ.THEMES[myPortrait().themes[0].k].short.replace(/you (come|long|have)/,'I $1').replace(/your/g,'my').replace(/you/g,'me')}`]:[]),'What do I need to know today?','What opportunities are coming?'].slice(0,3)];
 }
 // the fog rolls in over the page the reader is on; once it hides everything, her chamber is opened behind it and the fog
 // thins away from the centre
@@ -2142,7 +2203,16 @@ views.settings=()=>{
  const t=tab();
  if(t==='birth'){V.sec='discover';V.tab.discover='profile';history.replaceState(history.state,'',pathFor('discover','profile',{}));return nightPage(profileView(),'cp')}
  if(t==='birth-old')return nightSub(`<div class="sub">${hdr('Birth Details',{sub:'For your chart, Life Path and cycles'})}${birthForm()}</div>`,'bd');
- if(t==='subscription')return nightSub(`<div class="sub">${hdr('Subscription')}${panel(`<p class="kick">Your plan</p><h2>Kosmia · Early Access</h2><p>Every part of Kosmia is open to you while it is in early access: horoscopes, Whispers and tarot, your Journal, Dream Interpretation, Discover and Kassandra.</p><p class="muted">No subscription is needed and nothing is charged. If that ever changes, you will be told well in advance and nothing will be charged without your clear agreement.</p>`,'ornate')}</div>`,'st');
+ // Kosmia Premium: what stays free, what Premium opens, and the two plans. Payments are not switched on yet, so during
+ // early access everything is open and nothing can be bought here
+ if(t==='subscription'){const li=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  return nightSub(`<div class="sub">${hdr('Kosmia Premium')}<div class="prem">
+  <p class="prem-l">${firstName()?esc(firstName())+', the':'The'} cosmos, written for you alone</p>
+  ${panel(`<p class="kick prem-now">Your plan · Early Access</p><p class="prem-now">Everything in Kosmia is open to you, free, while it is in early access. Nothing is charged, and nothing ever will be without your clear agreement.</p>`,'ornate')}
+  ${panel(`<div class="prem-cols"><div class="prem-col"><h3>Always free</h3>${li(['Your Daily Whisper','Your sign’s horoscope','Journal and reflections','Moon and Cosmic Calendar','One-card and three-card readings'])}</div>
+   <div class="prem-col"><h3>Premium</h3>${li(['Written for You, every day','Kassandra, whenever you need her','Your birth chart and transits','Love, Career and Celtic Cross spreads','Compatibility in depth','Dream interpretation','Readings in Kassandra’s voice'])}</div></div>`,'ornate')}
+  <div class="prem-plans"><div class="plan best"><i>Best value</i><b>Yearly</b><strong>$49.99</strong><small>$4.17 a month</small><small>7 days free</small></div><div class="plan"><b>Monthly</b><strong>$9.99</strong><small>a month</small><small>cancel anytime</small></div></div>
+  <button class="btn" disabled>Premium opens soon</button><p class="muted small center">Until then, everything above is yours.</p></div></div>`,'st')}
  if(t!=='account')return nightSub(subPage(settingsPage(t)),'st');
  const s=sg(S.sign),acct=!C.enabled?'<p class="muted">Accounts are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
@@ -2170,8 +2240,8 @@ function settingsPage(t){
  const n=S.notif,st=S.settings;
  if(t==='notifications')return `<div class="stack"><h1>Notifications</h1><p class="note">Kosmia saves these choices now. Delivery is not switched on yet: it needs push messaging, which is coming in a later release. Nothing will be sent until then, and your browser will ask permission first.</p>${panel(`${[['n_on','Daily horoscope',n.on],['n_wh','Daily Whisper',n.whisper],['n_ev','Important celestial events',n.events],['n_mo','Monthly forecast reminder',n.monthly],['n_an','Yearly forecast reminder',n.annual]].map(([id,l,v])=>`<label class="row"><input type="checkbox" id="${id}" ${v?'checked':''} class="cb"> ${l}</label>`).join('')}<div class="field"><label for="n_time">Delivery time</label><input type="time" id="n_time" value="${n.time}"></div><label class="row"><input type="checkbox" id="n_q" ${n.quiet?'checked':''} class="cb"> Quiet hours</label><div class="row two"><div class="field"><label for="n_qf">From</label><input type="time" id="n_qf" value="${n.quietFrom}"></div><div class="field"><label for="n_qt">Until</label><input type="time" id="n_qt" value="${n.quietTo}"></div></div><p class="muted small">Times are in your time zone (${esc(TZ())}).</p>`)}</div>`;
  if(t==='privacy')return `<div class="stack"><h1>Privacy</h1>
-  ${panel(`<h3>What Kosmia keeps</h3><p>Your email, chosen sign and name; your Whispers, reflections, journal, readings, bookmarks and connections; and, only if you agree, your birth details. Everything is private to your account and protected so that only you can read it.</p><p class="muted small">AI features send only what they need: the tarot cards drawn, a forecast’s sign and period, or what you type to Kassandra.</p>`)}
-  ${panel(`<h3>Consent</h3><label class="row consent"><input type="checkbox" id="p_birth" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my account</span></label><label class="row consent"><input type="checkbox" id="p_kas" ${st.kPersonal?'checked':''} class="cb"> <span>Let Kassandra see my sign, chart placements and numbers when I talk with her</span></label>`)}
+  ${panel(`<h3>What Kosmia keeps</h3><p>Your email, chosen sign and name; your Whispers, reflections, journal, readings, bookmarks and connections; and, only if you agree, your birth details. Everything is private to your account and protected so that only you can read it.</p><p class="muted small">AI features send only what they need: the tarot cards drawn, a forecast’s sign and period, or what you type to Kassandra. While personalisation is on, a short summary of the themes you have been writing about, with a few lines in your own words, is sent each day to write your message and to help Kassandra know you. It is never shared or used for anything else.</p>`)}
+  ${panel(`<h3>Consent</h3><label class="row consent"><input type="checkbox" id="p_birth" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my account</span></label><label class="row consent"><input type="checkbox" id="p_pz" ${st.personal!==false?'checked':''} class="cb"> <span>Personalise my daily message, Whisper and Kassandra from what I write in my Journal, reflections, tarot questions and dreams</span></label><label class="row consent"><input type="checkbox" id="p_kas" ${st.kPersonal?'checked':''} class="cb"> <span>Let Kassandra see my sign, chart placements and numbers when I talk with her</span></label>`)}
   ${panel(`<h3>Your data</h3><button class="btn ghost" data-act="export">Download my data</button><button class="btn ghost" data-act="delbirth">Delete my birth details</button><div class="rule"></div><h3>Delete account</h3><p class="muted small">This permanently removes your account and everything in it. It cannot be undone.</p>${V.confirmDel?`<div class="field"><label for="delc">Type DELETE to confirm</label><input type="text" id="delc" autocomplete="off"></div><div class="row"><button class="btn danger" data-act="delacct">Delete my account</button><button class="btn ghost" data-act="canceldel">Cancel</button></div>`:`<button class="btn ghost danger-t" data-act="askdel" ${C.user?'':'disabled'}>Delete my account</button>${C.user?'':'<p class="muted small">Sign in to manage an account.</p>'}`}`)}</div>`;
  if(t==='display')return `<div class="stack"><h1>Display</h1>${panel(`<label class="row"><input type="checkbox" id="d_rm" ${st.reduce?'checked':''} class="cb"> Reduce motion (no card flips or sparkles)</label><label class="row"><input type="checkbox" id="d_lg" ${st.large?'checked':''} class="cb"> Larger text</label><p class="muted small">Kosmia also follows your device’s reduced-motion setting.</p>`)}${panel(`<h3>Time zone</h3><div class="field"><label for="d_tz">Days, weeks and events use</label><select id="d_tz"><option value="">This device (${esc(DEVICE_TZ)})</option>${(Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):[]).map(z=>`<option ${st.tz===z?'selected':''}>${z}</option>`).join('')}</select></div>`)}${panel(`<h3>Kassandra</h3><label class="row"><input type="checkbox" id="d_vo" ${st.voiceOut?'checked':''} class="cb"> Read Kassandra’s replies aloud</label>`)}</div>`;
  const acct=!C.enabled?'<h3>Local mode</h3><p class="muted">Accounts and sync are not configured for this build, so everything stays in this browser.</p>'
@@ -2190,13 +2260,14 @@ function render(){
  app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
- {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const f=pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/cover no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
-  nav.style.setProperty('--navbg',f&&f!=='none'?(pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
+ {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/cover no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/cover no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
+  nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
- if(authed)$('#navin').innerHTML=Kit.nav(MAIN.map(k=>({key:k,label:SECTIONS[k].label})),sec);
+ if(authed)$('#navin').innerHTML=Kit.nav(NAV,navCur());
+ if(authed)askDaily();
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
@@ -2330,6 +2401,7 @@ document.addEventListener('click',e=>{
  if(!t)return;
  if(t.dataset.go)return go(t.dataset.go,t.dataset.t||null);
  if(t.dataset.nav==='kassandra'&&V.sec!=='kassandra')return kasVeil(()=>go('kassandra'));
+ if(t.dataset.nav==='journal')return go('tarot','journal');
  if(t.dataset.nav)return go(t.dataset.nav);
  if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;return render()}
  if(t.dataset.calview){V.cal.view=t.dataset.calview;return render()}
@@ -2384,6 +2456,9 @@ document.addEventListener('click',e=>{
  if(a==='jfilter'){V.jfilter=t.dataset.k;return render()}
  if(a==='sheet'){V.sheet=t.dataset.k;return render()}
  if(a==='sheetclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.sheet=null;return render()}
+ // a reflection on the day written for the reader, its theme as the page's title
+ if(a==='pzmore'){V.pzOpen=true;return render()}
+ if(a==='jnew'){const j={id:uuid(),day:dkey(),kind:'reflection',title:myDay().focus,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='ne'){const k=t.dataset.k,today=dkey();V.sheet=null;
   if(k==='card'){if(!S.revealed[today]){toast('Reveal today’s Whisper first');return go('tarot','whisper')}return openEntry('fortune:'+today)}
   if(k==='reading'){if(!S.readings.length)return go('tarot','reading');V.sheet='reading';return render()}
@@ -2509,7 +2584,7 @@ document.addEventListener('change',e=>{
  if(V.sec!=='settings')return;
  const n=S.notif,st=S.settings;
  const map={n_on:()=>n.on=i.checked,n_wh:()=>n.whisper=i.checked,n_ev:()=>n.events=i.checked,n_mo:()=>n.monthly=i.checked,n_an:()=>n.annual=i.checked,n_time:()=>n.time=i.value,n_q:()=>n.quiet=i.checked,n_qf:()=>n.quietFrom=i.value,n_qt:()=>n.quietTo=i.value,
-  p_kas:()=>st.kPersonal=i.checked,d_rm:()=>st.reduce=i.checked,d_lg:()=>st.large=i.checked,d_vo:()=>st.voiceOut=i.checked,d_tz:()=>{st.tz=i.value;EVC.k='';chartCache.k=''},
+  p_kas:()=>st.kPersonal=i.checked,p_pz:()=>{st.personal=i.checked;pzCache.k=''},d_rm:()=>st.reduce=i.checked,d_lg:()=>st.large=i.checked,d_vo:()=>st.voiceOut=i.checked,d_tz:()=>{st.tz=i.value;EVC.k='';chartCache.k=''},
   p_birth:()=>{S.birthConsent=i.checked}};
  if(map[id]){map[id]();save();syncProfile();toast('Saved');if(/^d_/.test(id))render()}
 });
