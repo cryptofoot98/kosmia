@@ -3325,3 +3325,18 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 .tnight .hl-top::after{margin-top:6px!important}
 .tnight .hl-cards{padding-top:clamp(40px,16vw,80px)!important}
 .tnight .hl-top .hl-line{white-space:nowrap;font-size:clamp(.72rem,3.25vw,.86rem)!important}
+/* the framed night held by its top edge so its corner lily is always whole; the figure and the sign's words risen into
+   the night just beneath it */
+.hsp.hframe::before{background:#0A0F22 var(--fbg) 50% 0/100% auto no-repeat!important}
+.hframe .hsp-img{top:calc(var(--st) + 4cqw)!important}
+.hframe .hsp-c{left:26cqw!important;top:calc(var(--st) + 8cqw)!important;width:22cqw!important}
+.hframe .hsp-g{left:43cqw!important;top:calc(var(--st) + 12cqw)!important}
+.hframe .hsp-hero>.hsp-t{left:13cqw!important;top:calc(var(--st) + 27cqw)!important}
+.hframe>.hsp-hero{height:calc(var(--st) + 71cqw)!important}
+.hframe .hsp-hero>.hsp-t{left:10cqw!important;top:calc(var(--st) + 35cqw)!important}
+.hframe .hsp-soul{font-size:max(11.5px,3cqw)!important;margin-top:1.4cqw!important}
+.hframe>.hsp-hero{height:calc(var(--st) + 76cqw)!important}
+.hframe .hsp-hero>.hsp-t{top:calc(var(--st) + 40cqw)!important;width:34cqw!important}
+.hframe .hsp-soul{width:32cqw!important}
+.hframe>.hsp-hero{height:calc(var(--st) + 80cqw)!important}
+.hframe>.hsp-hero{height:calc(var(--st) + 84cqw)!important}
