@@ -3304,3 +3304,24 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 /* the period bar, the areas and the reading rise to meet the foot of the sign's figure */
 .hframe>.hsp-hero{min-height:0!important;height:calc(var(--st) + 82cqw)!important}
 .hframe .hsp-body{margin-top:-6cqw!important}
+/* Tarot under the night with the old card, the lilies and the roses (art/atlas/tarot-night2); its title centred in the
+   open sky beneath the star, larger, its lines beneath it */
+.land.tnight{--fbg:url(/art/atlas/tarot-night2.webp)}
+.tnight .hl-top{width:84%!important;margin:0 auto!important;padding-top:calc(env(safe-area-inset-top,0px) + 36vw)!important;text-align:center}
+@media (min-width:440px){.tnight .hl-top{padding-top:calc(env(safe-area-inset-top,0px) + 158px)!important}}
+.tnight .hl-top h1{font-size:clamp(2.6rem,13vw,3.4rem)!important;letter-spacing:.08em}
+.tnight .hl-top .hgreet{font-size:clamp(.9rem,4.2vw,1.05rem)!important;margin-top:10px!important}
+.tnight .hl-top .hl-line{font-size:clamp(.95rem,4.3vw,1.1rem)!important}
+/* the title in the middle of the open night, below the painted card, clear of it and of the lilies */
+.tnight .hl-top{padding-top:calc(env(safe-area-inset-top,0px) + 80vw)!important;width:76%!important}
+@media (min-width:440px){.tnight .hl-top{padding-top:calc(env(safe-area-inset-top,0px) + 350px)!important}}
+.tnight .hl-cards{padding-top:clamp(28px,12vw,60px)!important}
+/* the title in the open night between the painted card and the lilies, beneath the star */
+.tnight .hl-top{width:46%!important;padding-top:calc(env(safe-area-inset-top,0px) + 33vw)!important;transform:translateX(3%)}
+@media (min-width:440px){.tnight .hl-top{padding-top:calc(env(safe-area-inset-top,0px) + 145px)!important}}
+.tnight .hl-top h1{font-size:clamp(2rem,10.5vw,2.7rem)!important;letter-spacing:.06em}
+.tnight .hl-top .hgreet{font-size:clamp(.66rem,3vw,.8rem)!important;letter-spacing:.05em;margin-top:6px!important}
+.tnight .hl-top .hl-line{font-size:clamp(.78rem,3.5vw,.92rem)!important;margin-top:4px!important}
+.tnight .hl-top::after{margin-top:6px!important}
+.tnight .hl-cards{padding-top:clamp(40px,16vw,80px)!important}
+.tnight .hl-top .hl-line{white-space:nowrap;font-size:clamp(.72rem,3.25vw,.86rem)!important}
