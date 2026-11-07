@@ -926,7 +926,7 @@ function horoSign(){
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
  <div class="hsp-body">${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${k==='overview'&&ex===S.sign&&V.period==='daily'?pzCard('spz'):''}${reading(k)}${acts(k)}${HCATS[i+1]?`<button class="hnext" data-act="hcat" data-k="${HCATS[i+1][0]}">Next: ${CAT_INFO[HCATS[i+1][0]][0]}, ${pl[0].toLowerCase()} ${IC.chev}</button>`:''}</div>`).join('')}</div></div>
+ <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -2258,7 +2258,7 @@ function render(){
  app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
- {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/cover no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/cover no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
+ {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/max(100%,calc(100lvh * .563)) auto no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/max(100%,calc(100lvh * .563)) auto no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+',#0B0F1E':'none')}}
  jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}

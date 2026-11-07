@@ -3481,3 +3481,17 @@ html::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:
 .hbay .hh-stage{margin-top:1.5cqw!important}
 /* each section's title inside the inner arc too, where Today's wordmark sits */
 :is(.land.hnight,.land.dnight,.jnight)>.hl-top{padding-top:calc(env(safe-area-inset-top,0px) + 37.5cqw)!important}
+/* ---------- the night holds still: on a phone the screen grows as the address bar slides away, and a painting sized to
+   cover the screen grew with it; sized to the tallest the screen can be (100lvh) it never rescales ---------- */
+.home.hbay::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{background-size:max(100%,calc(100lvh * .563)) auto!important}
+/* ---------- the sign's page inside the frame's arch: the figure on the right, below the share and heart, her moon within
+   the arch's right margin; the constellation, name, dates and soul on the left, between the corner lily and the figure ---------- */
+.hsp.hframe>.hsp-hero{height:calc(var(--st) + 90cqw)!important;min-height:0!important}
+.hframe .hsp-img{left:auto!important;right:5cqw!important;top:calc(var(--st) + 19cqw)!important;width:98cqw!important;height:auto!important}
+.hframe .hsp-c{left:16cqw!important;top:calc(var(--st) + 27cqw)!important;width:21cqw!important}
+.hframe .hsp-g{left:36cqw!important;top:calc(var(--st) + 31cqw)!important;font-size:6.5cqw!important}
+.hframe .hsp-hero>.hsp-t{position:absolute!important;left:8cqw!important;right:auto!important;width:40cqw!important;top:calc(var(--st) + 44cqw)!important;margin:0!important;text-align:center!important}
+.hframe .hsp-t h1{font-size:min(8.4cqw,46cqw / var(--nl,6))!important}
+.hframe .hsp-star{margin:1.4cqw auto 0!important}
+.hframe .hsp-soul{position:relative!important;left:0!important;width:auto!important;margin:3cqw 0 0!important;text-align:center!important;font-size:max(12px,3.2cqw)!important;line-height:1.45!important}
+.home.hbay.hmoon.hsun::before{background-size:max(100%,calc(100lvh * .563)) auto!important}
