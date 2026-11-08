@@ -788,6 +788,7 @@ views.home=()=>{
   ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${wbtn}</div></div>`,'gilt hwhisper')}
   ${energyCarousel(energySlides(now,m,sign,h))}
+  ${readOthers()}
  `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
 
@@ -887,6 +888,11 @@ function playText(txt){
    the chosen area's reading; tapping an area, or swiping sideways, brings its reading in ----- */
 const PLABEL={daily:['Today','Today’s'],weekly:['This Week','This Week’s'],monthly:['This Month','This Month’s'],yearly:['This Year','This Year’s']};
 const periodSeg=()=>`<div role="group" aria-label="Time period">${seg(PERIODS.map(([k])=>[k,PLABEL[k][0]]),V.period,'period')}</div>`;
+// Read for Someone Else: every sign as a carousel to swipe, the reader's own marked
+const readOthers=()=>`<section class="hl-sec rfse">${Kit.divider('Read for Someone Else')}
+ <p class="hso">A partner, a friend, a child: open the sky they were born beneath.</p>
+ <div class="signs12 sg-car">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
+ </section>`;
 views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
@@ -896,20 +902,17 @@ views.horoscope=()=>{
  // the night over the bay holds still behind the whole page; the title in its sky, then three framed cards apart
  return `<div class="land hland hnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Your Sky</h1><p class="hl-motto">${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}</p></header>
  <div class="hl-cards">
+ <section class="hl-sec hl-horo">${Kit.divider('Horoscope')}
  <div class="hmine hl-card">
   <div class="hm-top">${glyphMed(sign.id)}<div><h2>${sign.name}</h2><p class="hm-d">${sign.dates}</p><p class="lr-m">${keys(SIGN_KEYS[sign.id])}</p></div></div>
   ${periodSeg()}
   ${V.period==='daily'?`<p class="hm-q">“${esc((String(myDay().body).match(/^[^.!?]*[.!?]/)||[''])[0])}”</p>`:first?`<p class="hm-q">“${esc(first)}”</p>`:''}
   <button class="btn hm-go${read?' on':''}" data-act="tohoroscope">${read?'✦ Read again':`Read your ${pw}`}</button>
  </div>
- <section class="hl-sec">${Kit.divider(`${sign.name} · ${pl[0]}, by area of life`)}
- <div class="tiles6">${HCATS.map(([k])=>{const x=horoscope(S.sign,k,V.period);return `<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||CAT_INFO[k][1])}</span></button>`}).join('')}</div>
  </section>
+ ${readOthers()}
  <section class="hl-sec hl-disc">${discoverLib()}</section>
- <section class="hl-sec">${Kit.divider('Read for Someone Else')}
- <p class="hso">A partner, a friend, a child: open the sky they were born beneath.</p>
- <div class="signs12 sg-car">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
- </section></div></div>`;
+</div></div>`;
 };
 function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);markRead({k:'horo',sign:ex,cat,period:V.period,from:{sec:'horoscope',t:'sign'}});
@@ -932,6 +935,7 @@ function horoSign(){
  <div class="hsp-body">${periodSeg()}
  <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
  <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
+ ${readOthers()}
  </div></div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's

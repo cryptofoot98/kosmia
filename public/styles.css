@@ -3634,3 +3634,17 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .hl-disc .dft.round .dft-art{box-shadow:0 0 0 1px rgba(233,201,133,.8),0 0 14px rgba(233,201,133,.25)}
 .hl-disc .dft.night{min-height:26cqw}.hl-disc .dft.night .dft-art{opacity:.9}
 .hl-disc .dprof strong{color:#F6E3B0}.hl-disc .dprof span span{color:rgba(241,226,188,.82)}.hl-disc .dprof svg{color:#E9C985}
+/* Stars: the Horoscope heading over the sign's card, in the carved titles of the shelves below it */
+.hl-horo>.k-div{margin:0 0 12px}
+/* Written in You's doors framed like the areas of life once were: a fine gold line, a finer inner rule, dark glass */
+.hl-disc .dft.round{border:1px solid rgba(233,201,133,.7)!important;border-radius:6px;background:linear-gradient(rgba(10,14,32,.7),rgba(10,14,32,.58))!important;
+ box-shadow:inset 0 0 0 3px rgba(10,14,32,.3),inset 0 0 0 4px rgba(233,201,133,.28),0 6px 16px rgba(0,0,0,.4)!important;padding:12px 6px 10px!important}
+.hland .hso{text-shadow:0 1px 6px #000,0 0 14px rgba(0,0,0,.9),0 0 3px #000}
+/* Read for Someone Else wherever it appears (Stars, Today, a sign's page), on the night */
+.rfse{margin-top:18px}
+.rfse>.k-div{margin:0 0 12px}
+.rfse .hso{margin:-4px 0 14px;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:.92rem;color:rgba(241,226,188,.85);text-shadow:0 1px 6px #000,0 0 14px rgba(0,0,0,.9),0 0 3px #000}
+.rfse .sgn{color:#F1E2BC!important;font-family:var(--font-serif)}
+.rfse .sgn.me span{color:#F6DA97!important}
+/* the sign's page: the areas of life in their own colours again */
+.hc-i img,.hc-i .acc-i{filter:drop-shadow(0 0 4px rgba(233,201,133,.25))!important}
