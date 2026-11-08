@@ -561,6 +561,8 @@ function setPhoto(file){
 const ROMAN=n=>[[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']].reduce((s,[v,r])=>{while(n>=v){s+=r;n-=v}return s},'');
 const wNum=c=>{const i=(globalThis.KOSMIA_WHISPERS||[]).findIndex(w=>w[0]===c.id);return i<0?'':ROMAN(i+1)};
 // the forecast on Home's card: whole sentences, as many as fit the card (about 150 letters), always at least one
+// a horoscope's summary for a card: its opening sentences, up to about two lines' worth
+const hSum=t=>(t.match(/[^.!?]+[.!?]+/g)||[t]).reduce((o,x)=>!o||(o+x).trim().length<=190?(o+x):o,'').trim();
 const hShort=t=>(t.match(/[^.!?]+[.!?]+/g)||[t]).reduce((o,x)=>!o||(o+x).trim().length<=150?(o+x):o,'').trim();
 // Today's Cosmic Energy as a carousel: the Moon, the next event in the sky, a planet turning retrograde, the season's sign
 // and the day's energy for the reader's sign, each in the same floating panel and each opening its own page
@@ -762,7 +764,7 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
 views.home=()=>{
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
- const nm=firstName(),my=myDay(),short=!my.ai&&my.short||hShort(my.body),fig='atlas/fg-'+sign.id;
+ const nm=firstName(),short=hSum(horoscope(sign.id,'overview','daily').body),fig='atlas/fg-'+sign.id;
  const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
  const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
  const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`;
@@ -2483,7 +2485,7 @@ document.addEventListener('click',e=>{
  if(a==='sheet'){V.sheet=t.dataset.k;return render()}
  if(a==='sheetclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.sheet=null;return render()}
  // a reflection on the day written for the reader, its theme as the page's title
- if(a==='pzmore'){V.pzOpen=true;return render()}
+ if(a==='pzmore'){V.pzOpen=true;const c=t.closest('.pz');if(c){c.classList.remove('fold');t.remove();return}return render()}
  if(a==='jnew'){const j={id:uuid(),day:dkey(),kind:'reflection',title:myDay().focus,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='ne'){const k=t.dataset.k,today=dkey();V.sheet=null;
   if(k==='card'){if(!S.revealed[today]){toast('Reveal today’s Whisper first');return go('tarot','whisper')}return openEntry('fortune:'+today)}

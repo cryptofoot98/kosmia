@@ -3572,3 +3572,7 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 /* the lilies at the figure's lower left fade into the night where they meet the corner of Written for You (whose top
    crosses the figure at 78.8% of its height), so the corner is soft rather than square */
 .hbay .hh-fig{-webkit-mask-image:radial-gradient(ellipse 34% 30% at 0 78.8%,transparent 25%,#000 100%);mask-image:radial-gradient(ellipse 34% 30% at 0 78.8%,transparent 25%,#000 100%)}
+/* Written for You: the Moon in a gold setting, so even a new Moon reads clearly */
+.pz-moon{gap:10px!important}
+.pz-moon .pz-mi{width:34px!important;height:34px!important;border-radius:50%;border:1.5px solid #E9C985;background:radial-gradient(circle,rgba(233,201,133,.28),rgba(10,14,32,.9) 70%);
+ box-shadow:0 0 12px rgba(246,210,140,.45);filter:brightness(1.35) contrast(1.05)}

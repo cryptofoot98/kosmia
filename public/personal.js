@@ -135,24 +135,31 @@ function skyForYou(K,now,sunSign,chart,exact){
 }
 
 /* ---------- the day's personal message ---------- */
-const OPEN={tender:['Be gentle with yourself today','Today asks for softness, not speed','There is more strength in you than you feel right now'],
- bright:['Something in you is opening','You are carrying a lovely light at the moment','Your spirit is lifting, and it shows'],
- steady:['Today is quietly on your side','The sky holds something meaningful for you today','A calm, clear current runs through your day']};
+const OPEN={tender:['Be gentle with yourself today','Today asks for softness, not speed','There is more strength in you than you feel right now','Your soul is doing quiet, important work','Even on a tender day, you are growing','You are allowed to move slowly and still move forward','The part of you that feels everything is also the part that heals'],
+ bright:['Something in you is opening','You are carrying a lovely light at the moment','Your spirit is lifting, and it shows','There is a brightness in you that others can feel','You are stepping into more of yourself','Your soul is wide awake today','Life is meeting you halfway'],
+ steady:['Today is quietly on your side','The sky holds something meaningful for you today','A calm, clear current runs through your day','Your soul knows the way, even when the mind wonders','Today is a fresh page, and the pen is in your hand','Something good is gathering around you','You are exactly where your growth can begin']};
+// the better self: one line each day on who the reader is becoming
+const GROW=['Every day you are allowed to become a little more of who you are meant to be.','The best version of you is not far away; it is built from small, faithful choices like the ones in front of you today.','Growth rarely announces itself, but it is happening in you now.','You do not have to become someone else, only more fully yourself.','Each kind choice you make for yourself today is a promise kept to the person you are becoming.','What you practise today, you become: let it be patience, courage and care.','Your soul is not asking you to be perfect, only to keep unfolding.','You have already come through every hard day so far; today you get to grow through this one.','Let today be one honest step closer to the life that feels like yours.','The light you are looking for is already practising in you.'];
+const GROWQ=['What would your best self do with this day?','Which small habit would the future you thank you for?','Where can you choose growth over comfort today?','What are you ready to outgrow?','What would it look like to be proud of yourself tonight?','Which part of you is asking to be trusted?'];
+const HONOUR=['Beneath it lies {g}, and that deserves to be honoured.','Beneath it lies {g}: treat it as a compass, not a burden.','Within it is {g}, and it is leading you somewhere good.','Look closely and you will find {g} at its heart.'];
 const ELEMENT_TONE={fire:'lends you warmth and courage',earth:'steadies you and rewards patience',air:'brings clarity and a lighter step',water:'deepens your intuition and softens your heart'};
 function message(o){
  // o: {K, now, today, name, sign (index), chart, portrait, uid}
  const P=o.portrait,seed=(o.uid||'')+o.today,sky=skyForYou(o.K,o.now,o.sign,o.chart,o.exact),nm=o.name?o.name+', ':'';
- const th=P.themes[0],T=th&&THEMES[th.k],T2=P.themes[1]&&THEMES[P.themes[1].k];
+ // a different one of the reader's themes leads each day, so the message is never yesterday's again
+ const dn=Math.floor(Date.parse(o.today+'T12:00:00Z')/DAY),lead=P.themes.length?dn%P.themes.length:0;
+ const th=P.themes[lead],T=th&&THEMES[th.k],o2=P.themes.find((x,i)=>i!==lead),T2=o2&&THEMES[o2.k];
  const lines=[];let mine='';
  const op=pick(OPEN[P.mood],seed+'o');lines.push(nm?`${nm}${op[0].toLowerCase()+op.slice(1)}.`:op+'.');
  lines.push(`The Moon moves through ${SIGN_NAMES[sky.moonSign]}, lighting ${sky.area}, and ${ELEMENT_TONE[ELEMENT(sky.moonSign)]}.`);
  if(sky.touch)lines.push(`${sky.touch.t==='Moon'?'Its path':sky.touch.t==='Sun'?'The Sun':sky.touch.t} ${ASPECT_WORD[sky.touch.a]} ${NATAL_ROLE[sky.touch.n]}, bringing ${ASPECT_GIFT[sky.touch.a]} ${th?T.short:'what matters most to you'}.`);
  if(T){
   mine=`${cap(when(th.since,o.today))} ${VIA[th.from.kind]||'you wrote about'} ${T.name}.`;
-  lines.push(`${cap(when(th.since,o.today))} ${VIA[th.from.kind]||'you wrote about'} ${T.name}${T2?`, and about ${T2.short}`:''}. Beneath it lies ${T.gift}, and that deserves to be honoured.`);
+  lines.push(`${cap(when(th.since,o.today))} ${VIA[th.from.kind]||'you wrote about'} ${T.name}${T2?`, and about ${T2.short}`:''}. ${pick(HONOUR,seed+'h').replace('{g}',T.gift)}`);
   lines.push(P.care?'Most of all, please reach out today to someone you trust, or to a local support line: you do not have to carry this alone, and you deserve to be held.':`One kind step for today: ${pick(T.step,seed+'s')}.`);
  }else lines.push('Your story with Kosmia is only beginning. As you write and reflect, these words will grow more and more your own.');
- const question=T?T.q:pick(['What would make today feel meaningful?','What are you ready to welcome in?','Where can you be a little braver today?'],seed+'q');
+ if(!P.care)lines.push(pick(GROW,seed+'g'));
+ const question=T&&hash(seed+'qq')%2?T.q:pick(GROWQ.concat(['What would make today feel meaningful?','What are you ready to welcome in?','Where can you be a little braver today?']),seed+'q');
  const focus=T?T.title:'A Fresh Page';
  return {body:lines.join(' '),short:mine?lines[0]+' '+mine:'',question,focus,sky,theme:th&&th.k};
 }
@@ -160,12 +167,17 @@ const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
 
 /* ---------- the Whisper, spoken to this reader ---------- */
 function whisper(card,words,o){
- const P=o.portrait,th=P.themes[0],T=th&&THEMES[th.k],seed=(o.uid||'')+o.today+'w',w=(words||[]).map(x=>x.toLowerCase());
- if(!T)return `${o.name?o.name+', this':'This'} card arrives as an invitation. Hold its message lightly through the day and notice where ${w[0]||'it'} appears.`;
+ const P=o.portrait,th=P.themes[0],T=th&&THEMES[th.k],seed=(o.uid||'')+o.today+'w',w=(words||[]).map(x=>x.toLowerCase()),nm=o.name?o.name+', ':'';
+ if(!T)return pick([
+  `${nm}${card.title} did not find you by chance. Carry it unspoken through the day and watch where ${w[0]||'its light'} appears: that is the door.`,
+  `${nm}the veil is thin today. ${card.title} has crossed it for you alone; listen for ${w[0]||'its voice'} in the quiet moments.`,
+  `${nm}some cards are drawn, others are sent. ${card.title} was sent, and ${w[0]||'its gift'} is already on its way to you.`
+ ],seed);
  return pick([
-  `${o.name?o.name+', ':''}${card.title} arrives as you think about ${T.name}. It brings ${w[0]||'its gift'} and ${w[1]||'grace'}: let them guide how you meet it today.`,
-  `With ${T.short} on your mind, ${card.title} is no accident. Its ${w[0]||'message'} is meant for exactly where you stand.`,
-  `${card.title} speaks to ${T.name}. Trust that ${w[1]||'its wisdom'} is already within you, and let today show you a little of it.`
+  `${nm}${card.title} rose from the deck as you turn towards ${T.short}. It carries ${w[0]||'its gift'} and ${w[1]||'grace'}: what you seek is already moving towards you.`,
+  `The cards remember what you carry. With ${T.short} on your mind, ${card.title} comes as a key, and ${w[0]||'its message'} is the lock it was made for.`,
+  `${nm}${card.title} speaks in an old tongue about ${T.name}. Its ${w[1]||'wisdom'} has been sleeping in you; today it wakes.`,
+  `Something unseen is turning in your favour. ${card.title} is its sign: where ${T.short} is concerned, trust ${w[0]||'the quiet knowing'} over every doubt.`
  ],seed);
 }
 
