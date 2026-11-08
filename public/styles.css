@@ -3495,3 +3495,23 @@ html::before{content:'';position:fixed;z-index:-1;top:0;bottom:0;left:50%;width:
 .hframe .hsp-star{margin:1.4cqw auto 0!important}
 .hframe .hsp-soul{position:relative!important;left:0!important;width:auto!important;margin:3cqw 0 0!important;text-align:center!important;font-size:max(12px,3.2cqw)!important;line-height:1.45!important}
 .home.hbay.hmoon.hsun::before{background-size:max(100%,calc(100lvh * .563)) auto!important}
+/* ---------- the whole night, never cropped: the painting (941 x 1671) drawn at the width of the screen, or of its height
+   on a wide one, so its gold borders, lilies and dawn all show; centred in the tallest view of the screen (100lvh) and
+   measured in px from the top, so it never moves, zooms or changes shape as the content scrolls or the address bar
+   slides away. --iw is the painting's width, --ig the night above it. On tablets and computers the app's column takes
+   the painting's own proportions. ---------- */
+:root{--pw:min(100vw,var(--appw));--iw:min(var(--pw),calc(100vh * .5631));--ig:max(0px,calc((100vh - var(--iw) * 1.7758) / 2))}
+@supports (height:1lvh){:root{--iw:min(var(--pw),calc(100lvh * .5631));--ig:max(0px,calc((100lvh - var(--iw) * 1.7758) / 2))}}
+@media (min-width:700px){:root{--appw:min(640px,100vw,max(420px,56.3vh))}}
+@media (min-width:700px) and (min-height:1000px){:root{--appw:min(680px,100vw,56.3vh)}}
+.home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{background-color:#030D1A!important;background-size:var(--iw) auto!important;background-position:50% var(--ig)!important}
+/* the painting draws its own gold borders, so the page's ruled sides stand down */
+body:has(#app>:is(.land.hnight,.land.tnight,.land.dnight,.jnight)) #app::after{display:none}
+/* each title inside the painting's inner arc, wherever the painting sits */
+.hbay .hh-head{padding-top:calc(var(--ig) + var(--iw) * .316)!important}
+.hmoon .brand{padding-top:0!important}
+:is(.land.hnight,.land.dnight,.jnight)>.hl-top{padding-top:calc(var(--ig) + var(--iw) * .308)!important}
+/* on a tablet or computer the pages measure themselves against the app's column, not the whole window, and the menu
+   sits under the column */
+.land,.jnight,.sub{container-type:inline-size}
+body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 10px))!important;margin-right:max(10px,calc(50% - var(--appw) / 2 + 10px))!important}
