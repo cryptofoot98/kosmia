@@ -3658,7 +3658,8 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
    The main screens' night (art/atlas/night-lily, 944 x 1888): the owner's own painting (the star and the Moon's
    phases, the Milky Way, the full Moon rising from the clouds, the lilies, and the gold-framed menu bar at its foot),
    its sky continued upwards so it fills a phone screen. Held still; it is shown at its full width, never cut at the
-   sides: its head (rows 0-330) and foot (rows 1150-1888) keep their true shape and only the open sky between gives.
+   sides: its head (rows 0-330, night-lily-top) and foot (rows 1150-1888, night-lily-bot) keep their true shape and only
+   the open sky between them (night-lily-mid) gives. Three plain backgrounds, which every phone draws.
    The content rises from behind the menu bar, between the lilies (night-lily-front, in front) and the Moon.
    ========================================================================================================== */
 :root{--nt:calc(var(--pw) * 330 / 944);--nb:calc(var(--pw) * 738 / 944);--nl:calc(var(--pw) * 738 / 944);
@@ -3667,8 +3668,9 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 @media (min-width:700px) and (min-height:1000px){:root{--appw:min(680px,100vw,50vh)}}
 .home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{
  background:#05070F!important;top:0!important;bottom:0!important;height:auto!important;box-sizing:border-box!important;
- border-style:solid!important;border-color:transparent!important;border-width:var(--nt) 0 var(--nb) 0!important;
- border-image:url(/art/atlas/night-lily.webp) 330 0 738 0 fill / 1 / 0 stretch!important;-webkit-mask-image:none!important;mask-image:none!important}
+ border:0!important;border-image:none!important;-webkit-mask-image:none!important;mask-image:none!important;
+ background:url(/art/atlas/night-lily-top.webp) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-bot.webp) 50% 100%/100% var(--nb) no-repeat,
+  url(/art/atlas/night-lily-mid.webp) 50% calc(var(--nt) - 1px)/100% calc(100% - var(--nt) - var(--nb) + 2px) no-repeat,#05070F!important}
 /* the lower lilies pass in front of the cards; the cards melt into the night above the menu's frame */
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav::before{top:auto!important;bottom:0!important;height:var(--nl)!important;
  background:url(/art/atlas/night-lily-front.webp) 50% 100%/100% auto no-repeat!important;clip-path:none!important;-webkit-clip-path:none!important;z-index:-1}
