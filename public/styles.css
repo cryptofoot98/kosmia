@@ -3691,3 +3691,7 @@ body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #n
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button::before{width:calc(var(--pw) * .1)!important;height:calc(var(--pw) * .1)!important;margin:0 auto!important;background-position:50% 50%!important;flex:none}
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button span{display:block;width:100%;text-align:center;white-space:nowrap;position:relative}
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button[aria-current=page] span::after{position:absolute;left:0;right:0;top:100%;margin-top:1px}
+/* Tarot's Today's Whisper and the Journal's Tonight's Reflection sit beneath their titles as Stars' Horoscope does:
+   the same open sky between the title's last line and the section's heading */
+.land.tnight>.hl-cards{padding-top:calc(var(--pw) * .077)!important}
+.jnight>.hl-cards{padding-top:0!important}
