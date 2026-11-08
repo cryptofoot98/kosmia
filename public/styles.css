@@ -3569,3 +3569,6 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .hbay .hh-rit .rit.on i{opacity:1;filter:drop-shadow(0 0 7px rgba(255,214,140,.95)) brightness(1.2)}
 /* Your Profile's title sits beside the crescent on one line, so it fits by the whole of its words */
 #app .pf-hero h1.cz{font-size:min(calc(var(--pw) * .105),calc(var(--pw) * .62 / (var(--lw,6) * .8)))!important}
+/* the lilies at the figure's lower left fade into the night where they meet the corner of Written for You (whose top
+   crosses the figure at 78.8% of its height), so the corner is soft rather than square */
+.hbay .hh-fig{-webkit-mask-image:radial-gradient(ellipse 34% 30% at 0 78.8%,transparent 25%,#000 100%);mask-image:radial-gradient(ellipse 34% 30% at 0 78.8%,transparent 25%,#000 100%)}
