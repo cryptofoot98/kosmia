@@ -3608,3 +3608,5 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .wpc-acts .ibtn{border:1px solid rgba(233,201,133,.7)!important;background:rgba(8,12,28,.6)!important;color:#F1DFB4!important;opacity:1!important}
 .wpc-acts .ibtn.on{color:#F6DA97!important;box-shadow:0 0 12px rgba(246,210,140,.45)}
 .wpc-acts .ibtn svg{width:20px;height:20px}
+/* the horoscope's and the Whisper's cards without the old inner rule, exactly as Written for You */
+#app .hbay :is(.hh-card,.card.hwhisper){box-shadow:0 10px 26px rgba(0,0,0,.45)!important}
