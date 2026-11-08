@@ -3655,22 +3655,23 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
    ornaments outside the circle, so they are not enlarged past it) */
 .hsp .hc-cats .hc-i .acc-i,.hsp .hc-cats.stuck .hc-i .acc-i{width:100%!important;height:100%!important;border-radius:50%;object-fit:cover}
 /* ==========================================================================================================
-   The main screens' night (art/atlas/night-moon, 944 x 1888, painted for Kosmia): the star and the Moon's phases at
-   its head, the Milky Way, the full Moon rising from the clouds, and at its foot the lilies curling around a gold frame
-   made for the menu. It always fills the screen at its full width, never cut at the sides: its head (rows 0-300) and
-   its foot (rows 1000-1888) keep their true shape, and only the open sky between them gives a little.
+   The main screens' night (art/atlas/night-lily, 944 x 1888): the owner's own painting (the star and the Moon's
+   phases, the Milky Way, the full Moon rising from the clouds, the lilies, and the gold-framed menu bar at its foot),
+   its sky continued upwards so it fills a phone screen. Held still; it is shown at its full width, never cut at the
+   sides: its head (rows 0-330) and foot (rows 1150-1888) keep their true shape and only the open sky between gives.
+   The content rises from behind the menu bar, between the lilies (night-lily-front, in front) and the Moon.
    ========================================================================================================== */
-:root{--nt:calc(var(--pw) * 300 / 944);--nb:calc(var(--pw) * 888 / 944);--nl:calc(var(--pw) * 808 / 944);
- --nm-h:calc(var(--pw) * 185 / 944);--nm-b:calc(var(--pw) * 145 / 944);--nm-x:calc(var(--pw) * 35 / 944);--nband:calc(var(--pw) * 418 / 944)}
+:root{--nt:calc(var(--pw) * 330 / 944);--nb:calc(var(--pw) * 738 / 944);--nl:calc(var(--pw) * 738 / 944);
+ --nm-h:calc(var(--pw) * 152 / 944);--nm-b:calc(var(--pw) * 95 / 944);--nm-x:calc(var(--pw) * 28 / 944);--nband:calc(var(--pw) * 257 / 944)}
 @media (min-width:700px){:root{--appw:min(640px,100vw,max(420px,50vh))}}
 @media (min-width:700px) and (min-height:1000px){:root{--appw:min(680px,100vw,50vh)}}
 .home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{
  background:#05070F!important;top:0!important;bottom:0!important;height:auto!important;box-sizing:border-box!important;
  border-style:solid!important;border-color:transparent!important;border-width:var(--nt) 0 var(--nb) 0!important;
- border-image:url(/art/atlas/night-moon.webp) 300 0 888 0 fill / 1 / 0 stretch!important;-webkit-mask-image:none!important;mask-image:none!important}
+ border-image:url(/art/atlas/night-lily.webp) 330 0 738 0 fill / 1 / 0 stretch!important;-webkit-mask-image:none!important;mask-image:none!important}
 /* the lower lilies pass in front of the cards; the cards melt into the night above the menu's frame */
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav::before{top:auto!important;bottom:0!important;height:var(--nl)!important;
- background:url(/art/atlas/night-moon-lilies.webp) 50% 100%/100% auto no-repeat!important;clip-path:none!important;-webkit-clip-path:none!important;z-index:-1}
+ background:url(/art/atlas/night-lily-front.webp) 50% 100%/100% auto no-repeat!important;clip-path:none!important;-webkit-clip-path:none!important;z-index:-1}
 /* the menu as it is, set inside the painting's own gold frame (which becomes its border) */
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in{height:var(--nm-h)!important;margin:0 calc(50% - var(--pw) / 2 + var(--nm-x)) var(--nm-b)!important;
  padding:0 6px!important;border:0!important;border-radius:calc(var(--nm-h) / 2)!important;background:none!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
@@ -3685,6 +3686,6 @@ body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #a
    labels clear the frame equally on both sides, and the whole group centred in the frame's height */
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in{padding:0 calc(var(--pw) * .035)!important;display:flex!important;align-items:stretch!important}
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button{flex:1 1 0!important;min-width:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:calc(var(--pw) * .008)!important;letter-spacing:.01em!important}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button::before{width:calc(var(--pw) * .112)!important;height:calc(var(--pw) * .112)!important;margin:0 auto!important;background-position:50% 50%!important;flex:none}
+body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button::before{width:calc(var(--pw) * .1)!important;height:calc(var(--pw) * .1)!important;margin:0 auto!important;background-position:50% 50%!important;flex:none}
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button span{display:block;width:100%;text-align:center;white-space:nowrap;position:relative}
 body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button[aria-current=page] span::after{position:absolute;left:0;right:0;top:100%;margin-top:1px}
