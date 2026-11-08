@@ -3648,3 +3648,6 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .rfse .sgn.me span{color:#F6DA97!important}
 /* the sign's page: the areas of life in their own colours again */
 .hc-i img,.hc-i .acc-i{filter:drop-shadow(0 0 4px rgba(233,201,133,.25))!important}
+/* Read for Someone Else: every medallion a true circle of one size, never squeezed by a narrower page */
+.rfse .sgn{min-width:0}
+.rfse .sgn-i{width:min(66px,100%)!important;height:auto!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:50%!important;flex:none}
