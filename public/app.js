@@ -753,12 +753,14 @@ function sharePop(){const s=V.share,can=navigator.canShare&&navigator.canShare({
  <p class="cp-k">Share your insight</p><img class="sh-img" src="${s.url}" alt="Your card, ready to share">
  <div class="sh-acts">${can?`<button class="btn" data-act="sharego">${IC.share} Share</button>`:''}<a class="btn${can?' ghost':''}" href="${s.url}" download="${s.file.name}">Save image</a></div></div></div>`}
 function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t:'whisper'}});
- return `<div class="cpop" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
+ const saved=S.saved.some(x=>x.date===k);
+ return `<div class="cpop wpc" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="cp-in wpc-in">
+ <button class="cp-x" data-act="wpopclose" aria-label="Close">×</button>
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
  <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
- <div class="cp-icons"><button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button>${k===dkey()?`<button class="ibtn${S.saved.some(x=>x.date===k)?' on':''}" data-act="savecard" aria-pressed="${S.saved.some(x=>x.date===k)}" aria-label="Save to your journal">${IC.heart}</button>`:''}</div>
- <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
- <button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Reflect in Your Journal'}</button></div></div></div>`}
+ <p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
+ <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Reflecting':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div>
+ </div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
@@ -768,11 +770,11 @@ views.home=()=>{
  const nm=firstName(),short=hSum(horoscope(sign.id,'overview','daily').body),fig='atlas/fg-'+sign.id;
  const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
  const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
- const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`;
+ const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="wpop">Read All</button>`;
  return `<div class="home hbay hmoon hsun"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <div class="hh-acts hh-fix">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div></div>
-  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1>${ritual}</header>
+  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${ritual}</header>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`
   <div class="hh-stage s-${sign.id}">
    <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
@@ -832,7 +834,7 @@ function askDaily(){
 function pzCard(cls=''){
  const d=myDay(),k=dkey(),m=K.moon(new Date()),fold=cls==='hpz'&&!V.pzOpen;
  return `<section class="pz atl${cls?' '+cls:''}${fold?' fold':''}" aria-label="Written for you today"><p class="pz-k">${Kit.icon('star')}<span>Written for You</span>${Kit.icon('star')}</p>
- <p class="pz-d">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p><h2 class="pz-t">${esc(d.focus)}</h2>
+ <h2 class="pz-t">${esc(d.focus)}</h2>
  <p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
  <p class="pz-b">${esc(d.body)}</p>${fold?'<button class="pz-more" data-act="pzmore">Read all of it</button>':''}<p class="pz-q">“${esc(d.question)}”</p>
  <div class="pz-acts"><button class="btn" data-act="jnew" data-k="pz">${IC.quill}Reflect</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div>

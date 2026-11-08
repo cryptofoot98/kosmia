@@ -3582,3 +3582,29 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 #app .hbay .card.hwhisper::before,#app .hbay .card.hwhisper::after{display:none!important}
 /* Written for You's words set square on both sides */
 .pz-b{text-align:justify!important;-webkit-hyphens:none;hyphens:none}
+/* ---------- Today, one frame for all three cards: the horoscope's summary in the frame of Written for You ---------- */
+#app .hbay .hh-card{border:6px solid transparent!important;border-image:var(--atl)!important;border-radius:0!important;
+ background:radial-gradient(120% 70% at 50% 0,rgba(233,201,133,.11),transparent 60%),linear-gradient(180deg,rgba(7,10,26,.93),rgba(6,8,22,.9))!important;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+#app .hbay .hh-card::before,#app .hbay .hh-card::after{display:none!important}
+/* the motto right beneath the wordmark; the day's date beneath the greeting */
+.hmoon .brand small{margin-top:.2cqw!important}
+.hh-date{margin:1cqw 0 0;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:max(14px,3.9cqw);color:rgba(241,226,188,.8);text-shadow:0 1px 6px #000}
+/* the Whisper opened: one floating framed card, the card itself, its meaning, and Reflect, keep and share inside it */
+.wpc{display:flex;align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 18px) 4% calc(var(--navh,0px) + 18px)}
+.wpc>.cp-x{display:none}
+.wpc .wpc-in{position:relative;width:100%;max-width:calc(var(--appw) * .92);margin:0 auto;padding:22px 20px 20px!important;gap:10px;
+ border:6px solid transparent;border-image:var(--atl);background:radial-gradient(120% 50% at 50% 0,rgba(233,201,133,.14),transparent 60%),linear-gradient(180deg,rgba(7,10,26,.97),rgba(6,8,22,.96));
+ box-shadow:0 20px 60px rgba(0,0,0,.7);animation:cpRise .45s cubic-bezier(.2,.8,.2,1)}
+.wpc .wpc-in>.cp-x{position:absolute;top:8px;right:8px;z-index:2;width:36px;height:36px}
+.wpc .cp-t{margin:0;font-size:min(8.4cqw,2rem)}
+.wpc .cp-card{width:min(58%,230px);animation:none}
+.wpc .cp-keys,.wpc .cp-msg,.wpc .cp-ref{margin:0}
+.wpc-acts{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:6px}
+.wpc-acts .btn{flex:1;min-height:44px}
+.wpc-acts .ibtn{flex:none;width:44px;height:44px}
+.wpc .cp-you{color:#F4E8CC!important;background:rgba(233,201,133,.08)!important;border:1px solid rgba(233,201,133,.45)!important}
+.wpc .cp-you span{color:#E9C985!important}
+.wpc .cp-keys{color:#E9C985}.wpc .cp-msg{color:#F4E8CC}.wpc .cp-ref{color:#F6E3B0}
+.wpc-acts .ibtn{border:1px solid rgba(233,201,133,.7)!important;background:rgba(8,12,28,.6)!important;color:#F1DFB4!important;opacity:1!important}
+.wpc-acts .ibtn.on{color:#F6DA97!important;box-shadow:0 0 12px rgba(246,210,140,.45)}
+.wpc-acts .ibtn svg{width:20px;height:20px}
