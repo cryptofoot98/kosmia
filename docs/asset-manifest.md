@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 535 |
-| In use, provisional | 491 |
+| Images | 547 |
+| In use, provisional | 503 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -36,6 +36,7 @@ their space before they load.
 | `public/art/atlas/home-moon.webp` | 941×1671 | 0.56:1 | no | 266 | provisional |  |
 | `public/art/atlas/home-night.webp` | 720×1619 | 0.44:1 | no | 235 | provisional |  |
 | `public/art/atlas/home-night2.webp` | 850×1850 | 0.46:1 | no | 376 | provisional |  |
+| `public/art/atlas/home-sun-today.webp` | 941×1671 | 0.56:1 | no | 285 | provisional |  |
 | `public/art/atlas/hsp-garland-l.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
 | `public/art/atlas/hsp-garland-r.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
 | `public/art/atlas/hsp-lily.webp` | 520×1600 | 0.33:1 | yes | 239 | provisional |  |
@@ -69,7 +70,17 @@ their space before they load.
 | `public/art/atlas/obm-star.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/obm-sun.webp` | 192×192 | 1:1 | no | 11 | provisional |  |
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
+| `public/art/atlas/pl-jupiter.webp` | 400×400 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/pl-mars.webp` | 400×400 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/pl-mercury.webp` | 400×400 | 1:1 | yes | 16 | provisional |  |
+| `public/art/atlas/pl-neptune.webp` | 400×400 | 1:1 | yes | 18 | provisional |  |
+| `public/art/atlas/pl-pluto.webp` | 400×400 | 1:1 | yes | 15 | provisional |  |
+| `public/art/atlas/pl-saturn.webp` | 400×400 | 1:1 | yes | 46 | provisional |  |
+| `public/art/atlas/pl-sun.webp` | 400×400 | 1:1 | yes | 36 | provisional |  |
+| `public/art/atlas/pl-uranus.webp` | 400×400 | 1:1 | yes | 18 | provisional |  |
+| `public/art/atlas/pl-venus.webp` | 400×400 | 1:1 | yes | 20 | provisional |  |
 | `public/art/atlas/reading-night.webp` | 850×1850 | 0.46:1 | no | 239 | provisional |  |
+| `public/art/atlas/rit-star.webp` | 120×120 | 1:1 | yes | 10 | provisional |  |
 | `public/art/atlas/sign-frame.webp` | 849×1851 | 0.46:1 | no | 170 | provisional |  |
 | `public/art/atlas/sign-mid.webp` | 849×1580 | 0.54:1 | no | 190 | provisional |  |
 | `public/art/atlas/sign-night.webp` | 850×1850 | 0.46:1 | no | 218 | provisional |  |
@@ -271,18 +282,18 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/fg-aquarius.webp` | 1024×1024 | 1:1 | yes | 226 | provisional |  |
-| `public/art/atlas/fg-aries.webp` | 1024×1024 | 1:1 | yes | 234 | provisional |  |
-| `public/art/atlas/fg-cancer.webp` | 1024×1024 | 1:1 | yes | 211 | provisional |  |
-| `public/art/atlas/fg-capricorn.webp` | 1024×1024 | 1:1 | yes | 195 | provisional |  |
-| `public/art/atlas/fg-gemini.webp` | 1024×1024 | 1:1 | yes | 208 | provisional |  |
-| `public/art/atlas/fg-leo.webp` | 1024×1024 | 1:1 | yes | 245 | provisional |  |
-| `public/art/atlas/fg-libra.webp` | 1024×1024 | 1:1 | yes | 234 | provisional |  |
-| `public/art/atlas/fg-pisces.webp` | 1024×1024 | 1:1 | yes | 230 | provisional |  |
-| `public/art/atlas/fg-sagittarius.webp` | 1024×1024 | 1:1 | yes | 215 | provisional |  |
-| `public/art/atlas/fg-scorpio.webp` | 1024×1024 | 1:1 | yes | 184 | provisional |  |
-| `public/art/atlas/fg-taurus.webp` | 1024×1024 | 1:1 | yes | 229 | provisional |  |
-| `public/art/atlas/fg-virgo.webp` | 1024×1024 | 1:1 | yes | 224 | provisional |  |
+| `public/art/atlas/fg-aquarius.webp` | 1024×1024 | 1:1 | yes | 228 | provisional |  |
+| `public/art/atlas/fg-aries.webp` | 1024×1024 | 1:1 | yes | 240 | provisional |  |
+| `public/art/atlas/fg-cancer.webp` | 1024×1024 | 1:1 | yes | 217 | provisional |  |
+| `public/art/atlas/fg-capricorn.webp` | 1024×1024 | 1:1 | yes | 199 | provisional |  |
+| `public/art/atlas/fg-gemini.webp` | 1024×1024 | 1:1 | yes | 213 | provisional |  |
+| `public/art/atlas/fg-leo.webp` | 1024×1024 | 1:1 | yes | 249 | provisional |  |
+| `public/art/atlas/fg-libra.webp` | 1024×1024 | 1:1 | yes | 239 | provisional |  |
+| `public/art/atlas/fg-pisces.webp` | 1024×1024 | 1:1 | yes | 235 | provisional |  |
+| `public/art/atlas/fg-sagittarius.webp` | 1024×1024 | 1:1 | yes | 220 | provisional |  |
+| `public/art/atlas/fg-scorpio.webp` | 1024×1024 | 1:1 | yes | 187 | provisional |  |
+| `public/art/atlas/fg-taurus.webp` | 1024×1024 | 1:1 | yes | 234 | provisional |  |
+| `public/art/atlas/fg-virgo.webp` | 1024×1024 | 1:1 | yes | 230 | provisional |  |
 
 ## Discover feature hero, framed
 
@@ -649,6 +660,7 @@ their space before they load.
 | `public/art/atlas/nvm-discover.webp` | 160×160 | 1:1 | yes | 8 | provisional |  |
 | `public/art/atlas/nvm-home.webp` | 160×160 | 1:1 | yes | 16 | provisional |  |
 | `public/art/atlas/nvm-horoscope.webp` | 160×160 | 1:1 | yes | 15 | provisional |  |
+| `public/art/atlas/nvm-journal.webp` | 160×160 | 1:1 | yes | 12 | provisional |  |
 | `public/art/atlas/nvm-kassandra.webp` | 160×160 | 1:1 | yes | 10 | provisional |  |
 | `public/art/atlas/nvm-tarot.webp` | 160×160 | 1:1 | yes | 6 | provisional |  |
 

@@ -3571,11 +3571,14 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 #app .pf-hero h1.cz{font-size:min(calc(var(--pw) * .105),calc(var(--pw) * .62 / (var(--lw,6) * .8)))!important}
 /* the lilies at the figure's lower left fade into the night where they meet the corner of Written for You (whose top
    crosses the figure at 78.8% of its height), so the corner is soft rather than square */
-.hbay .hh-fig{-webkit-mask-image:radial-gradient(ellipse 34% 30% at 0 78.8%,transparent 25%,#000 100%);mask-image:radial-gradient(ellipse 34% 30% at 0 78.8%,transparent 25%,#000 100%)}
+.hbay .hh-fig{-webkit-mask-image:radial-gradient(ellipse 15% 13% at 0 78.8%,transparent 0,#000 100%);mask-image:radial-gradient(ellipse 15% 13% at 0 78.8%,transparent 0,#000 100%)}
 /* Written for You: the Moon in a gold setting, so even a new Moon reads clearly */
 .pz-moon{gap:10px!important}
 .pz-moon .pz-mi{width:34px!important;height:34px!important;border-radius:50%;border:1.5px solid #E9C985;background:radial-gradient(circle,rgba(233,201,133,.28),rgba(10,14,32,.9) 70%);
  box-shadow:0 0 12px rgba(246,210,140,.45);filter:brightness(1.35) contrast(1.05)}
-/* the sign's figure shown whole, ending in her own hem and lilies as on Your Profile, not cut by a straight line: the
-   head of Today is tall enough to hold the figure's foot (which reaches 19.5cqw below the card) */
-.hbay .hhero{padding-bottom:21cqw!important}
+/* Today's Daily Whisper in the same frame as Written for You, on the same night glass */
+#app .hbay .card.hwhisper{border:6px solid transparent!important;border-image:var(--atl)!important;border-radius:0!important;
+ background:radial-gradient(120% 70% at 50% 0,rgba(233,201,133,.11),transparent 60%),linear-gradient(180deg,rgba(7,10,26,.93),rgba(6,8,22,.9))!important;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+#app .hbay .card.hwhisper::before,#app .hbay .card.hwhisper::after{display:none!important}
+/* Written for You's words set square on both sides */
+.pz-b{text-align:justify!important;-webkit-hyphens:none;hyphens:none}

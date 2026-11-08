@@ -569,11 +569,12 @@ const hShort=t=>(t.match(/[^.!?]+[.!?]+/g)||[t]).reduce((o,x)=>!o||(o+x).trim().
 function energySlides(now,m,sign,h){
  const sl=[[moonPic(m,'en-moon'),`${m.name}<br>in ${sIdx(m.sign).name}`,MOON_LINE[m.name]||'','data-go="discover" data-t="moon"']];
  const ev=upcoming().find(e=>['eclipse','meteor','conjunction','season','planet'].includes(e.type)&&e.date>now);
- if(ev)sl.push([evArt(ev,true).replace('ev-r','en-moon'),esc(ev.name),`${ymdLong(dkey(ev.date),{day:'numeric',month:'long'})} · ${esc(evKeys(ev))}`,'data-go="discover" data-t="events"']);
+ const pn=ev&&(ev.name.match(/Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto/)||[])[0];
+ if(ev)sl.push([pn?ui('pl-'+pn.toLowerCase(),'en-moon'):ev.type==='season'?ui('pl-sun','en-moon'):evArt(ev,true).replace('ev-r','en-moon'),esc(ev.name),`${ymdLong(dkey(ev.date),{day:'numeric',month:'long'})} · ${esc(evKeys(ev))}`,'data-go="discover" data-t="events"']);
  const rx=K.retrogrades(now,new Date(+now+120*DAY)).find(w=>w.start&&w.start<=now&&(!w.end||w.end>=now))||K.retrogrades(now,new Date(+now+120*DAY)).find(w=>w.start&&w.start>now);
- if(rx){const on=rx.start<=now;sl.push([ui('ev-planet','en-moon'),`${rx.planet} ${on?'retrograde':'turns retrograde'}`,on?`Until ${rx.end?ymdLong(dkey(rx.end),{day:'numeric',month:'long'}):'next year'}: a time to review ${PM[rx.planet]}.`:`From ${ymdLong(dkey(rx.start),{day:'numeric',month:'long'})}: a time to review ${PM[rx.planet]}.`,'data-go="discover" data-t="planets"'])}
+ if(rx){const on=rx.start<=now;sl.push([ui('pl-'+rx.planet.toLowerCase(),'en-moon'),`${rx.planet} ${on?'retrograde':'turns retrograde'}`,on?`Until ${rx.end?ymdLong(dkey(rx.end),{day:'numeric',month:'long'}):'next year'}: a time to review ${PM[rx.planet]}.`:`From ${ymdLong(dkey(rx.start),{day:'numeric',month:'long'})}: a time to review ${PM[rx.planet]}.`,'data-go="discover" data-t="planets"'])}
  const sun=sIdx(K.signIdx(K.positions(now)[0].lon));
- sl.push([ui('ev-sun','en-moon'),`The Sun<br>in ${sun.name}`,`${sun.name} season colours everyone’s days: ${SIGN_KEYS[sun.id].join(', ').toLowerCase()}.`,`data-act="tohoroscope"`]);
+ sl.push([ui('pl-sun','en-moon'),`The Sun<br>in ${sun.name}`,`${sun.name} season colours everyone’s days: ${SIGN_KEYS[sun.id].join(', ').toLowerCase()}.`,`data-act="tohoroscope"`]);
  sl.push([ui('m-'+sign.id,'en-moon'),`${sign.name}’s energy today`,esc(h.focus||''),`data-act="tohoroscope"`]);
  return sl;
 }
@@ -778,9 +779,9 @@ views.home=()=>{
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
   </div>`})}
  ${scenic(`
+  ${pzCard('hpz')}
   ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${wbtn}</div></div>`,'gilt hwhisper')}
-  ${pzCard('hpz')}
   ${energyCarousel(energySlides(now,m,sign,h))}
  `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
