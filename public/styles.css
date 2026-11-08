@@ -3523,8 +3523,7 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 @supports (height:1lvh){:root{--bw:max(var(--pw),calc(100lvh * .518));--bh:max(100lvh,calc(var(--pw) * 1.644))}}
 :root{--bl1:max(3px,calc(var(--bw) * .0128 - var(--bc)));--bl2:max(6px,calc(var(--bw) * .0196 - var(--bc)))}
 .home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{
- background:linear-gradient(90deg,transparent var(--bl1),rgba(200,170,128,.8) var(--bl1) calc(var(--bl1) + 1px),transparent calc(var(--bl1) + 1px) var(--bl2),#EBCB92 var(--bl2) calc(var(--bl2) + 1.5px),transparent calc(var(--bl2) + 1.5px) calc(100% - var(--bl2) - 1.5px),#EBCB92 calc(100% - var(--bl2) - 1.5px) calc(100% - var(--bl2)),transparent calc(100% - var(--bl2)) calc(100% - var(--bl1) - 1px),rgba(200,170,128,.8) calc(100% - var(--bl1) - 1px) calc(100% - var(--bl1)),transparent calc(100% - var(--bl1))) 0 calc(var(--bh) * .13)/100% calc(var(--bh) * .51) no-repeat,
-  #030D1A url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat!important}
+ background:#030D1A url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat!important}
 .hbay .hh-head{padding-top:calc(var(--bh) * .178)!important}
 :is(.land.hnight,.land.dnight,.jnight)>.hl-top{padding-top:calc(var(--bh) * .1734)!important}
 /* the sign's figure inside the frame, clear of its gold borders */
@@ -3534,3 +3533,29 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .hbay .hh-figbox{left:calc(var(--bl2) + 1.5px - var(--hpad,0px) - var(--fl,0) * var(--fw))!important}
 .hbay .s-libra{--fl:.034}.hbay .s-gemini{--fl:.013}
 .hbay .s-sagittarius .hh-figbox{--fw:55cqw;--fb:-14cqw}
+/* the sign's figure larger, crossing a little onto the horoscope card */
+.hbay .hh-figbox{--fw:71cqw;--fb:-19.5cqw}
+.hbay :is(.s-sagittarius,.s-taurus,.s-pisces) .hh-figbox{--fw:66cqw;--fb:-18cqw}
+/* ---------- one look for every card and every section: the cards in the frame of "Written for You", a little darker so
+   the words read easily; the sections between the carved titles of Stars' "by area of life" ---------- */
+.hl-card,.hh-card,.kz-card,.card.gilt,.card.ornate,.hnight .card,.jnight .card,.drm .card,.hread,.pz,.sub .card,.tw,.hmine,.cp-box,.mnp .mbox,.pf-card{
+ border:6px solid transparent!important;border-image:var(--atl)!important;border-radius:0!important;
+ background:radial-gradient(120% 70% at 50% 0,rgba(233,201,133,.11),transparent 60%),linear-gradient(180deg,rgba(7,10,26,.93),rgba(6,8,22,.9))!important}
+.mnp .mbox::before,.mnp .mb-c,.pf-card::before{display:none!important}
+.mnp .mbox{box-shadow:0 10px 26px rgba(0,0,0,.45)}
+#app .k-div{color:#E9C985}
+#app .k-div span{color:#F1D79A;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.8)}
+.msec{margin:6px 0 -2px;padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.7),rgba(8,12,28,.35) 70%,transparent)}
+#app .bare{border:0!important;border-image:none!important;background:none!important;box-shadow:none!important;padding:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+#app .bare::before,#app .bare::after{display:none!important}
+#app .bare>.list{gap:10px}
+/* the rows of a list, each its own small tile, a little darker too */
+#app .lrow,#app .ev{background:linear-gradient(180deg,rgba(7,10,26,.92),rgba(6,8,22,.88))!important;border:1px solid rgba(233,201,133,.55)!important;color:#F1E2BC}
+/* every section title the same: carved small capitals between fine gold rules (Discover's shelves and Today's energy
+   once wore stars instead) */
+.dshelf h2,.orn-s{display:flex!important;align-items:center;gap:10px;font-family:var(--font-display)!important;font-size:.8rem!important;font-weight:400!important;letter-spacing:.16em!important;text-transform:uppercase;color:#F1D79A!important}
+.dshelf h2::before,.dshelf h2::after,.orn-s::before,.orn-s::after{content:''!important;flex:1;height:1px;margin:0!important;background:linear-gradient(90deg,transparent,#E9C985 30%,#E9C985 70%,transparent)}
+.orn-s svg{display:none}
+.orn-s{width:100%}
+#app .bare{gap:10px}
+#app .bare>.asp{margin:0;padding:12px 14px;border:1px solid rgba(233,201,133,.55)!important;background:linear-gradient(180deg,rgba(7,10,26,.92),rgba(6,8,22,.88));color:#F1E2BC}

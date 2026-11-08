@@ -1507,6 +1507,32 @@ const nightPage=(h,cls)=>gild(h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1
 // a page under the old beige title bar (hdr), set as a night page the same way: the bar's title, line and buttons move into the sky
 const nightSub=(h,cls)=>gild(h.replace(/^\s*<div class="sub([^"]*)">\s*<header class="phd"><div class="ph-l">([\s\S]*?)<\/div><div class="ph-t"><h1>([\s\S]*?)<\/h1>(?:<p class="ph-sub">([\s\S]*?)<\/p>)?<\/div><div class="ph-r">([\s\S]*?)<\/div><\/header>/,
  (_,c,l,t,sub,r)=>`<div class="mnp ${cls}${c}">${mnHead(t,r,!!l)}${sub?`<p class="mn-sub">${sub}</p>`:''}`));
+// one look for every section across the app: a box's opening title (h3) rises out of it as the divider between
+// sections, the same carved title between fine rules as Stars' "by area of life"; a box that holds several labelled
+// parts becomes a tile for each, every one under its own divider
+function tileUp(){
+ const sep=t=>{const d=document.createElement('div');d.className='k-div msec';d.setAttribute('role','separator');const s=document.createElement('span');s.textContent=t;d.append(s);return d};
+ document.querySelectorAll('#app .mnp .mbox:not([data-t])').forEach(b=>{
+  b.dataset.t=1;
+  const own=()=>[...b.children].filter(e=>!e.matches('.mb-c'));
+  const h=own()[0];
+  if(h&&h.tagName==='H3'&&!h.children.length){b.before(sep(h.textContent.trim()));h.remove();const r=own()[0];if(r&&r.matches('.mrule'))r.remove()}
+  if(!own().some(e=>e.matches('.label')))return;
+  const pre=[],parts=[];let cur=null;
+  for(const e of own()){if(e.matches('.label')){cur={t:e.textContent.trim(),els:[]};parts.push(cur);e.remove()}else(cur?cur.els:pre).push(e)}
+  const trim=a=>{while(a.length&&a[a.length-1].matches('.mrule'))a.pop().remove();while(a.length&&a[0].matches('.mrule'))a.shift().remove();return a};
+  trim(pre);parts.forEach(x=>trim(x.els));
+  // a picture alone before the first part travels with that part
+  if(pre.length&&pre.every(e=>!e.textContent.trim())){parts[0].els.unshift(...pre.splice(0))}
+  let at=b;
+  if(!pre.length){const x=parts.shift();b.before(sep(x.t));b.append(...x.els)}
+  for(const x of parts){const t=document.createElement('section');t.className='mbox tile';t.dataset.t=1;t.append(...x.els);const d=sep(x.t);at.after(d);d.after(t);at=t}
+ });
+ // a card that opens with its own ornamented title gives it up to the divider above it
+ document.querySelectorAll('#app section.card>.orn:first-child').forEach(o=>{const h=o.querySelector('h2');if(!h||o.children.length>1)return;o.parentElement.before(sep(h.textContent.trim()));o.remove()});
+ // a box that only holds a list of rows stands aside, so the rows themselves are the tiles
+ document.querySelectorAll('#app :is(.mnp .mbox,.hl-card,section.card)').forEach(b=>{const own=[...b.children].filter(e=>!e.matches('.mb-c'));b.classList.toggle('bare',own.length===1&&own[0].matches('.list')||own.length>1&&own.every(e=>e.matches('.asp')))});
+}
 function moonView(now){
  const m=K.moon(now),ing=K.moonIngress(now),ph=K.lunarPhases(now,ahead3()),nn=ph.find(e=>e.k==='new_moon'),nf=ph.find(e=>e.k==='full_moon');
  const next=(l,e)=>`<div><div class="label">${l}</div><p>${e?evt(e.date)+'<br><span class="muted">in '+sIdx(e.sign).name+'</span>':''}</p></div>`;
@@ -2260,7 +2286,7 @@ function render(){
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+(one||pg.matches('.home.hbay')?',#030D1A':',#0B0F1E'):'none')}}
- jxRender();enCar();hcar();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();hcar();tileUp();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
