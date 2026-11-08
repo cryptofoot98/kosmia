@@ -3576,3 +3576,6 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .pz-moon{gap:10px!important}
 .pz-moon .pz-mi{width:34px!important;height:34px!important;border-radius:50%;border:1.5px solid #E9C985;background:radial-gradient(circle,rgba(233,201,133,.28),rgba(10,14,32,.9) 70%);
  box-shadow:0 0 12px rgba(246,210,140,.45);filter:brightness(1.35) contrast(1.05)}
+/* the sign's figure shown whole, ending in her own hem and lilies as on Your Profile, not cut by a straight line: the
+   head of Today is tall enough to hold the figure's foot (which reaches 19.5cqw below the card) */
+.hbay .hhero{padding-bottom:21cqw!important}

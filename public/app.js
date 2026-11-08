@@ -778,12 +778,10 @@ views.home=()=>{
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
   </div>`})}
  ${scenic(`
-  ${pzCard('hpz')}
-  ${energyCarousel(energySlides(now,m,sign,h))}
   ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${wbtn}</div></div>`,'gilt hwhisper')}
-
- ${forYou()}
+  ${pzCard('hpz')}
+  ${energyCarousel(energySlides(now,m,sign,h))}
  `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
 };
 
