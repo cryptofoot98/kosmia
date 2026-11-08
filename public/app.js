@@ -1528,6 +1528,8 @@ function tileUp(){
   if(!pre.length){const x=parts.shift();b.before(sep(x.t));b.append(...x.els)}
   for(const x of parts){const t=document.createElement('section');t.className='mbox tile';t.dataset.t=1;t.append(...x.els);const d=sep(x.t);at.after(d);d.after(t);at=t}
  });
+ // every page's title at one size (the Tarot page's), smaller only where its longest word would not fit the width
+ document.querySelectorAll('#app :is(.hl-top h1.cz,.mn-hd h1,.pf-hero h1.cz,.hh-word)').forEach(e=>e.style.setProperty('--lw',e.matches('.pf-hero h1')?e.innerText.trim().length:Math.max(...e.innerText.trim().split(/\s+/).map(x=>x.length))));
  // a card that opens with its own ornamented title gives it up to the divider above it
  document.querySelectorAll('#app section.card>.orn:first-child').forEach(o=>{const h=o.querySelector('h2');if(!h||o.children.length>1)return;o.parentElement.before(sep(h.textContent.trim()));o.remove()});
  // a box that only holds a list of rows stands aside, so the rows themselves are the tiles
@@ -2284,7 +2286,7 @@ function render(){
  app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
- {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
+ {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun-today':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+(one||pg.matches('.home.hbay')?',#030D1A':',#0B0F1E'):'none')}}
  jxRender();enCar();hcar();tileUp();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}

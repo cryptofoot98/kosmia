@@ -3530,7 +3530,7 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .hbay .hh-figbox{--fw:62cqw;--fb:-17cqw;left:var(--fx2,5cqw)!important}
 /* the figure's lilies grow straight out of the frame's inner gold line: its painted edge set exactly against the line
    (--fl, where a figure's paint begins inside its square) */
-.hbay .hh-figbox{left:calc(var(--bl2) + 1.5px - var(--hpad,0px) - var(--fl,0) * var(--fw))!important}
+.hbay .hh-figbox{left:calc(max(0px,var(--bw) * .0244 - var(--bc)) - var(--hpad,0px) - (var(--fl,0) + .01) * var(--fw))!important}
 .hbay .s-libra{--fl:.034}.hbay .s-gemini{--fl:.013}
 .hbay .s-sagittarius .hh-figbox{--fw:55cqw;--fb:-14cqw}
 /* the sign's figure larger, crossing a little onto the horoscope card */
@@ -3559,3 +3559,13 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .orn-s{width:100%}
 #app .bare{gap:10px}
 #app .bare>.asp{margin:0;padding:12px 14px;border:1px solid rgba(233,201,133,.55)!important;background:linear-gradient(180deg,rgba(7,10,26,.92),rgba(6,8,22,.88));color:#F1E2BC}
+/* ---------- every page's title the size of Tarot's (10.5cqw, .06em apart); a longer word steps down only as far as it
+   must to fit the screen (--lw, its longest word's letters) ---------- */
+#app :is(.hl-top h1.cz,.mn-hd h1,.pf-hero h1.cz,.hh-word){font-size:min(calc(var(--pw) * .105),calc(var(--pw) * .86 / (var(--lw,6) * .84)))!important;letter-spacing:.06em!important}
+/* Today's sky without its sparkling stars: they have come down to be the day's three steps */
+.home.hbay::before,.home.hbay.hmoon.hsun::before{background-image:url(/art/atlas/home-sun-today.webp)!important}
+.hbay .hh-rit .rit i{width:max(36px,9.5cqw)!important;height:max(36px,9.5cqw)!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+ background:url(/art/atlas/rit-star.webp) center/contain no-repeat!important;color:transparent!important;font-size:0!important;opacity:.5;filter:saturate(.35) brightness(.8);transition:opacity .4s,filter .4s}
+.hbay .hh-rit .rit.on i{opacity:1;filter:drop-shadow(0 0 7px rgba(255,214,140,.95)) brightness(1.2)}
+/* Your Profile's title sits beside the crescent on one line, so it fits by the whole of its words */
+#app .pf-hero h1.cz{font-size:min(calc(var(--pw) * .105),calc(var(--pw) * .62 / (var(--lw,6) * .8)))!important}
