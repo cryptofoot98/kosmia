@@ -197,6 +197,7 @@ const PARENT={'tarot/entry':'tarot/journal',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
+ if(sec==='discover')return ['horoscope','overview'];
  if(sec==='settings')return t==='account'?['home','today']:['settings','account'];
  return [sec,SECTIONS[sec].tabs[0][0]];
 }
@@ -229,6 +230,7 @@ function applyLocation(){
  if(path+search!==location.pathname+location.search)history.replaceState(history.state,'',path+search);
  const [,sec='home',t='']=path.split('/'),q=Object.fromEntries(new URLSearchParams(search));
  if(!SECTIONS[sec]||sec==='home'){V.sec='home';V.tab.home='today';return}
+ if(sec==='discover'&&(!t||t==='home')){history.replaceState(history.state,'','/horoscope');V.sec='horoscope';V.tab.horoscope='overview';return}
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
  if(sec==='tarot'&&q.k)V.jkey=q.k;
@@ -249,6 +251,7 @@ history.scrollRestoration='manual';
 // a fresh Card Reading: back to the choice of spread, with no question, cards or interpretation
 function newReading(){const T=V.tarot;T.stage='setup';T.q='';T.picks=[];T.drawn=null;T.ai='';T.aiState='';T.savedId=null;V.tpop=null}
 function go(sec,t,opt={}){
+ if(sec==='discover'&&(!t||t==='home')){sec='horoscope';t=null}
  stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.insPop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
@@ -891,7 +894,7 @@ views.horoscope=()=>{
  const ov=horoscope(S.sign,'overview',V.period),first=(String(ov.body||'').match(/^[^.!?]*[.!?]/)||[''])[0].trim();
  const read=V.period==='daily'&&S.readDay===dkey();
  // the night over the bay holds still behind the whole page; the title in its sky, then three framed cards apart
- return `<div class="land hland hnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Horoscope</h1><p class="hgreet">${nm?esc(nm)+', your sky':'Your sky'}</p><p class="hl-line">${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}</p></header>
+ return `<div class="land hland hnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Your Sky</h1><p class="hl-motto">${V.period==='daily'?'What the stars have written for you today':`What the stars have written for your ${pw}`}</p></header>
  <div class="hl-cards">
  <div class="hmine hl-card">
   <div class="hm-top">${glyphMed(sign.id)}<div><h2>${sign.name}</h2><p class="hm-d">${sign.dates}</p><p class="lr-m">${keys(SIGN_KEYS[sign.id])}</p></div></div>
@@ -902,11 +905,10 @@ views.horoscope=()=>{
  <section class="hl-sec">${Kit.divider(`${sign.name} · ${pl[0]}, by area of life`)}
  <div class="tiles6">${HCATS.map(([k])=>{const x=horoscope(S.sign,k,V.period);return `<button class="tile" data-act="tohoroscope" data-cat="${k}">${catIco(k,'tile-i')}<strong>${CAT_INFO[k][0]}</strong><span>${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||CAT_INFO[k][1])}</span></button>`}).join('')}</div>
  </section>
- <section class="hl-sec">${Kit.divider('Written in You')}<div class="sky4">${[['ex-chart','Birth Chart','birth-chart'],['hero-affinity','Compatibility','affinity'],['ex-lifepath','Life Path','life-path'],['ev-full','Cosmic Calendar','calendar']].map(([i,l,t])=>`<button class="sk4" data-go="discover" data-t="${t}"><span class="sk4-a">${ui(i,'sk4-i')}</span><span>${l}</span></button>`).join('')}</div>
- <button class="link sky-more" data-go="discover">All of your sky ${IC.chev}</button></section>
- <section class="hl-sec hl-card">${Kit.divider('Read for Someone Else')}
+ <section class="hl-sec hl-disc">${discoverLib()}</section>
+ <section class="hl-sec">${Kit.divider('Read for Someone Else')}
  <p class="hso">A partner, a friend, a child: open the sky they were born beneath.</p>
- <div class="signs12">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
+ <div class="signs12 sg-car">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
  </section></div></div>`;
 };
 function horoSign(){
@@ -1570,23 +1572,14 @@ function eventsView(){
    Cosmic Connections, The Language of Numbers, the Celestial Calendar and the Mystical Library ----- */
 // the pages kept from the six-section release open under their own header
 const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="sub">${hdr(t)}`);
-views.discover=()=>{
- const t=tab();
- const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>nightPage(synastryView(),'sy'),'life-path':()=>nightSub(lifePathView(),'lp'),'name-within':()=>nightSub(nameView(),'nm'),cycles:()=>nightPage(cyclesView(),'cy'),
-  calendar:()=>nightSub(calendarView(),'cc'),moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:eventsView,dreams:dreamsView,'new-dream':()=>nightSub(newDreamView(),'nd'),dream:()=>nightSub(dreamView(),'dm'),'dream-journal':()=>nightSub(dreamJournalView(),'dj'),library:()=>nightSub(libraryView(),'lb')};
- if(map[t]&&GROUPS[t])return groupTabs(t,(!A&&['synastry','calendar','moon','planets','events'].includes(t))?`<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`:map[t]());
- if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
- V.chartOpen=false;
- // the lake under the crescent Moon with the zodiac wheel in its water holds still behind the page, its lilies and roses
- // rising at the foot; the title in its sky, then three shelves of night glass, each door telling the reader what it
- // already knows of them
+// Discover's shelves (the sky you were born beneath, two souls, the sky above, the night's dreams), shown on Stars
+function discoverLib(){
  const nm=firstName(),shelf=(t,sub)=>`<div class="dshelf"><h2>${t}</h2><p>${sub}</p></div>`;
  const bd=hasBirthDate()?S.birth.date:'',yr=Number(dkey().slice(0,4));
  let chSub='Your cosmic blueprint';try{if(bd&&S.fullName&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(q=>q.n===n);return x?sIdx(x.sign).name:''};chSub=[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon'].filter(Boolean).join(' · ')||chSub}}catch(e){}
  let lpSub='Your soul’s journey',cySub='Your personal year, month and day';try{if(bd&&N){const l=N.lifePath(bd).r.n;lpSub=`Your number ${l} · ${N.MEANING[l][0]}`;cySub=`Your Personal Year ${N.personalYear(bd,yr).r.n}`}}catch(e){}
  const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
- return `<div class="land dland dnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Discover</h1><p class="hgreet">${nm?esc(nm)+', the sky':'The sky'} has more to tell you</p></header>
- <div class="dlib">
+ return `<div class="dlib">
   ${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Cosmic Profile</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
   ${shelf('Written in You',`${nm?esc(nm)+', the':'The'} sky you were born beneath`)}
   ${ft('ex-chart','Birth Chart',esc(chSub),'birth-chart','round')}${ft('ex-lifepath','Life Path',esc(lpSub),'life-path','round')}
@@ -1597,7 +1590,21 @@ views.discover=()=>{
   ${ft('banner-calendar','Cosmic Calendar','The Moon, the planets and every event','calendar','night wide')}${ft('banner-library','Astrology Library','Signs, planets, houses and tarot','library','night wide')}
   ${shelf('What the Night Brings','The dreams you carry back with you')}
   ${ft('hero-dream','Dream Interpretation','Symbols, meanings and your Dream Journal','dreams','night wide')}
- </div></div>`;
+ </div>`;
+}
+views.discover=()=>{
+ const t=tab();
+ const map={'birth-chart':chartView,profile:()=>nightPage(profileView(),'cp'),affinity:affinityView,resonance:resonanceView,synastry:()=>nightPage(synastryView(),'sy'),'life-path':()=>nightSub(lifePathView(),'lp'),'name-within':()=>nightSub(nameView(),'nm'),cycles:()=>nightPage(cyclesView(),'cy'),
+  calendar:()=>nightSub(calendarView(),'cc'),moon:()=>moonView(new Date()),planets:()=>planetsView(new Date()),events:eventsView,dreams:dreamsView,'new-dream':()=>nightSub(newDreamView(),'nd'),dream:()=>nightSub(dreamView(),'dm'),'dream-journal':()=>nightSub(dreamJournalView(),'dj'),library:()=>nightSub(libraryView(),'lb')};
+ if(map[t]&&GROUPS[t])return groupTabs(t,(!A&&['synastry','calendar','moon','planets','events'].includes(t))?`<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`:map[t]());
+ if(map[t]){if(!A&&['birth-chart','synastry','calendar','moon','planets','events'].includes(t))return `<div class="sub">${hdr(tabLabel('discover',t))}${needLib()}</div>`;return map[t]()}
+ V.chartOpen=false;
+ // the lake under the crescent Moon with the zodiac wheel in its water holds still behind the page, its lilies and roses
+ // rising at the foot; the title in its sky, then three shelves of night glass, each door telling the reader what it
+ // already knows of them
+ const nm=firstName();
+ return `<div class="land dland dnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Discover</h1><p class="hgreet">${nm?esc(nm)+', the sky':'The sky'} has more to tell you</p></header>
+ ${discoverLib()}</div>`
 };
 const GROUP_COMPAT=[['affinity','Signs'],['resonance','Names'],['synastry','Birth Charts']],GROUP_SKY=[['calendar','Calendar'],['moon','Moon'],['planets','Planets'],['events','Events']];
 const GROUPS={};GROUP_COMPAT.forEach(([k])=>GROUPS[k]=GROUP_COMPAT);GROUP_SKY.forEach(([k])=>GROUPS[k]=GROUP_SKY);

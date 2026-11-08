@@ -3610,3 +3610,27 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .wpc-acts .ibtn svg{width:20px;height:20px}
 /* the horoscope's and the Whisper's cards without the old inner rule, exactly as Written for You */
 #app .hbay :is(.hh-card,.card.hwhisper){box-shadow:0 10px 26px rgba(0,0,0,.45)!important}
+/* ---------- Stars ---------- */
+/* Your Sky, and beneath it the motto in the lettering of Today's "The universe speaks" */
+.hland .hl-motto{margin:.4cqw 0 0;font-family:var(--font-serif);font-weight:700;font-size:max(9.5px,2.55cqw);letter-spacing:.08em;text-transform:uppercase;color:#F6E3B0;
+ -webkit-text-stroke:.35px #F6E3B0;paint-order:stroke fill;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.8)}
+/* the reader's sign card in the lettering of Today's horoscope card */
+.hmine h2{font-family:var(--font-display)!important;font-weight:600!important;font-size:max(20px,6.2cqw)!important;letter-spacing:.06em!important;text-transform:uppercase;color:#F6E3B0!important;line-height:1.05!important}
+.hmine .hm-d{font-family:var(--font-text)!important;font-style:normal!important;font-size:max(13px,3.6cqw)!important;color:#F1E2BC!important}
+.hmine .lr-m{font-family:var(--font-serif)!important;font-style:normal!important;font-weight:600!important;font-size:max(9.5px,2.6cqw)!important;letter-spacing:.05em!important;text-transform:uppercase;color:#E0C487!important}
+.hmine .hm-q{font-family:var(--font-text)!important;font-style:normal!important;font-size:max(14px,3.9cqw)!important;line-height:1.45!important;color:#F1E2BC!important}
+/* the areas of life in their own colours again */
+.tiles6 .tile-i{filter:drop-shadow(0 0 4px rgba(233,201,133,.25))!important}
+/* Read for Someone Else: the twelve signs as a carousel to swipe */
+.signs12.sg-car{display:flex!important;grid-template-columns:none!important;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;margin:0 -2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.signs12.sg-car::-webkit-scrollbar{display:none}
+.sg-car .sgn{flex:0 0 calc((100% - 36px) / 4);scroll-snap-align:start}
+/* Discover's shelves inside Stars, as they looked on Discover */
+.hl-disc .dlib{padding:0;gap:12px}
+.hl-disc .dshelf{margin:14px 0 2px;padding:6px 0;background:radial-gradient(closest-side,rgba(8,12,28,.75),rgba(8,12,28,.4) 70%,transparent)}
+.hl-disc .dshelf p{color:#F4E6C2;text-shadow:0 1px 6px #000}
+.hl-disc :is(.dft,.dprof){border:1px solid rgba(233,201,133,.75)!important;border-radius:6px;background:linear-gradient(180deg,rgba(7,10,26,.92),rgba(6,8,22,.88))!important}
+.hl-disc .dft-t strong{color:#F6E3B0}.hl-disc .dft-t span{color:rgba(241,226,188,.82)}
+.hl-disc .dft.round .dft-art{box-shadow:0 0 0 1px rgba(233,201,133,.8),0 0 14px rgba(233,201,133,.25)}
+.hl-disc .dft.night{min-height:26cqw}.hl-disc .dft.night .dft-art{opacity:.9}
+.hl-disc .dprof strong{color:#F6E3B0}.hl-disc .dprof span span{color:rgba(241,226,188,.82)}.hl-disc .dprof svg{color:#E9C985}
