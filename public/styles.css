@@ -3666,19 +3666,19 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
  --nm-h:calc(var(--pw) * 152 / 944);--nm-b:calc(var(--pw) * 95 / 944);--nm-x:calc(var(--pw) * 28 / 944);--nband:calc(var(--pw) * 257 / 944)}
 @media (min-width:700px){:root{--appw:min(640px,100vw,max(420px,50vh))}}
 @media (min-width:700px) and (min-height:1000px){:root{--appw:min(680px,100vw,50vh)}}
-.home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight)::before{
+.home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight,.land.drm,.mnp,.hsp,.pfp,.sub)::before{
  background:#05070F!important;top:0!important;bottom:0!important;height:auto!important;box-sizing:border-box!important;
  border:0!important;border-image:none!important;-webkit-mask-image:none!important;mask-image:none!important;
  background:url(/art/atlas/night-lily-top.webp) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-bot.webp) 50% 100%/100% var(--nb) no-repeat,
   url(/art/atlas/night-lily-mid.webp) 50% calc(var(--nt) - 1px)/100% calc(100% - var(--nt) - var(--nb) + 2px) no-repeat,#05070F!important}
 /* the lower lilies pass in front of the cards; the cards melt into the night above the menu's frame */
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav::before{top:auto!important;bottom:0!important;height:var(--nl)!important;
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav::before{top:auto!important;bottom:0!important;height:var(--nl)!important;
  background:url(/art/atlas/night-lily-front.webp) 50% 100%/100% auto no-repeat!important;clip-path:none!important;-webkit-clip-path:none!important;z-index:-1}
 /* the menu as it is, set inside the painting's own gold frame (which becomes its border) */
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in{height:var(--nm-h)!important;margin:0 calc(50% - var(--pw) / 2 + var(--nm-x)) var(--nm-b)!important;
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in{height:var(--nm-h)!important;margin:0 calc(50% - var(--pw) / 2 + var(--nm-x)) var(--nm-b)!important;
  padding:0 6px!important;border:0!important;border-radius:calc(var(--nm-h) / 2)!important;background:none!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button{height:100%!important}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #app{padding-bottom:calc(var(--nband) + 14px)!important}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in button{height:100%!important}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #app{padding-bottom:calc(var(--nband) + 14px)!important}
 /* the titles inside the painting's inner arc, beneath its small star */
 .hbay .hh-head{padding-top:calc(var(--pw) * .275)!important}
 :is(.land.hnight,.land.dnight,.jnight)>.hl-top{padding-top:calc(var(--pw) * .285)!important}
@@ -3686,12 +3686,30 @@ body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #a
 .hbay .hh-figbox{left:calc(var(--pw) * .0195 - var(--hpad,0px) - (var(--fl,0) + .01) * var(--fw))!important}
 /* the menu in its frame: larger icons, each icon and label on its button's centre line, the row inset so the outer
    labels clear the frame equally on both sides, and the whole group centred in the frame's height */
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in{padding:0 calc(var(--pw) * .035)!important;display:flex!important;align-items:stretch!important}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button{flex:1 1 0!important;min-width:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:calc(var(--pw) * .008)!important;letter-spacing:.01em!important}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button::before{width:calc(var(--pw) * .1)!important;height:calc(var(--pw) * .1)!important;margin:0 auto!important;background-position:50% 50%!important;flex:none}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button span{display:block;width:100%;text-align:center;white-space:nowrap;position:relative}
-body:has(#app>:is(.home.hbay,.land.hnight,.land.tnight,.land.dnight,.jnight)) #nav .in button[aria-current=page] span::after{position:absolute;left:0;right:0;top:100%;margin-top:1px}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in{padding:0 calc(var(--pw) * .035)!important;display:flex!important;align-items:stretch!important}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in button{flex:1 1 0!important;min-width:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:calc(var(--pw) * .008)!important;letter-spacing:.01em!important}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in button::before{width:calc(var(--pw) * .1)!important;height:calc(var(--pw) * .1)!important;margin:0 auto!important;background-position:50% 50%!important;flex:none}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in button span{display:block;width:100%;text-align:center;white-space:nowrap;position:relative}
+body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in button[aria-current=page] span::after{position:absolute;left:0;right:0;top:100%;margin-top:1px}
 /* Tarot's Today's Whisper and the Journal's Tonight's Reflection sit beneath their titles as Stars' Horoscope does:
    the same open sky between the title's last line and the section's heading */
 .land.tnight>.hl-cards{padding-top:calc(var(--pw) * .077)!important}
 .jnight>.hl-cards{padding-top:0!important}
+/* ---------- every other screen under the same night and the same menu: the sign's pages, Tarot's and the Journal's
+   inner pages, Discover's and the Profile's. Each page's own painting gives way to the night; its own figures (the
+   sign, the profile) stay. Kassandra keeps her chamber (her chat and her Past Conversations) under the same menu. ---------- */
+:is(.land.drm,.mnp,.hsp,.pfp,.sub){background:none!important;isolation:isolate}
+:is(.pfp,.sub)::before{content:''!important;display:block!important;position:fixed!important;z-index:-1!important;left:50%!important;right:auto!important;
+ width:min(100%,var(--appw))!important;margin:0!important;transform:translateX(-50%)!important;filter:none!important;animation:none!important;pointer-events:none}
+:is(.land.drm,.mnp,.hsp)::after{display:none!important}
+.mnp.ks::before{background:#05070F url(/art/atlas/kassandra-bg.webp) 50% 0/100% auto no-repeat!important}
+/* each inner page's title where the main screens' titles sit: inside the painting's inner arc, beneath its small star
+   and the Moon's phases, centred, as wide as the arc allows */
+.mnp>.mn-hd{padding-top:calc(var(--pw) * .285)!important;margin:0!important;width:auto!important;left:auto!important;right:auto!important;height:auto!important;min-height:0!important;transform:none!important;text-align:center!important}
+.mnp>.mn-hd>.mn-t{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;max-width:88%!important;margin:0 auto!important;padding:0!important;transform:none!important}
+.land.drm>.hl-top{padding-top:calc(var(--pw) * .285)!important}
+/* the corner buttons (back, share, help, history) as dark glass in a fine gold ring, so they read over the lilies */
+:is(.mnp .mn-bar,.hsp-bar,.land.drm,.sub>.phd) .ibtn{width:44px!important;height:44px!important;border-radius:50%!important;background:rgba(8,12,28,.6)!important;border:1px solid rgba(233,201,133,.55)!important;color:#F1D79A!important;filter:none!important}
+/* the sign's page: its figure, name and words lowered just beneath the painting's star and the Moon's phases */
+.hframe .hsp-hero{--st:calc(env(safe-area-inset-top,0px) + 12cqw)}
+.mnp>.mn-hd{align-self:stretch!important;padding-bottom:0!important}
