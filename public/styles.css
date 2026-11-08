@@ -3651,3 +3651,6 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 /* Read for Someone Else: every medallion a true circle of one size, never squeezed by a narrower page */
 .rfse .sgn{min-width:0}
 .rfse .sgn-i{width:min(66px,100%)!important;height:auto!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:50%!important;flex:none}
+/* the areas of life as six identical round medallions, each exactly the size of its place (they no longer carry
+   ornaments outside the circle, so they are not enlarged past it) */
+.hsp .hc-cats .hc-i .acc-i,.hsp .hc-cats.stuck .hc-i .acc-i{width:100%!important;height:100%!important;border-radius:50%;object-fit:cover}

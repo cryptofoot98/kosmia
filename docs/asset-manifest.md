@@ -40,12 +40,12 @@ their space before they load.
 | `public/art/atlas/hsp-garland-l.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
 | `public/art/atlas/hsp-garland-r.webp` | 520×1720 | 0.30:1 | yes | 230 | provisional |  |
 | `public/art/atlas/hsp-lily.webp` | 520×1600 | 0.33:1 | yes | 239 | provisional |  |
-| `public/art/atlas/hz-career.webp` | 360×360 | 1:1 | yes | 36 | provisional |  |
-| `public/art/atlas/hz-family.webp` | 360×360 | 1:1 | yes | 29 | provisional |  |
-| `public/art/atlas/hz-health.webp` | 360×360 | 1:1 | yes | 41 | provisional |  |
-| `public/art/atlas/hz-love.webp` | 360×360 | 1:1 | yes | 26 | provisional |  |
-| `public/art/atlas/hz-money.webp` | 360×360 | 1:1 | yes | 37 | provisional |  |
-| `public/art/atlas/hz-overview.webp` | 360×360 | 1:1 | yes | 41 | provisional |  |
+| `public/art/atlas/hz-career.webp` | 360×360 | 1:1 | yes | 54 | provisional |  |
+| `public/art/atlas/hz-family.webp` | 360×360 | 1:1 | yes | 62 | provisional |  |
+| `public/art/atlas/hz-health.webp` | 360×360 | 1:1 | yes | 59 | provisional |  |
+| `public/art/atlas/hz-love.webp` | 360×360 | 1:1 | yes | 52 | provisional |  |
+| `public/art/atlas/hz-money.webp` | 360×360 | 1:1 | yes | 57 | provisional |  |
+| `public/art/atlas/hz-overview.webp` | 360×360 | 1:1 | yes | 57 | provisional |  |
 | `public/art/atlas/jen-mid.webp` | 850×1120 | 0.76:1 | no | 120 | provisional |  |
 | `public/art/atlas/jen-night.webp` | 850×1850 | 0.46:1 | no | 250 | provisional |  |
 | `public/art/atlas/jrn-mid.webp` | 850×1580 | 0.54:1 | no | 166 | provisional |  |
@@ -571,12 +571,12 @@ their space before they load.
 |---|---|---|---|---|---|---|
 | `public/art/atlas/med-aquarius.webp` | 560×560 | 1:1 | no | 49 | provisional |  |
 | `public/art/atlas/med-aries.webp` | 560×560 | 1:1 | no | 52 | provisional |  |
-| `public/art/atlas/med-cancer.webp` | 560×560 | 1:1 | no | 48 | provisional |  |
+| `public/art/atlas/med-cancer.webp` | 560×560 | 1:1 | no | 57 | provisional |  |
 | `public/art/atlas/med-capricorn.webp` | 560×560 | 1:1 | no | 53 | provisional |  |
 | `public/art/atlas/med-gemini.webp` | 560×560 | 1:1 | no | 50 | provisional |  |
 | `public/art/atlas/med-leo.webp` | 560×560 | 1:1 | no | 58 | provisional |  |
 | `public/art/atlas/med-libra.webp` | 560×560 | 1:1 | no | 46 | provisional |  |
-| `public/art/atlas/med-pisces.webp` | 560×560 | 1:1 | no | 52 | provisional |  |
+| `public/art/atlas/med-pisces.webp` | 560×560 | 1:1 | no | 58 | provisional |  |
 | `public/art/atlas/med-sagittarius.webp` | 560×560 | 1:1 | no | 48 | provisional |  |
 | `public/art/atlas/med-scorpio.webp` | 560×560 | 1:1 | no | 50 | provisional |  |
 | `public/art/atlas/med-taurus.webp` | 560×560 | 1:1 | no | 53 | provisional |  |
