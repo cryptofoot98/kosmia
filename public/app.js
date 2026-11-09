@@ -468,14 +468,14 @@ views.welcome=()=>{
  // Ancient Wisdom: the painting of the woman under the full Moon by the bay (ob-intro2), its words set where the painting
  // leaves room for them, the six gifts on parchment rows with their medallions, and the night button at its foot
  if(st==='intro')return `<div class="ob ob2 ob2-intro">${ui('ob-intro2','ob2-bg','',true)}${iconBtn('back','data-act="obstep" data-to="welcome"','Back')}
-  <div class="ob2-in"><h1 class="ob2-h">Ancient Wisdom<br>for Modern Life</h1><p class="ob2-lead">Explore the cosmos and discover a deeper<br>understanding of yourself.</p>
+  <div class="ob2-in"><div class="ob2-hd"><h1 class="ob2-h">Ancient Wisdom<br>for Modern Life</h1><p class="ob2-lead">Explore the cosmos and discover a deeper<br>understanding of yourself.</p></div><div class="ob2-md"></div>
   <ul class="ob2-list">${OB_FEATS.map(([i,t,d])=>`<li><span class="obi-med">${ui(i,'obi-k')}</span><span><strong>${t}</strong><span>${d}</span></span></li>`).join('')}</ul>
-  <button class="ob2-btn ob2-go" data-act="obnext" data-to="sign">Let’s Begin <span aria-hidden="true">→</span></button></div></div>`;
- // the zodiac: the Sun and the crescent over the lake at dawn (zs-night), the twelve medallions in the painting's own places
+  <div class="ob2-ft"><button class="ob2-btn ob2-go" data-act="obnext" data-to="sign">Let’s Begin <span aria-hidden="true">→</span></button></div></div></div>`;
+ // the zodiac: the Sun and the crescent over the lake at dawn (zs-night), the twelve medallions in the night between
  if(st==='sign')return `<div class="ob ob2 ob2-sign">${ui('zs-night','ob2-bg','',true)}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}<div class="ob2-in">
-  <h1 class="ob2-h">What’s your<br>zodiac sign?</h1><p class="ob2-lead">Choose your sun sign to personalise<br>your cosmic experience.</p>
-  <div class="zgrid ob2-z${s?' has':''}" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map(x=>`<button class="zg-s" role="radio" aria-checked="${V.joinSign===x.id}" data-sign="${x.id}" aria-label="${x.name}, ${x.dates}">${ui('zm-'+x.id,'zg-m')}<span>${x.name}</span></button>`).join('')}</div>
-  <button class="ob2-ns" data-act="bdayopen">Not sure of your sign?</button></div>${V.bdayOpen?bdayPop():''}</div>`;
+  <div class="ob2-hd"><h1 class="ob2-h">What’s your<br>zodiac sign?</h1><p class="ob2-lead">Choose your sun sign to personalise<br>your cosmic experience.</p></div>
+  <div class="ob2-md"><div class="zgrid ob2-z${s?' has':''}" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map(x=>`<button class="zg-s" role="radio" aria-checked="${V.joinSign===x.id}" data-sign="${x.id}" aria-label="${x.name}, ${x.dates}">${ui('zm-'+x.id,'zg-m')}<span>${x.name}</span></button>`).join('')}</div></div>
+  <div class="ob2-ft"><button class="ob2-ns" data-act="bdayopen">Not sure of your sign?</button></div></div>${V.bdayOpen?bdayPop():''}</div>`;
  // When Were You Born? (optional): the birthday given on the zodiac page already in place, the time and place if known,
  // and the reader's choice to keep them in their account, as on the Profile; Skip for now leads straight in
  if(st==='birth'){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth,!S.birth.date&&V.joinBirth?{date:V.joinBirth}:{}));
@@ -506,10 +506,10 @@ views.welcome=()=>{
  // the welcome: the Sun and the crescent over the bay at night (ob-welcome2), the name and its promise in the sky, the
  // night button glowing over the water
  return `<div class="ob ob2 ob2-wel">${ui('ob-welcome2','ob2-bg','',true)}<div class="ob2-in">
-  <h1 class="ob2-logo">Kosmia</h1><p class="ob2-tag">Your cosmic guide<br>for a more aligned you</p>
-  <p class="ob2-tags">Astrology <i>✦</i> Tarot <i>✦</i> Guidance<br>Self discovery <i>✦</i> Cosmic connection</p>
+  <div class="ob2-hd"><h1 class="ob2-logo">Kosmia</h1><p class="ob2-tag">Your cosmic guide<br>for a more aligned you</p></div>
+  <div class="ob2-ft"><p class="ob2-tags">Astrology <i>✦</i> Tarot <i>✦</i> Guidance<br>Self discovery <i>✦</i> Cosmic connection</p>
   <button class="ob2-btn ob2-begin" data-act="obnext" data-to="intro">Begin Your Journey <span aria-hidden="true">→</span></button>
-  ${C.enabled&&!C.user?'<p class="ob2-alt">Already have an account? <button class="link" data-act="obstep" data-to="signin">Sign in</button></p>':''}</div></div>`;
+  ${C.enabled&&!C.user?'<p class="ob2-alt">Already have an account? <button class="link" data-act="obstep" data-to="signin">Sign in</button></p>':''}</div></div></div>`;
 };
 views.join=views.welcome;
 views.reset=()=>`<div class="ob ob-paper ob-form ob-signin">${obBg(CROWN,SUNSET)}${obRule('lone')}<h1>Choose a New Password</h1><div class="ob-fields">${pwField('npw','New password','At least 8 characters','new-password')}<button class="btn" data-act="setpw">Save password</button></div></div>`;
@@ -570,6 +570,12 @@ async function submitJoin(e){
  }catch(x){V.busy=false;syncJoin();if(err)err.textContent=authMsg(x)}
 }
 function bindJoin(){const f=$('#authForm');if(!f)return;f.addEventListener('input',syncJoin);f.addEventListener('submit',submitJoin);syncJoin()}
+// a screen shorter than the painting (the app's column wider than half the screen's height): the zodiac in four columns
+// and Ancient Wisdom's button nearer the foot; shorter still, the lines that can give way do (measured by the column, so
+// a wide window is judged by the app's own width)
+function obShape(){const o=$('.ob.ob2'),i=o&&o.querySelector('.ob2-in');if(!i)return;const r=i.offsetWidth/document.documentElement.clientHeight;
+ o.classList.toggle('ob2-short',r>=.5);o.classList.toggle('ob2-shorter',r>=.65)}
+addEventListener('resize',obShape);
 /* ----- Home: a personal celestial dashboard, like opening an enchanted almanac. The day's forecast at the top, the daily
    rituals in the middle (insights for each area of life, the Whisper, the Moon's energy), discoveries further down. ----- */
 // a small engraved moon showing the lit fraction (waxing lit on the right, as seen from the northern hemisphere)
@@ -2381,7 +2387,7 @@ function render(){
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
  navH();tarotFit();
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
- if(onboarding())bindJoin();
+ if(onboarding()){bindJoin();obShape()}
  if(authed&&SECTIONS[sec])syncUrl();
  drift();
  const vk=sec+'/'+tab()+(sec==='tarot'?'/'+V.tarot.stage:'');if(vk!==render.vk&&sec==='tarot'&&tab()==='reading')requestAnimationFrame(()=>window.scrollTo(0,0));render.vk=vk;

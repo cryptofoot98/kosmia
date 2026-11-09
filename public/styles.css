@@ -2875,12 +2875,12 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .pf-hint{font-family:'Cinzel',var(--serif);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#E0C487}
 .pf-card .pf-rm{padding:0;border:0;background:none;cursor:pointer;font-size:.8rem;color:#E0C487!important;text-decoration:underline}
 .avatar img.av-i{border-radius:50%}
-/* ---------- onboarding: the welcome and Ancient Wisdom set on their paintings (ob-welcome2, ob-intro2), each 850 wide;
-   every word and button placed in the painting's own measure (--u, one of its pixels) so they land where it leaves room ---------- */
+/* ---------- onboarding: the welcome, Ancient Wisdom and the zodiac set on their paintings (ob-welcome2, ob-intro2,
+   zs-night), each 850 wide; every word and button measured in the painting's own unit (--u, one of its pixels) so they
+   land where it leaves room (how the page fits the screen: below, after "onboarding holds still") ---------- */
 .ob.ob2{--w:min(100vw,var(--appw));--u:calc(var(--w) / 850);position:relative;min-height:100svh;padding:0;background:#0A0E1F;color:#F1E2BC;overflow:hidden}
 .ob2 .ob2-bg{display:block;width:100%;height:auto}
-.ob2 .ob2-in{position:absolute;inset:0;text-align:center}
-.ob2 .ob2-in>*{position:absolute;left:0;right:0;margin:0}
+.ob2 .ob2-in{text-align:center}
 .ob2>.ibtn{position:absolute;z-index:3;top:calc(var(--u) * 50);left:calc(var(--u) * 28);color:#F1DFB4;background:rgba(8,12,28,.55)}
 /* the night button: deep night glass in a gold rim, its word in gold capitals, a warm light along its edges */
 .ob2-btn{display:flex;align-items:center;justify-content:center;gap:.5em;margin:0 auto!important;border:1.5px solid #E7BF6E;border-radius:999px;cursor:pointer;
@@ -2890,27 +2890,27 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .ob2-btn span{font-family:var(--font-serif);font-weight:400;font-size:1.15em}
 .ob2-btn:focus-visible{outline:2px solid #F6DA97;outline-offset:4px}
 /* the welcome */
-.ob2-wel .ob2-logo{top:calc(var(--u) * 488);font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 132);line-height:1;letter-spacing:.04em;text-transform:uppercase;
+.ob2-wel .ob2-logo{margin:0;font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 132);line-height:1;letter-spacing:.04em;text-transform:uppercase;
  background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
-.ob2-wel .ob2-tag{top:calc(var(--u) * 668);font-family:var(--font-display);font-size:calc(var(--u) * 31);line-height:1.3;letter-spacing:.12em;text-transform:uppercase;color:#F4E6C2;text-shadow:0 1px 8px #000}
-.ob2-wel .ob2-tags{top:calc(var(--u) * 1308);font-family:var(--font-display);font-size:calc(var(--u) * 28);line-height:1.55;letter-spacing:.1em;text-transform:uppercase;color:#F4E6C2;text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.9)}
+.ob2-wel .ob2-tag{margin:calc(var(--u) * 48) 0 0;font-family:var(--font-display);font-size:calc(var(--u) * 31);line-height:1.3;letter-spacing:.12em;text-transform:uppercase;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-wel .ob2-tags{margin:0;font-family:var(--font-display);font-size:calc(var(--u) * 28);line-height:1.55;letter-spacing:.1em;text-transform:uppercase;color:#F4E6C2;text-shadow:0 1px 8px #000,0 0 14px rgba(0,0,0,.9)}
 .ob2-wel .ob2-tags i{font-style:normal;color:#E9C985;margin:0 .45em}
-.ob2-wel .ob2-begin{top:calc(var(--u) * 1445);width:calc(var(--u) * 650);height:calc(var(--u) * 108);font-size:calc(var(--u) * 38)}
-.ob2-wel .ob2-alt{top:calc(var(--u) * 1590);font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 34);color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-wel .ob2-begin{margin-top:calc(var(--u) * 50)!important;width:calc(var(--u) * 650);height:calc(var(--u) * 108);font-size:calc(var(--u) * 38)}
+.ob2-wel .ob2-alt{margin:calc(var(--u) * 37) 0 0;font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 34);color:#F4E6C2;text-shadow:0 1px 8px #000}
 .ob2-wel .ob2-alt .link{font:inherit;color:#F3D896;text-decoration:underline;text-underline-offset:3px}
 /* Ancient Wisdom */
-.ob2-intro .ob2-h{top:calc(var(--u) * 112);font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 54);line-height:1.12;letter-spacing:.04em;text-transform:uppercase;
+.ob2-intro .ob2-h{margin:0;font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 54);line-height:1.12;letter-spacing:.04em;text-transform:uppercase;
  background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
-.ob2-intro .ob2-lead{top:calc(var(--u) * 252);font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 31);line-height:1.3;color:#F4E6C2;text-shadow:0 1px 8px #000}
-.ob2-intro .ob2-list{top:calc(var(--u) * 843);left:calc(var(--u) * 46);right:calc(var(--u) * 46);display:flex;flex-direction:column;gap:calc(var(--u) * 7);padding:0;list-style:none}
-.ob2-intro .ob2-list li{position:relative;display:flex;align-items:center;gap:calc(var(--u) * 34);height:calc(var(--u) * 118);padding:0 calc(var(--u) * 20) 0 calc(var(--u) * 36);text-align:left;border:1.5px solid #C9A25C;border-radius:calc(var(--u) * 18);
+.ob2-intro .ob2-lead{margin:calc(var(--u) * 19) 0 0;font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 31);line-height:1.3;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-intro .ob2-list{margin:0 calc(var(--u) * 46);display:flex;flex-direction:column;gap:calc(var(--lu) * 7);padding:0;list-style:none}
+.ob2-intro .ob2-list li{position:relative;display:flex;align-items:center;gap:calc(var(--lu) * 34);height:calc(var(--lu) * 118);padding:0 calc(var(--u) * 20) 0 calc(var(--lu) * 36);text-align:left;border:1.5px solid #C9A25C;border-radius:calc(var(--lu) * 18);
  background:linear-gradient(180deg,#F6E9CF,#EAD6AE);box-shadow:inset 0 0 0 3px rgba(255,248,232,.5),0 3px 10px rgba(0,0,0,.35)}
-.ob2-intro .ob2-list li+li::before{content:'✦';position:absolute;left:50%;top:calc(var(--u) * -14);transform:translateX(-50%);font-size:calc(var(--u) * 20);line-height:1;color:#C9963F}
-.ob2-intro .obi-med{flex:none;width:calc(var(--u) * 106);height:calc(var(--u) * 106);border-radius:50%;overflow:hidden;background:#0E1430;box-shadow:0 0 0 2px #C9A25C,0 2px 6px rgba(0,0,0,.4)}
+.ob2-intro .ob2-list li+li::before{content:'✦';position:absolute;left:50%;top:calc(var(--lu) * -14);transform:translateX(-50%);font-size:calc(var(--lu) * 20);line-height:1;color:#C9963F}
+.ob2-intro .obi-med{flex:none;width:calc(var(--lu) * 106);height:calc(var(--lu) * 106);border-radius:50%;overflow:hidden;background:#0E1430;box-shadow:0 0 0 2px #C9A25C,0 2px 6px rgba(0,0,0,.4)}
 .ob2-intro .obi-k{width:100%;height:100%;object-fit:cover;display:block}
-.ob2-intro .ob2-list strong{display:block;font-family:var(--font-serif);font-weight:700;font-size:calc(var(--u) * 35);line-height:1.15;color:#2A1C0E}
-.ob2-intro .ob2-list li>span:last-child>span{display:block;margin-top:calc(var(--u) * 4);font-family:var(--font-serif);font-size:calc(var(--u) * 31);line-height:1.15;color:#5A4630}
-.ob2-intro .ob2-go{top:calc(var(--u) * 1622);width:calc(var(--u) * 428);height:calc(var(--u) * 92);font-size:calc(var(--u) * 36)}
+.ob2-intro .ob2-list strong{display:block;font-family:var(--font-serif);font-weight:700;font-size:calc(var(--lu) * 35);line-height:1.15;color:#2A1C0E}
+.ob2-intro .ob2-list li>span:last-child>span{display:block;margin-top:calc(var(--lu) * 4);font-family:var(--font-serif);font-size:calc(var(--lu) * 31);line-height:1.15;color:#5A4630}
+.ob2-intro .ob2-go{margin-top:calc(var(--u) * 36)!important;width:calc(var(--u) * 428);height:calc(var(--u) * 92);font-size:calc(var(--u) * 36)}
 .ob2-intro .ob2-list strong{color:#24170B!important;font-weight:700!important;-webkit-text-fill-color:#24170B}.ob2-intro .ob2-list li>span:last-child>span{color:#33240F!important;-webkit-text-fill-color:#33240F;font-weight:600}
 .ob2-intro .ob2-list strong{-webkit-text-stroke:.7px #24170B;paint-order:stroke fill;letter-spacing:.005em}
 /* the onboarding's buttons as the app's own: night glass in a fine gold rim, gold capitals, a soft gold light */
@@ -2918,17 +2918,17 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
  box-shadow:inset 0 1px 0 rgba(255,240,205,.12),0 0 14px rgba(233,201,133,.22)!important;text-shadow:0 1px 4px rgba(0,0,0,.6)!important;-webkit-text-stroke:0!important}
 .ob .btn.ghost{background:rgba(6,10,24,.3)!important;border:1px solid rgba(217,182,110,.6)!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;box-shadow:none!important}
 /* the zodiac on its painting */
-.ob2-sign .ob2-h{top:calc(var(--u) * 312);font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 60);line-height:1.12;letter-spacing:.04em;text-transform:uppercase;
+.ob2-sign .ob2-h{margin:0;font-family:var(--font-display);font-weight:600;font-size:calc(var(--u) * 60);line-height:1.12;letter-spacing:.04em;text-transform:uppercase;
  background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.85))}
-.ob2-sign .ob2-lead{top:calc(var(--u) * 478);font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 31);line-height:1.3;color:#F4E6C2;text-shadow:0 1px 8px #000}
-.ob2-sign .ob2-z{top:calc(var(--u) * 564);left:calc(var(--u) * 82);right:auto;width:calc(var(--u) * 684);display:grid!important;grid-template-columns:repeat(3,1fr);grid-auto-rows:calc(var(--u) * 230);gap:0!important;padding:0!important;margin:0!important;background:none!important}
-.ob2-sign .zg-s{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:calc(var(--u) * 4);padding:0!important;border:0!important;background:none!important;box-shadow:none!important;cursor:pointer;opacity:1!important;filter:none!important}
-.ob2-sign .zg-m{width:calc(var(--u) * 182)!important;height:calc(var(--u) * 182)!important;border-radius:50%;box-shadow:0 0 0 1px rgba(233,201,133,.5),0 4px 12px rgba(0,0,0,.55)!important;transition:box-shadow .2s,transform .2s}
-.ob2-sign .zg-s span{font-family:var(--font-serif)!important;font-weight:600;font-size:calc(var(--u) * 34)!important;line-height:1.1;color:#F4E6C2!important;text-shadow:0 1px 6px #000;letter-spacing:0;text-transform:none}
+.ob2-sign .ob2-lead{margin:calc(var(--u) * 32) 0 0;font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 31);line-height:1.3;color:#F4E6C2;text-shadow:0 1px 8px #000}
+.ob2-sign .ob2-z{width:calc(var(--zu) * 684);display:grid!important;grid-template-columns:repeat(var(--zc),1fr);grid-auto-rows:calc(var(--zu) * var(--zh));gap:0!important;padding:0!important;margin:0!important;background:none!important}
+.ob2-sign .zg-s{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:calc(var(--zu) * 4);padding:0!important;border:0!important;background:none!important;box-shadow:none!important;cursor:pointer;opacity:1!important;filter:none!important}
+.ob2-sign .zg-m{width:calc(var(--zu) * var(--zm))!important;height:calc(var(--zu) * var(--zm))!important;border-radius:50%;box-shadow:0 0 0 1px rgba(233,201,133,.5),0 4px 12px rgba(0,0,0,.55)!important;transition:box-shadow .2s,transform .2s}
+.ob2-sign .zg-s span{font-family:var(--font-serif)!important;font-weight:600;font-size:calc(var(--zu) * var(--zt))!important;line-height:1.1;color:#F4E6C2!important;text-shadow:0 1px 6px #000;letter-spacing:0;text-transform:none}
 .ob2-sign .zg-s[aria-checked=true] .zg-m{transform:scale(1.04);box-shadow:0 0 0 2px #F3D896,0 0 22px 6px rgba(243,210,140,.6)!important}
 .ob2-sign .zg-s[aria-checked=true] span{color:#F6DA97!important}
 .ob2-sign .zgrid.has .zg-s:not([aria-checked=true]) .zg-m{opacity:.62}
-.ob2-sign .ob2-ns{top:calc(var(--u) * 1496);left:calc(var(--u) * 150);right:calc(var(--u) * 150);padding:4px 0;border:0;background:none;cursor:pointer;
+.ob2-sign .ob2-ns{display:block;margin:0 auto;padding:4px calc(var(--u) * 20);border:0;background:none;cursor:pointer;
  font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 32);color:#F4E6C2;text-shadow:0 1px 8px #000}
 /* ---------- every round picture across the app wears one fine solid gold line and nothing else: no pale outline, no
    halo, no second ring; the medallions with a painted rim are trimmed so that rim sits under the line ---------- */
@@ -3018,14 +3018,42 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 /* ---------- onboarding holds still: every page fits the screen, its painting fixed, nothing scrolls ---------- */
 html:has(body.obfit),body.obfit{overflow:hidden;overscroll-behavior:none;height:100%}
 body.obfit #app{padding-bottom:0!important;min-height:0}
-/* the paintings with their words in place (welcome, Ancient Wisdom, the zodiac): the painting scaled whole to the screen,
-   its own night blurred behind it at the sides */
-.ob.ob2{--w:min(100vw,var(--appw),calc(100svh * .4597));--u:calc(var(--w) / 850);height:100svh;min-height:0;overflow:hidden;isolation:isolate}
+/* the paintings with their words in place (welcome, Ancient Wisdom, the zodiac) fill the width of any screen: the
+   painting's head holds to the top with the words set in it; its foot, drawn again over the painting's lower part and
+   fading into it (::after), holds to the bottom with the words and buttons set there; only the open bay or night
+   between gives way to fit the screen, and what sits there (the gifts, the zodiac) is measured to fit it too. A screen
+   too short even for that scrolls. Beyond the app's width, the painting's own night blurred */
+html:has(.ob.ob2),body.obfit:has(.ob.ob2){overflow-y:auto;height:auto}
+.ob.ob2{min-height:100svh;overflow:hidden;isolation:isolate}
 .ob.ob2::before{content:'';position:absolute;inset:-30px;z-index:-1;background:var(--ob2bg) 50% 50%/cover no-repeat;filter:blur(18px) brightness(.55)}
-.ob2-wel{--ob2bg:url(/art/atlas/ob-welcome2.webp)}.ob2-intro{--ob2bg:url(/art/atlas/ob-intro2.webp)}.ob2-sign{--ob2bg:url(/art/atlas/zs-night.webp)}
-.ob2 .ob2-bg{position:absolute;top:50%;left:50%;width:var(--w);transform:translate(-50%,-50%)}
-.ob2 .ob2-in{left:50%;right:auto;top:50%;bottom:auto;width:var(--w);height:calc(var(--w) * 2.1753);transform:translate(-50%,-50%);right:auto;bottom:auto}
-.ob2>.ibtn{top:calc(50% - var(--w) * 1.0877 + var(--u) * 50);left:calc(50% - var(--w) / 2 + var(--u) * 28)}
+.ob.ob2::after{content:'';position:absolute;z-index:0;bottom:0;left:50%;width:var(--w);height:calc(var(--u) * var(--ft));transform:translateX(-50%);pointer-events:none;
+ background:var(--ob2bg) 50% 100%/100% auto no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 calc(var(--u) * var(--fd)));mask-image:linear-gradient(transparent,#000 calc(var(--u) * var(--fd)))}
+.ob2-wel{--ob2bg:url(/art/atlas/ob-welcome2.webp);--ft:560;--fd:80}
+.ob2-intro{--ob2bg:url(/art/atlas/ob-intro2.webp);--ft:310;--fd:60;--if:264;--lu:clamp(calc(var(--u) * .8),calc((100svh - var(--u) * (650 + var(--if))) / 743),var(--u))}
+.ob2-sign{--ob2bg:url(/art/atlas/zs-night.webp);--ft:440;--fd:90;--zc:3;--zh:230;--zm:182;--zt:34;--zr:920;--zf:936;
+ --zu:clamp(calc(var(--u) * .7),calc((100svh - var(--u) * var(--zf)) / var(--zr)),var(--u))}
+.ob2 .ob2-bg{position:absolute;z-index:0;top:0;left:50%;width:var(--w);transform:translateX(-50%)}
+.ob2 .ob2-in{position:relative;z-index:1;display:flex;flex-direction:column;width:var(--w);min-height:100svh;margin:0 auto}
+.ob2 .ob2-ft{flex:none;margin-top:auto}
+.ob2>.ibtn{top:calc(var(--u) * 50);left:calc(50% - var(--w) / 2 + var(--u) * 28)}
+/* the welcome: its name and promise in the sky under the Sun; the gifts, the button and the sign-in over the water */
+.ob2-wel .ob2-hd{padding-top:calc(var(--u) * 488)}
+.ob2-wel .ob2-ft{height:calc(var(--u) * 542)}
+/* Ancient Wisdom: on a short screen the gifts rise over the woman's shoulders (never her face), draw closer together and
+   bring the button nearer the foot (--if, from the gifts to the bottom) */
+.ob2-intro .ob2-hd{padding-top:calc(var(--u) * 112)}
+.ob2-intro .ob2-md{flex:none;height:clamp(calc(var(--u) * 317),calc(100svh - var(--u) * (333 + var(--if)) - var(--lu) * 743),calc(var(--u) * 510))}
+.ob2-intro .ob2-ft{height:calc(var(--u) * var(--if))}
+.ob2-intro.ob2-short{--if:200}
+/* the zodiac: the medallions centred in the night between the title and Not sure of your sign?, in four columns once the
+   screen is shorter than the painting; on the shortest, the line under the title (and the welcome's gifts) give way
+   (ob2-short and ob2-shorter, set by obShape in app.js from the app's column) */
+.ob2-sign .ob2-hd{padding-top:calc(var(--u) * 312)}
+.ob2-sign .ob2-md{flex:1 0 auto;display:flex;align-items:center;justify-content:center;padding:calc(var(--u) * 12) 0}
+.ob2-sign .ob2-ft{height:calc(var(--u) * 354)}
+.ob2-sign.ob2-short{--zc:4;--zh:194;--zm:150;--zt:32;--zr:582}
+.ob2-sign.ob2-shorter{--zf:824}.ob2-sign.ob2-shorter .ob2-lead{display:none}
+.ob2-wel.ob2-shorter .ob2-tags{display:none}.ob2-wel.ob2-shorter .ob2-ft{height:calc(var(--u) * 405)}.ob2-wel.ob2-shorter .ob2-begin{margin-top:0!important}
 /* Create Your Account and Welcome Back: the painting's head and dawn fixed to the top and foot of the screen, the form
    filling the space between them */
 .ob.ob3{height:100svh;min-height:0;padding:0!important;overflow:hidden}
@@ -3085,6 +3113,9 @@ body.obfit #app{padding-bottom:0!important;min-height:0}
 .ob3-birth .ob3-panel .consent span{flex:1;width:auto;min-width:0;font-size:inherit}
 .ob3-birth .ob3-lead{margin-top:2px;padding-left:calc(var(--u) * 24)}
 @media (max-height:700px){.ob.ob3-birth>.ob3-panel{gap:2px;padding-top:8px;padding-bottom:8px}.ob3-birth .ob3-panel .inp input,.ob3-birth .ob3-panel .row.nowrap input,.ob3-birth .ob3-panel .row.nowrap .btn{min-height:34px;height:34px}.ob3-birth .ob3-panel label{margin-bottom:2px;font-size:.85rem}.ob3-birth .ob3-panel .btn{min-height:38px}}
+/* where the form's labels give way to their placeholders, the two choices (birth time unknown, kept in the account) stay,
+   and the form scrolls within its frame if the screen is too short for all of it */
+@media (max-height:640px){.ob3-birth .ob3-panel label.row{position:static;width:auto;height:auto;overflow:visible;clip:auto}.ob.ob3-birth>.ob3-panel{overflow-y:auto}}
 .ob3-birth .ob3-panel .muted,.ob3-birth .places .link{margin:4px 0 0;font-family:var(--font-serif);font-size:.85rem;color:rgba(241,226,188,.8)}
 .ob3-birth .places{margin:4px 0 0;padding:0;list-style:none}.ob3-birth .places .link{color:#F3D896;text-decoration:underline}
 /* ---------- Dream Interpretation: the night with the crescent among clouds and lilies, held still behind the page ---------- */
