@@ -1,6 +1,6 @@
 [build]
   publish = "public"
-  command = "sh scripts/build-config.sh"
+  command = "sh scripts/fetch-art.sh && sh scripts/build-config.sh"
 
 # astronomy-engine is loaded with require() in the functions, so its CommonJS build ships alongside them.
 [functions]
