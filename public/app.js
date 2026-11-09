@@ -2318,13 +2318,21 @@ function settingsPage(t){
 }
 /* ---------- render + events ---------- */
 const onboarding=()=>['welcome','join','reset'].includes(V.sec);
+// a redraw of the same screen (the Whisper revealed, a card opened, an answer arriving) keeps the reader where they
+// were: on the page, and in any pop-up or carousel on it (swapping the page in would otherwise scroll it to the top)
+const SCROLLS='.pop-box,.cpop,.en-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl';
+const scrollsOf=r=>[...r.querySelectorAll(SCROLLS)].map(e=>[e.className,e.scrollLeft,e.scrollTop]);
+const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='tarot'?V.tarot.stage:'',h?h.textContent.trim():''].join('/')};
 function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&!onboarding();
  // a night page's subtitle belongs with its title, so it stays in place with it
  const html=(views[sec]||views.home)().replace(/<\/header>(\s*)(<p class="mn-sub">[\s\S]*?<\/p>)/g,'$2</header>$1');
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
- const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null;
+ const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null,y=scrollY,sc=scrollsOf(app);
  app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
+ const scr=screenOf(app);
+ if(scr===render.scr){window.scrollTo(0,y);app.querySelectorAll(SCROLLS).forEach((e,i)=>{const s=sc[i];if(s&&s[0]===e.className){e.scrollLeft=s[1];e.scrollTop=s[2]}})}
+ render.scr=scr;
  // behind the floating menu, a strip of the page's own painting at the very spot it would be, laid over the cards, so
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun-today':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
