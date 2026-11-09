@@ -435,9 +435,9 @@ const nameNums=nm=>nm&&N.clean(nm)?N.name(nm,S.settings.yMode):null;
 /* ---------- views ---------- */
 const views={};
 /* Onboarding: four pages of one illustrated book (docs/mockups/ob2-*). Welcome; Ancient Wisdom, the woman before the
-   moon and what Kosmia holds; the sign, chosen with one tap on its medallion; the account. Without accounts (local mode),
-   or when already signed in, the tap on the sign opens Kosmia. Signing in has its own page, Welcome Back. Birth details
-   and notifications wait in the profile. */
+   moon and what Kosmia holds; the sign, chosen with one tap on its medallion; the account, which asks the reader's name;
+   then, if they wish, When Were You Born? (without accounts, local mode, the tap on the sign leads straight there; when
+   already signed in, it opens Kosmia). Signing in has its own page, Welcome Back. Notifications wait in the profile. */
 const needAcct=()=>C.enabled&&!C.user;
 // the sign the reader would be, from a birthday (by the Sun's usual dates; the chart confirms it later)
 function signFromDate(d){const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d||'');if(!m)return '';const md=+m[2]*100+ +m[3];
@@ -451,6 +451,17 @@ const obBg=(...layers)=>`<div class="obg" aria-hidden="true">${layers.map(([id,c
 const obRule=(cls='')=>`<span class="ob-rule${cls?' '+cls:''}" aria-hidden="true">${Kit.icon('star')}</span>`;
 // the golden sunset rising from the foot of every page, and the crown of night with its crescent over a parchment page
 const SUNSET=['ob-sunset','obl-foot',false],CROWN=['ob-crescent','obl-crown'];
+// the name Kosmia speaks to the reader by, asked first on Create Your Account
+const nameField=()=>`<div class="field"><label for="obn">What shall the stars call you?</label><div class="inp">${IC.star}<input id="obn" type="text" autocomplete="given-name" autocapitalize="words" placeholder="Your first name" value="${esc(S.name)}"></div></div>`;
+// Not sure of your sign?: a card of the app's own (the atlas frame on Written for You's night glass) over the zodiac,
+// asking the birthday; the sign it names appears beneath, its medallion, name and dates, with the button that chooses it
+const bdayPop=()=>`<div class="obz" role="dialog" aria-modal="true" aria-labelledby="obzt"><button class="obz-veil" data-act="bdayclose" tabindex="-1" aria-label="Close"></button>
+ <div class="obz-card"><button class="obz-x" data-act="bdayclose" aria-label="Close">×</button>
+ <p class="pz-k">${Kit.icon('star')}<span>Your Sun Sign</span>${Kit.icon('star')}</p><h2 class="obz-t" id="obzt">Find Your Sign</h2>
+ <p class="obz-d">It is written in the day you were born.</p>
+ <div class="field"><label for="obd">Your birthday</label><div class="inp">${IC.cal}<input type="date" id="obd" value="${esc(V.joinBirth||'')}"></div></div>${bdayRes()}</div></div>`;
+const bdayRes=()=>{const id=signFromDate(V.joinBirth),s=id?sg(id):null;
+ return `<div class="obz-res" role="status" data-k="${id}">${s?`${ui('zm-'+id,'obz-m')}<p class="obz-s">You are ${s.name}</p><p class="obz-d">${s.dates}</p><button class="btn" data-sign="${id}">Continue as ${s.name} →</button>`:''}</div>`};
 const OB_FEATS=[['obm-sun','Personalised horoscopes','Daily, weekly, monthly and beyond'],['obm-tarot','Tarot and daily Whispers','Guidance for your journey'],['obm-moon','Astrology and numerology','Discover your unique blueprint'],['obm-star','Cosmic calendar','Follow the energy of the universe'],['obm-dream','Dream interpretation','Decode the messages within'],['kassandra','Kassandra, your AI oracle','Always here for your questions']];
 views.welcome=()=>{
  const st=V.ob,s=V.joinSign?sg(V.joinSign):null;
@@ -464,13 +475,24 @@ views.welcome=()=>{
  if(st==='sign')return `<div class="ob ob2 ob2-sign">${ui('zs-night','ob2-bg','',true)}${iconBtn('back','data-act="obstep" data-to="intro"','Back')}<div class="ob2-in">
   <h1 class="ob2-h">What’s your<br>zodiac sign?</h1><p class="ob2-lead">Choose your sun sign to personalise<br>your cosmic experience.</p>
   <div class="zgrid ob2-z${s?' has':''}" role="radiogroup" aria-label="Your zodiac sign">${SIGNS.map(x=>`<button class="zg-s" role="radio" aria-checked="${V.joinSign===x.id}" data-sign="${x.id}" aria-label="${x.name}, ${x.dates}">${ui('zm-'+x.id,'zg-m')}<span>${x.name}</span></button>`).join('')}</div>
-  <details class="ob-bday ob2-bday"${V.bdayOpen?' open':''}><summary>Not sure of your sign?</summary><div class="field"><label for="obd">Your birthday</label><input type="date" id="obd"></div>${s&&V.bdayOpen?`<p class="ob-hint" role="status">That makes you ${s.name}. Tap ${s.name} to continue.</p>`:''}</details></div></div>`;
+  <button class="ob2-ns" data-act="bdayopen">Not sure of your sign?</button></div>${V.bdayOpen?bdayPop():''}</div>`;
+ // When Were You Born? (optional): the birthday given on the zodiac page already in place, the time and place if known,
+ // and the reader's choice to keep them in their account, as on the Profile; Skip for now leads straight in
+ if(st==='birth'){const b=V.birthDraft||(V.birthDraft=Object.assign({},S.birth,!S.birth.date&&V.joinBirth?{date:V.joinBirth}:{}));
+  return `<div class="ob ob3 ob3-acct ob3-birth">${C.enabled?'':iconBtn('back','data-act="obstep" data-to="sign"','Back')}
+  <div class="ob3-head"><h1>When Were<br>You Born?</h1>${obRule()}<p class="ob3-lead">${firstName()?esc(firstName())+', your':'Your'} birth chart and cycles begin with this moment.</p></div>
+  <div class="ob3-panel">${C.enabled?'':nameField()}
+  <div class="field"><label for="bd">Date of birth</label><div class="inp">${IC.cal}<input type="date" id="bd" value="${esc(b.date)}"></div></div>
+  ${b.unk?'':`<div class="field"><label for="bt">Time of birth</label><div class="inp">${IC.history}<input type="time" id="bt" value="${esc(b.time)}"></div></div>`}
+  <label class="row"><input type="checkbox" id="bu" ${b.unk?'checked':''} class="cb"> I don’t know my birth time</label>${placeField('birth',b)}
+  <label class="row consent"><input type="checkbox" id="bcons" ${S.birthConsent?'checked':''} class="cb"> <span>Keep them in my account so they sync across my devices. Private to me.</span></label>
+  <button class="btn" data-act="obbirth">Continue →</button><p class="auth-alt"><button type="button" class="link" data-act="obskip">Skip for now</button></p></div></div>`}
  // Create Your Account and Welcome Back: the night paintings (acct-*, wb-*: their heads at the top, their dawns at the foot,
  // the night between) and the form on night glass framed in gold, as every page of the app
  if(st==='account')return `<div class="ob ob3 ob3-acct">${iconBtn('back','data-act="obstep" data-to="sign"','Back')}
   <div class="ob3-head"><h1>Create Your<br>Account</h1>${obRule()}<p class="ob3-lead">Join Kosmia and start your<br>journey of self-discovery.</p></div>
-  <form id="authForm" class="ob3-panel" novalidate><div class="field"><label for="em">Email address</label><div class="inp">${IC.mail}<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(S.email)}" required></div></div>
-  ${pwField('pw','Create a password','At least 8 characters','new-password')}${pwField('pw2','Confirm password','Type it again','new-password')}
+  <form id="authForm" class="ob3-panel" novalidate>${nameField()}<div class="field"><label for="em">Email address</label><div class="inp">${IC.mail}<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(S.email)}" required></div></div>
+  ${pwField('pw','Create a password','At least 8 characters','new-password')}
   <ul class="pw-rules" id="pwRules" aria-live="polite">${pwRules('').map(([ok,t])=>`<li class="${ok?'ok':''}">${t}</li>`).join('')}</ul>
   <p class="auth-err" id="authErr" role="alert"></p><button class="btn" id="joinBtn" type="submit">Continue →</button>
   <p class="auth-alt">Already have an account? <button type="button" class="link" data-act="obstep" data-to="signin">Sign in</button></p></form></div>`;
@@ -495,16 +517,16 @@ views.reset=()=>`<div class="ob ob-paper ob-form ob-signin">${obBg(CROWN,SUNSET)
 // a wide cartouche (Cancer, Capricorn) takes a medallion painted to its own outline; the others the round one
 const signArt=id=>`<span class="sp-plate g-${id}">${ui('plate-'+id,'sign-plate',sg(id).name)}${Kit.size('atlas/sgmw-'+id)?ui('sgmw-'+id,'sp-gmw'):glyphMed(id,'sp-gm')}</span>`;
 function obValid(){
- const em=$('#em'),pw=$('#pw'),pw2=$('#pw2'),up=V.ob==='account';
+ const em=$('#em'),pw=$('#pw'),up=V.ob==='account';
  const okEm=!!em&&/^\S+@\S+\.\S+$/.test(em.value.trim()),p=pw?pw.value:'';
  if(!up)return {ok:okEm&&p.length>=6};
  const rules=pwRules(p),n=rules.filter(r=>r[0]).length;
- return {ok:okEm&&n===3&&pw2&&pw2.value===p,rules,n,mismatch:pw2&&pw2.value&&pw2.value!==p};
+ return {ok:okEm&&n===3,rules,n};
 }
 function syncJoin(){
  const b=$('#joinBtn');if(!b)return;const v=obValid();
  if(v.rules){$('#pwRules').innerHTML=v.rules.map(([ok,t])=>`<li class="${ok?'ok':''}">${t}</li>`).join('');
-  const err=$('#authErr');if(err&&!V.busy)err.textContent=v.mismatch?'The passwords don’t match yet.':''}
+  const err=$('#authErr');if(err&&!V.busy)err.textContent=''}
  b.disabled=!v.ok||V.busy;b.textContent=V.busy?'One moment…':V.ob==='account'?'Continue →':'Sign in →';
 }
 const authMsg=x=>{const m=(x&&x.message)||'';
@@ -515,23 +537,34 @@ const authMsg=x=>{const m=(x&&x.message)||'';
  return m||'Something went wrong. Please try again.'};
 // into Kosmia from onboarding
 function enterApp(){V.obHold=false;V.bdayOpen=false;V.ob='welcome';go('home','today',{replace:true})}
-// one tap on a medallion chooses the sign: it lights for a moment, then the account (or, without one to make, Kosmia)
+// one tap on a medallion chooses the sign: it lights for a moment, then the account (or, without one to make, When Were
+// You Born?; already signed in, Kosmia)
 let pickT=0;
 function pickSign(id){
- V.joinSign=id;render();clearTimeout(pickT);
+ V.joinSign=id;V.bdayOpen=false;render();clearTimeout(pickT);
  pickT=setTimeout(()=>{if(!onboarding()||V.ob!=='sign')return;
   if(needAcct()){V.ob='account';V.bdayOpen=false;render();return window.scrollTo(0,0)}
-  S.sign=id;save();if(C.user)syncProfile();enterApp()},matchMedia('(prefers-reduced-motion: reduce)').matches?60:320)}
+  S.sign=id;save();if(C.user){syncProfile();return enterApp()}
+  V.obHold=true;V.ob='birth';V.bdayOpen=false;render()},matchMedia('(prefers-reduced-motion: reduce)').matches?60:320)}
+// leaving When Were You Born?: the name (asked there when there was no account to make) and, on Continue, the birth
+// details, kept as the Profile keeps them
+function obBirth(keep){
+ const n=$('#obn');if(n&&n.value.trim())S.name=n.value.trim();
+ if(keep){readBirth();const b=V.birthDraft;if(!b.date)return toast('Add your date of birth, or skip for now');
+  S.birth=Object.assign({},b,{time:b.unk?'':b.time});delete S.birth.name;S.birthConsent=$('#bcons').checked}
+ V.birthDraft=null;save();syncProfile();enterApp()}
 async function submitJoin(e){
  e.preventDefault();if($('#joinBtn').disabled)return;
  const email=$('#em').value.trim(),pw=$('#pw').value,err=$('#authErr');
  V.busy=true;syncJoin();if(err)err.textContent='';
  try{
   if(V.ob==='account'){
+   const nm=$('#obn').value.trim();if(nm)S.name=nm;
    S.email=email;S.sign=V.joinSign;save();
    const r=await C.signUp(email,pw,V.joinSign);
-   // with email confirmation on, the account waits for its link; otherwise the reader is signed in and Kosmia opens
-   V.busy=false;if(r.session)return enterApp();V.obHold=true;V.ob='verify';render();
+   // with email confirmation on, the account waits for its link; otherwise the reader is signed in and asked, if they
+   // wish, when they were born
+   V.busy=false;V.obHold=true;V.ob=r.session?'birth':'verify';render();
   }else{await C.signIn(email,pw);S.email=email;save();V.busy=false}
   // signing in: the auth listener runs pullMerge, which opens Kosmia once the profile has a sign
  }catch(x){V.busy=false;syncJoin();if(err)err.textContent=authMsg(x)}
@@ -2499,8 +2532,11 @@ document.addEventListener('click',e=>{
  // onboarding
  if(a==='obnext'||a==='obstep'){const to=t.dataset.to;
   if(to==='account'||to==='signin'){const em=$('#em');if(em)S.email=em.value.trim()}
+  {const n=$('#obn');if(n)S.name=n.value.trim()}
   V.ob=to;render();return window.scrollTo(0,0)}
  if(a==='enter')return enterApp();
+ if(a==='bdayopen'||a==='bdayclose'){V.bdayOpen=a==='bdayopen';return render()}
+ if(a==='obbirth'||a==='obskip')return obBirth(a==='obbirth');
  if(a==='pweye'){const i=$('#'+t.dataset.for);if(i){i.type=i.type==='password'?'text':'password';t.setAttribute('aria-label',i.type==='password'?'Show password':'Hide password')}return}
  if(a==='resend'){if(C.resend)C.resend(S.email).then(()=>toast('A new link is on its way.'),x=>toast(authMsg(x)));return}
  // Kassandra
@@ -2641,6 +2677,7 @@ document.addEventListener('input',e=>{
 document.addEventListener('keydown',e=>{
  if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&$('.jbook')&&!e.target.closest('input,textarea,select')){e.preventDefault();return jflip(jIdx(journalPages())+(e.key==='ArrowRight'?1:-1))}
  if(e.key==='Enter'&&e.target.id==='jn'){e.preventDefault();return e.target.blur()}
+ if(e.key==='Escape'&&V.bdayOpen&&onboarding()){V.bdayOpen=false;return render()}
  if(e.key==='Escape'&&V.jx){V.jx=false;return render()}
  if(e.key==='Escape'&&V.sheet){V.sheet=null;return render()}
  if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}
@@ -2651,7 +2688,11 @@ document.addEventListener('change',e=>{
  const i=e.target,id=i.id;
  if(id==='pfphoto'){setPhoto(i.files&&i.files[0]);i.value='';return}
  if(i.dataset.act==='jint'){S.intent=S.intent||{};const a=S.intent[V.jkey]||[];a[+i.dataset.i]=i.checked;S.intent[V.jkey]=a;save();return}
- if(id==='obd'){const s=signFromDate(i.value);if(s){V.joinSign=s;V.bdayOpen=true;render()}return}
+ // the birthday's sign appears in its card (and lights on the zodiac behind) in place, and only when the sign changes
+ // (the field also reports a change as it closes, under the finger tapping Continue): redrawing would swallow that tap
+ if(id==='obd'){V.joinBirth=i.value;const s=signFromDate(i.value);if(s)V.joinSign=s;
+  document.querySelectorAll('.ob2-z .zg-s').forEach(b=>b.setAttribute('aria-checked',b.dataset.sign===V.joinSign));
+  const z=$('.ob2-z'),r=$('.obz-res');if(z)z.classList.toggle('has',!!V.joinSign);if(r&&r.dataset.k!==s)r.outerHTML=bdayRes();return}
  if(id==='za'||id==='zb'){V.love[id==='za'?'a':'b']=i.value;V.love.done=false;return render()}
  if(id==='bu'){readBirth();render()}
  if(id==='su'){readSyn();render()}

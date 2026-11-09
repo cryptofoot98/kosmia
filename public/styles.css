@@ -2909,9 +2909,9 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .ob2-intro .obi-med{flex:none;width:calc(var(--u) * 106);height:calc(var(--u) * 106);border-radius:50%;overflow:hidden;background:#0E1430;box-shadow:0 0 0 2px #C9A25C,0 2px 6px rgba(0,0,0,.4)}
 .ob2-intro .obi-k{width:100%;height:100%;object-fit:cover;display:block}
 .ob2-intro .ob2-list strong{display:block;font-family:var(--font-serif);font-weight:700;font-size:calc(var(--u) * 35);line-height:1.15;color:#2A1C0E}
-.ob2-intro .ob2-list li>span:last-child>span{display:block;margin-top:calc(var(--u) * 4);font-family:var(--font-serif);font-size:calc(var(--u) * 27);color:#5A4630}
+.ob2-intro .ob2-list li>span:last-child>span{display:block;margin-top:calc(var(--u) * 4);font-family:var(--font-serif);font-size:calc(var(--u) * 31);line-height:1.15;color:#5A4630}
 .ob2-intro .ob2-go{top:calc(var(--u) * 1622);width:calc(var(--u) * 428);height:calc(var(--u) * 92);font-size:calc(var(--u) * 36)}
-.ob2-intro .ob2-list strong{color:#24170B!important;font-weight:700!important;-webkit-text-fill-color:#24170B}.ob2-intro .ob2-list li>span:last-child>span{color:#4A3824!important;-webkit-text-fill-color:#4A3824;font-weight:500}
+.ob2-intro .ob2-list strong{color:#24170B!important;font-weight:700!important;-webkit-text-fill-color:#24170B}.ob2-intro .ob2-list li>span:last-child>span{color:#33240F!important;-webkit-text-fill-color:#33240F;font-weight:600}
 .ob2-intro .ob2-list strong{-webkit-text-stroke:.7px #24170B;paint-order:stroke fill;letter-spacing:.005em}
 /* the onboarding's buttons as the app's own: night glass in a fine gold rim, gold capitals, a soft gold light */
 .ob2-btn,.ob .btn:not(.ghost):not(.danger){background:rgba(6,10,24,.42)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid #D9B66E!important;color:#F1D79A!important;-webkit-text-fill-color:#F1D79A;
@@ -2928,12 +2928,8 @@ body:is(.cb-a,.cb-b,.cb-c) .mini[aria-pressed=true]{outline:0!important;box-shad
 .ob2-sign .zg-s[aria-checked=true] .zg-m{transform:scale(1.04);box-shadow:0 0 0 2px #F3D896,0 0 22px 6px rgba(243,210,140,.6)!important}
 .ob2-sign .zg-s[aria-checked=true] span{color:#F6DA97!important}
 .ob2-sign .zgrid.has .zg-s:not([aria-checked=true]) .zg-m{opacity:.62}
-.ob2-sign .ob2-bday{top:calc(var(--u) * 1496);left:calc(var(--u) * 150);right:calc(var(--u) * 150);border:0;background:none;padding:0}
-.ob2-sign .ob2-bday summary{list-style:none;cursor:pointer;font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 32);color:#F4E6C2;text-shadow:0 1px 8px #000}
-.ob2-sign .ob2-bday summary::-webkit-details-marker{display:none}
-.ob2-sign .ob2-bday[open]{padding:12px;border:1px solid rgba(233,201,133,.7);border-radius:8px;background:rgba(8,12,28,.88)}
-.ob2-sign .ob2-bday label,.ob2-sign .ob-hint{color:#F1E2BC}
-.ob2-sign .ob2-bday input{background:rgba(6,10,24,.6);border:1px solid rgba(233,201,133,.6);color:#F4E8CC}
+.ob2-sign .ob2-ns{top:calc(var(--u) * 1496);left:calc(var(--u) * 150);right:calc(var(--u) * 150);padding:4px 0;border:0;background:none;cursor:pointer;
+ font-family:var(--font-serif);font-style:italic;font-size:calc(var(--u) * 32);color:#F4E6C2;text-shadow:0 1px 8px #000}
 /* ---------- every round picture across the app wears one fine solid gold line and nothing else: no pale outline, no
    halo, no second ring; the medallions with a painted rim are trimmed so that rim sits under the line ---------- */
 :is(.obi-med,.zg-m,.en-moon,.th.round,.ev-r,.gmed,.sgn-i,.dft.round .dft-art,.ce-moon,.sym-i,.pf-pic,.avatar,.acc-i.round,.sign-ico,.et-med,.et-m2,.dp-i,.hm-top .gmed){border:0!important;box-shadow:0 0 0 1.5px #C9A253!important;outline:0}
@@ -3055,6 +3051,42 @@ body.obfit #app{padding-bottom:0!important;min-height:0}
 }
 .ob.ob3>.ob3-panel{overflow:visible}
 .ob.ob3-wb>.ob3-panel{top:calc(var(--u) * 482)}
+/* Not sure of your sign?: the card it opens over the zodiac, centred on the screen above the dimmed night: the atlas frame
+   on Written for You's night glass, its carved title, the birthday in the account's field, then the sign it names */
+.obz{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
+.obz-veil{position:absolute;inset:0;padding:0;border:0;background:rgba(4,6,16,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);cursor:default}
+.obz-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;width:min(100%,340px);padding:26px 22px 22px;text-align:center;color:#F1E2BC;
+ border:5px solid transparent;border-image:var(--atl);box-shadow:0 14px 40px rgba(0,0,0,.6);
+ background:radial-gradient(120% 70% at 50% 0,rgba(233,201,133,.14),transparent 60%),linear-gradient(180deg,rgba(10,14,34,.95),rgba(8,11,28,.93))}
+.obz-x{position:absolute;top:14px;right:16px;width:36px;height:36px;padding:0;border:0;background:none;font-size:1.4rem;line-height:1;color:#E9C985;cursor:pointer}
+.obz-t{margin:0;font-family:var(--font-display);font-weight:600;font-size:1.5rem;line-height:1.15;letter-spacing:.06em;text-transform:uppercase;
+ background:linear-gradient(180deg,#FBE7AE,#D2A456 55%,#F0D18A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.obz-d{margin:0;font-family:var(--font-serif);font-style:italic;font-size:1rem;line-height:1.35;color:rgba(241,226,188,.85)}
+.obz .field{width:100%;margin:6px 0 0}
+.obz label{display:block;margin:0 0 6px;font-family:var(--font-serif);font-weight:600;font-size:.95rem;color:#F4E6C2;text-align:center}
+.obz .inp{border:1px solid rgba(233,201,133,.55);border-radius:10px;background:rgba(6,10,24,.55)}
+.obz .inp svg{color:#E9C985}
+.obz .inp input{min-height:44px;background:none!important;border:0!important;color:#F4E8CC!important;font-family:var(--font-serif);font-size:1rem}
+.obz-res{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%}
+.obz-res:empty{display:none}
+.obz-m{display:block;width:96px;height:96px;margin:10px 0 4px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1.5px #F3D896,0 0 22px 6px rgba(243,210,140,.45)}
+.obz-s{margin:0;font-family:var(--font-display);font-weight:600;font-size:1.3rem;letter-spacing:.05em;color:#F6DA97;text-shadow:0 0 14px rgba(246,210,140,.35)}
+.obz-res .btn{width:100%;margin-top:10px}
+/* When Were You Born?: Create Your Account's painting, its form holding the birth details as the Profile does; a list of
+   places found scrolls inside it */
+.ob3-birth .ob3-head h1{white-space:nowrap}
+.ob.ob3-birth>.ob3-panel{justify-content:space-evenly;gap:6px}
+.ob.ob3-birth>.ob3-panel:has(.places){overflow-y:auto;justify-content:flex-start}
+.ob3-birth .ob3-panel .row{display:flex;align-items:center;gap:10px;margin:0;font-family:var(--font-serif);font-size:.95rem;color:#F4E6C2}
+.ob3-birth .ob3-panel .row.nowrap input{flex:1;min-width:0;min-height:38px;padding:0 12px;border:1px solid rgba(233,201,133,.55);border-radius:10px;background:rgba(6,10,24,.55);color:#F4E8CC;font-family:var(--font-serif)}
+.ob3-birth .ob3-panel .row.nowrap input::placeholder{color:rgba(241,226,188,.5);font-style:italic}
+.ob3-birth .ob3-panel .row.nowrap .btn{flex:none;width:auto;min-height:38px;margin:0;padding:0 14px}
+.ob3-birth .ob3-panel .consent{flex-wrap:nowrap;align-items:flex-start;text-align:left;font-size:.82rem;line-height:1.3;color:rgba(241,226,188,.85)}
+.ob3-birth .ob3-panel .consent span{flex:1;width:auto;min-width:0;font-size:inherit}
+.ob3-birth .ob3-lead{margin-top:2px;padding-left:calc(var(--u) * 24)}
+@media (max-height:700px){.ob.ob3-birth>.ob3-panel{gap:2px;padding-top:8px;padding-bottom:8px}.ob3-birth .ob3-panel .inp input,.ob3-birth .ob3-panel .row.nowrap input,.ob3-birth .ob3-panel .row.nowrap .btn{min-height:34px;height:34px}.ob3-birth .ob3-panel label{margin-bottom:2px;font-size:.85rem}.ob3-birth .ob3-panel .btn{min-height:38px}}
+.ob3-birth .ob3-panel .muted,.ob3-birth .places .link{margin:4px 0 0;font-family:var(--font-serif);font-size:.85rem;color:rgba(241,226,188,.8)}
+.ob3-birth .places{margin:4px 0 0;padding:0;list-style:none}.ob3-birth .places .link{color:#F3D896;text-decoration:underline}
 /* ---------- Dream Interpretation: the night with the crescent among clouds and lilies, held still behind the page ---------- */
 .land.drm{position:relative;isolation:isolate;min-height:100svh;padding-bottom:30px;background:none}
 .land.drm::before{content:'';position:fixed;z-index:-1;top:0;bottom:var(--navh,0px);left:50%;width:min(100%,var(--appw));transform:translateX(-50%);background:#0B0F1E url(/art/atlas/dream-night.webp) 50% 0/cover no-repeat}
