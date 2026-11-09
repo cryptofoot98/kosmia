@@ -68,8 +68,8 @@ their space before they load.
 | `public/art/atlas/kas-scene2.webp` | 1086×1448 | 3:4 | no | 399 | provisional |  |
 | `public/art/atlas/night-lily-bot.webp` | 944×738 | 1.28:1 | no | 80 | provisional |  |
 | `public/art/atlas/night-lily-front.webp` | 944×738 | 1.28:1 | yes | 84 | provisional |  |
-| `public/art/atlas/night-lily-mid.webp` | 944×820 | 1.15:1 | no | 84 | provisional |  |
-| `public/art/atlas/night-lily-top.webp` | 944×330 | 2.86:1 | no | 51 | provisional |  |
+| `public/art/atlas/night-lily-mid.webp` | 944×820 | 1.15:1 | no | 89 | provisional |  |
+| `public/art/atlas/night-lily-top.webp` | 944×330 | 2.86:1 | no | 52 | provisional |  |
 | `public/art/atlas/night-lily.webp` | 944×1888 | 1:2 | no | 209 | provisional |  |
 | `public/art/atlas/nvi-discover.webp` | 512×512 | 1:1 | yes | 52 | provisional |  |
 | `public/art/atlas/nvi-home.webp` | 512×512 | 1:1 | yes | 118 | provisional |  |

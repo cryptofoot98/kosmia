@@ -3669,8 +3669,11 @@ body:is(.nv-b,.nv-d) #nav .in{margin-left:max(10px,calc(50% - var(--appw) / 2 + 
 .home.hbay::before,.home.hbay.hmoon.hsun::before,:is(.land.hnight,.land.tnight,.land.dnight,.jnight,.land.drm,.mnp,.hsp,.pfp,.sub)::before{
  background:#05070F!important;top:0!important;bottom:0!important;height:auto!important;box-sizing:border-box!important;
  border:0!important;border-image:none!important;-webkit-mask-image:none!important;mask-image:none!important;
- background:url(/art/atlas/night-lily-top.webp) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-bot.webp) 50% 100%/100% var(--nb) no-repeat,
-  url(/art/atlas/night-lily-mid.webp) 50% calc(var(--nt) - 1px)/100% calc(100% - var(--nt) - var(--nb) + 2px) no-repeat,#05070F!important}
+ background:url(/art/atlas/night-arcs-head.svg) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-top.webp) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-bot.webp) 50% 100%/100% var(--nb) no-repeat,
+  url(/art/atlas/night-arcs-sky.svg) 50% var(--nt)/100% auto no-repeat,url(/art/atlas/night-lily-mid.webp) 50% calc(var(--nt) - 1px)/100% calc(100% - var(--nt) - var(--nb) + 2px) no-repeat,#05070F!important}
+/* the two gold arches beneath the Moon's phases (night-arcs-head, night-arcs-sky) are drawn apart from the painting and
+   scaled by its width alone, so they stay true circles however tall the screen; the open sky between head and foot
+   still gives. The sky's part passes behind the foot, as the painted arches passed behind the clouds. */
 /* the lower lilies pass in front of the cards; the cards melt into the night above the menu's frame */
 body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav::before{top:auto!important;bottom:0!important;height:var(--nl)!important;
  background:url(/art/atlas/night-lily-front.webp) 50% 100%/100% auto no-repeat!important;clip-path:none!important;-webkit-clip-path:none!important;z-index:-1}

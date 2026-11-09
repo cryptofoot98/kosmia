@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="944" height="330" viewBox="0 0 944 330">
+<defs>
+<linearGradient id="fo" gradientUnits="userSpaceOnUse" x1="0" y1="650" x2="0" y2="890.0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="fi" gradientUnits="userSpaceOnUse" x1="0" y1="470" x2="0" y2="588.5"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="mo" maskUnits="userSpaceOnUse" x="0" y="0" width="944" height="1150"><rect width="944" height="1150" fill="url(#fo)"/></mask>
+<mask id="mi" maskUnits="userSpaceOnUse" x="0" y="0" width="944" height="1150"><rect width="944" height="1150" fill="url(#fi)"/></mask>
+</defs>
+<g fill="none" stroke-linecap="round" mask="url(#mo)">
+<path d="M322.0 195.3A398 398 0 0 0 243.7 890.0M622.0 195.3A398 398 0 0 1 700.3 890.0" stroke="#E0A060" stroke-width="4" stroke-opacity=".06"/>
+<path d="M322.0 195.3A398 398 0 0 0 243.7 890.0M622.0 195.3A398 398 0 0 1 700.3 890.0" stroke="#B9824A" stroke-width="1" stroke-opacity=".35"/>
+<path d="M322.0 195.3A398 398 0 0 0 243.7 890.0M622.0 195.3A398 398 0 0 1 700.3 890.0" stroke="#E2AE6E" stroke-width="2" stroke-opacity=".85" stroke-dasharray="0 4.6"/>
+</g>
+<g fill="none" stroke-linecap="round" mask="url(#mi)">
+<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#E0A060" stroke-width="4" stroke-opacity=".06"/>
+<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#B9824A" stroke-width="1" stroke-opacity=".35"/>
+<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#E2AE6E" stroke-width="2" stroke-opacity=".85" stroke-dasharray="0 4.6"/>
+</g>
+</svg>
