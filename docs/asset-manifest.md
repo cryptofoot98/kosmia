@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 552 |
-| In use, provisional | 508 |
+| Images | 576 |
+| In use, provisional | 532 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -25,6 +25,20 @@ their space before they load.
 | `public/art/atlas/aw-top.webp` | 1269×846 | 3:2 | no | 284 | provisional |  |
 | `public/art/atlas/cal-scene.webp` | 1100×733 | 1.50:1 | no | 253 | provisional |  |
 | `public/art/atlas/ce-vignette.webp` | 480×720 | 2:3 | no | 102 | provisional |  |
+| `public/art/atlas/chart-scene.webp` | 720×720 | 1:1 | no | 198 | provisional |  |
+| `public/art/atlas/chart-sky.webp` | 800×800 | 1:1 | no | 187 | provisional |  |
+| `public/art/atlas/csg-aquarius.webp` | 160×160 | 1:1 | yes | 14 | provisional |  |
+| `public/art/atlas/csg-aries.webp` | 160×160 | 1:1 | yes | 11 | provisional |  |
+| `public/art/atlas/csg-cancer.webp` | 160×160 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/csg-capricorn.webp` | 160×160 | 1:1 | yes | 14 | provisional |  |
+| `public/art/atlas/csg-gemini.webp` | 160×160 | 1:1 | yes | 12 | provisional |  |
+| `public/art/atlas/csg-leo.webp` | 160×160 | 1:1 | yes | 12 | provisional |  |
+| `public/art/atlas/csg-libra.webp` | 160×160 | 1:1 | yes | 13 | provisional |  |
+| `public/art/atlas/csg-pisces.webp` | 160×160 | 1:1 | yes | 20 | provisional |  |
+| `public/art/atlas/csg-sagittarius.webp` | 160×160 | 1:1 | yes | 13 | provisional |  |
+| `public/art/atlas/csg-scorpio.webp` | 160×160 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/csg-taurus.webp` | 160×160 | 1:1 | yes | 17 | provisional |  |
+| `public/art/atlas/csg-virgo.webp` | 160×160 | 1:1 | yes | 9 | provisional |  |
 | `public/art/atlas/disc-night.webp` | 898×1752 | 0.51:1 | no | 375 | provisional |  |
 | `public/art/atlas/dream-night.webp` | 941×1672 | 0.56:1 | no | 316 | provisional |  |
 | `public/art/atlas/hland-night.webp` | 850×1850 | 0.46:1 | no | 407 | provisional |  |
@@ -75,6 +89,16 @@ their space before they load.
 | `public/art/atlas/obm-star.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
 | `public/art/atlas/obm-sun.webp` | 192×192 | 1:1 | no | 11 | provisional |  |
 | `public/art/atlas/obm-tarot.webp` | 192×192 | 1:1 | no | 7 | provisional |  |
+| `public/art/atlas/orb-jupiter.webp` | 200×200 | 1:1 | yes | 8 | provisional |  |
+| `public/art/atlas/orb-mars.webp` | 200×200 | 1:1 | yes | 9 | provisional |  |
+| `public/art/atlas/orb-mercury.webp` | 200×200 | 1:1 | yes | 7 | provisional |  |
+| `public/art/atlas/orb-moon.webp` | 200×200 | 1:1 | yes | 7 | provisional |  |
+| `public/art/atlas/orb-neptune.webp` | 200×200 | 1:1 | yes | 9 | provisional |  |
+| `public/art/atlas/orb-pluto.webp` | 200×200 | 1:1 | yes | 8 | provisional |  |
+| `public/art/atlas/orb-saturn.webp` | 200×200 | 1:1 | yes | 8 | provisional |  |
+| `public/art/atlas/orb-sun.webp` | 200×200 | 1:1 | yes | 12 | provisional |  |
+| `public/art/atlas/orb-uranus.webp` | 200×200 | 1:1 | yes | 7 | provisional |  |
+| `public/art/atlas/orb-venus.webp` | 200×200 | 1:1 | yes | 8 | provisional |  |
 | `public/art/atlas/pl-jupiter.webp` | 560×560 | 1:1 | yes | 116 | provisional |  |
 | `public/art/atlas/pl-mars.webp` | 560×560 | 1:1 | yes | 118 | provisional |  |
 | `public/art/atlas/pl-mercury.webp` | 560×560 | 1:1 | yes | 121 | provisional |  |

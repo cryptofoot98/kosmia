@@ -1617,17 +1617,44 @@ function groupTabs(t,h){
  if(g===GROUP_COMPAT)h=h.replace(/<h1>(Zodiac Affinity|Soul Resonance|Synastry)<\/h1>/,'<h1>Compatibility</h1>');
  return h.replace('</header>','</header>'+bar);
 }
-/* Birth Chart: the wheel in navy and gold with the reader's planets, then the planets, aspects and houses as their own tabs */
+/* Birth Chart: the reader's own celestial map, drawn for their chart over Kosmia's paintings. At its heart the sun
+   rising over the mountains and the village (the horizon is the Ascendant's line, so it always lies level); around it
+   the night where their planets shine at their exact degrees, set apart where they crowd; then their houses in Roman
+   numerals and the zodiac engraved in gold, turned to their Ascendant. Then the planets, aspects and houses as their own
+   tabs */
 function chartWheel(c){
- const asc=c.ang?c.ang.asc:0,CX=150,R=146,R2=116,R3=66,pt=(lon,r)=>{const ph=(180+lon-asc)*Math.PI/180;return [CX+r*Math.cos(ph),CX-r*Math.sin(ph)]};
- const ring=SIGNS.map((s,i)=>{const [x1,y1]=pt(i*30,R),[x2,y2]=pt(i*30,R2),[gx,gy]=pt(i*30+15,(R+R2)/2);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#C9A45C" stroke-width=".8"/><text x="${gx}" y="${gy}" class="zg">${s.g}</text>`}).join('');
- const ticks=Array.from({length:72},(_,i)=>{const [x1,y1]=pt(i*5,R2),[x2,y2]=pt(i*5,R2-(i%6?4:7));return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8C6A35" stroke-width=".6"/>`}).join('');
- const axes=c.ang?[[c.ang.asc,'AC'],[c.ang.mc,'MC']].map(([l,n])=>{const [a1,b1]=pt(l,R2),[a2,b2]=pt(l+180,R2);return `<line x1="${a1}" y1="${b1}" x2="${a2}" y2="${b2}" stroke="#6E2230" stroke-width="${n==='AC'?1.1:.8}" ${n==='MC'?'stroke-dasharray="3 3"':''}/>`}).join(''):'';
- const asp=c.asp.filter(a=>a.n!=='conjunction'&&a.a.g&&a.b.g&&!/Ascendant|Midheaven/.test(a.a.n+a.b.n)).map(a=>{const [x1,y1]=pt(a.a.lon,R3),[x2,y2]=pt(a.b.lon,R3);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${/square|opposition/.test(a.n)?'#8E2C3A':'#2E5378'}" stroke-width=".7" opacity=".75"/>`}).join('');
- const pls=c.pl.map(p=>{const [x,y]=pt(p.lon,(R2+R3)/2+(p.n==='Moon'?-6:0)),sel=V.chartSel===p.n;return `<g data-planet="${p.n}" tabindex="0" role="button" aria-label="${p.n} in ${sIdx(p.sign).name}"><circle cx="${x}" cy="${y}" r="11" class="pl${sel?' sel':''}"/><text x="${x}" y="${y}" class="pg">${p.g}</text></g>`}).join('');
- return `<svg class="wheel-c" viewBox="0 0 300 300" role="img" aria-label="Your natal chart wheel"><defs><clipPath id="sunc"><circle cx="${CX}" cy="${CX}" r="${R3-20}"/></clipPath></defs>
- <g class="zring"><circle cx="${CX}" cy="${CX}" r="${R}" fill="#18213B" stroke="#C9A45C" stroke-width="1.6"/><circle cx="${CX}" cy="${CX}" r="${R2}" fill="#F4E8CF" stroke="#C9A45C" stroke-width="1.2"/>${ring}</g>${ticks}
- <circle cx="${CX}" cy="${CX}" r="${R3}" fill="#EFE0C0" stroke="#B8924F" stroke-width=".8"/>${asp}<image href="/art/atlas/ex-chart.webp" x="${CX-R3+20}" y="${CX-R3+20}" width="${2*(R3-20)}" height="${2*(R3-20)}" clip-path="url(#sunc)" opacity=".9"/>${axes}${pls}</svg>`;
+ const asc=c.ang?c.ang.asc:0,C=200,R0=198,R1=195,R2=158,R3=106,R4=94,f=n=>n.toFixed(1),
+  pt=(lon,r)=>{const ph=(180+lon-asc)*Math.PI/180;return [C+r*Math.cos(ph),C-r*Math.sin(ph)]},
+  line=(l,r1,r2,k)=>{const [x1,y1]=pt(l,r1),[x2,y2]=pt(l,r2);return `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="${k}"/>`},
+  ring=(r1,r2)=>`M${C-r1} ${C}a${r1} ${r1} 0 1 0 ${2*r1} 0a${r1} ${r1} 0 1 0 ${-2*r1} 0ZM${C-r2} ${C}a${r2} ${r2} 0 1 1 ${2*r2} 0a${r2} ${r2} 0 1 1 ${-2*r2} 0Z`;
+ // the zodiac engraved in gold: a tick for every degree, and in each sign its painted figure between a small star and
+ // its glyph
+ const zod=SIGNS.map((s,i)=>{const m=(R1+R2)/2+.5,[ix,iy]=pt(i*30+15,m),[gx,gy]=pt(i*30+26,m),[sx,sy]=pt(i*30+4,m);
+  return line(i*30,R2,R1,'cw-zl')+`<image href="/art/atlas/csg-${s.id}.webp" x="${f(ix-17)}" y="${f(iy-17)}" width="34" height="34"/><text x="${f(gx)}" y="${f(gy)}" class="zg">${s.g}</text><circle cx="${f(sx)}" cy="${f(sy)}" r=".9" class="cw-zs"/>`}).join('');
+ const deg=Array.from({length:360},(_,i)=>line(i,R2,R2+(i%10?i%5?2.4:3.8:5.4),'cw-t')).join('');
+ // whole-sign houses: each sign is one house, numbered from the rising sign
+ const hs=c.known&&c.ang?K.signIdx(c.ang.asc):-1;
+ const houses=hs<0?'':SIGNS.map((s,i)=>{const [hx,hy]=pt(i*30+15,(R3+R4)/2);return line(i*30,R4,R3,'cw-hl')+`<text x="${f(hx)}" y="${f(hy)}" class="cw-hn">${ROMAN((i-hs+12)%12+1)}</text>`}).join('');
+ // the planets on two circles, the outer first; where they crowd they take turns on the inner one, then ease apart
+ // along their circles until no two touch, each still pointing to its exact degree
+ const LV=[144,121],D=30,gap=(a,b)=>{const d=Math.abs(a-b)%360;return Math.min(d,360-d)},sp=[...c.pl].sort((a,b)=>a.lon-b.lon).map(p=>({p,a:p.lon,k:0})),xy=q=>pt(q.a,LV[q.k]);
+ sp.forEach((q,i)=>{const o=sp[i-1];if(o&&gap(o.p.lon,q.p.lon)<2*Math.asin(D/2/LV[0])*180/Math.PI)q.k=1-o.k});
+ for(let t=0;t<200;t++){let moved=0;
+  for(let i=0;i<sp.length;i++)for(let j=i+1;j<sp.length;j++){const A=sp[i],B=sp[j],[ax,ay]=xy(A),[bx,by]=xy(B),d=Math.hypot(ax-bx,ay-by);
+   if(d<D){const dir=((B.a-A.a+540)%360)-180>=0?1:-1,st=Math.min(2,(D-d)/2/(LV[1]*Math.PI/180)+.2);A.a-=dir*st;B.a+=dir*st;moved=1}}
+  if(!moved)break}
+ const pls=sp.map(({p,a,k})=>{const r=LV[k],[x,y]=pt(a,r),[tx,ty]=pt(p.lon,R2-1),sel=V.chartSel===p.n;
+  return `<g data-planet="${p.n}" tabindex="0" role="button" aria-label="${p.n} in ${sIdx(p.sign).name}"><line x1="${f(tx)}" y1="${f(ty)}" x2="${f(x)}" y2="${f(y)}" class="cw-pp"/><circle cx="${f(tx)}" cy="${f(ty)}" r="1.6" class="cw-pd"/><circle cx="${f(x)}" cy="${f(y)}" r="15" class="cw-ph${sel?' sel':''}"/><image href="/art/atlas/orb-${p.n.toLowerCase()}.webp" x="${f(x-19)}" y="${f(y-19)}" width="38" height="38"/>${p.retro?`<text x="${f(x+11)}" y="${f(y+11)}" class="cw-rx">℞</text>`:''}</g>`}).join('');
+ // the Ascendant's line is the horizon of the painting; the Midheaven's crosses it
+ const axes=c.ang?[[c.ang.asc,'AC'],[c.ang.mc,'MC']].map(([l,n])=>{const [x,y]=pt(l,R4-12);return line(l,R2,R4,'cw-ax'+(n==='MC'?' mc':''))+line(l+180,R2,R4,'cw-ax'+(n==='MC'?' mc':''))+`<text x="${f(x)}" y="${f(y)}" class="cw-tg">${n}</text>`}).join(''):'';
+ const axin=c.ang?[c.ang.asc,c.ang.mc].map((l,i)=>line(l,R4,0,'cw-ax'+(i?' mc':''))+line(l+180,R4,0,'cw-ax'+(i?' mc':''))).join(''):'';
+ return `<svg class="wheel-c cw" viewBox="0 0 400 400" role="img" aria-label="Your natal chart, drawn as a map of the sky"><defs>
+ <clipPath id="cw-all"><circle cx="${C}" cy="${C}" r="${R0}"/></clipPath><clipPath id="cw-in"><circle cx="${C}" cy="${C}" r="${R4}"/></clipPath>
+ <radialGradient id="cw-v" gradientUnits="userSpaceOnUse" cx="${C}" cy="${C}" r="${R2}"><stop offset=".6" stop-color="#05070F" stop-opacity="0"/><stop offset="1" stop-color="#05070F" stop-opacity=".55"/></radialGradient></defs>
+ <image href="/art/atlas/chart-sky.webp" x="${C-R0}" y="${C-R0}" width="${2*R0}" height="${2*R0}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cw-all)"/><circle cx="${C}" cy="${C}" r="${R2}" fill="url(#cw-v)"/>
+ <path d="${ring(R0,R2)}" fill-rule="evenodd" class="cw-band"/>${deg}${zod}<circle cx="${C}" cy="${C}" r="${R0}" class="cw-l b"/><circle cx="${C}" cy="${C}" r="${R1}" class="cw-l"/><circle cx="${C}" cy="${C}" r="${R2}" class="cw-l b"/>
+ <image href="/art/atlas/chart-scene.webp" x="${C-R4}" y="${C-R4}" width="${2*R4}" height="${2*R4}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cw-in)"/>${axin}
+ ${hs<0?'':`<path d="${ring(R3,R4)}" fill-rule="evenodd" class="cw-band h"/>${houses}`}<circle cx="${C}" cy="${C}" r="${R3}" class="cw-l"/><circle cx="${C}" cy="${C}" r="${R4}" class="cw-l b"/>${axes}${pls}</svg>`;
 }
 const CHART_ROWS=[['planets',()=>pic('cats','planets','acc-i'),'Planetary Positions','Where the planets were at your birth'],['houses',()=>ui('ico-family','acc-i'),'Houses','The 12 areas of your life'],['aspects',()=>pic('cats','aspects','acc-i'),'Aspects','The connections between planets'],['interp',()=>pic('cats','insights','acc-i'),'Full Interpretation','A complete analysis of your chart']];
 function chartView(){
@@ -1642,7 +1669,7 @@ function chartView(){
  if(ct==='planets')body=`<div class="list">${c.pl.map(p=>acc(`<span class="glyph pgl">${p.g}</span>`,`${p.n} in ${p.n==='Moon'&&c.moonRange?'an uncertain sign':sIdx(p.sign).name}`,`${p.n==='Moon'&&c.moonRange?'Needs birth time':degTxt(p.lon)}${p.house?' · House '+p.house:''}${p.retro?' · retrograde':''}`,`<p>${placement(p)}</p>`)).join('')}</div>`;
  else if(ct==='aspects')body=`<div class="list">${c.asp.slice(0,18).map(a=>acc(`<span class="glyph pgl">${a.g}</span>`,`${a.a.n} ${a.n} ${a.b.n}`,`orb ${a.orb.toFixed(1)}°`,`<p>Your ${PM[a.a.n]} and ${PM[a.b.n]} ${ASPT[a.n]}.</p>`)).join('')||'<p class="muted center">No major aspects within the orbs used.</p>'}</div>`;
  else if(ct==='houses')body=c.known?`<p class="muted small center">Whole-sign houses: each sign is one house, starting from the rising sign.</p><div class="list">${HOUSE.map((h,i)=>{const s=sIdx(K.signIdx(c.ang.asc)+i),inn=c.pl.filter(p=>p.house===i+1).map(p=>p.n);return acc(`<span class="hn">${i+1}</span>`,`${ORD(i+1)} house · ${s.name}`,h,`<p>The ${ORD(i+1)} house is the life area of ${h}. In your chart it falls in ${s.name}, so you tend to meet it ${STYLE[s.id]}.${inn.length?` ${inn.join(', ')} ${inn.length>1?'are':'is'} placed here, bringing ${inn.map(n=>PM[n]).join('; ')} into this area.`:''}</p>`)}).join('')}</div>`:empty('Houses need your birth time and place','Add them below to see the twelve houses of your chart.');
- else body=`${mbox(`<div class="wheel-wrap">${chartWheel(c)}</div>${sel?`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${sIdx(sel.sign).name}</h3><p>${placement(sel)}</p>`:'<p class="muted center small">Tap a planet to read it.</p>'}`)}<div class="big3">${big}</div>
+ else body=`<div class="wheel-wrap wheel-free">${chartWheel(c)}</div>${sel?mbox(`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${sIdx(sel.sign).name}</h3><p>${placement(sel)}</p>`):'<p class="muted center small ch-tap">Tap a planet to read it.</p>'}<div class="big3">${big}</div>
   ${acc('','Full Interpretation','A complete analysis of your chart',`<div class="read">${c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).map(p=>`<p><strong>${p.n} in ${sIdx(p.sign).name}.</strong> ${placement(p)}</p>`).join('')}${c.ang?`<p><strong>${sIdx(K.signIdx(c.ang.asc)).name} rising.</strong> You tend to meet the world ${STYLE[sIdx(K.signIdx(c.ang.asc)).id]}.</p>`:''}</div>`,!!V.chartInterp)}`;
  return `<div class="mnp ch">${H}<p class="muted center ch-who">${ymdLong(b.date)}${b.unk||!b.time?'':' · '+esc(b.time)}${b.place?' · '+esc(b.place):''}</p>
  ${other?'':`<button class="link ch-ns" data-act="nsearch" data-k="chart">Search another person’s chart</button>`}

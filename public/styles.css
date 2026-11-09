@@ -3713,3 +3713,34 @@ body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in bu
 /* the sign's page: its figure, name and words lowered just beneath the painting's star and the Moon's phases */
 .hframe .hsp-hero{--st:calc(env(safe-area-inset-top,0px) + 12cqw)}
 .mnp>.mn-hd{align-self:stretch!important;padding-bottom:0!important}
+/* ---------- Birth Chart: the reader's own sky map (see chartWheel): fine gold engraving on the night, the planets'
+   painted orbs, the houses' numerals, the horizon and the meridian in gold ---------- */
+.wheel-c.cw{width:min(100%,400px);filter:drop-shadow(0 8px 20px rgba(0,0,0,.6))}
+.mbox .wheel-wrap:has(.cw){margin:0 -20px;padding:0}
+.cw .cw-band{fill:#060917;opacity:.9}
+.cw .cw-band.h{opacity:.78}
+.cw .cw-l{fill:none;stroke:#D9B56E;stroke-width:.6}
+.cw .cw-l.b{stroke-width:1.2}
+.cw .cw-zl{stroke:#D9B56E;stroke-width:.7}
+.cw .cw-t{stroke:#C9A45C;stroke-width:.4}
+.cw .cw-zs{fill:#E9C985}
+.cw .zg{font-family:var(--sym);font-size:9.5px;fill:#EFCF8A;text-anchor:middle;dominant-baseline:central}
+.cw .cw-hl{stroke:rgba(217,181,110,.7);stroke-width:.6}
+.cw .cw-hn{font-family:var(--font-serif);font-size:7.4px;font-weight:600;fill:#E9C985;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
+.cw .cw-ax{stroke:#E9C985;stroke-width:.8;opacity:.85}
+.cw .cw-ax.mc{opacity:.6}
+.cw .cw-tg{font-family:var(--font-serif);font-size:7px;font-weight:700;fill:#F6E3B0;text-anchor:middle;dominant-baseline:central;letter-spacing:.08em;paint-order:stroke;stroke:#05070F;stroke-width:2.4px}
+.cw .cw-pp{stroke:rgba(233,201,133,.55);stroke-width:.6}
+.cw .cw-pd{fill:#F6DA97}
+.cw .cw-ph{fill:transparent;stroke:none}
+.cw .cw-ph.sel{stroke:#FFF0C8;stroke-width:1.4;filter:drop-shadow(0 0 4px rgba(255,214,140,.95))}
+.cw .cw-rx{font-family:var(--font-serif);font-size:8px;font-weight:700;fill:#F07A5C;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:#05070F;stroke-width:2.2px}
+.cw g[data-planet]{cursor:pointer}
+.cw g[data-planet]:focus-visible{outline:none}
+.cw g[data-planet]:focus-visible .cw-ph{stroke:#FFF0C8;stroke-width:1.4}
+.cw image{pointer-events:none}
+.cw .cw-ph{pointer-events:all}
+/* the sky map on its own, floating on the night above the page, as wide as the page allows */
+.wheel-free{margin:6px 0 2px;padding:0}
+.wheel-free .wheel-c.cw{width:min(100%,420px);filter:drop-shadow(0 10px 26px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(233,201,133,.12))}
+.mnp.ch .ch-tap{margin:2px 0 6px;color:rgba(241,226,188,.85)!important;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.9)}
