@@ -1,18 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="944" height="820" viewBox="0 330 944 820">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="944" height="820" viewBox="0 330 944 820">
 <defs>
-<linearGradient id="fo" gradientUnits="userSpaceOnUse" x1="0" y1="650" x2="0" y2="890.0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-<linearGradient id="fi" gradientUnits="userSpaceOnUse" x1="0" y1="470" x2="0" y2="588.5"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="fo" gradientUnits="userSpaceOnUse" x1="0" y1="200" x2="0" y2="901.5"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="fi" gradientUnits="userSpaceOnUse" x1="0" y1="215" x2="0" y2="588.5"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
 <mask id="mo" maskUnits="userSpaceOnUse" x="0" y="0" width="944" height="1150"><rect width="944" height="1150" fill="url(#fo)"/></mask>
 <mask id="mi" maskUnits="userSpaceOnUse" x="0" y="0" width="944" height="1150"><rect width="944" height="1150" fill="url(#fi)"/></mask>
+<radialGradient id="sh" r="1"><stop offset="0" stop-color="#FFD596" stop-opacity=".55"/><stop offset=".35" stop-color="#E8A55C" stop-opacity=".18"/><stop offset="1" stop-color="#E8A55C" stop-opacity="0"/></radialGradient>
+<radialGradient id="sr" cx="0" cy="0" r="26" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF7E2"/><stop offset=".3" stop-color="#FBD9A0"/><stop offset="1" stop-color="#E9B068" stop-opacity="0"/></radialGradient>
+<radialGradient id="sd" cx="0" cy="0" r="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF2D6"/><stop offset="1" stop-color="#E9B068" stop-opacity="0"/></radialGradient>
+<symbol id="s" overflow="visible">
+<circle r="13" fill="url(#sh)"/>
+<path d="M0-26L1.2-1.2L26 0L1.2 1.2L0 26L-1.2 1.2L-26 0L-1.2-1.2Z" fill="url(#sr)"/>
+<path d="M0-12L.9-.9L12 0L.9 .9L0 12L-.9 .9L-12 0L-.9-.9Z" fill="url(#sd)" transform="rotate(45)"/>
+<circle r="1.9" fill="#FFF9EC"/>
+</symbol>
 </defs>
 <g fill="none" stroke-linecap="round" mask="url(#mo)">
-<path d="M322.0 195.3A398 398 0 0 0 243.7 890.0M622.0 195.3A398 398 0 0 1 700.3 890.0" stroke="#E0A060" stroke-width="4" stroke-opacity=".06"/>
-<path d="M322.0 195.3A398 398 0 0 0 243.7 890.0M622.0 195.3A398 398 0 0 1 700.3 890.0" stroke="#B9824A" stroke-width="1" stroke-opacity=".35"/>
-<path d="M322.0 195.3A398 398 0 0 0 243.7 890.0M622.0 195.3A398 398 0 0 1 700.3 890.0" stroke="#E2AE6E" stroke-width="2" stroke-opacity=".85" stroke-dasharray="0 4.6"/>
+<path d="M322.0 195.3A398 398 0 0 0 261.1 901.5M622.0 195.3A398 398 0 0 1 682.9 901.5" stroke="#A8743F" stroke-width=".7" stroke-opacity=".22"/>
+<path d="M322.0 195.3A398 398 0 0 0 261.1 901.5M622.0 195.3A398 398 0 0 1 682.9 901.5" stroke="#D9A468" stroke-width="1.35" stroke-opacity=".6" stroke-dasharray="0 4.2"/>
 </g>
 <g fill="none" stroke-linecap="round" mask="url(#mi)">
-<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#E0A060" stroke-width="4" stroke-opacity=".06"/>
-<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#B9824A" stroke-width="1" stroke-opacity=".35"/>
-<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#E2AE6E" stroke-width="2" stroke-opacity=".85" stroke-dasharray="0 4.6"/>
+<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#A8743F" stroke-width=".7" stroke-opacity=".22"/>
+<path d="M472 215.0A398 398 0 0 0 74.8 588.5M472 215.0A398 398 0 0 1 869.2 588.5" stroke="#D9A468" stroke-width="1.35" stroke-opacity=".6" stroke-dasharray="0 4.2"/>
 </g>
+<use xlink:href="#s" href="#s" transform="translate(82 372) scale(0.846)" opacity="0.9"/><use xlink:href="#s" href="#s" transform="translate(896 394) scale(0.500)" opacity="0.85"/><use xlink:href="#s" href="#s" transform="translate(103 609) scale(0.538)" opacity="0.8"/><use xlink:href="#s" href="#s" transform="translate(884 560) scale(0.769)" opacity="0.9"/><use xlink:href="#s" href="#s" transform="translate(56 748) scale(0.385)" opacity="0.7"/><use xlink:href="#s" href="#s" transform="translate(71 841) scale(0.692)" opacity="0.9"/><use xlink:href="#s" href="#s" transform="translate(46 1025) scale(0.423)" opacity="0.8"/><use xlink:href="#s" href="#s" transform="translate(882 1088) scale(0.538)" opacity="0.8"/>
 </svg>
