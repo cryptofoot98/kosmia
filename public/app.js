@@ -960,7 +960,7 @@ function horoSign(){
  // one area's reading: the words, its focus and the question to carry
  const reading=k=>{const h=horoscope(ex,k,V.period);
   return `<div class="read">${paras(h.body)}</div>
-  ${h.focus?`<p class="h-kick">Your focus</p><p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="h-kick">To reflect on</p><p class="quote h-ref">${esc(h.reflection)}</p>`:''}
+  ${h.focus||h.reflection?`<div class="h-qs">${h.focus?`<p class="h-kick">Your focus</p><p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="h-kick">To reflect on</p><p class="quote h-ref">${esc(h.reflection)}</p>`:''}</div>`:''}
   ${ex!==S.sign?`<div class="acts"><button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button></div>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`};
  // at the foot of the screen, the area being read: its medallion lit between an arrow back and an arrow forward, the
@@ -974,15 +974,17 @@ function horoSign(){
  const listen=`<button class="ibtn${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the whole page on one screen: at its head the sign's painting dissolved into the night, its constellation, symbol,
- // name, dates and soul in the open sky at its left; right beneath it the time, and the reading on an invisible card,
- // its words set as large as lets it sit whole (it slides sideways to the next area of life while the head stays
- // still); at the foot, above the menu, the area's medallion between the arrows
+ // name, dates and soul in the open sky at its left; right beneath it the time, and the reading on an invisible card in
+ // the app's own reading size, laid out in pages that each sit whole (a swipe turns the page, and after the last brings
+ // in the next area of life while the head stays still), a mark for each page beneath it; at the foot, above the menu,
+ // the area's medallion between the arrows
  return `<div class="hsp hframe sx s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}<button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div>
  <div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
  <div class="sx-main">${per}
- <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div></div>
+ <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div>
+ <div class="hc-pgs" role="group" aria-label="Pages"></div></div>
  ${ctl}
  </div>`;
 }
@@ -2409,9 +2411,11 @@ let enT=0;
 /* the sign page: the painting and the sign's name stay in place while its words, the period bar, the areas and the
    reading roll up over them; the areas then stay at the top of the screen as its menu. */
 /* the areas of life on a sign page. The reading never moves sideways under the finger (so scrolling stays steady): a
-   clearly sideways swipe on the reading, once let go, brings in the next area (or the one before), as the arrows
-   beneath it do. The new reading slides in without redrawing the page; the medallion between the arrows turns to the
-   new area like a carousel; the painting and the sign's name stay still; and the new reading opens at its start. */
+   clearly sideways swipe on the reading, once let go, turns its page (or back), and after its last page brings in the
+   next area (or, back from its first, the one before at its last page); the arrows beneath it go to the next area or
+   the one before, at its start. The new page or reading slides in without redrawing the page; the marks beneath the
+   reading follow its page; the medallion between the arrows turns to the new area like a carousel; the painting and
+   the sign's name stay still. */
 function hcar(){
  const c=$('.hcar');if(!c)return;
  const R=c.querySelector('.hc-read'),T=$('.hc-track'),n=HCATS.length,arr=d=>$('.hc-ctl .hc-'+d),pg=c.closest('.hsp')||c;
@@ -2419,37 +2423,72 @@ function hcar(){
   [['pv',(j+n-1)%n,'Back to '],['nx',(j+1)%n,'Next, ']].forEach(([d,x,w])=>{const b=arr(d);if(b){b.dataset.k=HCATS[x][0];b.setAttribute('aria-label',w+CAT_INFO[HCATS[x][0]][0])}})};
  const cur=()=>Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
  line(cur());
- const take=(j,dir)=>{j=(j+n)%n;const k=HCATS[j][0];if(k===V.hcat)return;const cur0=cur();
+ // one page of the area being read in view, its mark lit (and kept when the page is drawn again, as when the reading
+ // is saved or read aloud)
+ const pages=()=>[...R.children[cur()].querySelectorAll('.hc-pg')];
+ const show=(p,dir)=>{const P=pages(),D=$('.sx .hc-pgs');p=Math.max(0,Math.min(P.length-1,p));c.pg=p;V.hpg=[R.children[cur()].dataset.ref,p];
+  P.forEach((e,x)=>{const on=x===p;e.hidden=!on;e.classList.toggle('cur',on);e.classList.toggle('turn',on&&!!dir);e.classList.toggle('from-l',on&&dir<0)});
+  if(D)D.innerHTML=P.length>1?P.map((e,x)=>`<button class="hc-pd${x===p?' on':''}" data-act="hpg" data-pg="${x}" aria-label="Page ${x+1} of ${P.length}"${x===p?' aria-current="true"':''}></button>`).join(''):'';
+  R.scrollTop=0;sxOvf()};
+ const take=(j,dir,last)=>{j=(j+n)%n;const k=HCATS[j][0];if(k===V.hcat)return;const cur0=cur();
   const was=V.say;V.hcat=k;stopAudio();line(j,Math.abs(j-cur0)>1);
   const back=dir?dir<0:j<cur0,turn=(sl,x)=>{const on=x===j;sl.hidden=!on;sl.classList.toggle('cur',on);sl.classList.toggle('from-l',on&&back)};
-  [...R.children].forEach(turn);
+  [...R.children].forEach(turn);sxLay(R.children[j]);
   const sl=R.children[j],r=sl.dataset.ref,hb=$('.hsp-bar [data-act=bookhoro]'),sh=$('.hsp-bar [data-act=sharecard]'),wr=$('.hsp-body [data-act=hreflect]');
   if(hb){const on=isSaved('horoscope',r);hb.dataset.ref=r;hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);hb.setAttribute('aria-label',on?'Saved to your journal':'Save to your journal')}
   if(sh)sh.dataset.cat=k;if(wr)wr.dataset.ref=r;
   syncUrl();
-  R.scrollTop=0;sxOvf();if(R.getBoundingClientRect().top<0)window.scrollTo(0,0);
+  show(last?1e9:0);if(R.getBoundingClientRect().top<0)window.scrollTo(0,0);
   if(was)render()};
- // a clearly sideways swipe moves to the next area or back; anything more up-and-down is left to scrolling
+ // the next page, or the next area once its last page is read; back the same way
+ const step=d=>{const P=pages().length;if(d>0&&c.pg<P-1)return show(c.pg+1,1);if(d<0&&c.pg>0)return show(c.pg-1,-1);take(cur()+d,d,d<0)};
+ // a clearly sideways swipe turns the page; anything more up-and-down is left to scrolling
  let sx=0,sy=0;
  pg.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
- pg.addEventListener('touchend',e=>{const t=e.changedTouches[0],x=t.clientX-sx,y=t.clientY-sy;if(Math.abs(x)>50&&Math.abs(x)>2*Math.abs(y))take(cur()+(x<0?1:-1),x<0?1:-1)},{passive:true});
- c.go=(j,d)=>take(j,d);
- sxFit();
+ pg.addEventListener('touchend',e=>{const t=e.changedTouches[0],x=t.clientX-sx,y=t.clientY-sy;if(Math.abs(x)>50&&Math.abs(x)>2*Math.abs(y))step(x<0?1:-1)},{passive:true});
+ c.go=(j,d)=>take(j,d);c.show=show;c.pg=V.hpg&&V.hpg[0]===R.children[cur()].dataset.ref?V.hpg[1]:0;
+ sxPage();
 }
-// a sign's page is one screen: the reading's words are set as large as lets every one of its areas sit whole on the
-// invisible card, with its question and next steps (between 17px and 13.5px, one size for all six), measured on a
-// hidden copy so the reading itself does not stir; an area still longer than the card at the smallest size scrolls
-// within it, fading at its foot
-function sxFit(){
- const R=$('.sx .hc-read');if(!R)return;
- const M=R.cloneNode(true),H=R.clientHeight;M.removeAttribute('aria-live');M.setAttribute('aria-hidden','true');M.classList.remove('ovf');
- M.style.cssText=`position:absolute;left:0;top:0;width:${R.clientWidth}px;height:auto!important;overflow:visible;visibility:hidden;pointer-events:none`;
- R.parentNode.appendChild(M);const sl=[...M.children];sl.forEach(x=>x.classList.remove('cur'));
- const fits=()=>sl.every(x=>{sl.forEach(y=>y.hidden=y!==x);return M.offsetHeight<=H+1});
- let f=17;for(;f>13.5;f-=.5){M.style.setProperty('--rf',f+'px');if(fits())break}
- M.remove();R.style.setProperty('--rf',f+'px');sxOvf()}
+// a sign's page is one screen: each area's reading is laid out in pages that sit whole on the invisible card, in the
+// app's own reading size, broken between sentences (a paragraph carries on over the page) into as few pages as hold
+// it, the breaks chosen so its pages are as alike as they can be, its small print at the end of its last; then its
+// focus and its question together on a page of their own, with the button to choose the sign where it fits beside
+// them (or else at the end of the reading); all on one page where the card holds it whole. Measured on a hidden page
+// so the reading itself does not stir, and laid out again only when the card changes size. A page still longer than
+// the card (only on the smallest screens) scrolls within it, fading at its foot
+function sxLay(sl){
+ const R=$('.sx .hc-read'),c=$('.hcar');if(!R||!sl)return;
+ const H=R.clientHeight,at=R.clientWidth+'x'+H;if(sl._at===at)return;sl._at=at;
+ const M=document.createElement('div');M.className='hc-slide';M.setAttribute('aria-hidden','true');
+ M.style.cssText=`position:absolute;left:0;top:0;width:${R.clientWidth}px;height:auto;visibility:hidden;pointer-events:none`;
+ c.appendChild(M);
+ const html=us=>{let o='',rd=0,p=0;const end=()=>{if(p)o+='</p>';if(rd)o+='</div>';rd=p=0};
+  us.forEach(u=>{if(u.s==null){end();o+=u.h;return}if(!rd){o+='<div class="read">';rd=1}if(u.np&&p){o+='</p>';p=0}if(!p){o+='<p>';p=1}o+=esc(u.s)});
+  end();return `<div class="hc-pg${us.q?' q':''}">${o}</div>`};
+ const fits=(us,h)=>{M.innerHTML=html(us);return M.offsetHeight<=h+1};
+ // the fewest pages, then the breaks that make them most alike; every page holds some of the reading
+ const even=us=>{const n=us.length,h=us.map(()=>[]),memo={},last=us.map(u=>u.s!=null).lastIndexOf(true);
+  for(let i=0;i<n;i++)for(let j=i+1;j<=n;j++){const ok=fits(us.slice(i,j),H);if(ok||j===i+1)h[i][j]=M.offsetHeight;if(!ok)break}
+  const f=(i,k)=>{if(i===n)return k?Infinity:0;if(!k||i>last&&last>=0)return Infinity;const key=i+'/'+k;if(key in memo)return memo[key][0];
+   let b=[Infinity,i+1];for(let j=i+1;j<=n&&h[i][j]!=null;j++){const v=h[i][j]**2+f(j,k-1);if(v<=b[0])b=[v,j]}memo[key]=b;return b[0]};
+  let P=1;while(P<n&&f(0,P)===Infinity)P++;f(0,P);
+  const pgs=[];for(let i=0,k=P;i<n;k--){const j=memo[i+'/'+k][1];pgs.push(us.slice(i,j));i=j}return pgs};
+ {
+  const t=document.createElement('template');t.innerHTML=sl._src=sl._src||sl.innerHTML;const all=[],us=[],ts=[];
+  [...t.content.children].forEach(e=>{
+   if(e.classList.contains('read'))[...e.children].forEach(q=>(q.textContent.match(/[^.!?…]+(?:[.!?…]+[’”"')\]]*\s*|$)/g)||[]).filter(x=>x.trim()).forEach((x,i)=>{const u={s:x,np:!i};all.push(u);us.push(u)}));
+   else{const u={h:e.outerHTML};all.push(u);(e.classList.contains('h-qs')||e.classList.contains('acts')&&fits(ts.concat(u),H)?ts:us).push(u)}});
+  let pgs;
+  if(fits(all,H))pgs=[all];
+  else{pgs=even(us);if(ts.length){ts.q=1;pgs.push(ts)}}
+  sl.innerHTML=pgs.map(html).join('')}
+ M.remove()}
+// the area in view laid out again (the others when they are next turned to), its page kept
+function sxPage(){
+ const R=$('.sx .hc-read'),c=$('.hcar');if(!R)return;
+ [...R.children].forEach(x=>x._at='');sxLay(R.querySelector('.hc-slide.cur'));if(c.show)c.show(c.pg||0)}
 const sxOvf=()=>{const R=$('.sx .hc-read');if(!R)return;R.classList.remove('ovf');R.classList.toggle('ovf',R.scrollHeight>R.clientHeight+1)};
-addEventListener('resize',()=>{clearTimeout(sxFit.t);sxFit.t=setTimeout(sxFit,150)});if(document.fonts)document.fonts.ready.then(()=>sxFit());
+addEventListener('resize',()=>{clearTimeout(sxPage.t);sxPage.t=setTimeout(sxPage,150)});if(document.fonts)document.fonts.ready.then(()=>sxPage());
 function enCar(){
  clearInterval(enT);const t=$('.en-track');if(!t)return;
  const dots=[...document.querySelectorAll('.en-dots i')],at=()=>Math.round(t.scrollLeft/Math.max(1,t.clientWidth));let hold=0;
@@ -2614,6 +2653,7 @@ document.addEventListener('click',e=>{
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
  if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
+ if(a==='hpg'){const c=$('.hcar');return c&&c.show&&c.show(+t.dataset.pg,+t.dataset.pg<(c.pg||0)?-1:1)}
  if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k),t.dataset.dir?+t.dataset.dir:0);V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
  if(a==='hreflect'){const [sign,cat,period,key]=t.dataset.ref.split('/');return openEntry(ensureBook('horoscope',t.dataset.ref,horoData(sign,cat,period,key)))}
