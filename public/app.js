@@ -957,10 +957,9 @@ function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);markRead({k:'horo',sign:ex,cat,period:V.period,from:{sec:'horoscope',t:'sign'}});
  if(ex===S.sign&&V.period==='daily'&&S.readDay!==dkey()){S.readDay=dkey();save()}
  const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),n=HCATS.length,ci=Math.max(0,HCATS.findIndex(x=>x[0]===cat));
- // one area's reading: the words, its focus and the question to carry
+ // one area's reading: its words alone
  const reading=k=>{const h=horoscope(ex,k,V.period);
   return `<div class="read">${paras(h.body)}</div>
-  ${h.focus||h.reflection?`<div class="h-qs">${h.focus?`<p class="h-kick">Your focus</p><p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="h-kick">To reflect on</p><p class="quote h-ref">${esc(h.reflection)}</p>`:''}</div>`:''}
   ${ex!==S.sign?`<div class="acts"><button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button></div>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`};
  // at the foot of the screen, the area being read: its medallion lit between an arrow back and an arrow forward, the
@@ -2451,11 +2450,10 @@ function hcar(){
 }
 // a sign's page is one screen: each area's reading is laid out in pages that sit whole on the invisible card, in the
 // app's own reading size, broken between sentences (a paragraph carries on over the page) into as few pages as hold
-// it, the breaks chosen so its pages are as alike as they can be, its small print at the end of its last; then its
-// focus and its question together on a page of their own, with the button to choose the sign where it fits beside
-// them (or else at the end of the reading); all on one page where the card holds it whole. Measured on a hidden page
-// so the reading itself does not stir, and laid out again only when the card changes size. A page still longer than
-// the card (only on the smallest screens) scrolls within it, fading at its foot
+// it, the breaks chosen so its pages are as alike as they can be, the button to choose the sign and its small print
+// at the end of its last; all on one page where the card holds it whole. Measured on a hidden page so the reading
+// itself does not stir, and laid out again only when the card changes size. A page still longer than the card (only
+// on the smallest screens) scrolls within it, fading at its foot
 function sxLay(sl){
  const R=$('.sx .hc-read'),c=$('.hcar');if(!R||!sl)return;
  const H=R.clientHeight,at=R.clientWidth+'x'+H;if(sl._at===at)return;sl._at=at;
@@ -2464,7 +2462,7 @@ function sxLay(sl){
  c.appendChild(M);
  const html=us=>{let o='',rd=0,p=0;const end=()=>{if(p)o+='</p>';if(rd)o+='</div>';rd=p=0};
   us.forEach(u=>{if(u.s==null){end();o+=u.h;return}if(!rd){o+='<div class="read">';rd=1}if(u.np&&p){o+='</p>';p=0}if(!p){o+='<p>';p=1}o+=esc(u.s)});
-  end();return `<div class="hc-pg${us.q?' q':''}">${o}</div>`};
+  end();return `<div class="hc-pg">${o}</div>`};
  const fits=(us,h)=>{M.innerHTML=html(us);return M.offsetHeight<=h+1};
  // the fewest pages, then the breaks that make them most alike; every page holds some of the reading
  const even=us=>{const n=us.length,h=us.map(()=>[]),memo={},last=us.map(u=>u.s!=null).lastIndexOf(true);
@@ -2474,14 +2472,11 @@ function sxLay(sl){
   let P=1;while(P<n&&f(0,P)===Infinity)P++;f(0,P);
   const pgs=[];for(let i=0,k=P;i<n;k--){const j=memo[i+'/'+k][1];pgs.push(us.slice(i,j));i=j}return pgs};
  {
-  const t=document.createElement('template');t.innerHTML=sl._src=sl._src||sl.innerHTML;const all=[],us=[],ts=[];
+  const t=document.createElement('template');t.innerHTML=sl._src=sl._src||sl.innerHTML;const us=[];
   [...t.content.children].forEach(e=>{
-   if(e.classList.contains('read'))[...e.children].forEach(q=>(q.textContent.match(/[^.!?…]+(?:[.!?…]+[’”"')\]]*\s*|$)/g)||[]).filter(x=>x.trim()).forEach((x,i)=>{const u={s:x,np:!i};all.push(u);us.push(u)}));
-   else{const u={h:e.outerHTML};all.push(u);(e.classList.contains('h-qs')||e.classList.contains('acts')&&fits(ts.concat(u),H)?ts:us).push(u)}});
-  let pgs;
-  if(fits(all,H))pgs=[all];
-  else{pgs=even(us);if(ts.length){ts.q=1;pgs.push(ts)}}
-  sl.innerHTML=pgs.map(html).join('')}
+   if(e.classList.contains('read'))[...e.children].forEach(q=>(q.textContent.match(/[^.!?…]+(?:[.!?…]+[’”"')\]]*\s*|$)/g)||[]).filter(x=>x.trim()).forEach((x,i)=>us.push({s:x,np:!i})));
+   else us.push({h:e.outerHTML})});
+  sl.innerHTML=(fits(us,H)?[us]:even(us)).map(html).join('')}
  M.remove()}
 // the area in view laid out again (the others when they are next turned to), its page kept
 function sxPage(){

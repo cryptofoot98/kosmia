@@ -3888,28 +3888,46 @@ body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in bu
 /* the small cards on Today and Stars keep the sizes fitted to them, in the same hand */
 #app :is(.hh-card p:not(.keys),.hmine .hm-d,.en-row>span>span){font-family:var(--font-text)!important;font-style:normal!important;font-weight:500!important}
 /* ---------- a sign's page, all on one screen, under a night of its own: the painting's sky with its lilies at its
-   head but without the Moon at its foot. At its head the sign's painting dissolved into the night, with its constellation,
-   symbol, name, dates and soul in the open sky at its left, as the sign's page has always drawn them, raised to sit
-   just beneath the Moon's phases (--st), and drawn a little smaller on shorter screens (--hs, from the painting's
-   head down) so the reading keeps its room. Right beneath it the time between two gold lines, and the reading on an
-   invisible card in the app's own reading size, laid out in pages that each sit whole (sxPage in app.js), a mark for
-   each page beneath it: a swipe turns the page, and after the last brings in the next area of life while the head
+   head but without the Moon's phases there or the Moon at its foot. At its head the sign's painting dissolved into the
+   night, risen beneath the buttons and reaching the frame's gold line at the right, the night's star and its lilies
+   kept in front of it; in the open sky at its left the sign's symbol beside its name, its constellation beneath the
+   symbol, the dates beneath the name and the soul in wide-spaced lines below them (all in --u, a little smaller on the
+   shortest screens so the reading keeps its room). Right beneath it the time between two gold lines, and the reading on
+   an invisible card in the app's own reading size, laid out in pages that each sit whole in the middle of the card
+   (sxPage in app.js), a mark for each page beneath it: a swipe turns the page, and after the last brings in the next area of life while the head
    stays still. At the foot, above the menu, the area's medallion lit between an arrow back and an arrow forward,
-   turning like a carousel. The page itself never scrolls. ---------- */
+   turning like a carousel. The page itself never scrolls: the body is held to the screen as it is seen (Safari's 100vh
+   is the screen with its bars hidden, taller than the page, which let the whole page slide up under the finger) ---------- */
 html body:has(#app>.hsp.sx) #app{padding-bottom:0!important}
-#app .hsp.sx{position:relative;height:100vh;height:100svh;min-height:0!important;overflow:hidden;padding:0!important;--hs:1}
-@media (max-height:800px){#app .hsp.sx{--hs:.92}}
-@media (max-height:740px){#app .hsp.sx{--hs:.84}}
-@media (max-height:690px){#app .hsp.sx{--hs:.78}}
-@media (max-height:620px){#app .hsp.sx{--hs:.7}}
-#app .hsp.sx::before{background:url(/art/atlas/night-arcs-head.svg) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-top.webp) 50% 0/100% var(--nt) no-repeat,
+html:has(#app>.hsp.sx){overflow:hidden;overscroll-behavior:none}
+html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
+#app .hsp.sx{position:relative;height:100vh;height:100svh;min-height:0!important;overflow:hidden;padding:0!important;--k:1;--u:calc(var(--k) * 1cqw)}
+@media (max-height:620px){#app .hsp.sx{--k:.85}}
+#app .hsp.sx::before{background:url(/art/atlas/night-arcs-head.svg) 50% 0/100% var(--nt) no-repeat,url(/art/atlas/night-lily-top-nomoon.webp) 50% 0/100% var(--nt) no-repeat,
  url(/art/atlas/night-lily-bot-bare.webp) 50% 100%/100% var(--nb) no-repeat,url(/art/atlas/night-arcs-sky.svg) 50% var(--nt)/100% auto no-repeat,
  url(/art/atlas/night-lily-mid.webp) 50% calc(var(--nt) - 1px)/100% calc(100% - var(--nt) - var(--nb) + 2px) no-repeat,#05070F!important}
-#app .hsp.sx>.hsp-hero{--st:calc(env(safe-area-inset-top,0px) + 3cqw);transform:scale(var(--hs));transform-origin:50% 22cqw;pointer-events:none}
-/* its dates and soul as the sign's page has always set them */
-#app .sx .hsp-t .hsp-d{font-family:var(--font-serif)!important;font-size:2.6cqw!important;font-weight:400!important;font-style:normal!important;letter-spacing:.06em!important;line-height:1.5!important;text-transform:uppercase!important}
-#app .sx .hsp-t .hsp-soul{font-family:var(--font-serif)!important;font-size:3.2cqw!important;font-weight:400!important;font-style:italic!important;line-height:1.45!important}
-#app .sx .sx-main{position:absolute;z-index:3;left:7cqw;right:6cqw;top:calc(22cqw + 64cqw * var(--hs) - var(--pu,0px));bottom:calc(var(--nband) + 6px + var(--cb,77px) + 2px);display:flex;flex-direction:column}
+#app .hsp.sx>.hsp-hero{--st:env(safe-area-inset-top,0px);pointer-events:none}
+/* the figure, risen beneath the buttons, her moon behind them, the painting running whole to the frame's gold line at
+   the right (the line at 98.1% of the night's width) */
+#app .sx .hsp-img{left:0!important;right:auto!important;top:calc(var(--st) + 3.5 * var(--u))!important;width:calc(98 * var(--u))!important;
+ -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 52%),linear-gradient(transparent,#000 12%,#000 64%,transparent 92%)!important;
+ mask-image:linear-gradient(90deg,transparent 30%,#000 52%),linear-gradient(transparent,#000 12%,#000 64%,transparent 92%)!important}
+/* the night's star and its two lilies drawn again in front of the figure, so the painting never dims or hides them
+   (art/atlas/night-top-front: the star and the lilies alone from the night's head, at the same size) */
+#app .hsp.sx>.hsp-hero::after{content:'';position:absolute;z-index:2;left:0;top:0;width:100%;height:var(--nt);
+ background:url(/art/atlas/night-top-front.webp) 50% 0/100% var(--nt) no-repeat;pointer-events:none}
+/* the symbol just before the name, the constellation beneath it, and the name, its dates, the star line and the soul in
+   a column at their right */
+#app .sx .hsp-g{left:calc(17 * var(--u))!important;top:calc(var(--st) + 20.6 * var(--u))!important;font-size:calc(5 * var(--u))!important}
+#app .sx .hsp-c{left:calc(9.5 * var(--u))!important;top:calc(var(--st) + 26.7 * var(--u))!important;width:calc(11 * var(--u))!important}
+#app .sx .hsp-hero>.hsp-t{left:calc(23.6 * var(--u))!important;top:calc(var(--st) + 19.4 * var(--u))!important;width:calc(26 * var(--u))!important;text-align:left!important}
+#app .sx .hsp-t :is(h1,.hsp-d){width:auto!important;margin-left:0!important;text-align:left!important}
+#app .sx .hsp-t h1{font-size:min(calc(6.55 * var(--u)),calc(35.9 * var(--u) / var(--nl,6)))!important}
+#app .sx .hsp-t .hsp-d{margin:calc(.4 * var(--u)) 0 0!important;font-family:var(--font-serif)!important;font-size:calc(2.03 * var(--u))!important;font-weight:400!important;font-style:normal!important;letter-spacing:.06em!important;line-height:1.5!important;text-transform:uppercase!important}
+#app .sx .hsp-star{width:calc(20.3 * var(--u))!important;height:calc(2.3 * var(--u));margin:calc(1.1 * var(--u)) 0 0!important}
+#app .sx .hsp-star::after{font-size:calc(2 * var(--u))}
+#app .sx .hsp-t .hsp-soul{width:calc(34 * var(--u))!important;margin:calc(2 * var(--u)) 0 0 calc(-13.6 * var(--u))!important;text-align:left!important;font-family:var(--font-serif)!important;font-size:calc(2.5 * var(--u))!important;font-weight:400!important;font-style:italic!important;line-height:2!important}
+#app .sx .sx-main{position:absolute;z-index:3;left:7cqw;right:6cqw;top:calc(env(safe-area-inset-top,0px) + 55 * var(--u));bottom:calc(var(--nband) + 6px + var(--cb,77px) + 2px);display:flex;flex-direction:column}
 /* the time, between two gold lines, above the reading it chooses */
 #app .sx .sx-per{flex:none;display:flex;align-items:center;justify-content:center;gap:5cqw;margin:0}
 #app .sx .sx-per::before,#app .sx .sx-per::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,201,133,.55))}
@@ -3924,20 +3942,12 @@ html body:has(#app>.hsp.sx) #app{padding-bottom:0!important}
 #app .sx .hc-read.ovf{padding-bottom:28px;-webkit-mask-image:linear-gradient(#000 calc(100% - 44px),transparent);mask-image:linear-gradient(#000 calc(100% - 44px),transparent)}
 #app .sx .hc-read::-webkit-scrollbar{display:none}
 #app .sx .hc-slide{height:100%}
-/* the page of the focus and the question, in the middle of the card */
-#app .sx .hc-pg.q{display:flex;flex-direction:column;min-height:100%}
-#app .sx .hc-pg.q>:first-child{margin-top:auto!important}
-#app .sx .hc-pg.q>:last-child{margin-bottom:auto!important}
-#app .sx .hc-pg.q :is(.h-focus,.h-ref){padding:0 7%;text-wrap:balance}
+/* each page in the middle of the card, the space above and below it alike */
+#app .sx .hc-slide .hc-pg{display:flex;flex-direction:column;justify-content:center;min-height:100%}
 #app .sx .hc-slide .read{display:block!important}
-#app .sx .hc-slide .read p{margin:0 0 .5em!important;font-size:var(--t-body)!important;line-height:1.55!important;color:#F4E8CC;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.8)}
+#app .sx .hc-slide .read p{margin:0 0 .5em!important;text-align:justify;-webkit-hyphens:auto;hyphens:auto;font-size:var(--t-body)!important;line-height:1.55!important;color:#F4E8CC;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.8)}
 #app .sx .hc-slide .read p:last-child{margin-bottom:0!important}
 #app .sx .hc-slide .rule{display:none}
-#app .sx .hc-slide .h-kick{margin:12px 0 2px!important;text-align:center;font-family:var(--font-display)!important;font-style:normal!important;font-weight:600!important;font-size:var(--t-label)!important;line-height:1.4!important;
- letter-spacing:.12em!important;text-transform:uppercase!important;color:#E0C487;text-shadow:0 1px 6px #000}
-#app .sx .hc-slide :is(.h-focus,.h-ref){margin:0!important;text-align:center;font-size:var(--t-phrase)!important;line-height:1.4!important;color:#F1D79A;text-shadow:0 1px 6px #000}
-/* a page that opens on the focus starts at its top */
-#app .sx .hc-pg>.h-qs:first-child>.h-kick:first-child{margin-top:0!important}
 /* the next page slides in from the side it was swiped from */
 #app .sx .hc-pg.turn{animation:hcin .32s ease-out}
 #app .sx .hc-pg.turn.from-l{animation-name:hcinl}
@@ -3952,12 +3962,12 @@ html body:has(#app>.hsp.sx) #app{padding-bottom:0!important}
 #app .sx .hc-slide .acts .btn svg{width:14px;height:14px;flex:none}
 #app .sx .hc-slide .acts .btn[data-act=setsign]{flex-basis:100%}
 #app .sx .hc-slide .muted.small{margin:5px 0 0!important;text-align:center;font-size:.68rem!important;line-height:1.2!important}
-/* at the foot: the area's medallion between the arrows */
-#app .sx .hc-ctl{position:absolute;z-index:2;left:0;right:0;bottom:calc(var(--nband) + 6px);display:flex;align-items:center;justify-content:center;gap:26px;margin:0}
-#app .sx .hc-arr{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid rgba(233,201,133,.6);background:rgba(6,10,24,.55);color:#F1D79A;cursor:pointer}
-#app .sx .hc-arr svg{width:18px;height:18px}
+/* at the foot: the area's medallion with an arrow close at either side */
+#app .sx .hc-ctl{position:absolute;z-index:2;left:0;right:0;bottom:calc(var(--nband) + 6px);display:flex;align-items:center;justify-content:center;gap:2px;margin:0}
+#app .sx .hc-arr{position:relative;z-index:1;display:grid;place-items:center;width:36px;height:44px;padding:0;border:0;background:none;color:#F1D79A;cursor:pointer;filter:drop-shadow(0 1px 3px #000) drop-shadow(0 0 6px rgba(0,0,0,.8))}
+#app .sx .hc-arr svg{width:20px;height:20px}
 #app .sx .hc-pv svg{transform:rotate(180deg)}
-#app .sx .hc-win{width:130px;margin:-16px 0;overflow:hidden}
+#app .sx .hc-win{width:120px;margin:-16px -22px;overflow:hidden}
 #app .sx .hc-track{display:flex;overflow:visible!important;transform:translateX(calc(var(--p,0) * -100%));transition:transform .4s cubic-bezier(.3,.7,.3,1)}
 #app .sx .hc-track.jump{transition:none}
 #app .sx .hc-s{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 0;opacity:.25;transition:opacity .4s}
@@ -3965,6 +3975,6 @@ html body:has(#app>.hsp.sx) #app{padding-bottom:0!important}
 #app .sx .hc-m{display:block;width:56px;height:56px;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 2px rgba(255,232,170,.9)) drop-shadow(0 0 9px rgba(243,210,140,.75)) drop-shadow(0 0 18px rgba(243,210,140,.4))}
 #app .sx .hc-sl{font-family:var(--font-display);font-weight:600;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#F6DA97;text-shadow:0 1px 4px #000;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){#app .sx .hc-track,#app .sx .hc-s{transition:none}}
-/* on a shorter screen the reading keeps its lines: the time a little higher into the painting's fading foot, the
-   area's medallion a little smaller (--cb, the height of the medallion and its name) */
-@media (max-height:700px){#app .hsp.sx{--pu:6px;--cb:67px}#app .sx .hc-m{width:48px;height:48px}#app .sx .hc-s{gap:4px}}
+/* on a shorter screen the reading keeps its lines: the area's medallion a little smaller (--cb, the height of the
+   medallion and its name) */
+@media (max-height:700px){#app .hsp.sx{--cb:67px}#app .sx .hc-m{width:48px;height:48px}#app .sx .hc-s{gap:4px}}
