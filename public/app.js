@@ -956,26 +956,35 @@ views.horoscope=()=>{
 function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);markRead({k:'horo',sign:ex,cat,period:V.period,from:{sec:'horoscope',t:'sign'}});
  if(ex===S.sign&&V.period==='daily'&&S.readDay!==dkey()){S.readDay=dkey();save()}
- const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),pl=PLABEL[V.period];
- const tiles=HCATS.map(([k])=>{const x=horoscope(ex,k,V.period);
-  return `<button class="hc-ic t-${k}${k===cat?' on':''}" data-act="hcat" data-k="${k}" aria-pressed="${k===cat}" title="${k==='overview'?'The whole picture':esc(THEME[k][x.rel]||'')}"><span class="hc-i">${ui('hz-'+k,'acc-i')}</span><span class="hc-l">${CAT_INFO[k][0]}</span></button>`}).join('');
- const reading=k=>{const h=horoscope(ex,k,V.period),playing=V.say===h.body;
-  return panel(`<div class="hd"><div><h2>${k==='overview'?pl[1]+' Horoscope':`${CAT_INFO[k][0]} · ${pl[0]}`}</h2><p class="muted">${periodHead(V.period,h.per)}</p></div><button class="ibtn round${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div>
-  <div class="read">${paras(h.body)}</div>${h.focus||h.reflection?'<div class="rule" aria-hidden="true"></div>':''}${h.focus?`<p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="quote h-ref">${esc(h.reflection)}</p>`:''}
-  ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`,'ornate hread')};
- const acts=k=>`<div class="acts"><button class="btn" data-act="hreflect" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}">${IC.quill}Write a Reflection</button>${ex!==S.sign?`<button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button>`:''}<button class="btn ghost" data-act="kasask" data-q="What does this ${pl[0].toLowerCase()} forecast mean for me as a ${s.name}?">${IC.chat}Ask Kassandra</button></div>`;
+ const ref=`${ex}/${cat}/${V.period}/${h.per.key}`,saved=isSaved('horoscope',ref),n=HCATS.length,ci=Math.max(0,HCATS.findIndex(x=>x[0]===cat));
+ // one area's reading: the words, its focus and the question to carry
+ const reading=k=>{const h=horoscope(ex,k,V.period);
+  return `<div class="read">${paras(h.body)}</div>
+  ${h.focus?`<p class="h-kick">Your focus</p><p class="h-focus">${esc(h.focus)}</p>`:''}${h.reflection?`<p class="h-kick">To reflect on</p><p class="quote h-ref">${esc(h.reflection)}</p>`:''}
+  ${ex!==S.sign?`<div class="acts"><button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button></div>`:''}
+  ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`};
+ // at the foot of the screen, the area being read: its medallion lit between an arrow back and an arrow forward, the
+ // medallions passing through like a carousel as the reading changes
+ const pv=HCATS[(ci+n-1)%n][0],nx=HCATS[(ci+1)%n][0],playing=V.say===h.body;
+ const ctl=`<div class="hc-ctl"><button class="hc-arr hc-pv" data-act="hcat" data-k="${pv}" data-dir="-1" aria-label="Back to ${CAT_INFO[pv][0]}">${IC.chev}</button>
+  <div class="hc-win" role="group" aria-label="Areas of life"><div class="hc-track" style="--p:${ci}">${HCATS.map(([k],x)=>`<span class="hc-s${x===ci?' on':''}" aria-hidden="${x!==ci}">${ui('hz-'+k,'hc-m','',true)}<span class="hc-sl">${CAT_INFO[k][0]}</span></span>`).join('')}</div></div>
+  <button class="hc-arr hc-nx" data-act="hcat" data-k="${nx}" data-dir="1" aria-label="Next, ${CAT_INFO[nx][0]}">${IC.chev}</button></div>`;
+ const PSHORT={daily:'Today',weekly:'Week',monthly:'Month',yearly:'Year'};
+ const per=`<div class="sx-per" role="tablist" aria-label="Time period">${PERIODS.map(([k])=>`<button role="tab" aria-selected="${V.period===k}" data-period="${k}">${PSHORT[k]}</button>`).join('')}</div>`;
+ const listen=`<button class="ibtn${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
- // the sign's painting dissolved into the night sky at the head of the page, its name, dates and soul in the open sky at
- // its left; then the
- // reading on a card of night glass framed in gold over the night sky edged with lilies, the next area at its foot
- return `<div class="hsp hframe s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r"><button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div><div class="hsp-hero stay">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
+ // the whole page on one screen: at its head the sign's painting dissolved into the night, its constellation, symbol,
+ // name, dates and soul in the open sky at its left; right beneath it the time, and the reading on an invisible card,
+ // its words set as large as lets it sit whole (it slides sideways to the next area of life while the head stays
+ // still); at the foot, above the menu, the area's medallion between the arrows
+ return `<div class="hsp hframe sx s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}<button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div>
+ <div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
- <div class="hsp-body">${periodSeg()}
- <div class="hcar"><div class="hc-cats" role="group" aria-label="Areas of life" style="--n:${HCATS.length}">${tiles}<i class="hc-ul" aria-hidden="true"></i></div>
- <div class="hc-read" aria-live="polite">${HCATS.map(([k],i)=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${h.per.key}"${k===cat?'':' hidden'}>${reading(k)}${acts(k)}</div>`).join('')}</div></div>
- ${readOthers()}
- </div></div>`;
+ <div class="sx-main">${per}
+ <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div></div>
+ ${ctl}
+ </div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
 function speakText(txt){
@@ -998,7 +1007,7 @@ views.tarot=()=>{
  // the night with the old card and the lilies holds still behind the page; the title under the arc, then today's card
  // (the daily step, the same Whisper as on Home) and the readings, each way of reading one tap from its own spread
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],note=S.notes[k],nm=firstName();
- return `<div class="land tland hnight tnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Tarot</h1><p class="hgreet">${nm?esc(nm)+', the cards':'The cards'}<br>are listening</p><p class="hl-line">Turn today’s card, or ask them a question</p></header>
+ return `<div class="land tland hnight tnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Tarot</h1><p class="hgreet">${nm?esc(nm)+', the cards':'The cards'} are listening</p><p class="hl-line">Turn today’s card, or ask them a question</p></header>
  <div class="hl-cards">
  <section class="hl-sec">${Kit.divider('Today’s Whisper')}<div class="hl-card tw"><div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">One card for today, face down. Turn it over for its message.</p>'}
@@ -1457,7 +1466,7 @@ function synastryView(){
   const saved=S.conns.some(c=>c.kind==='synastry'&&(c.data.them||{}).date===Y.date&&(c.data.them||{}).name===Y.name);
   out=panel(synBody(Y)+`<div class="row"><button class="btn ghost sm" data-act="saveconn" data-kind="synastry">${saved?'Saved':'Save connection'}</button></div>`);
  }
- return `<div class="stack"><h1>Synastry</h1><p class="muted center">How two birth charts speak to each other.</p>${form}${out}</div>`;
+ return `<div class="stack"><h1>Synastry</h1><p class="mn-sub">How two birth charts speak to each other.</p>${form}${out}</div>`;
 }
 // the Personal Cosmic Profile: birth details, the big three and the numbers, each linking to its page
 function profileView(){
@@ -1543,7 +1552,9 @@ const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map
 // above everything in a bar of their own, so they can always be reached
 const SHARE_PAGES=['affinity','resonance','synastry','birth-chart','life-path','name-within','cycles','dream','moon','profile'];
 const mnHead=(t,right='',back=true)=>{if(V.sec==='discover'&&SHARE_PAGES.includes(tab()))right=`<button class="ibtn pg-share" data-act="sharecard" data-k="page" aria-label="Share this">${IC.share}</button>`+right;return mnHead0(t,right,back)};
-const mnHead0=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1><svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg>${mnGreet()}</div></header>`;
+// the fine gold rule beneath every page's title: a line, a ring and a star at its heart
+const MN_ORN='<svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg>';
+const mnHead0=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1>${MN_ORN}${mnGreet()}</div></header>`;
 // a line for the reader beneath the title of each inner page, in the voice of the page
 const MN_GREET={whisper:'the card that found you today',affinity:'you and another, beneath the same sky',resonance:'the music two names make together',synastry:'two skies, read side by side',calendar:'the sky above you, night by night',moon:'the Moon above you tonight',planets:'the wanderers that move through your sky',events:'what the heavens are preparing',
  'birth-chart':'the sky you were born beneath','life-path':'the road your soul chose','name-within':'the music in your name',cycles:'the season you are walking through',library:'the old knowledge, open to you',dreams:'what the night left with you','dream-journal':'every dream you have kept',profile:'the sky that is yours alone',notifications:'what the stars will whisper to you',settings:'your Kosmia, as you wish it'};
@@ -1994,7 +2005,7 @@ function entryView(){
  // the page over the night with the armillary sphere, the candle and the lily, under the arc of the Moon's phases: what
  // the page belongs to and a line for the reader in its sky, the night the page was written under, then the page itself
  return `<div class="mnp jn entry enight"><div class="mn-bar">${iconBtn('back','data-act="back"','Back')}<div class="mn-r"><button class="hsave" data-act="jsavenow">Save</button>${p.t==='n'&&!S.saved.some(x=>x.date===p.day)&&!S.notes[p.day]?'':iconBtn('more','data-act="jmenu"','Entry options')}</div></div>
- <header class="en-top stay"><p class="en-k">${hd[0]}</p><h1 class="cz">${hd[1]}</h1><p class="en-l">${hd[2]}</p><p class="en-sky">${entrySky(p.day)}</p></header>
+ <header class="en-top stay"><h1 class="cz">${hd[1]}</h1>${MN_ORN}<p class="en-k">${hd[0]}</p><p class="en-sky">${entrySky(p.day)}</p><p class="en-l">${hd[2]}</p></header>
  ${V.jmenu?`<div class="menu-pop"><button data-act="jdelentry">${IC.trash} Tear out this page</button></div>`:''}
  ${mbox(entryTop(p))}
  ${mbox(`<h2 class="sec-h">My Reflection <span id="jsaved" class="saved">${txt?'Saved':''}</span></h2>
@@ -2359,7 +2370,7 @@ function settingsPage(t){
 const onboarding=()=>['welcome','join','reset'].includes(V.sec);
 // a redraw of the same screen (the Whisper revealed, a card opened, an answer arriving) keeps the reader where they
 // were: on the page, and in any pop-up or carousel on it (swapping the page in would otherwise scroll it to the top)
-const SCROLLS='.pop-box,.cpop,.en-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl';
+const SCROLLS='.pop-box,.cpop,.en-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl,.hc-read';
 const scrollsOf=r=>[...r.querySelectorAll(SCROLLS)].map(e=>[e.className,e.scrollLeft,e.scrollTop]);
 const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='tarot'?V.tarot.stage:'',h?h.textContent.trim():''].join('/')};
 function render(){
@@ -2376,7 +2387,7 @@ function render(){
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun-today':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+(one||pg.matches('.home.hbay')?',#030D1A':',#0B0F1E'):'none')}}
- jxRender();enCar();hcar();tileUp();stayHeads();stayFade();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();hcar();tileUp();stayHeads();stayFade();footFit();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
@@ -2397,32 +2408,48 @@ function render(){
 let enT=0;
 /* the sign page: the painting and the sign's name stay in place while its words, the period bar, the areas and the
    reading roll up over them; the areas then stay at the top of the screen as its menu. */
-const hcarStick=()=>{const t=$('.hc-cats');if(t)t.classList.toggle('stuck',t.getBoundingClientRect().top<1)};
-addEventListener('scroll',hcarStick,{passive:true});
 /* the areas of life on a sign page. The reading never moves sideways under the finger (so scrolling stays steady): a
-   clearly sideways swipe on the icons or the reading, once let go, brings in the next area (or the one before), and a
-   tap on an icon brings in that one. The new reading slides in without redrawing the page, and if the reader was
-   further down it opens at its start, under the menu. */
+   clearly sideways swipe on the reading, once let go, brings in the next area (or the one before), as the arrows
+   beneath it do. The new reading slides in without redrawing the page; the medallion between the arrows turns to the
+   new area like a carousel; the painting and the sign's name stay still; and the new reading opens at its start. */
 function hcar(){
  const c=$('.hcar');if(!c)return;
- const R=c.querySelector('.hc-read'),T=c.querySelector('.hc-cats'),n=HCATS.length;
- const line=j=>{T.style.setProperty('--p',j);T.querySelectorAll('.hc-ic').forEach((b,x)=>{b.classList.toggle('on',x===j);b.setAttribute('aria-pressed',x===j)})};
+ const R=c.querySelector('.hc-read'),T=$('.hc-track'),n=HCATS.length,arr=d=>$('.hc-ctl .hc-'+d),pg=c.closest('.hsp')||c;
+ const line=(j,jump)=>{if(T){T.classList.toggle('jump',!!jump);T.style.setProperty('--p',j);T.querySelectorAll('.hc-s').forEach((b,x)=>{b.classList.toggle('on',x===j);b.setAttribute('aria-hidden',x!==j)});if(jump)requestAnimationFrame(()=>requestAnimationFrame(()=>T.classList.remove('jump')))}
+  [['pv',(j+n-1)%n,'Back to '],['nx',(j+1)%n,'Next, ']].forEach(([d,x,w])=>{const b=arr(d);if(b){b.dataset.k=HCATS[x][0];b.setAttribute('aria-label',w+CAT_INFO[HCATS[x][0]][0])}})};
  const cur=()=>Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
- line(cur());hcarStick();
+ line(cur());
  const take=(j,dir)=>{j=(j+n)%n;const k=HCATS[j][0];if(k===V.hcat)return;const cur0=cur();
-  const was=V.say;V.hcat=k;stopAudio();line(j);
-  const back=dir?dir<0:j<cur0;[...R.children].forEach((sl,x)=>{const on=x===j;sl.hidden=!on;sl.classList.toggle('cur',on);sl.classList.toggle('from-l',on&&back)});
-  const sl=R.children[j],hb=$('.hsp-bar [data-act=bookhoro]');
-  if(hb){const on=isSaved('horoscope',sl.dataset.ref);hb.dataset.ref=sl.dataset.ref;hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);hb.setAttribute('aria-label',on?'Saved to your journal':'Save to your journal')}
+  const was=V.say;V.hcat=k;stopAudio();line(j,Math.abs(j-cur0)>1);
+  const back=dir?dir<0:j<cur0,turn=(sl,x)=>{const on=x===j;sl.hidden=!on;sl.classList.toggle('cur',on);sl.classList.toggle('from-l',on&&back)};
+  [...R.children].forEach(turn);
+  const sl=R.children[j],r=sl.dataset.ref,hb=$('.hsp-bar [data-act=bookhoro]'),sh=$('.hsp-bar [data-act=sharecard]'),wr=$('.hsp-body [data-act=hreflect]');
+  if(hb){const on=isSaved('horoscope',r);hb.dataset.ref=r;hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);hb.setAttribute('aria-label',on?'Saved to your journal':'Save to your journal')}
+  if(sh)sh.dataset.cat=k;if(wr)wr.dataset.ref=r;
   syncUrl();
-  if(c.getBoundingClientRect().top<0)window.scrollTo(0,c.getBoundingClientRect().top+scrollY);
+  R.scrollTop=0;sxOvf();if(R.getBoundingClientRect().top<0)window.scrollTo(0,0);
   if(was)render()};
  // a clearly sideways swipe moves to the next area or back; anything more up-and-down is left to scrolling
  let sx=0,sy=0;
- c.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
- c.addEventListener('touchend',e=>{const t=e.changedTouches[0],x=t.clientX-sx,y=t.clientY-sy;if(Math.abs(x)>50&&Math.abs(x)>2*Math.abs(y))take(cur()+(x<0?1:-1),x<0?1:-1)},{passive:true});
- c.go=j=>take(j);
+ pg.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+ pg.addEventListener('touchend',e=>{const t=e.changedTouches[0],x=t.clientX-sx,y=t.clientY-sy;if(Math.abs(x)>50&&Math.abs(x)>2*Math.abs(y))take(cur()+(x<0?1:-1),x<0?1:-1)},{passive:true});
+ c.go=(j,d)=>take(j,d);
+ sxFit();
 }
+// a sign's page is one screen: the reading's words are set as large as lets every one of its areas sit whole on the
+// invisible card, with its question and next steps (between 17px and 13.5px, one size for all six), measured on a
+// hidden copy so the reading itself does not stir; an area still longer than the card at the smallest size scrolls
+// within it, fading at its foot
+function sxFit(){
+ const R=$('.sx .hc-read');if(!R)return;
+ const M=R.cloneNode(true),H=R.clientHeight;M.removeAttribute('aria-live');M.setAttribute('aria-hidden','true');M.classList.remove('ovf');
+ M.style.cssText=`position:absolute;left:0;top:0;width:${R.clientWidth}px;height:auto!important;overflow:visible;visibility:hidden;pointer-events:none`;
+ R.parentNode.appendChild(M);const sl=[...M.children];sl.forEach(x=>x.classList.remove('cur'));
+ const fits=()=>sl.every(x=>{sl.forEach(y=>y.hidden=y!==x);return M.offsetHeight<=H+1});
+ let f=17;for(;f>13.5;f-=.5){M.style.setProperty('--rf',f+'px');if(fits())break}
+ M.remove();R.style.setProperty('--rf',f+'px');sxOvf()}
+const sxOvf=()=>{const R=$('.sx .hc-read');if(!R)return;R.classList.remove('ovf');R.classList.toggle('ovf',R.scrollHeight>R.clientHeight+1)};
+addEventListener('resize',()=>{clearTimeout(sxFit.t);sxFit.t=setTimeout(sxFit,150)});if(document.fonts)document.fonts.ready.then(()=>sxFit());
 function enCar(){
  clearInterval(enT);const t=$('.en-track');if(!t)return;
  const dots=[...document.querySelectorAll('.en-dots i')],at=()=>Math.round(t.scrollLeft/Math.max(1,t.clientWidth));let hold=0;
@@ -2444,6 +2471,38 @@ let driftF=0;
 // a page's head stands still while the page rises over it, fading as the first card reaches it
 // a page's line beneath its title belongs to its head, so it holds still with it
 function stayHeads(){document.querySelectorAll('.mnp>.mn-sub').forEach(e=>{const t=e.parentElement.querySelector(':scope>.mn-hd .mn-t');if(t)t.appendChild(e)})}
+// every page ends the same height above the screen's foot (--t-foot in styles.css: just above the Moon's rim in the
+// night's painting), so once a page is read to its end the Moon shows over the menu. The page is measured as it is
+// drawn: the space it already leaves beneath its last words and boxes counts towards it, and where it leaves more, its
+// own padding at the foot gives way. Kassandra's chamber and a sign's page (one screen) keep their own foot.
+function footFit(){
+ const app=$('#app'),pg=app.firstElementChild;if(!pg||pg.matches('.kz,.ob,.sx')){app.style.removeProperty('padding-bottom');return}
+ if(footRO&&footFit.pg!==pg){footRO.disconnect();footRO.observe(pg);footFit.pg=pg}
+ const pr=document.createElement('i');pr.style.cssText='position:absolute;visibility:hidden;width:0;height:var(--t-foot)';app.append(pr);const T=pr.offsetHeight;pr.remove();
+ const sy=scrollY;app.style.setProperty('padding-bottom','0px','important');(footFit.cut||[]).forEach(e=>e.style.removeProperty('padding-bottom'));footFit.cut=[];
+ let last=-1e9;
+ for(const e of pg.querySelectorAll('*')){const r=e.getBoundingClientRect();if(!r.width||!r.height||r.bottom<=last)continue;
+  const c=getComputedStyle(e);if(c.position==='fixed'||c.visibility==='hidden'||+c.opacity===0||(e.tagName==='IMG'&&c.position==='absolute'))continue;
+  const own=!e.children.length||/^(IMG|svg|CANVAS|INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.tagName)||parseFloat(c.borderBottomWidth)>0||c.backgroundImage!=='none'||c.backgroundColor!=='rgba(0, 0, 0, 0)'||[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim());
+  if(own)last=r.bottom}
+ if(last<-1e8){if(scrollY!==sy)scrollTo(0,sy);return}
+ // the page's end is found by measuring, adjusted until it lies the right height below the last words (the margins of
+ // a page and of its sheets fold into one another, so the space added is not always the space gained): more room is
+ // added beneath the column, or where there is too much, the padding of whatever reaches lowest gives way
+ const end=()=>document.documentElement.scrollHeight-(last+sy);let pad=0,F=end();
+ for(let k=0;k<6&&Math.abs(F-T)>1;k++){
+  if(F<T){pad+=T-F;app.style.setProperty('padding-bottom',Math.round(pad)+'px','important')}
+  else if(pad>0){pad=Math.max(0,pad-(F-T));app.style.setProperty('padding-bottom',Math.round(pad)+'px','important')}
+  else{let low=pg,lb=-1e9;for(const e of [pg,...pg.querySelectorAll('*')]){const b=e.getBoundingClientRect().bottom;if(b>lb+.5&&(parseFloat(getComputedStyle(e).paddingBottom)||0)>0){lb=b;low=e}}
+   const p0=parseFloat(getComputedStyle(low).paddingBottom)||0;if(!p0)break;low.style.setProperty('padding-bottom',Math.max(0,Math.round(p0-(F-T)))+'px','important');footFit.cut=(footFit.cut||[]).concat(low)}
+  F=end()}
+ // the reader stays where they were while the page was measured
+ if(scrollY!==sy)scrollTo(0,sy)}
+// measured again whenever the page changes size (its pictures and fonts arriving, a reading opening)
+let footF=0;const footSoon=()=>{if(!footF)footF=requestAnimationFrame(()=>{footF=0;footFit()})};
+const footRO=window.ResizeObserver?new ResizeObserver(footSoon):null;
+addEventListener('resize',footSoon);
+if(document.fonts)document.fonts.ready.then(footSoon);
 function stayFade(y=scrollY){document.querySelectorAll('.stay').forEach(e=>{e.style.opacity=Math.max(0,1-y/Math.max(1,e.offsetHeight*.8)).toFixed(3);e.style.pointerEvents=y>e.offsetHeight*.5?'none':''})}
 function drift(){
  const y=scrollY;document.body.classList.toggle('scrolled',y>120);stayFade(y);
@@ -2517,7 +2576,9 @@ document.addEventListener('click',e=>{
  if(t.dataset.nav==='kassandra'&&V.sec!=='kassandra')return kasVeil(()=>go('kassandra'));
  if(t.dataset.nav==='journal')return go('tarot','journal');
  if(t.dataset.nav)return go(t.dataset.nav);
- if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;return render()}
+ if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;render();
+  // on a sign's page the new reading opens at its start
+  if(t.closest('.hsp')&&V.sec==='horoscope'){const r=$('.hsp .hc-read');if(r){r.scrollTop=0;if(r.getBoundingClientRect().top<0)window.scrollTo(0,0)}}return}
  if(t.dataset.calview){V.cal.view=t.dataset.calview;return render()}
  if(t.dataset.ctab){V.chartTab=t.dataset.ctab;return render()}
  if(t.dataset.ins){V.insTab=t.dataset.ins;return render()}
@@ -2553,7 +2614,7 @@ document.addEventListener('click',e=>{
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
  if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
- if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k));V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+ if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k),t.dataset.dir?+t.dataset.dir:0);V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
  if(a==='hreflect'){const [sign,cat,period,key]=t.dataset.ref.split('/');return openEntry(ensureBook('horoscope',t.dataset.ref,horoData(sign,cat,period,key)))}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/');return bookmark('horoscope',t.dataset.ref,horoData(sign,cat,period,key))}
