@@ -51,7 +51,7 @@ function symbol(k){
 
 /* ---------- storage ---------- */
 const KEY='kosmia.v1';
-const fresh=()=>({wfy:'',dreamAsk:'',email:'',sign:'',name:'',fullName:'',altName:'',birth:{date:'',time:'',unk:false,place:'',lat:'',lon:'',tz:''},birthConsent:false,
+const fresh=()=>({wfy:'',dreamAsk:'',intentAsk:'',released:'',email:'',sign:'',name:'',fullName:'',altName:'',birth:{date:'',time:'',unk:false,place:'',lat:'',lon:'',tz:''},birthConsent:false,
  revealed:{},days:{},saved:[],notes:{},matches:[],conns:[],readings:[],journal:[],bookmarks:[],
  notif:{on:false,time:'08:00',monthly:true,annual:true,events:false,sign2:'',whisper:false,quiet:false,quietFrom:'22:00',quietTo:'07:00'},
  settings:{tz:'',reduce:false,large:false,kPersonal:false,voiceOut:false,yMode:'auto'},intro:false,kcur:[],intent:{}});
@@ -186,7 +186,7 @@ const SECTIONS={
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'You',tabs:[['home','You']]},
- settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Subscription']]}
+ settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the five places: Today (the day's path), Sky (look up), Oracle (ask: Kassandra, the cards, a dream), Journal
@@ -262,7 +262,7 @@ history.scrollRestoration='manual';
 function newReading(){const T=V.tarot;T.stage='setup';T.q='';T.picks=[];T.drawn=null;T.ai='';T.aiState='';T.savedId=null;V.tpop=null}
 function go(sec,t,opt={}){
  if(sec==='discover'&&(!t||t==='home')){sec='horoscope';t=null}
- stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.spk=false;V.insPop=false;jLeave();jeLeave();
+ stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.spk=false;V.insPop=false;V.letter=null;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
  if(sec==='discover')V.ns={};
@@ -811,22 +811,72 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
  <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
  <p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
- <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Reflecting':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div>
+ <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div>
  </div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
 // the day's path: its four steps, each lighting a Moon a quarter further, and the screen it opens on: on mornings
 // "Did you dream?" first, until answered; otherwise the first step not yet done, and once all four are, the day held
+// the Moon's chapter: from one New Moon to the next, with its Full Moon, the sign it began in and how far in today is
+let chCache={k:'',v:null};const LETGO='What I let go of tonight';
+const dayGap=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/DAY);
+function chapterAt(d=new Date()){
+ const k=dkey(d);if(chCache.k===k)return chCache.v;let v=null;
+ try{const ev=K.lunarPhases(new Date(+d-34*DAY),new Date(+d+34*DAY)),nm=ev.filter(e=>e.k==='new_moon');
+  const prev=nm.filter(e=>dkey(e.date)<=k).pop(),next=nm.find(e=>dkey(e.date)>k);
+  if(prev&&next){const key=dkey(prev.date),endKey=dkey(next.date),full=ev.find(e=>e.k==='full_moon'&&e.date>prev.date&&e.date<next.date);
+   v={key,endKey,sign:prev.sign,fullKey:full?dkey(full.date):'',fullSign:full?full.sign:0,day:dayGap(key,k)+1,len:dayGap(key,endKey)}}}catch(e){}
+ if(dkey()===k)chCache={k,v};return v;
+}
+const lastChapter=ch=>ch?chapterAt(new Date(Date.parse(ch.key+'T12:00:00Z')-2*DAY)):null;
+// the wish the reader planted at a chapter's New Moon (a page of their Journal)
+const WISH='A wish for the New Moon',isWish=j=>String(j.title||'').startsWith(WISH);
+const chWish=ch=>ch?S.journal.find(j=>isWish(j)&&j.day>=ch.key&&j.day<ch.endKey&&j.body):null;
+const ritualTexts=()=>new Set(S.journal.filter(j=>j.title===LETGO||isWish(j)).map(j=>plain([j.title,j.body].filter(Boolean).join('. '))));
+const clip=(t,n)=>{t=plain(String(t||'')).replace(/\s+/g,' ').trim();return t.length<=n?t:t.slice(0,t.lastIndexOf(' ',n)>n*.6?t.lastIndexOf(' ',n):n)+'…'};
+// a thread back to the reader's own words: a page from about a Moon ago, else about a week ago, else from the last weeks;
+// never when what they wrote suggests real distress, and only while personal writing is on
+function myThread(){
+ if(!personalOn()||myPortrait().care)return null;const k=dkey();
+ const skip=ritualTexts();
+ const it=myItems().filter(x=>['journal','reflection','dream'].includes(x.kind)&&x.text.length>24&&!skip.has(x.text)).map(x=>Object.assign({ago:dayGap(x.day,k)},x));
+ const pickIn=(a,b)=>it.filter(x=>x.ago>=a&&x.ago<=b).sort((x,y)=>x.ago-y.ago);
+ const pool=[pickIn(27,32),pickIn(6,8),pickIn(3,24)].find(p=>p.length);if(!pool)return null;
+ const x=pool[Number(k.replace(/-/g,''))%pool.length];
+ const when=x.ago>=27?'A Moon ago':x.ago>=6&&x.ago<=8?'A week ago':x.ago+' days ago';
+ return {label:`${when} ${x.kind==='dream'?'you dreamt':'you wrote'}`,text:clip(x.text,150),ask:x.kind==='dream'?'Does it still visit you?':'How is it now?',day:x.day,kind:x.kind};
+}
+// the letter at the close of a chapter: written here, from the reader's own pages of that Moon, and never sent anywhere
+function moonLetter(ch){
+ const nm=firstName(),end=ch.endKey<=dkey(),it=myItems().filter(x=>x.day>=ch.key&&x.day<ch.endKey),skip=ritualTexts(),own=it.filter(x=>['journal','reflection','dream'].includes(x.kind)&&!skip.has(x.text));
+ const days=new Set(it.map(x=>x.day)).size,P=PZ.portrait(it,end?ch.endKey:dkey()),wish=chWish(ch),signN=sIdx(ch.sign).name;
+ const cards=[...new Set(Object.keys(S.revealed).filter(d=>S.revealed[d]&&d>=ch.key&&d<ch.endKey).sort().map(d=>cardFor(d).title))];
+ const ps=[`This Moon began in ${signN} on ${ymdLong(ch.key,{day:'numeric',month:'long'})}${end?` and closed on ${ymdLong(ch.endKey,{day:'numeric',month:'long'})}`:`, and it is still with us: tonight is night ${ch.day} of ${ch.len}`}.`];
+ if(wish)ps.push(`At its beginning you wished: “${esc(clip(wish.body,160))}”. ${end?'Look at where you are now. Whatever came of it, the wish was yours, and wishing is a kind of courage.':'Hold it lightly. There is still time for it to find you.'}`);
+ if(!days)ps.push('This Moon you mostly listened, and that is allowed. Nothing here needs to be earned.');
+ else ps.push(`You came back on ${days===1?'one night':days+' nights'}${own.length?` and kept ${own.length===1?'one page':own.length+' pages'}`:''}.${P.themes.length&&personalOn()?` Your words kept returning to ${P.themes.slice(0,2).map(x=>PZ.THEMES[x.k].name).join(' and ')}.`:''}`);
+ if(own.length&&personalOn()&&!P.care){const a=own.slice().sort((x,y)=>x.day<y.day?-1:1),f=a[0],l=a[a.length-1];
+  ps.push(f===l?`You wrote: “${esc(clip(f.text,170))}”`:`Early on you wrote: “${esc(clip(f.text,130))}” And later: “${esc(clip(l.text,130))}”`)}
+ if(cards.length)ps.push(`The Whispers that found you: ${cards.slice(-4).map(esc).join(', ')}.`);
+ ps.push(P.care?'It was a heavy Moon. Please let someone you trust hold some of it with you; you do not have to carry it alone.':P.mood==='tender'?'It was a tender Moon. You carried more than you showed, and you kept going.':P.mood==='bright'?'There was light in your words this Moon. Remember it on darker nights.':'It was a quiet, steady Moon, and it was yours.');
+ ps.push(end?'Whatever you carry into the next chapter, carry it gently.':'Come back to this letter as the Moon grows. It will grow with you.');
+ return `<div class="pop" role="dialog" aria-modal="true" aria-label="Your letter for this Moon" data-act="letterclose"><div class="pop-box ins-box lt-box"><button class="pop-x" data-act="letterclose" aria-label="Close">×</button>
+ <p class="cp-k">Your letter for this Moon</p><h2 class="center">${nm?'Dear '+esc(nm)+',':'Dear you,'}</h2><div class="lt-b">${ps.map(p=>`<p>${p}</p>`).join('')}<p class="lt-sig">Kosmia</p></div>
+ <p class="muted small center">Written here, from your own pages. It is never sent anywhere.</p></div></div>`;
+}
 const PATH=[['wfy','Written for You'],['stars','Your Stars'],['whisper','Whisper'],['reflect','Reflect']],PHASES=['waxing-crescent','first-quarter','waxing-gibbous','full-moon'];
 const pathDone=k=>({wfy:S.wfy===k,stars:S.readDay===k,whisper:!!S.revealed[k],reflect:!!S.notes[k]});
 const hourNow=()=>Number(fmt({hour:'numeric',hour12:false},new Date()));
 const askDream=k=>{const h=hourNow();return h>=4&&h<12&&S.dreamAsk!==k};
-const pathOrder=k=>[...(askDream(k)?['dream']:[]),...PATH.map(x=>x[0]),'held'];
+// in the first three nights of a chapter, a wish for it; in the evening, something to let go of before sleep
+const askIntent=()=>{const ch=chapterAt();return !!ch&&ch.day<=3&&!chWish(ch)&&S.intentAsk!==ch.key};
+const askNight=k=>{const h=hourNow();return (h>=18||h<4)&&S.released!==k};
+const pathOrder=k=>[...(askDream(k)?['dream']:[]),...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
  const k=dkey(),dn=pathDone(k);
  if(V.hday!==k){V.hday=k;V.hstep=null}
- return V.hstep||(askDream(k)?'dream':(PATH.find(([x])=>!dn[x])||['held'])[0]);
+ return V.hstep||(askDream(k)?'dream':askIntent()?'intent':(PATH.find(([x])=>!dn[x])||[askNight(k)?'night':'held'])[0]);
 }
 // to the next step (or back): leaving Your Stars counts it as read; the page returns to its head
 function pathMove(dir){
@@ -846,27 +896,35 @@ views.home=()=>{
  const playing=V.say===d.body;
  const card=(title,body,cls='')=>panel(`${orn(title)}${body}`,`gilt hp-card ${cls}`);
  let stage;
- if(st==='dream')stage=card('Good Morning',`<div class="hp-in"><p class="hp-big">Did you dream?</p><p class="hp-sub">Dreams fade within minutes of waking. Keep yours before it goes, and read its meaning when you are ready.</p>
-  <div class="pz-acts"><button class="btn" data-act="hdream">Write It Down</button><button class="btn ghost" data-act="hnodream">Not Today</button></div></div>`,'hp-dream');
+ if(st==='dream')stage=card('Good Morning',`<div class="hp-in"><p class="hp-big">Did you dream?</p><p class="hp-sub">Dreams fade within minutes of waking. Tell it while it is still close, however small or strange.</p>
+  <div class="pz-acts"><button class="btn" data-act="hdream">Write it down</button><button class="btn ghost" data-act="hnodream">Not today</button></div></div>`,'hp-dream');
+ else if(st==='intent'){const ch=chapterAt();stage=card('A New Chapter',`<div class="hp-in"><span class="hp-full">${pic('moons','new-moon','hp-fm')}</span><p class="hp-big">The New Moon in ${sIdx(ch.sign).name}</p><p class="hp-sub">A new chapter of your month begins. What would you like to grow before this Moon is full?</p><textarea class="hp-ta" id="hpwish" rows="3" placeholder="A wish, a hope, one small thing." aria-label="Your wish for this Moon"></textarea>
+  <div class="pz-acts"><button class="btn" data-act="hwish">Plant it</button><button class="btn ghost" data-act="hnowish">Not this time</button></div><p class="hp-sub">It stays in your Journal, and the Moon will bring it back to you.</p></div>`,'hp-intent')}
+ else if(st==='night')stage=card('Before You Sleep',`<div class="hp-in"><span class="hp-full">${moonPic(m,'hp-fm')}</span><p class="hp-big">What are you ready to let go of tonight?</p><p class="hp-sub">A worry, a word you wish you hadn’t said, a day that asked too much. Write it, then let it go.</p><textarea class="hp-ta" id="hprel" rows="4" placeholder="Nothing written here is kept unless you ask." aria-label="What you are letting go of"></textarea>
+  <div class="pz-acts"><button class="btn" data-act="hlet">Let it go</button><button class="btn ghost" data-act="hrelkeep">Keep it instead</button></div><button class="jp-new" data-act="hnonight">Not tonight ${IC.chev}</button></div>`,'hp-night');
  else if(st==='wfy')stage=card('Written for You',`<div class="hp-in"><h2 class="pz-t">${esc(d.focus)}</h2><p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
-  <div class="pz-b">${esc(d.body)}</div><div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
+  <div class="pz-b">${esc(d.body)}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
+   if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
+   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
  else if(st==='stars')stage=`<div class="hh-stage s-${sign.id}">
    <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
-   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button>${next()}</article>
+   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read the rest of today</button>${next()}</article>
   </div>`;
  else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${rev?'':'<button class="btn" data-act="reveal">Reveal</button>'}</div></div>
-   ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p><div class="hp-acts"><button class="btn ghost" data-act="wpop">See the Card</button>${next()}</div>`:''}`,'hp-whisper');
- else if(st==='reflect')stage=card('Reflect',`<div class="hp-in"><p class="pz-q">“${esc(d.question)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write whatever comes…" aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
-  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep It</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div><p class="hp-sub">What you keep goes into your Journal.</p></div>`,'hp-reflect');
- else stage=card('Your Day Is Held',`<div class="hp-in"><span class="hp-full">${pic('moons','full-moon','hp-fm')}</span><p class="hp-big">${done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
-  <p class="hp-sub">${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p></div>`,'hp-held')+energyCarousel(energySlides(now,m,sign,h));
+   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over when you are ready. It was drawn for you.</p>'}${rev?'':'<button class="btn" data-act="reveal">Reveal</button>'}</div></div>
+   ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p><div class="hp-acts"><button class="btn ghost" data-act="wpop">See the card</button>${next()}</div>`:''}`,'hp-whisper');
+ else if(st==='reflect')stage=card('Reflect',`<div class="hp-in"><p class="pz-q">“${esc(d.question)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
+  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div><p class="hp-sub">What you keep goes into your Journal.</p></div>`,'hp-reflect');
+ else{const eve=hourNow()>=18||hourNow()<4,ch=chapterAt(),lt=ch&&(ch.len-ch.day<=2||ch.day<=3);
+  stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in"><span class="hp-full">${pic('moons','full-moon','hp-fm')}</span><p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
+  <p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>
+  ${lt?`<button class="btn ghost" data-act="hletter">${ch.day<=3?'Your letter from the last Moon':'Your letter for this Moon'}</button>`:''}${ch?`<p class="hp-sub">Night ${ch.day} of ${ch.len} in the ${sIdx(ch.sign).name} Moon’s chapter.</p>`:''}</div>`,'hp-held')};if(st==='held')stage+=energyCarousel(energySlides(now,m,sign,h));
  return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <div class="hh-acts hh-fix">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
- <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div></div>
+ <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>Come as you are. <span>You are known here.</span></small></div></div>
   <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${ritual}</header>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`<div class="hp-stage" data-step="${st}" aria-live="polite">${stage}</div>`})}
- ${V.wpop?whisperPop(c):''}</div>`;
+ ${V.wpop?whisperPop(c):''}${V.letter?moonLetter(V.letter):''}</div>`;
 };
 
 /* ---------- the personal voice (personal.js): what the reader has written, read on this device and woven into the
@@ -1062,22 +1120,22 @@ function whisperView(){
  ${V.whelp?mbox(`<p>One card a day, drawn from ${ORACLE.length} Whispers. You will not see the same card again until you have met them all. Read it, sit with it, and write what it stirs in you: every reflection is kept in your Journal.</p>`):''}
  ${cardScene(c,rev,'fortuneCard')}
  ${rev?mbox(`<p class="kpills">${keys(wKeys(c))}</p><p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p>
-  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Continue Your Reflection':'Write Your Reflection'}</button><button class="ibtn sq" data-act="sharecard" data-k="whisper" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
- :`<button class="btn" data-act="reveal">Reveal My Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}${V.wpop?whisperPop(c):''}</div>`;
+  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Write Your Reflection'}</button><button class="ibtn sq" data-act="sharecard" data-k="whisper" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
+ :`<button class="btn" data-act="reveal">Turn over my Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}${V.wpop?whisperPop(c):''}</div>`;
 }
 function tarotView(){
  const T=V.tarot,sp=SPREADS[T.spread];
  // 1. the reading type and the question; Shuffle draws a fresh deck
  if(T.stage==='setup')return `<div class="mnp trd">${mnHead('Card Reading')}<p class="mn-sub">What is yet to be revealed?</p>
   <div class="list spreads" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="lrow${T.spread===k?' on':''}" role="radio" aria-checked="${T.spread===k}" data-act="tspread" data-k="${k}"><span class="lr-i">${pic('spreads',k,'th')}</span><span class="lr-t"><strong>${x.s}</strong><span class="sp-n">${x.p.length} card${x.p.length>1?'s':''}</span></span><span class="lr-c tick" aria-hidden="true"></span></button>`).join('')}</div>
-  <div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the Cards</button></div>`;
+  <div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
  // 2. pick face-down cards; the reveal opens by itself once enough are chosen
  if(T.stage==='pick')return `<div class="mnp trd">${mnHead(`Choose ${sp.p.length} card${sp.p.length>1?'s':''}`)}<p class="mn-sub">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
  const cards=T.drawn,done=cards.every(c=>c.shown);if(done)markRead({k:'reading',cards,from:{sec:'tarot',t:'reading'}});
  return `<div class="mnp trd">${mnHead(sp.s.replace(/ · /g,' · '))}<p class="mn-sub">${sp.n}</p>${T.q?`<p class="quote center">“${esc(T.q)}”</p>`:''}<p class="muted center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p><div class="rd-grid${cards.length===1?' solo':''}">${cards.map((c,i)=>`<div class="rd-cell"><div class="label">${c.pos}</div><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face bare">${pic('deck',c.id,'tarot-art')}</div></div></div></div>`).join('')}</div>
  ${done?mbox(`<div class="int-hd"><h2>Interpretation</h2><span class="int-ic"><button class="ibtn" data-act="sharecard" data-k="reading" aria-label="Share this reading">${IC.share}</button><button class="ibtn${T.savedId?' on':''}" data-act="${T.savedId?'jopen':'saveread'}"${T.savedId?` data-k="reading:${esc(T.savedId)}"`:''} aria-pressed="${!!T.savedId}" aria-label="${T.savedId?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></span></div>${T.ai?`<div class="ai-read read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<p class="kick">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</p><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><p class="kick">The reading as a whole</p>${paras(T.ai.whole)}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`<div class="read">${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}</div><p class="quote">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted small">Symbols for reflection, not predictions.</p>
- ${T.savedId?`<button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write Your Reflection</button>`:''}<button class="btn ghost" data-act="newread">New Reading</button>`):''}
+ ${T.savedId?`<button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write tonight’s reflection</button>`:''}<button class="btn ghost" data-act="newread">A new reading</button>`):''}
  ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
 }
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
@@ -1533,7 +1591,7 @@ function birthForm(other){
 function cyclesView(){
  const other=!!V.ns.cy;
  if(!other&&!hasBirthDate())return `<div class="stack"><h1>My Cycles</h1>${invite('Your personal cycles are counted from your birth day and month. Add your date of birth to your Cosmic Profile, or look up anyone’s cycles.','cy')}</div>`;
- if(other&&!V.cyOther)return `<div class="stack"><h1>My Cycles</h1>${mbox(`<p class="lead">Find anyone’s personal cycles from their date of birth.</p><div class="field"><label for="cyd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="cyd"></div></div>`)}<button class="btn" data-act="cygo">See Their Cycles →</button>${mineBtn('cy',hasBirthDate())}</div>`;
+ if(other&&!V.cyOther)return `<div class="stack"><h1>My Cycles</h1>${mbox(`<p class="lead">Find anyone’s personal cycles from their date of birth.</p><div class="field"><label for="cyd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="cyd"></div></div>`)}<button class="btn" data-act="cygo">See their cycles →</button>${mineBtn('cy',hasBirthDate())}</div>`;
  const [y,mo,d]=dkey().split('-').map(Number),b=other?V.cyOther:S.birth.date,py=N.personalYear(b,y),pyn=N.personalYear(b,y+1),pm=N.personalMonth(b,y,mo),pdd=N.personalDay(b,y,mo,d),uy=N.universalYear(y),by=Number(b.slice(0,4));
  const mname=ymdLong(dkey(),{month:'long',year:'numeric'});
  return `<div class="stack"><h1>My Cycles</h1>
@@ -1790,7 +1848,7 @@ function affinityView(){
   <div class="list">${acc(pic('cats','love','acc-i'),'Love Compatibility','Romance and emotional connection',`<p>${el[1][1]}</p><p>${r.angle[1]}</p>`)}${acc(pic('cats','connections','acc-i'),'Friendship Compatibility','Shared values and support',`<p>${el[0][1]}</p><p>${el[4][1]}</p>`)}${acc(pic('cats','career','acc-i'),'Work Compatibility','How you collaborate',`<p>${el[3][1]}</p>`)}${acc(pic('cats','moon','acc-i'),'Detailed Analysis','Strengths, challenges and advice',matchBody(a,b))}</div>
   <div class="acts"><button class="btn" data-act="saveconn" data-kind="zodiac">${saved?'Saved to your journal':'Save connection'}</button><button class="btn ghost" data-act="kasask" data-q="What do ${A1.name} and ${B1.name} traditionally bring out in each other?">Ask Kassandra</button><button class="btn ghost" data-go="discover" data-t="synastry">Compare birth charts</button></div></div>`}
  return `<div class="mnp af">${mnHead('Zodiac Affinity')}<p class="mn-sub">Love • Friendship • Connection</p>${mbox(`<p class="lead">Explore the natural flow between two signs and discover your strengths, challenges and unique connection.</p>
- <div class="two">${signSelect('za','Your sign',a)}${signSelect('zb','Their sign',b)}</div>`)}<button class="btn" data-act="domatch" ${b?'':'disabled'}>See Compatibility →</button>${res||`<div class="list dim">${[['love','love','Love Compatibility','Romance and emotional connection'],['connections','friend','Friendship Compatibility','Shared values and support'],['career','work','Work Compatibility','How you collaborate'],['moon','more','Detailed Analysis','Strengths, challenges and advice']].map(([i,,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div><p class="muted small center">Choose their sign to see your compatibility.</p>`}</div>`;
+ <div class="two">${signSelect('za','Your sign',a)}${signSelect('zb','Their sign',b)}</div>`)}<button class="btn" data-act="domatch" ${b?'':'disabled'}>See how you meet →</button>${res||`<div class="list dim">${[['love','love','Love Compatibility','Romance and emotional connection'],['connections','friend','Friendship Compatibility','Shared values and support'],['career','work','Work Compatibility','How you collaborate'],['moon','more','Detailed Analysis','Strengths, challenges and advice']].map(([i,,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div><p class="muted small center">Choose their sign to see your compatibility.</p>`}</div>`;
 }
 // the three numerology comparisons for two names, each an expandable reading
 function resonanceView(){
@@ -1799,7 +1857,7 @@ function resonanceView(){
  if(R.done&&N.clean(a)&&N.clean(b)){const saved=S.conns.some(c=>c.kind==='resonance'&&c.data.a===a&&c.data.b===b);
   out=`<div class="list">${resonanceRows(a,b,h=>{const m=/^<h3>(.*?)<\/h3>([\s\S]*)$/.exec(h);return m?acc('',m[1],'',m[2],true):h})}</div>`+mbox(resMethod())+`<div class="acts"><button class="btn" data-act="saveconn" data-kind="resonance">${saved?'Saved to your journal':'Save connection'}</button></div>`}
  return `<div class="mnp rs">${mnHead('Soul Resonance')}<p class="mn-sub">Name match</p>${mbox(`<p class="lead">Compare two names through numerology, using full birth names where you know them.</p>
- <div class="field"><label for="ra">Your name</label><div class="inp">${IC.star}<input type="text" id="ra" value="${esc(a)}" autocomplete="name" placeholder="Your full name"></div></div><div class="field"><label for="rb">Their name</label><div class="inp">${IC.heart}<input type="text" id="rb" value="${esc(b)}" placeholder="Their full name"></div></div>`)}<button class="btn" data-act="doresonance">Compare Our Names →</button><p class="muted small center">Names stay private to you.</p>${out}</div>`;
+ <div class="field"><label for="ra">Your name</label><div class="inp">${IC.star}<input type="text" id="ra" value="${esc(a)}" autocomplete="name" placeholder="Your full name"></div></div><div class="field"><label for="rb">Their name</label><div class="inp">${IC.heart}<input type="text" id="rb" value="${esc(b)}" placeholder="Their full name"></div></div>`)}<button class="btn" data-act="doresonance">Compare our names →</button><p class="muted small center">Names stay private to you.</p>${out}</div>`;
 }
 /* Life Path: the number, then its strengths, challenges and guidance as expandable readings */
 /* the soul of each number, spoken to the reader: who they are at their best, a practice in the spirit of the Stoics,
@@ -1839,7 +1897,7 @@ const LPX={1:['Courage, originality and the drive to begin what others only imag
 function lifePathView(){
  const other=!!V.ns.lp,d=other?V.lpOther:(hasBirthDate()?S.birth.date:''),H=hdr('Life Path',{sub:other?'Another soul’s journey':'Your soul’s journey'});
  const lead='Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.';
- if(other&&!d)return `<div class="sub">${H}${mbox(`<p class="lead">Find anyone’s Life Path from their date of birth.</p><div class="field"><label for="lpd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd"></div></div>`)}<button class="btn" data-act="lpgo">Discover Their Life Path →</button>${mineBtn('lp',hasBirthDate())}</div>`;
+ if(other&&!d)return `<div class="sub">${H}${mbox(`<p class="lead">Find anyone’s Life Path from their date of birth.</p><div class="field"><label for="lpd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd"></div></div>`)}<button class="btn" data-act="lpgo">Their Life Path →</button>${mineBtn('lp',hasBirthDate())}</div>`;
  const form=other?'':mbox(`<p class="lead">${lead}</p>`);
  if(!d)return `<div class="sub">${H}${invite(lead+' Add your date of birth to your Cosmic Profile, or look up anyone’s Life Path.','lp')}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
@@ -1848,7 +1906,7 @@ function lifePathView(){
  <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Guidance','How to align with your path',`<p>${X[2]}</p>`)}
  ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
- ${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My Personal Cycles</button>'}</div>`;
+ ${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My cycles</button>'}</div>`;
 }
 /* The Name Within: the numbers in a full birth name, each an expandable reading with its working */
 function nameView(){
@@ -1864,7 +1922,7 @@ function nameView(){
  const lead='Your name carries a vibration and a story. Discover what your name reveals about your personality, purpose and life path.';
  const dim=`<div class="list dim">${[['general','Expression Number','Your natural abilities'],['love','Soul Urge Number','Your inner desires'],['insights','Personality Number','How you show up to the world'],['lifepath','Destiny Number','Your life purpose']].map(([i,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div>`;
  const H=hdr('The Name Within',{sub:other?'Another name’s numbers':'Name numerology'});
- if(other&&!nm)return `<div class="sub">${H}${mbox(`<p class="lead">Discover the numbers in anyone’s name: use their full name at birth.</p><div class="field"><label for="fn2">Their full name</label><div class="inp">${IC.star}<input type="text" id="fn2" value="${esc(V.oName||'')}" placeholder="Their full name at birth"></div></div>`)}<button class="btn" data-act="nwgo">Reveal Their Numbers →</button>${mineBtn('nw',!!nameNums(S.fullName))}</div>`;
+ if(other&&!nm)return `<div class="sub">${H}${mbox(`<p class="lead">Discover the numbers in anyone’s name: use their full name at birth.</p><div class="field"><label for="fn2">Their full name</label><div class="inp">${IC.star}<input type="text" id="fn2" value="${esc(V.oName||'')}" placeholder="Their full name at birth"></div></div>`)}<button class="btn" data-act="nwgo">Reveal their numbers →</button>${mineBtn('nw',!!nameNums(S.fullName))}</div>`;
  if(!nm)return `<div class="sub">${H}${invite(lead+' Add your full name at birth to your Cosmic Profile, or look up anyone’s name.','nw')}${dim}</div>`;
  return `<div class="sub">${H}${mbox(`<p class="lead">${other?`The numbers in the name <strong>${esc(V.oName)}</strong>.`:lead}</p>`)}
  ${nm.expression.r.n?mbox(soulBlock(nm.expression.r.n,other?firstOf(V.oName):firstOf(S.name||S.fullName),other?'What this name carries':'What your name carries')):''}
@@ -1941,8 +1999,7 @@ function journalLib(){
  const [ask,act,lab]=rev?[c.ref,`data-act="jopen" data-k="fortune:${k}"`,note?'Continue your reflection':'Write about '+esc(c.title)]
   :h?[h.reflection||'What do you want to remember about today?',`data-act="hreflect" data-ref="${S.sign}/overview/daily/${h.per.key}"`,'Write tonight’s reflection']
   :['What do you want to remember about today?','data-act="sheet" data-k="new"','Begin a new page'];
- const days=new Set(it.map(p=>p.day));let streak=0;for(let d=new Date();days.has(dkey(d));d=new Date(+d-DAY))streak++;
- const month=new Set(it.filter(p=>p.day.slice(0,7)===k.slice(0,7)).map(p=>p.day)).size;
+ const ch=chapterAt(),wish=chWish(ch),chDays=ch?new Set(it.filter(p=>p.day>=ch.key&&p.day<ch.endKey).map(p=>p.day)).size:0;
  const theme=THEMES.map(([l,,re])=>[l,it.reduce((n,p)=>n+((jText(p)||'').toLowerCase().match(re)||[]).length,0)]).sort((a,b)=>b[1]-a[1])[0];
  const recent=it.slice().sort(byNew).slice(0,3);
  const sec=(t,h,cls='')=>`<section class="hl-sec">${Kit.divider(t)}<div class="hl-card ${cls}">${h}</div></section>`;
@@ -1951,10 +2008,10 @@ function journalLib(){
  <div class="hl-cards">
  ${V.jsearch!=null?`<div class="hl-card jsrch"><div class="field"><label class="sr-only" for="jq">Search</label><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch)}" placeholder="Search titles and reflections"></div></div>${q?`<div class="list">${items.length?items.map(p=>lrow(jThumb(p),jHeading(p),ymdLong(p.day,{day:'numeric',month:'short',year:'numeric'}),`data-act="jopen" data-k="${esc(jKey(p))}"`)).join(''):'<p class="muted center">Nothing found.</p>'}</div>`:''}</div>`:''}
  ${sec('Tonight’s Reflection',`${m?`<p class="jp-k">${esc(m.name)} in ${sIdx(m.sign).name}${rev?' · '+esc(c.title):''}</p>`:''}<p class="jp-q">“${esc(ask)}”</p><button class="btn" ${act}>${lab}</button><button class="jp-new" data-act="sheet" data-k="new">Or begin a new page ${IC.chev}</button>`,'jprompt')}
- ${sec('Your Path So Far',`<div class="js3">${[[it.length,it.length===1?'Page':'Pages'],[streak,streak===1?'Day in a row':'Days in a row'],[month,'Days this month']].map(([v,l])=>`<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>${theme&&theme[1]?`<p class="js-th">Lately your words keep returning to <b>${theme[0]}</b>.</p>`:''}<div class="jlinks"><button class="jl-b" data-act="inspop">${IC.chart} Insights &amp; Themes</button><button class="jl-b" data-go="discover" data-t="dreams">${IC.eye} Your Dreams</button></div>`,'jpath')}
+ ${sec(ch?`This Moon’s chapter`:'Your path so far',`<div class="js3">${[[it.length,it.length===1?'Page kept':'Pages kept'],[chDays,chDays===1?'Day written this Moon':'Days written this Moon'],...(ch?[[`${ch.day}`,`Night of ${ch.len}`]]:[])].map(([v,l])=>`<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>${ch?`<p class="js-th">${wish?`At the New Moon in ${sIdx(ch.sign).name} you wished: <b>“${esc(clip(wish.body,120))}”</b>`:`This chapter began with the New Moon in ${sIdx(ch.sign).name}.`}</p><button class="btn ghost" data-act="hletter">Read this Moon’s letter</button>`:''}${theme&&theme[1]?`<p class="js-th">Lately your words keep returning to <b>${theme[0]}</b>.</p>`:''}<div class="jlinks"><button class="jl-b" data-act="inspop">${IC.chart} Insights &amp; Themes</button><button class="jl-b" data-go="discover" data-t="dreams">${IC.eye} Your Dreams</button></div>`,'jpath')}
  ${sec('Your Latest Pages',recent.length?`<div class="list">${recent.map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]} · ${relDay(p.day)}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')}</div>`:'<p class="jp-empty">Your first page is waiting. Whatever you write tonight will be kept here.</p>','jrecent')}
  ${sec('Your Moon Calendar',journalCal(),'jmoon')}
- </div></div>${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><p class="cp-k">Insights &amp; Themes</p><h2 class="center">${firstName()?esc(firstName())+', your words so far':'Your words so far'}</h2>${journalInsights()}</div></div>`:''}`;
+ </div></div>${V.letter?moonLetter(V.letter):''}${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><p class="cp-k">Insights &amp; Themes</p><h2 class="center">${firstName()?esc(firstName())+', your words so far':'Your words so far'}</h2>${journalInsights()}</div></div>`:''}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
 function sheetView(){
@@ -2169,7 +2226,7 @@ function dreamsView(){
  return `<div class="land drm">${iconBtn('back','data-act="back"','Back')}<header class="hl-top stay"><h1 class="cz">Dream<br>Interpretation</h1><p class="hgreet">${nm?esc(nm)+', what':'What'} the night left with you</p></header>
  <div class="hl-cards">
  <div class="hl-card"><p class="dr-lead">Your dreams are a bridge between your waking mind and the deeper one. Tell Kassandra what you saw, and uncover what it is asking you to notice.</p>
-  <button class="btn" data-go="discover" data-t="new-dream">Interpret a Dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Your Dream Journal</button></div>
+  <button class="btn" data-go="discover" data-t="new-dream">Bring a dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Your dream journal</button></div>
  <section class="hl-sec">${Kit.divider('Common Symbols')}<div class="hl-card"><div class="symrow">${['water','flying','snake','house','death'].map(id=>{const x=dsym(id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(x.name.replace(/^(The|A|An) /,''))}">${artOf(x.art,'sym-i')}<strong>${x.name.replace(/^The /,'')}</strong><span>${x.keys[0]}</span></button>`}).join('')}</div></div></section>
  ${dreamPatterns(list)?`<div class="hl-card">${dreamPatterns(list)}</div>`:''}
  ${list.length?`<section class="hl-sec">${Kit.divider('Your Recent Dreams')}<div class="hl-card"><div class="list">${list.slice(0,3).map(dreamRow).join('')}</div>${seeAll('discover','dream-journal','All your dreams')}</div></section>`:''}
@@ -2186,7 +2243,7 @@ function newDreamView(){
  ${acc(`<span class="ico">☺</span>`,'How did you feel in the dream?',D.mood?MOODS.find(m=>m[0]===D.mood)[1]:'Optional',`<div class="fchips">${MOODS.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${D.mood===k}" data-act="dmood" data-k="${k}">${l}</button>`).join('')}</div>`,!!D.mood)}
  ${acc(`<span class="ico">${IC.star}</span>`,'Select dream symbols',D.symbols.length?D.symbols.map(id=>dsym(id).name.replace(/^(The|A|An) /,'')).join(', '):'Optional',`<div class="fchips">${DREAMS.map(s=>`<button class="fchip" role="checkbox" aria-checked="${D.symbols.includes(s.id)}" data-act="dsym" data-k="${s.id}">${s.name.replace(/^(The|A|An) /,'')}</button>`).join('')}</div>`,D.symbols.length>0)}
  </div>
- <button class="btn" data-act="dgo">Interpret My Dream →</button>
+ <button class="btn" data-act="dgo">What does it mean? →</button>
  <p class="muted small center">${C.user?'Kassandra reads your dream with AI; only what you write here is sent.':'Without signing in, your dream is read with Kosmia’s dream dictionary. Sign in for Kassandra’s personal reading.'} Your dream is kept privately in your Dream Journal.</p></div>`;
 }
 function dreamView(){
@@ -2197,14 +2254,14 @@ function dreamView(){
  <div class="dm-art">${dreamArt(d,'dm-img')}</div>${mbox(`<h2 class="center dm-t">${esc(I.title||'Your Dream')}</h2><p class="keys">${keys((I.keywords||[]).slice(0,3))}</p>
  <div class="read">${paras(I.meaning)}</div>
  ${(I.symbols||[]).length?`${orn('Other Symbols in Your Dream')}<div class="symrow">${I.symbols.map(s=>{const x=dsym(s.id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(s.name)}">${x?artOf(x.art,'sym-i sq'):ui('d-dream','sym-i sq')}<strong>${esc(s.name)}</strong><span>${esc(s.meaning||'')}</span></button>`}).join('')}</div>`:''}`)}
- ${panel(`<p class="kick">A question to sit with</p><p class="quote">“${esc(I.reflection||PROMPTS.d[2])}”</p><button class="btn" data-act="jopen" data-k="bk:dream:${esc(d.id)}">${d.note?'Continue Your Reflection':'Write a Reflection'}</button>`,'ornate')}
+ ${panel(`<p class="kick">A question to sit with</p><p class="quote">“${esc(I.reflection||PROMPTS.d[2])}”</p><button class="btn" data-act="jopen" data-k="bk:dream:${esc(d.id)}">${d.note?'Keep writing':'Write a Reflection'}</button>`,'ornate')}
  <details class="acc plain"><summary><span class="lr-t"><strong>Your dream, as you wrote it</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><p class="pre">${esc(d.text)}</p></div></details>
  <p class="muted small center">${I.ai?'Read by Kassandra with AI. ':'Read with Kosmia’s dream dictionary. '}Dream meanings are symbolic and subjective, offered for reflection rather than as scientifically established predictions.</p>
- <div class="acts"><button class="btn ghost" data-act="kasask" data-q="I dreamt: ${esc((d.text||'').slice(0,300))} What might it mean?">Ask Kassandra about it</button><button class="btn ghost" data-go="discover" data-t="new-dream">Interpret Another Dream</button></div></div>`;
+ <div class="acts"><button class="btn ghost" data-act="kasask" data-q="I dreamt: ${esc((d.text||'').slice(0,300))} What might it mean?">Ask Kassandra about it</button><button class="btn ghost" data-go="discover" data-t="new-dream">Bring another dream</button></div></div>`;
 }
 function dreamJournalView(){
  const list=dreams();
- return `<div class="sub">${hdr('Dream Journal',{sub:'Your dreams and what they revealed'})}${dreamPatterns(list)}<div class="list">${list.map(dreamRow).join('')||'<p class="muted center">No dreams recorded yet.</p>'}</div><button class="btn" data-go="discover" data-t="new-dream">Record a Dream</button></div>`;
+ return `<div class="sub">${hdr('Dream Journal',{sub:'Your dreams and what they revealed'})}${dreamPatterns(list)}<div class="list">${list.map(dreamRow).join('')||'<p class="muted center">No dreams recorded yet.</p>'}</div><button class="btn" data-go="discover" data-t="new-dream">Tell me a dream</button></div>`;
 }
 /* ----- The Mystical Library: guides, the signs, planets, houses, the tarot, the Moon's phases and the dream dictionary ----- */
 const GUIDES=[
@@ -2249,7 +2306,9 @@ function kasContext(){
  else if(L.sec==='tarot'&&L.t==='entry'&&V.lastRead&&V.lastRead.p){ctx.reading=`Their journal page “${jHeading(V.lastRead.p)}”: ${String(jText(V.lastRead.p)||'').slice(0,800)}`}
  else if(L.sec==='tarot'&&L.t==='whisper'&&V.lastRead&&V.lastRead.card){const c=V.lastRead.card;ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
  else if(S.revealed[k]){const c=todayCard();ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
- if(personalOn()){const pt=PZ.forKassandra(myPortrait());if(pt)ctx.portrait=pt}
+ if(personalOn()){const pt=PZ.forKassandra(myPortrait()),th=myThread(),ch=chapterAt(),w=chWish(ch);
+  const more=[th?`${th.label} (${th.day}): “${th.text}”. You may gently ask how it is now, if it fits.`:'',w?`Their wish for this Moon's chapter (begun at the New Moon in ${sIdx(ch.sign).name}): “${clip(w.body,200)}”.`:''].filter(Boolean).join('\n');
+  if(pt||more)ctx.portrait=[pt,more].filter(Boolean).join('\n')}
  if(S.settings.kPersonal){
   const ch=myChart(),p=[`Chosen sign ${sg(S.sign).name}`];
   if(S.name)p.push('Name '+S.name);
@@ -2273,7 +2332,7 @@ views.kassandra=()=>{
  ${has||KS.busy?`<div class="thread" id="kthread" aria-live="polite">${KS.msgs.map(m=>`<div class="kas-m ${m.role}">${esc(m.content).replace(/\n+/g,'<br>')}</div>`).join('')}${KS.busy?'<div class="kas-m assistant muted">Kassandra is gazing into the crystal…</div>':''}</div>`:''}
  <form id="kas-f" class="kas-f"><label class="sr-only" for="kas-in">Your question for Kassandra</label><input type="text" id="kas-in" placeholder="Ask Kassandra…" maxlength="600" ${rec!=='idle'?'disabled':''}><button type="submit" class="kas-send" aria-label="Send" ${KS.busy||rec!=='idle'?'disabled':''}>${IC.send}</button></form>
  <label class="ck small"><input type="checkbox" id="kas-p" class="cb" ${S.settings.kPersonal?'checked':''}><span>Share my sign, chart and numbers with Kassandra</span></label>
- ${has?'<button class="btn ghost sm" data-act="kasnew">Start a New Conversation</button>':''}`
+ ${has?'<button class="btn ghost sm" data-act="kasnew">Begin a new conversation</button>':''}`
  :`<button class="kp-mic" data-act="toauth" aria-label="Sign in to speak with Kassandra">${IC.mic}</button>
  <div class="kp-pr">${kasPrompts().map(p=>`<button class="pill-b" data-act="toauth">${esc(p)}</button>`).join('')}</div>
  <button class="btn" data-act="toauth">Sign in to talk with Kassandra</button><p class="muted small center">Kassandra’s readings are written by AI, so she listens once you are signed in.</p>`}
@@ -2297,8 +2356,8 @@ function kasGreet(){
  if(L&&L.k==='dream')return [`${hi}your dream still lingers around you. Shall we follow where it leads?`,['What is my dream telling me?','Why do I keep dreaming this?','Something else']];
  if(L&&L.k==='entry')return [`${hi}you have just been writing. Would you like to sit with it a little longer, together?`,['Help me reflect on what I wrote','What is beneath this feeling?','Something else']];
  let moon='';try{const m=K.moon(new Date());moon=` ${/^(New|Full)/.test(m.name)?`The ${m.name} rests`:`The Moon is ${m.waxing?'growing':'waning'}`} in ${sIdx(m.sign).name} tonight…`}catch(e){}
- const felt=personalOn()?PZ.greeting(myPortrait()):'';
- return [`${nm?`Welcome back, ${nm}.`:'Welcome, traveller.'}${moon}${felt?' '+felt:''} What is on your heart?`,[...(felt&&myPortrait().themes[0]?[`Guide me with ${PZ.THEMES[myPortrait().themes[0].k].short.replace(/you (come|long|have)/,'I $1').replace(/your/g,'my').replace(/you/g,'me')}`]:[]),'What do I need to know today?','What opportunities are coming?'].slice(0,3)];
+ const th0=personalOn()?myThread():null,felt=personalOn()?(PZ.greeting(myPortrait())||(th0?`${th0.label} about something close to you. ${th0.ask}`:'')):'';
+ return [`${nm?`Welcome back, ${nm}.`:'Welcome. Sit with me a while.'}${moon}${felt?' '+felt:''} What is on your heart?`,[...(felt&&myPortrait().themes[0]?[`Guide me with ${PZ.THEMES[myPortrait().themes[0].k].short.replace(/you (come|long|have)/,'I $1').replace(/your/g,'my').replace(/you/g,'me')}`]:[]),'What do I need to know today?','What opportunities are coming?'].slice(0,3)];
 }
 // the fog rolls in over the page the reader is on; once it hides everything, her chamber is opened behind it and the fog
 // thins away from the centre
@@ -2380,13 +2439,13 @@ views.settings=()=>{
  // Kosmia Premium: what stays free, what Premium opens, and the two plans. Payments are not switched on yet, so during
  // early access everything is open and nothing can be bought here
  if(t==='subscription'){const li=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-  return nightSub(`<div class="sub">${hdr('Kosmia Premium')}<div class="prem">
-  <p class="prem-l">${firstName()?esc(firstName())+', the':'The'} cosmos, written for you alone</p>
+  return nightSub(`<div class="sub">${hdr('The Sanctuary')}<div class="prem">
+  <p class="prem-l">${firstName()?esc(firstName())+', a':'A'} place that knows you a little more each Moon</p>
   ${panel(`<p class="kick prem-now">Your plan · Early Access</p><p class="prem-now">Everything in Kosmia is open to you, free, while it is in early access. Nothing is charged, and nothing ever will be without your clear agreement.</p>`,'ornate')}
   ${panel(`<div class="prem-cols"><div class="prem-col"><h3>Always free</h3>${li(['Your Daily Whisper','Your sign’s horoscope','Journal and reflections','Moon and Cosmic Calendar','One-card and three-card readings'])}</div>
-   <div class="prem-col"><h3>Premium</h3>${li(['Written for You, every day','Kassandra, whenever you need her','Your birth chart and transits','Love, Career and Celtic Cross spreads','Compatibility in depth','Dream interpretation','Readings in Kassandra’s voice'])}</div></div>`,'ornate')}
+   <div class="prem-col"><h3>The Sanctuary</h3>${li(['Written for You, every day','Kassandra, whenever you need her','Your birth chart and transits','Love, Career and Celtic Cross spreads','Compatibility in depth','Dream interpretation','Readings in Kassandra’s voice'])}</div></div>`,'ornate')}
   <div class="prem-plans"><div class="plan best"><i>Best value</i><b>Yearly</b><strong>$49.99</strong><small>$4.17 a month</small><small>7 days free</small></div><div class="plan"><b>Monthly</b><strong>$9.99</strong><small>a month</small><small>cancel anytime</small></div></div>
-  <button class="btn" disabled>Premium opens soon</button><p class="muted small center">Until then, everything above is yours.</p></div></div>`,'st')}
+  <button class="btn" disabled>The Sanctuary opens soon</button><p class="muted small center">Until then, everything above is yours.</p></div></div>`,'st')}
  if(t!=='account')return nightSub(subPage(settingsPage(t)),'st');
  const s=sg(S.sign),acct=!C.enabled?'<p class="muted">Accounts are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
@@ -2405,7 +2464,7 @@ views.settings=()=>{
  ${lrow(pic('cats','notifications','th'),'Notifications','Daily horoscope, Whispers and celestial events','data-go="settings" data-t="notifications"')}
  ${lrow(pic('cats','prefs','th'),'Display','Text size, motion, time zone and voice','data-go="settings" data-t="display"')}
  ${lrow(pic('cats','privacy','th'),'Privacy & Data','Consent, download and deletion','data-go="settings" data-t="privacy"')}
- ${lrow(pic('cats','collection','th'),'Subscription','Kosmia · Early Access','data-go="settings" data-t="subscription"')}
+ ${lrow(pic('cats','collection','th'),'Membership','Kosmia · Early access','data-go="settings" data-t="subscription"')}
  ${C.user?acc(ui('t-history','th'),'Password','Change your password',`<div class="field"><label for="npw">New password</label><input id="npw" type="password" autocomplete="new-password" minlength="8"></div><button class="btn sm" data-act="setpw">Change password</button>`):''}
  </div><button class="btn ghost" data-act="signout">Sign out${C.user?'':' and clear this device'}</button></div></div>`;
 };
@@ -2745,11 +2804,22 @@ document.addEventListener('click',e=>{
  // a reflection on the day written for the reader, its theme as the page's title
  if(a==='pzspeak')return speakText(myDay().body);
  if(a==='hnext')return pathMove(1);
+ if(a==='hwish'){const v=(($('#hpwish')||{}).value||'').trim(),ch=chapterAt();if(!v){toast('Write a few words first');const x=$('#hpwish');if(x)x.focus();return}
+  const j={id:uuid(),day:dkey(),kind:'reflection',title:`${WISH} in ${sIdx(ch.sign).name}`,body:v,at:new Date().toISOString()};S.journal.push(j);save();C.saveJournal&&C.saveJournal(j);
+  V.hstep=null;render();window.scrollTo(0,0);return toast('Planted. The Moon will bring it back to you')}
+ if(a==='hnowish'){const ch=chapterAt();S.intentAsk=ch?ch.key:'';save();V.hstep=null;render();return window.scrollTo(0,0)}
+ if(a==='hlet'||a==='hrelkeep'||a==='hnonight'){const x=$('#hprel'),v=((x||{}).value||'').trim(),k=dkey();
+  if(a!=='hnonight'&&!v){toast('Write a few words first');if(x)x.focus();return}
+  if(a==='hrelkeep'){const j={id:uuid(),day:k,kind:'reflection',title:LETGO,body:v,at:new Date().toISOString()};S.journal.push(j);C.saveJournal&&C.saveJournal(j)}
+  S.released=k;save();const done=()=>{V.hstep='held';render();window.scrollTo(0,0);if(a==='hlet')toast('Let go');if(a==='hrelkeep')toast('Kept in your Journal')};
+  if(a==='hlet'&&x&&!S.settings.reduce){x.classList.add('hp-gone');x.value='';return setTimeout(done,1400)}return done()}
+ if(a==='hletter'){const ch=chapterAt();V.letter=ch&&ch.day<=3&&V.sec==='home'?lastChapter(ch)||ch:ch;return render()}
+ if(a==='letterclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.letter=null;return render()}
  if(a==='hgo'){V.hstep=t.dataset.k;render();return window.scrollTo(0,0)}
  if(a==='hdream'){S.dreamAsk=dkey();save();return go('discover','new-dream')}
  if(a==='hnodream'){S.dreamAsk=dkey();save();V.hstep=null;render();return window.scrollTo(0,0)}
  if(a==='hkeep'){const v=($('#hpta')||{}).value||'',k=dkey();if(!v.trim()){toast('Write a few words first');const x=$('#hpta');if(x)x.focus();return}
-  S.notes[k]=v.trim();save();syncFortune(k);V.hstep='held';render();window.scrollTo(0,0);return toast('Kept in your Journal')}
+  S.notes[k]=v.trim();save();syncFortune(k);V.hstep=askNight(k)?'night':'held';render();window.scrollTo(0,0);return toast('Kept in your Journal')}
  if(a==='kasgo')return kasVeil(()=>go('kassandra'));
  if(a==='pzmore'){V.pzOpen=true;const c=t.closest('.pz');if(c){c.classList.remove('fold');t.remove();return}return render()}
  if(a==='jnew'){const j={id:uuid(),day:dkey(),kind:'reflection',title:myDay().focus,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
@@ -2861,6 +2931,7 @@ document.addEventListener('keydown',e=>{
  if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&$('.jbook')&&!e.target.closest('input,textarea,select')){e.preventDefault();return jflip(jIdx(journalPages())+(e.key==='ArrowRight'?1:-1))}
  if(e.key==='Enter'&&e.target.id==='jn'){e.preventDefault();return e.target.blur()}
  if(e.key==='Escape'&&V.bdayOpen&&onboarding()){V.bdayOpen=false;return render()}
+ if(e.key==='Escape'&&V.letter){V.letter=null;return render()}
  if(e.key==='Escape'&&V.jx){V.jx=false;return render()}
  if(e.key==='Escape'&&V.sheet){V.sheet=null;return render()}
  if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}

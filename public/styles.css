@@ -4036,3 +4036,14 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 .hp-full{display:block;width:96px;height:96px}
 .hp-fm{width:100%;height:100%;filter:drop-shadow(0 0 14px rgba(246,210,140,.6))}
 .hp-dream .pz-acts,.hp-reflect .pz-acts{width:100%}
+
+/* the evening ritual: what is let go of fades away; the Moon's letter reads like a letter */
+.hp-ta{transition:opacity 1.3s ease,filter 1.3s ease,transform 1.3s ease}
+.hp-ta.hp-gone{opacity:0;filter:blur(6px);transform:translateY(-14px) scale(.98)}
+.hp-night .hp-big,.hp-intent .hp-big{font-size:1.25rem;line-height:1.25}
+.hp-held .btn.ghost{width:100%;min-height:44px}
+.lt-b{margin:6px 0 12px;font-family:var(--font-serif);font-size:1.05rem;line-height:1.55;text-align:left}
+.lt-b p{margin:0 0 .8em}
+.lt-sig{text-align:right;font-style:italic;color:#E9C985}
+.jpath .btn.ghost{width:100%;margin-top:8px}
+.lt-box{padding-bottom:180px!important}
