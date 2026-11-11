@@ -51,7 +51,7 @@ function symbol(k){
 
 /* ---------- storage ---------- */
 const KEY='kosmia.v1';
-const fresh=()=>({email:'',sign:'',name:'',fullName:'',altName:'',birth:{date:'',time:'',unk:false,place:'',lat:'',lon:'',tz:''},birthConsent:false,
+const fresh=()=>({wfy:'',dreamAsk:'',email:'',sign:'',name:'',fullName:'',altName:'',birth:{date:'',time:'',unk:false,place:'',lat:'',lon:'',tz:''},birthConsent:false,
  revealed:{},days:{},saved:[],notes:{},matches:[],conns:[],readings:[],journal:[],bookmarks:[],
  notif:{on:false,time:'08:00',monthly:true,annual:true,events:false,sign2:'',whisper:false,quiet:false,quietFrom:'22:00',quietTo:'07:00'},
  settings:{tz:'',reduce:false,large:false,kPersonal:false,voiceOut:false,yMode:'auto'},intro:false,kcur:[],intent:{}});
@@ -181,24 +181,34 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 // [page slug, title]; the first page of each section is its landing
 const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
- horoscope:{label:'Horoscope',tabs:[['overview','Horoscope'],['sign','Horoscope']]},
- tarot:{label:'Tarot',tabs:[['home','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
+ horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
+ tarot:{label:'Oracle',tabs:[['home','Oracle'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
+ you:{label:'You',tabs:[['home','You']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Subscription']]}
 };
-const MAIN=['home','horoscope','tarot','discover','kassandra'];
-const NAV=[{key:'home',label:'Today'},{key:'horoscope',label:'Stars'},{key:'tarot',label:'Tarot'},{key:'journal',label:'Journal'},{key:'kassandra',label:'Kassandra'}];
-const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','dream-journal'];
-function navCur(){const t=tab();if(V.sec==='tarot'&&JPAGES.includes(t))return 'journal';if(V.sec==='discover')return DPAGES.includes(t)?'journal':'horoscope';return V.sec}
+const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
+// the five places: Today (the day's path), Sky (look up), Oracle (ask: Kassandra, the cards, a dream), Journal
+// (remember) and You (your Codex, your Circle and your settings)
+const NAV=[{key:'home',label:'Today'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'journal',label:'Journal'},{key:'you',label:'You'}];
+const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
+// the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
+// numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
+function navCur(){const t=tab();
+ if(V.sec==='tarot')return JPAGES.includes(t)?'journal':'tarot';
+ if(V.sec==='kassandra')return 'tarot';
+ if(V.sec==='settings'||V.sec==='you')return 'you';
+ if(V.sec==='discover')return DPAGES.includes(t)?'tarot':t==='dream-journal'?'journal':YPAGES.includes(t)?'you':'horoscope';
+ return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
-const PARENT={'tarot/entry':'tarot/journal',
- 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/dreams':'tarot/journal',
+const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
+ 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'tarot/journal','discover/dreams':'tarot/home',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
- if(sec==='discover')return ['horoscope','overview'];
- if(sec==='settings')return t==='account'?['home','today']:['settings','account'];
+ if(sec==='discover')return YPAGES.includes(t)?['you','home']:['horoscope','overview'];
+ if(sec==='settings')return t==='account'?['you','home']:['settings','account'];
  return [sec,SECTIONS[sec].tabs[0][0]];
 }
 // earlier addresses keep working: the six-section release and the first release's single words
@@ -252,7 +262,7 @@ history.scrollRestoration='manual';
 function newReading(){const T=V.tarot;T.stage='setup';T.q='';T.picks=[];T.drawn=null;T.ai='';T.aiState='';T.savedId=null;V.tpop=null}
 function go(sec,t,opt={}){
  if(sec==='discover'&&(!t||t==='home')){sec='horoscope';t=null}
- stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.insPop=false;jLeave();jeLeave();
+ stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.spk=false;V.insPop=false;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
  if(sec==='discover')V.ns={};
@@ -806,29 +816,57 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
    then the parchment sheet */
+// the day's path: its four steps, each lighting a Moon a quarter further, and the screen it opens on: on mornings
+// "Did you dream?" first, until answered; otherwise the first step not yet done, and once all four are, the day held
+const PATH=[['wfy','Written for You'],['stars','Your Stars'],['whisper','Whisper'],['reflect','Reflect']],PHASES=['waxing-crescent','first-quarter','waxing-gibbous','full-moon'];
+const pathDone=k=>({wfy:S.wfy===k,stars:S.readDay===k,whisper:!!S.revealed[k],reflect:!!S.notes[k]});
+const hourNow=()=>Number(fmt({hour:'numeric',hour12:false},new Date()));
+const askDream=k=>{const h=hourNow();return h>=4&&h<12&&S.dreamAsk!==k};
+const pathOrder=k=>[...(askDream(k)?['dream']:[]),...PATH.map(x=>x[0]),'held'];
+function pathStep(){
+ const k=dkey(),dn=pathDone(k);
+ if(V.hday!==k){V.hday=k;V.hstep=null}
+ return V.hstep||(askDream(k)?'dream':(PATH.find(([x])=>!dn[x])||['held'])[0]);
+}
+// to the next step (or back): leaving Your Stars counts it as read; the page returns to its head
+function pathMove(dir){
+ const k=dkey(),o=pathOrder(k),st=pathStep(),i=Math.max(0,o.indexOf(st)),n=Math.min(o.length-1,Math.max(0,i+dir));
+ if(st==='stars'&&dir>0&&S.readDay!==k){S.readDay=k;save()}
+ if(n===i)return;V.hstep=o[n];render();window.scrollTo(0,0);
+}
 views.home=()=>{
  if(!A||!K)return needLib();
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
- const nm=firstName(),short=hSum(horoscope(sign.id,'overview','daily').body),fig='atlas/fg-'+sign.id;
- const note=S.notes[k],steps=[['Read your day',S.readDay===k,'data-act="tohoroscope"'],['Reveal your Whisper',rev,`data-act="${rev?'wpop':'reveal'}"`],['Reflect',!!note,`data-act="jopen" data-k="fortune:${k}"`]],done=steps.filter(x=>x[1]).length;
- const ritual=`<div class="hh-rit" aria-label="Today’s ritual, ${done} of 3 done">${steps.map(([l,d,at],i)=>`<button class="rit${d?' on':''}" ${at}><i aria-hidden="true">${d?'✦':i+1}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
- const wbtn=!rev?`<button class="btn" data-act="reveal">Reveal</button>`:`<button class="btn" data-act="wpop">Read All</button>`;
- return `<div class="home hbay hmoon hsun"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
+ const nm=firstName(),short=hSum(h.body),fig='atlas/fg-'+sign.id,d=myDay(),st=pathStep();
+ V.hstep=st;   // the step in view stays in view until the reader moves on, even once it counts as done
+ if(st==='wfy'&&S.wfy!==k){S.wfy=k;save()}
+ const dn=pathDone(k),done=PATH.filter(([x])=>dn[x]).length;
+ const ritual=`<div class="hh-rit hh-path" aria-label="Today’s path, ${done} of 4 done">${PATH.map(([x,l],i)=>`<button class="rit${dn[x]?' on':''}${st===x?' cur':''}" data-act="hgo" data-k="${x}"${st===x?' aria-current="step"':''}><i aria-hidden="true">${pic('moons',dn[x]?PHASES[i]:'new-moon','rit-m')}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
+ const next=(l='Continue')=>`<button class="btn" data-act="hnext">${l}</button>`;
+ const playing=V.say===d.body;
+ const card=(title,body,cls='')=>panel(`${orn(title)}${body}`,`gilt hp-card ${cls}`);
+ let stage;
+ if(st==='dream')stage=card('Good Morning',`<div class="hp-in"><p class="hp-big">Did you dream?</p><p class="hp-sub">Dreams fade within minutes of waking. Keep yours before it goes, and read its meaning when you are ready.</p>
+  <div class="pz-acts"><button class="btn" data-act="hdream">Write It Down</button><button class="btn ghost" data-act="hnodream">Not Today</button></div></div>`,'hp-dream');
+ else if(st==='wfy')stage=card('Written for You',`<div class="hp-in"><h2 class="pz-t">${esc(d.focus)}</h2><p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
+  <div class="pz-b">${esc(d.body)}</div><div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
+ else if(st==='stars')stage=`<div class="hh-stage s-${sign.id}">
+   <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
+   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button>${next()}</article>
+  </div>`;
+ else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${rev?'':'<button class="btn" data-act="reveal">Reveal</button>'}</div></div>
+   ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p><div class="hp-acts"><button class="btn ghost" data-act="wpop">See the Card</button>${next()}</div>`:''}`,'hp-whisper');
+ else if(st==='reflect')stage=card('Reflect',`<div class="hp-in"><p class="pz-q">“${esc(d.question)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write whatever comes…" aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
+  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep It</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div><p class="hp-sub">What you keep goes into your Journal.</p></div>`,'hp-reflect');
+ else stage=card('Your Day Is Held',`<div class="hp-in"><span class="hp-full">${pic('moons','full-moon','hp-fm')}</span><p class="hp-big">${done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
+  <p class="hp-sub">${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p></div>`,'hp-held')+energyCarousel(energySlides(now,m,sign,h));
+ return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <div class="hh-acts hh-fix">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>The universe speaks. <span>Are you listening?</span></small></div></div>
   <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${ritual}</header>
- ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`
-  <div class="hh-stage s-${sign.id}">
-   <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
-   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read Full Horoscope →</button></article>
-  </div>`})}
- ${scenic(`
-  ${pzCard('hpz')}
-  ${panel(`${orn('Your Daily Whisper')}<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over for today’s message from the cosmos.</p>'}${wbtn}</div></div>`,'gilt hwhisper')}
-  ${energyCarousel(energySlides(now,m,sign,h))}
-  ${readOthers()}
- `,'hsheet',ui('home-night2','ksc-n'))}${V.wpop?whisperPop(c):''}</div>`;
+ ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`<div class="hp-stage" data-step="${st}" aria-live="polite">${stage}</div>`})}
+ ${V.wpop?whisperPop(c):''}</div>`;
 };
 
 /* ---------- the personal voice (personal.js): what the reader has written, read on this device and woven into the
@@ -950,7 +988,7 @@ views.horoscope=()=>{
  </div>
  </section>
  ${readOthers()}
- <section class="hl-sec hl-disc">${discoverLib()}</section>
+ <section class="hl-sec hl-disc">${discoverLib('sky')}</section>
 </div></div>`;
 };
 function horoSign(){
@@ -962,7 +1000,7 @@ function horoSign(){
   return `<div class="read">${paras(h.body)}</div>
   ${ex!==S.sign?`<div class="acts"><button class="btn ghost" data-act="setsign" data-sign="${ex}">Set ${s.name} as my sign</button></div>`:''}
   ${k==='money'?'<p class="muted small">For reflection only. This is not financial advice.</p>':''}${k==='health'?'<p class="muted small">For reflection only. This is not medical advice.</p>':''}`};
- // at the foot of the screen, the area being read: its medallion lit between an arrow back and an arrow forward, the
+ // beneath the time, the area being read: its medallion lit between an arrow back and an arrow forward, the
  // medallions passing through like a carousel as the reading changes
  const pv=HCATS[(ci+n-1)%n][0],nx=HCATS[(ci+1)%n][0],playing=V.say===h.body;
  const ctl=`<div class="hc-ctl"><button class="hc-arr hc-pv" data-act="hcat" data-k="${pv}" data-dir="-1" aria-label="Back to ${CAT_INFO[pv][0]}">${IC.chev}</button>
@@ -973,18 +1011,19 @@ function horoSign(){
  const listen=`<button class="ibtn${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>`;
  const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
  // the whole page on one screen: at its head the sign's painting dissolved into the night, its constellation, symbol,
- // name, dates and soul in the open sky at its left; right beneath it the time, and the reading on an invisible card in
- // the app's own reading size, laid out in pages that each sit whole (a swipe turns the page, and after the last brings
- // in the next area of life while the head stays still), a mark for each page beneath it; at the foot, above the menu,
- // the area's medallion between the arrows
+ // name, dates and soul in the open sky at its left; right beneath it the time and the area's medallion between the
+ // arrows, then the reading on an invisible card in the app's own reading size, laid out in pages that each sit whole
+ // (a swipe turns the page, and after the last brings in the next area of life while the head stays still); at the
+ // foot, above the menu, an invitation to write about it and another to read for someone else, a mark for each page
+ // between them
  return `<div class="hsp hframe sx s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}<button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div>
  <div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
   ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
   <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
- <div class="sx-main">${per}
+ <div class="sx-main">${per}${ctl}
  <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div>
- <div class="hc-pgs" role="group" aria-label="Pages"></div></div>
- ${ctl}
+ <div class="sx-ft"><button class="sx-a" data-act="hreflect" data-ref="${ref}">Write about it</button><div class="hc-pgs" role="group" aria-label="Pages"></div><button class="sx-a" data-act="spkopen">Read for someone else</button></div></div>
+ ${V.spk?signPick(ex):''}
  </div>`;
 }
 // reading a page aloud: Kassandra's own voice when signed in, otherwise the device's
@@ -1007,15 +1046,15 @@ views.tarot=()=>{
  if(['notebook','history','calendar','insights'].includes(t)){if(t==='insights')V.insPop=true;V.tab.tarot='journal';history.replaceState(history.state,'',pathFor('tarot','journal',viewQuery()));return journalLib()}
  // the night with the old card and the lilies holds still behind the page; the title under the arc, then today's card
  // (the daily step, the same Whisper as on Home) and the readings, each way of reading one tap from its own spread
- const k=dkey(),c=todayCard(),rev=!!S.revealed[k],note=S.notes[k],nm=firstName();
- return `<div class="land tland hnight tnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Tarot</h1><p class="hgreet">${nm?esc(nm)+', the cards':'The cards'} are listening</p><p class="hl-line">Turn today’s card, or ask them a question</p></header>
+ const nm=firstName();
+ return `<div class="land tland hnight tnight">${jdoor()}<header class="hl-top stay"><h1 class="cz">Oracle</h1><p class="hgreet">${nm?esc(nm)+', what':'What'} do you seek?</p><p class="hl-line">Ask Kassandra, turn the cards, or bring a dream</p></header>
  <div class="hl-cards">
- <section class="hl-sec">${Kit.divider('Today’s Whisper')}<div class="hl-card tw"><div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-  <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">One card for today, face down. Turn it over for its message.</p>'}
-  ${!rev?'<button class="btn" data-act="reveal">Reveal</button>':`<button class="btn" data-act="jopen" data-k="fortune:${k}">${note?'Continue Reflecting':'Reflect'}</button>`}</div></div></div></section>
+ <section class="hl-sec">${Kit.divider('Ask Kassandra')}<div class="hl-card tk"><div class="dw dw-row"><span class="tk-m">${ui('kassandra','tk-i')}</span>
+  <div class="dw-side"><h3 class="dw-t">She is listening</h3><p class="dw-msg">Speak or write your question. She knows your sign, your chart and your day.</p><button class="btn" data-act="kasgo">Ask Kassandra</button></div></div></div></section>
  <section class="hl-sec">${Kit.divider('Ask the Cards')}<div class="hl-card tr"><p class="tr-in">Hold a question in your heart, then choose how deeply to look.</p>
   <div class="tr-sp">${Object.entries(SPREADS).map(([sk,x])=>`<button class="tr-s" data-act="tspreadgo" data-k="${sk}">${pic('spreads',sk,'tr-i')}<strong>${x.s}</strong><span>${x.p.length} card${x.p.length>1?'s':''}</span></button>`).join('')}</div></div></section>
- </div>${V.wpop?whisperPop(c):''}</div>`;
+ <section class="hl-sec hl-disc">${discoverLib('oracle')}</section>
+ </div></div>`;
 };
 function whisperView(){
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
@@ -1628,23 +1667,23 @@ function eventsView(){
 // the pages kept from the six-section release open under their own header
 const subPage=h=>h.replace(/^<div class="stack"><h1>([\s\S]*?)<\/h1>/,(_,t)=>`<div class="sub">${hdr(t)}`);
 // Discover's shelves (the sky you were born beneath, two souls, the sky above, the night's dreams), shown on Stars
-function discoverLib(){
+function discoverLib(part){
  const nm=firstName(),shelf=(t,sub)=>`<div class="dshelf"><h2>${t}</h2><p>${sub}</p></div>`;
  const bd=hasBirthDate()?S.birth.date:'',yr=Number(dkey().slice(0,4));
  let chSub='Your cosmic blueprint';try{if(bd&&S.fullName&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(q=>q.n===n);return x?sIdx(x.sign).name:''};chSub=[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon'].filter(Boolean).join(' · ')||chSub}}catch(e){}
  let lpSub='Your soul’s journey',cySub='Your personal year, month and day';try{if(bd&&N){const l=N.lifePath(bd).r.n;lpSub=`Your number ${l} · ${N.MEANING[l][0]}`;cySub=`Your Personal Year ${N.personalYear(bd,yr).r.n}`}}catch(e){}
  const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
  return `<div class="dlib">
-  ${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Cosmic Profile</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
-  ${shelf('Written in You',`${nm?esc(nm)+', the':'The'} sky you were born beneath`)}
+  ${part==='codex'?`${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Cosmic Profile</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
+  ${shelf('Your Codex',`${nm?esc(nm)+', the':'The'} sky you were born beneath`)}
   ${ft('ex-chart','Birth Chart',esc(chSub),'birth-chart','round')}${ft('ex-lifepath','Life Path',esc(lpSub),'life-path','round')}
-  ${ft('ex-name','The Name Within','The numbers in your name','name-within','round')}${ft('m-'+S.sign,'My Cycles',esc(cySub),'cycles','round')}
-  ${shelf('Between Two Souls','You and another, by sign, name or chart')}
-  ${ft('hero-affinity','Compatibility','Signs · Names · Birth charts','affinity','night wide')}
-  ${shelf('The Sky Above','What the heavens are doing now')}
-  ${ft('banner-calendar','Cosmic Calendar','The Moon, the planets and every event','calendar','night wide')}${ft('banner-library','Astrology Library','Signs, planets, houses and tarot','library','night wide')}
-  ${shelf('What the Night Brings','The dreams you carry back with you')}
-  ${ft('hero-dream','Dream Interpretation','Symbols, meanings and your Dream Journal','dreams','night wide')}
+  ${ft('ex-name','The Name Within','The numbers in your name','name-within','round')}${ft('m-'+S.sign,'My Cycles',esc(cySub),'cycles','round')}`:''}
+  ${part==='circle'?`${shelf('Your Circle','Read for the people you love')}
+  ${ft('hero-affinity','Compatibility','Signs · Names · Birth charts','affinity','night wide')}`:''}
+  ${part==='sky'?`${shelf('The Sky Above','What the heavens are doing now')}
+  ${ft('banner-calendar','Cosmic Calendar','The Moon, the planets and every event','calendar','night wide')}${ft('banner-library','Astrology Library','Signs, planets, houses and tarot','library','night wide')}`:''}
+  ${part==='oracle'?`${shelf('What the Night Brings','The dreams you carry back with you')}
+  ${ft('hero-dream','Dream Interpretation','Tell it, and its symbols answer','dreams','night wide')}`:''}
  </div>`;
 }
 views.discover=()=>{
@@ -2317,6 +2356,23 @@ async function voiceRec(target){
 function kasStopRec(cancel){if(KS.rec&&KS.rec.state!=='inactive'){KS.cancel=!!cancel;KS.rec.stop()}KS.rec=null;clearTimeout(KS.timer)}
 
 /* ---------- Your Profile (from the avatar on Home): the account, sign, birth details, notifications, display, privacy and plan ---------- */
+views.you=()=>{
+ const nm=firstName(),sign=sg(S.sign);let line=`${sign.name} Sun`;
+ try{if(hasBirthDate()&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(q=>q.n===n);return x?sIdx(x.sign).name:''},asc=ch.ang&&!S.birth.unk?sIdx(Math.floor(ch.ang.asc/30)).name:'';
+  line=[pl('Sun')&&'Sun '+pl('Sun'),pl('Moon')&&!ch.moonRange&&'Moon '+pl('Moon'),asc&&'Rising '+asc].filter(Boolean).join(' · ')||line}}catch(e){}
+ return `<div class="land hland hnight yland">${jdoor()}<header class="hl-top stay"><h1 class="cz">${nm?esc(nm):'You'}</h1><p class="hl-motto">${esc(line)}</p></header>
+ <div class="hl-cards">
+ <section class="hl-sec hl-disc">${discoverLib('codex')}</section>
+ <section class="hl-sec hl-disc">${discoverLib('circle')}</section>
+ ${readOthers()}
+ <section class="hl-sec">${Kit.divider('Your Details')}<div class="hl-card ydet"><div class="list">
+  ${lrow(myFace('th round'),'Your Profile','Your name, photo and account','data-go="settings" data-t="account"')}
+  ${lrow('','Birth Details',hasBirthDate()?ymdLong(S.birth.date,{day:'numeric',month:'long',year:'numeric'}):'Add your birthday, time and place','data-go="settings" data-t="birth"')}
+  ${lrow('','Notifications','When the stars may call on you','data-go="settings" data-t="notifications"')}
+  ${lrow('','Privacy &amp; Data','What is kept, and where','data-go="settings" data-t="privacy"')}
+ </div></div></section>
+ </div></div>`;
+};
 views.settings=()=>{
  const t=tab();
  if(t==='birth'){V.sec='discover';V.tab.discover='profile';history.replaceState(history.state,'',pathFor('discover','profile',{}));return nightPage(profileView(),'cp')}
@@ -2388,11 +2444,12 @@ function render(){
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun-today':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+(one||pg.matches('.home.hbay')?',#030D1A':',#0B0F1E'):'none')}}
- jxRender();enCar();hcar();tileUp();stayHeads();stayFade();footFit();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();hcar();hswipe();tileUp();stayHeads();stayFade();footFit();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
  if(authed)$('#navin').innerHTML=Kit.nav(NAV,navCur());
+ if(authed){const yb=$('#navin [data-nav=you]');if(yb)yb.style.setProperty('--ico',`url(/art/atlas/sgm-${S.sign||'aries'}.webp)`)}
  if(authed)askDaily();
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
@@ -2404,6 +2461,13 @@ function render(){
  drift();
  const vk=sec+'/'+tab()+(sec==='tarot'?'/'+V.tarot.stage:'');if(vk!==render.vk&&sec==='tarot'&&tab()==='reading')requestAnimationFrame(()=>window.scrollTo(0,0));render.vk=vk;
 }
+// Today's path: a clearly sideways swipe on the step, once let go, brings the next step (or the one before)
+function hswipe(){
+ const s=$('.hp-stage');if(!s)return;let x0=null,y0=0;
+ s.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY},{passive:true});
+ s.addEventListener('touchend',e=>{if(x0==null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5&&!e.target.closest('textarea,.en-car'))pathMove(dx<0?1:-1)},{passive:true});
+}
 // the Cosmic Energy carousel: its dots follow the slide in view, and it moves on by itself every few seconds unless the
 // reader has just touched it or motion is reduced
 let enT=0;
@@ -2411,9 +2475,9 @@ let enT=0;
    reading roll up over them; the areas then stay at the top of the screen as its menu. */
 /* the areas of life on a sign page. The reading never moves sideways under the finger (so scrolling stays steady): a
    clearly sideways swipe on the reading, once let go, turns its page (or back), and after its last page brings in the
-   next area (or, back from its first, the one before at its last page); the arrows beneath it go to the next area or
+   next area (or, back from its first, the one before at its last page); the arrows above it go to the next area or
    the one before, at its start. The new page or reading slides in without redrawing the page; the marks beneath the
-   reading follow its page; the medallion between the arrows turns to the new area like a carousel; the painting and
+   reading follow its page, and Write about it the area in view; the medallion between the arrows turns to the new area like a carousel; the painting and
    the sign's name stay still. */
 function hcar(){
  const c=$('.hcar');if(!c)return;
@@ -2433,7 +2497,7 @@ function hcar(){
   const was=V.say;V.hcat=k;stopAudio();line(j,Math.abs(j-cur0)>1);
   const back=dir?dir<0:j<cur0,turn=(sl,x)=>{const on=x===j;sl.hidden=!on;sl.classList.toggle('cur',on);sl.classList.toggle('from-l',on&&back)};
   [...R.children].forEach(turn);sxLay(R.children[j]);
-  const sl=R.children[j],r=sl.dataset.ref,hb=$('.hsp-bar [data-act=bookhoro]'),sh=$('.hsp-bar [data-act=sharecard]'),wr=$('.hsp-body [data-act=hreflect]');
+  const sl=R.children[j],r=sl.dataset.ref,hb=$('.hsp-bar [data-act=bookhoro]'),sh=$('.hsp-bar [data-act=sharecard]'),wr=$('.sx [data-act=hreflect]');
   if(hb){const on=isSaved('horoscope',r);hb.dataset.ref=r;hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);hb.setAttribute('aria-label',on?'Saved to your journal':'Save to your journal')}
   if(sh)sh.dataset.cat=k;if(wr)wr.dataset.ref=r;
   syncUrl();
@@ -2448,6 +2512,14 @@ function hcar(){
  c.go=(j,d)=>take(j,d);c.show=show;c.pg=V.hpg&&V.hpg[0]===R.children[cur()].dataset.ref?V.hpg[1]:0;
  sxPage();
 }
+// Read for someone else: the Whisper's floating frame, asking whose sign to read, the twelve medallions as the zodiac
+// shows them when one first arrives; the sign chosen opens its own page at the same area and time
+function signPick(ex){
+ return `<div class="cpop wpc spk" role="dialog" aria-modal="true" aria-labelledby="spkt" data-act="spkclose"><div class="cp-in wpc-in">
+ <button class="cp-x" data-act="spkclose" aria-label="Close">×</button>
+ <p class="cp-k">Read for someone else</p><h2 class="cp-t" id="spkt">Choose Their Sign</h2><p class="spk-d">Whose sky shall the stars read?</p>
+ <div class="zgrid spk-z">${SIGNS.map(x=>`<button class="zg-s" data-act="tohoroscope" data-sign="${x.id}" data-cat="${V.hcat}" data-period="${V.period}"${x.id===ex?' aria-current="true"':''} aria-label="${x.name}, ${x.dates}">${ui('zm-'+x.id,'zg-m')}<span>${x.name}</span></button>`).join('')}</div>
+ </div></div>`}
 // a sign's page is one screen: each area's reading is laid out in pages that sit whole on the invisible card, in the
 // app's own reading size, broken between sentences (a paragraph carries on over the page) into as few pages as hold
 // it, the breaks chosen so its pages are as alike as they can be, the button to choose the sign and its small print
@@ -2607,7 +2679,6 @@ document.addEventListener('click',e=>{
  const t=e.target.closest('[data-go],[data-nav],[data-act],[data-sign],[data-sign2],[data-period],[data-pick],[data-planet],[data-calview],[data-ctab],[data-ins]');
  if(!t)return;
  if(t.dataset.go)return go(t.dataset.go,t.dataset.t||null);
- if(t.dataset.nav==='kassandra'&&V.sec!=='kassandra')return kasVeil(()=>go('kassandra'));
  if(t.dataset.nav==='journal')return go('tarot','journal');
  if(t.dataset.nav)return go(t.dataset.nav);
  if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;render();
@@ -2651,6 +2722,8 @@ document.addEventListener('click',e=>{
  if(a==='hpg'){const c=$('.hcar');return c&&c.show&&c.show(+t.dataset.pg,+t.dataset.pg<(c.pg||0)?-1:1)}
  if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k),t.dataset.dir?+t.dataset.dir:0);V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
+ if(a==='spkopen'){V.spk=true;return render()}
+ if(a==='spkclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.spk=false;return render()}
  if(a==='hreflect'){const [sign,cat,period,key]=t.dataset.ref.split('/');return openEntry(ensureBook('horoscope',t.dataset.ref,horoData(sign,cat,period,key)))}
  if(a==='bookhoro'){const [sign,cat,period,key]=t.dataset.ref.split('/');return bookmark('horoscope',t.dataset.ref,horoData(sign,cat,period,key))}
  if(a==='setsign'){S.sign=t.dataset.sign;V.exploreSign=null;save();syncProfile();toast('Your sign is now '+sg(S.sign).name);return render()}
@@ -2670,6 +2743,14 @@ document.addEventListener('click',e=>{
  if(a==='sheet'){V.sheet=t.dataset.k;return render()}
  if(a==='sheetclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.sheet=null;return render()}
  // a reflection on the day written for the reader, its theme as the page's title
+ if(a==='pzspeak')return speakText(myDay().body);
+ if(a==='hnext')return pathMove(1);
+ if(a==='hgo'){V.hstep=t.dataset.k;render();return window.scrollTo(0,0)}
+ if(a==='hdream'){S.dreamAsk=dkey();save();return go('discover','new-dream')}
+ if(a==='hnodream'){S.dreamAsk=dkey();save();V.hstep=null;render();return window.scrollTo(0,0)}
+ if(a==='hkeep'){const v=($('#hpta')||{}).value||'',k=dkey();if(!v.trim()){toast('Write a few words first');const x=$('#hpta');if(x)x.focus();return}
+  S.notes[k]=v.trim();save();syncFortune(k);V.hstep='held';render();window.scrollTo(0,0);return toast('Kept in your Journal')}
+ if(a==='kasgo')return kasVeil(()=>go('kassandra'));
  if(a==='pzmore'){V.pzOpen=true;const c=t.closest('.pz');if(c){c.classList.remove('fold');t.remove();return}return render()}
  if(a==='jnew'){const j={id:uuid(),day:dkey(),kind:'reflection',title:myDay().focus,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='ne'){const k=t.dataset.k,today=dkey();V.sheet=null;
@@ -2783,6 +2864,7 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&V.jx){V.jx=false;return render()}
  if(e.key==='Escape'&&V.sheet){V.sheet=null;return render()}
  if(e.key==='Escape'&&V.tpop!=null){V.tpop=null;return render()}
+ if(e.key==='Escape'&&V.spk){V.spk=false;return render()}
  if((e.key==='Enter'||e.key===' ')&&e.target.matches('.scene[data-act],[data-planet]')){e.preventDefault();tap(e.target)}
  if(e.key==='Enter'&&e.target.matches('input[id$="-q"]')){e.preventDefault();placeSearch(e.target.id.slice(0,-2))}
 });

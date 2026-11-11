@@ -3891,12 +3891,12 @@ body:has(#app>:is(.home.hbay,.land,.jnight,.mnp,.hsp,.pfp,.kz,.sub)) #nav .in bu
    head but without the Moon's phases there or the Moon at its foot. At its head the sign's painting dissolved into the
    night, risen beneath the buttons and reaching the frame's gold line at the right, the night's star and its lilies
    kept in front of it; in the open sky at its left the sign's symbol beside its name, its constellation beneath the
-   symbol, the dates beneath the name and the soul in wide-spaced lines below them (all in --u, a little smaller on the
-   shortest screens so the reading keeps its room). Right beneath it the time between two gold lines, and the reading on
-   an invisible card in the app's own reading size, laid out in pages that each sit whole in the middle of the card
-   (sxPage in app.js), a mark for each page beneath it: a swipe turns the page, and after the last brings in the next area of life while the head
-   stays still. At the foot, above the menu, the area's medallion lit between an arrow back and an arrow forward,
-   turning like a carousel. The page itself never scrolls: the body is held to the screen as it is seen (Safari's 100vh
+   symbol, the dates beneath the name and the soul in lines below them (all in --u, a little smaller on the
+   shortest screens so the reading keeps its room). Right beneath it the time between two gold lines and the area's
+   medallion lit between an arrow back and an arrow forward, turning like a carousel; then the reading on an invisible
+   card in the app's own reading size, laid out in pages that each sit whole in the middle of the card (sxPage in
+   app.js): a swipe turns the page, and after the last brings in the next area of life while the head stays still. At
+   the foot, above the menu, Write about it and Read for someone else, a mark for each page between them. The page itself never scrolls: the body is held to the screen as it is seen (Safari's 100vh
    is the screen with its bars hidden, taller than the page, which let the whole page slide up under the finger) ---------- */
 html body:has(#app>.hsp.sx) #app{padding-bottom:0!important}
 html:has(#app>.hsp.sx){overflow:hidden;overscroll-behavior:none}
@@ -3923,11 +3923,11 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 #app .sx .hsp-hero>.hsp-t{left:calc(23.6 * var(--u))!important;top:calc(var(--st) + 19.4 * var(--u))!important;width:calc(26 * var(--u))!important;text-align:left!important}
 #app .sx .hsp-t :is(h1,.hsp-d){width:auto!important;margin-left:0!important;text-align:left!important}
 #app .sx .hsp-t h1{font-size:min(calc(6.55 * var(--u)),calc(35.9 * var(--u) / var(--nl,6)))!important}
-#app .sx .hsp-t .hsp-d{margin:calc(.4 * var(--u)) 0 0!important;font-family:var(--font-serif)!important;font-size:calc(2.03 * var(--u))!important;font-weight:400!important;font-style:normal!important;letter-spacing:.06em!important;line-height:1.5!important;text-transform:uppercase!important}
+#app .sx .hsp-t .hsp-d{margin:calc(.4 * var(--u)) 0 0!important;font-family:var(--font-serif)!important;font-size:calc(2.8 * var(--u))!important;font-weight:400!important;font-style:normal!important;letter-spacing:.06em!important;line-height:1.5!important;text-transform:uppercase!important}
 #app .sx .hsp-star{width:calc(20.3 * var(--u))!important;height:calc(2.3 * var(--u));margin:calc(1.1 * var(--u)) 0 0!important}
 #app .sx .hsp-star::after{font-size:calc(2 * var(--u))}
-#app .sx .hsp-t .hsp-soul{width:calc(34 * var(--u))!important;margin:calc(2 * var(--u)) 0 0 calc(-13.6 * var(--u))!important;text-align:left!important;font-family:var(--font-serif)!important;font-size:calc(2.5 * var(--u))!important;font-weight:400!important;font-style:italic!important;line-height:2!important}
-#app .sx .sx-main{position:absolute;z-index:3;left:7cqw;right:6cqw;top:calc(env(safe-area-inset-top,0px) + 55 * var(--u));bottom:calc(var(--nband) + 6px + var(--cb,77px) + 2px);display:flex;flex-direction:column}
+#app .sx .hsp-t .hsp-soul{width:calc(41 * var(--u))!important;margin:calc(1.2 * var(--u)) 0 0 calc(-13.6 * var(--u))!important;text-align:left!important;font-family:var(--font-serif)!important;font-size:calc(3.6 * var(--u))!important;font-weight:400!important;font-style:italic!important;line-height:1.4!important}
+#app .sx .sx-main{position:absolute;z-index:3;left:7cqw;right:6cqw;top:calc(env(safe-area-inset-top,0px) + 52.5 * var(--u));bottom:calc(var(--pw) * 344 / 944);display:flex;flex-direction:column}
 /* the time, between two gold lines, above the reading it chooses */
 #app .sx .sx-per{flex:none;display:flex;align-items:center;justify-content:center;gap:5cqw;margin:0}
 #app .sx .sx-per::before,#app .sx .sx-per::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,201,133,.55))}
@@ -3937,7 +3937,7 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 #app .sx .sx-per button[aria-selected=true]{color:#F6DA97}
 #app .sx .sx-per button[aria-selected=true]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,#E9C985,transparent)}
 /* the invisible card */
-#app .sx .hcar{position:relative;flex:1;min-height:0;margin-top:6px}
+#app .sx .hcar{position:relative;flex:1;min-height:0;margin-top:4px}
 #app .sx .hc-read{height:100%!important;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:0;box-sizing:border-box}
 #app .sx .hc-read.ovf{padding-bottom:28px;-webkit-mask-image:linear-gradient(#000 calc(100% - 44px),transparent);mask-image:linear-gradient(#000 calc(100% - 44px),transparent)}
 #app .sx .hc-read::-webkit-scrollbar{display:none}
@@ -3952,9 +3952,14 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 #app .sx .hc-pg.turn{animation:hcin .32s ease-out}
 #app .sx .hc-pg.turn.from-l{animation-name:hcinl}
 @media (prefers-reduced-motion:reduce){#app .sx .hc-pg.turn{animation:hcfade .2s}}
-/* a mark for each page of the reading, the page being read lit */
+/* at the foot, between the lilies (the row's foot held where they leave it room, by the night's own width), the two
+   invitations side by side, a mark for each page of the reading between them, the page being read lit */
+#app .sx .sx-ft{flex:none;display:flex;align-items:center;justify-content:center;gap:6px;height:24px;margin-top:6px}
+#app .sx .sx-a{display:inline-flex;align-items:center;padding:3px 1px;border:0;cursor:pointer;white-space:nowrap;
+ background:linear-gradient(90deg,transparent,rgba(233,201,133,.7),transparent) 50% 100%/100% 1px no-repeat;
+ font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:14px;line-height:1.2;letter-spacing:0;color:#F1D79A;text-shadow:0 1px 4px #000,0 0 8px rgba(0,0,0,.8)}
 #app .sx .hc-pgs{flex:none;display:flex;justify-content:center;height:18px}
-#app .sx .hc-pd{display:grid;place-items:center;width:24px;height:18px;padding:0;border:0;background:none;cursor:pointer}
+#app .sx .hc-pd{display:grid;place-items:center;width:20px;height:18px;padding:0;border:0;background:none;cursor:pointer}
 #app .sx .hc-pd::before{content:'';width:5px;height:5px;transform:rotate(45deg);border:1px solid rgba(233,201,133,.75)}
 #app .sx .hc-pd.on::before{width:6px;height:6px;border-color:#F6DA97;background:#F1D79A;box-shadow:0 0 6px rgba(243,210,140,.85)}
 #app .sx .hc-slide .acts{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;margin:8px 0 0}
@@ -3962,19 +3967,72 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 #app .sx .hc-slide .acts .btn svg{width:14px;height:14px;flex:none}
 #app .sx .hc-slide .acts .btn[data-act=setsign]{flex-basis:100%}
 #app .sx .hc-slide .muted.small{margin:5px 0 0!important;text-align:center;font-size:.68rem!important;line-height:1.2!important}
-/* at the foot: the area's medallion with an arrow close at either side */
-#app .sx .hc-ctl{position:absolute;z-index:2;left:0;right:0;bottom:calc(var(--nband) + 6px);display:flex;align-items:center;justify-content:center;gap:2px;margin:0}
-#app .sx .hc-arr{position:relative;z-index:1;display:grid;place-items:center;width:36px;height:44px;padding:0;border:0;background:none;color:#F1D79A;cursor:pointer;filter:drop-shadow(0 1px 3px #000) drop-shadow(0 0 6px rgba(0,0,0,.8))}
+/* beneath the time: the area's medallion with its name beside it, an arrow close at either side (the medallion's
+   window, wider than it for its glow, lets touches through to the time above it) */
+#app .sx .hc-ctl{position:relative;z-index:2;flex:none;display:flex;align-items:center;justify-content:center;gap:2px;margin:2px 0 0}
+#app .sx .hc-arr{position:relative;z-index:1;display:grid;place-items:center;width:36px;height:40px;padding:0;border:0;background:none;color:#F1D79A;cursor:pointer;filter:drop-shadow(0 1px 3px #000) drop-shadow(0 0 6px rgba(0,0,0,.8))}
 #app .sx .hc-arr svg{width:20px;height:20px}
 #app .sx .hc-pv svg{transform:rotate(180deg)}
-#app .sx .hc-win{width:120px;margin:-16px -22px;overflow:hidden}
+#app .sx .hc-win{width:150px;margin:-16px -18px;overflow:hidden;pointer-events:none}
 #app .sx .hc-track{display:flex;overflow:visible!important;transform:translateX(calc(var(--p,0) * -100%));transition:transform .4s cubic-bezier(.3,.7,.3,1)}
 #app .sx .hc-track.jump{transition:none}
-#app .sx .hc-s{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 0;opacity:.25;transition:opacity .4s}
+#app .sx .hc-s{flex:0 0 100%;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:9px;padding:16px 0;opacity:.25;transition:opacity .4s}
 #app .sx .hc-s.on{opacity:1}
-#app .sx .hc-m{display:block;width:56px;height:56px;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 2px rgba(255,232,170,.9)) drop-shadow(0 0 9px rgba(243,210,140,.75)) drop-shadow(0 0 18px rgba(243,210,140,.4))}
+#app .sx .hc-m{display:block;width:44px;height:44px;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 2px rgba(255,232,170,.9)) drop-shadow(0 0 9px rgba(243,210,140,.75)) drop-shadow(0 0 18px rgba(243,210,140,.4))}
 #app .sx .hc-sl{font-family:var(--font-display);font-weight:600;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#F6DA97;text-shadow:0 1px 4px #000;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){#app .sx .hc-track,#app .sx .hc-s{transition:none}}
-/* on a shorter screen the reading keeps its lines: the area's medallion a little smaller (--cb, the height of the
-   medallion and its name) */
-@media (max-height:700px){#app .hsp.sx{--cb:67px}#app .sx .hc-m{width:48px;height:48px}#app .sx .hc-s{gap:4px}}
+/* on a shorter screen the reading keeps its lines: the area's medallion a little smaller */
+@media (max-height:700px){#app .sx .hc-m{width:38px;height:38px}}
+/* Read for someone else: the twelve medallions of the zodiac, four to a row, in the Whisper's floating frame; the sign
+   being read lit */
+.spk .spk-d{margin:-4px 0 4px;font-family:var(--font-serif);font-style:italic;font-size:var(--t-phrase);color:#F4E8CC}
+.spk .spk-z{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:auto;gap:14px 4px;width:100%;margin:0 0 4px}
+.spk .zg-s{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;padding:0;border:0;background:none;cursor:pointer;
+ font-family:var(--font-serif);font-weight:600;font-size:.82rem;line-height:1.1;color:#F4E6C2;text-shadow:0 1px 6px #000}
+.spk .zg-m{width:min(100%,62px)!important;max-width:none;height:auto;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 1px rgba(233,201,133,.5),0 4px 12px rgba(0,0,0,.55)!important}
+.spk .zg-s[aria-current=true] .zg-m{box-shadow:0 0 0 2px #F3D896,0 0 18px 4px rgba(243,210,140,.55)!important}
+.spk .zg-s[aria-current=true] span{color:#F6DA97}
+.spk .zg-s:focus-visible .zg-m{box-shadow:0 0 0 2.5px #FFE9B0,0 0 0 6px rgba(255,233,176,.5)!important}
+
+/* the five places. Oracle wears Kassandra's crystal in the menu; You wears the reader's own medallion (set from their sign) */
+#nav .in [data-nav=tarot]{--ico:url(/art/atlas/nvm-kassandra.webp)}
+/* Today's path: four painted Moons, each lit to its phase once its step is done, the new Moon while it waits */
+.hh-path{width:84cqw!important;margin-left:auto!important;margin-right:auto!important}
+.hh-path .rit{flex:none;width:17cqw}
+.hh-path .rit i{opacity:1!important;border:0!important;background:none!important;box-shadow:none!important;overflow:visible}
+.hh-path .rit .rit-m{display:block;width:100%;height:100%;object-fit:contain}
+.hh-path .rit:not(.on) .rit-m{filter:brightness(1.35) drop-shadow(0 0 4px rgba(246,210,140,.35))}
+.hh-path .rit.on .rit-m{filter:drop-shadow(0 0 7px rgba(246,210,140,.65))}
+.hh-path .rit span{white-space:normal!important}
+.hh-path .rit-j{max-width:4cqw!important}
+/* the Oracle: Kassandra beside her invitation */
+.tk .tk-m{width:100%;border-radius:10px;overflow:hidden;border:1px solid #D9B66E;box-shadow:0 0 0 3px rgba(10,14,32,.6),0 0 0 4px rgba(233,201,133,.4),0 8px 18px rgba(0,0,0,.55)}
+.tk .tk-i{display:block;width:100%;height:auto}
+/* You: the details beneath the Codex and the Circle */
+.ydet .list{display:flex;flex-direction:column}
+.ydet .lrow .lr-t{flex:1}
+.ydet .lrow .lr-c{margin-left:auto}
+
+/* Today's path: one step to a screen over the bay. The Moon of the step in view is ringed; each step sits in the app's
+   gilt card, Your Stars in the sign's own scene with its figure */
+.hh-path .rit.cur span{color:#F6DA97;text-decoration:underline;text-decoration-color:rgba(246,218,151,.6);text-underline-offset:3px}
+.hh-path .rit.cur i{border-radius:50%!important;box-shadow:0 0 0 2px rgba(10,14,32,.8),0 0 0 3px rgba(246,218,151,.8)!important}
+.hp-stage{position:relative;margin-top:6cqw}
+.hp-stage .hh-stage{margin-top:0}
+.hp-stage .hh-card .btn+.btn{margin-top:2cqw}
+.hp-card{margin:0 0 4cqw}
+.hp-in{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.hp-in .pz-t{margin:0}
+.hp-in .pz-moon{display:flex;align-items:center;justify-content:center;gap:8px;margin:0}
+.hp-in .pz-b{margin:0}
+.hp-big{margin:0;font-family:var(--font-display);font-size:1.45rem;letter-spacing:.04em;color:#F6DA97}
+.hp-sub{margin:0;font-family:var(--font-serif);font-style:italic;font-size:1.02rem;line-height:1.4;color:rgba(241,226,188,.85)}
+.hp-acts{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:4px}
+.hp-acts .btn{flex:1;min-height:44px}
+.hp-you{margin:14px 0 6px;text-align:left}
+.hp-ta{width:100%;min-height:120px;padding:12px 14px;border:1px solid rgba(233,201,133,.55);border-radius:6px;background:#E9D6AE url(/art/frame-paper.webp) 50% 50%/cover;color:#3B2A14;
+ font-family:var(--font-serif);font-style:italic;font-size:1.1rem;line-height:1.4;resize:vertical;box-shadow:inset 0 0 18px rgba(120,84,30,.25)}
+.hp-ta::placeholder{color:rgba(59,42,20,.55)}
+.hp-full{display:block;width:96px;height:96px}
+.hp-fm{width:100%;height:100%;filter:drop-shadow(0 0 14px rgba(246,210,140,.6))}
+.hp-dream .pz-acts,.hp-reflect .pz-acts{width:100%}
