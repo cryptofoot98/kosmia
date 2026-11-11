@@ -1,0 +1,166 @@
+/* The Temple of Kosmia: one calm painted place behind every screen, a fine gold frame, a translucent menu within it.
+   @@ stands for a selector prefix strong enough to beat the older rules (many of them !important); @N the same for the menu. */
+:root{--tx:#EBD9AC;--tk:#E3C27E;--tt:#F1DDA6;--tq:#F3E2BA;--tr:rgba(227,194,126,.3);--tf:rgba(227,194,126,.5)}
+body[data-tone=ink]{--tx:#24160A;--tk:#4A2C0E;--tt:#24160A;--tq:#7A2E2E;--tr:rgba(106,78,44,.35);--tf:rgba(106,78,44,.55)}
+
+/* ---- the shell: the scene held still behind the page, its foot and the frame laid over it ---- */
+#t-back,#t-front{display:none;position:fixed;top:0;bottom:0;left:50%;width:min(100vw,var(--appw));transform:translateX(-50%);pointer-events:none}
+body.tp #t-back,body.tp #t-front{display:block}
+#t-back{z-index:-1}
+#t-front{z-index:14}
+#t-back i,#t-front i{position:absolute;left:0;right:0;display:block;background-repeat:no-repeat}
+#t-back .tb-head{top:0}
+#t-back .tb-foot,#t-back .tb-veil{bottom:0}
+#t-back .tb-head{transition:opacity .5s}
+#t-back.scrolled .tb-head{opacity:.4}
+#t-back .tb-veil{opacity:0;transition:opacity .5s}
+#t-back.dim .tb-veil{opacity:1}
+#t-front .tf-veil{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000 40px);mask-image:linear-gradient(transparent,#000 40px)}
+#t-front .tf-frt{top:0}#t-front .tf-frb{bottom:0}
+html:has(body.tp){background:#0B1024!important}
+html body.tp{background:transparent!important}
+@R::after,@N::before,@N::after{display:none!important}
+@R{padding-bottom:calc(var(--t-foot,260px) + 4px)!important}
+@R>*::before,@R>*::after{background:none!important;box-shadow:none!important;border:0!important;-webkit-mask-image:none!important;mask-image:none!important}
+@R,@R>*{background:none!important}
+
+/* ---- the menu: floating inside the frame, translucent ---- */
+@N .in{height:70px!important;margin:0 calc(50% - var(--pw) / 2 + 27px) 30px!important;padding:0 8px!important;border:0!important;border-radius:35px!important;
+ background:linear-gradient(180deg,rgba(18,24,52,.36),rgba(7,10,24,.44))!important;-webkit-backdrop-filter:blur(7px)!important;backdrop-filter:blur(7px)!important;
+ box-shadow:inset 0 0 0 1px #C8A25A,inset 0 0 0 3px rgba(7,10,24,.5),inset 0 0 0 4px rgba(200,162,90,.35),0 10px 24px rgba(0,0,0,.45)!important}
+@N .in button{height:100%!important;color:rgba(241,226,188,.8)!important;font-family:'Cinzel',serif!important;font-weight:600!important;font-size:9.5px!important;letter-spacing:.05em!important}
+@N .in button[aria-current=page]{color:#F6DA97!important}
+@N .in button::before{width:38px!important;height:38px!important}
+
+/* ---- the words ---- */
+@R{color:var(--tx)}
+@@ .orn{margin:0!important;padding:0!important;background:none!important;border:0!important}
+@@ .orn h2{display:block!important;margin:0!important;padding:0!important;text-align:center!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:9.5px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important;background:none!important;text-shadow:none!important;line-height:1.4!important}
+@@ .orn::before,@@ .orn::after{display:none!important}
+@@ .orn h2 span{color:inherit!important;text-shadow:none!important;background:none!important}
+@@ .orn h2 svg,@@ .orn h2 .k-ico{display:none!important}
+@@ .orn h2::before,@@ .orn h2::after{display:none!important}
+@@ .card,@@ .panel,@@ .card.gilt,@@ .card.ornate{background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding-left:0!important;padding-right:0!important}
+@@ .card::before,@@ .card::after{display:none!important}
+
+/* ---- Today ---- */
+@@ .home{position:relative;container-type:inline-size;padding:0 !important}
+@@ .home .hbar,@@ .home .hh-top,@@ .home .hhero .ks-bg,@@ .home .hhero .stars,@@ .home .hhero>i{display:none!important}
+@@ .home .hh-fix{position:absolute!important;top:30px!important;right:26px!important;z-index:5;gap:4px;margin:0!important;width:auto!important}
+@@ .home .hh-fix .ibtn,@@ .home .hh-fix .avatar{width:30px!important;height:30px!important;min-width:0!important}
+@@ .hh-head,@@ .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:calc(49cqw + 2cqw) 9cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
+@@ .hh-date{order:-1;margin:0!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:9.5px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important}
+@@ .hh-greet{margin:6px 0 0!important;font:italic 600 22px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
+@@ .hhero{padding:6px 9cqw 0!important;color:var(--tx)!important}
+@@ .hh-stage{margin:0!important}
+.tm-arc{position:absolute;left:-9cqw;top:0;width:100cqw;height:48.7cqw;z-index:3;pointer-events:none}
+.tm-orn{position:absolute;left:0;top:0;width:100%;height:100%}
+.tm-mo{position:absolute;display:block;padding:0;margin:0;border:0;background:none;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+span.tm-mo{pointer-events:none;cursor:default}
+.tm-mo img{position:absolute;left:0;top:0;width:100%;height:100%;display:block;max-width:none}
+.tm-mo .lit{opacity:0;transition:opacity .9s;filter:drop-shadow(0 0 5px rgba(246,198,96,.55))}
+.tm-mo.on .lit{opacity:1}
+.tm-mo.flip{transform:scaleX(-1)}
+.tm-mo.cur{filter:drop-shadow(0 0 7px rgba(246,206,120,.7));animation:tmbr 3.6s ease-in-out infinite}
+@keyframes tmbr{50%{filter:drop-shadow(0 0 10px rgba(246,206,120,.9))}}
+body.reduce .tm-mo.cur{animation:none}
+@@ .hp-card{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;color:var(--tx)}
+@@ .hp-in{padding:0!important;display:flex;flex-direction:column;align-items:center;text-align:center}
+@@ .hp-card .orn{margin:10px 0 0!important}
+@@ .hp-big,@@ .pz-t{margin:6px 0 0!important;font:italic 600 28px/1.08 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
+@@ .hp-sub,@@ .pz-b,@@ .dw-msg{margin:9px 0 0!important;font:500 17px/1.36 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important}
+@@ .pz-q{margin:8px 0 0!important;font:italic 600 24px/1.14 'Cormorant Garamond',serif!important;color:var(--tt)!important}
+@@ .hp-tonight span{display:block;font:500 9.5px 'Cinzel',serif;letter-spacing:.24em;text-transform:uppercase;color:var(--tk);margin-bottom:4px}
+@@ .pz-moon{margin:8px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .pz-moon .pz-mi{display:none!important}
+@@ .cp-you{margin:12px 0 0!important;padding:10px 0 0!important;border:0!important;border-top:1px solid var(--tr)!important;background:none!important;font:italic 500 16px/1.3 'Cormorant Garamond',serif!important;color:var(--tq)!important;box-shadow:none!important}
+@@ .cp-you span{display:block;font:500 9.5px 'Cinzel',serif!important;font-style:normal!important;letter-spacing:.2em;text-transform:uppercase;color:var(--tk)!important;margin-bottom:3px}
+@@ .hp-ta{width:100%;margin-top:9px!important;border:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px var(--tf)!important;background:rgba(255,255,255,.04)!important;padding:10px 12px!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-align:left}
+@@ .hp-ta::placeholder{color:var(--tx);opacity:.6}
+@@ .pz-acts,@@ .hp-acts{display:flex!important;flex-direction:row!important;justify-content:center;align-items:center;gap:10px;width:100%;margin-top:14px!important}
+@@ .hp-card .btn{flex:1 1 0;min-width:0;max-width:200px;height:40px;padding:0 6px!important;border-radius:20px!important;white-space:nowrap;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
+@@ .hp-card .btn:not(.ghost){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+@@ .hp-card .btn.ghost{background:rgba(11,16,36,.5)!important;color:var(--tk)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+@I .hp-card .btn:not(.ghost){background:linear-gradient(#3b2817,#22150b)!important;color:#F1E2BC!important;box-shadow:inset 0 0 0 1px #22150b,inset 0 0 0 2px rgba(231,201,135,.45)!important}
+@I .hp-card .btn.ghost{background:rgba(255,248,230,.6)!important;color:#3a2512!important;box-shadow:inset 0 0 0 1px #6b4318!important}
+@@ .hh-plate{width:70px;height:auto;margin:8px auto 0;border-radius:4px;box-shadow:0 0 0 1px #8a6630,0 8px 16px -6px #000}
+@@ .hh-card{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--tx)!important}
+@@ .hh-card .hh-name{display:flex;flex-direction:column;align-items:center;gap:0}
+@@ .hh-card .glyph{display:none!important}
+@@ .hh-card h2{margin:8px 0 0!important;font:500 14px 'Cinzel',serif!important;letter-spacing:.34em!important;text-transform:uppercase;color:#F4E2B4!important}
+@@ .hh-card .hh-name p{margin:2px 0 0!important;font:italic 500 13px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .hh-card .keys{margin:3px 0 0!important;font:500 7.5px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
+@@ .hh-card .hh-text{margin:10px 0 0!important;font:500 17px/1.36 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .hh-card .btn{margin-top:12px!important}
+@@ .hh-stage .hh-halo,@@ .hh-stage .hh-figbox{display:none!important}
+@I .hh-date,@I .hh-greet{color:#F6E9C8!important;text-shadow:0 1px 6px rgba(40,20,40,.5)!important}
+@@ .orn{border:0!important;box-shadow:none!important}
+@@ .orn *{text-shadow:none!important;box-shadow:none!important}
+
+/* ---- the other places: a title under the head's art, the sections as open words, no plates ---- */
+@@ .land{position:relative;padding-left:0!important;padding-right:0!important}
+@@ .land .jl-bar{position:absolute!important;top:28px!important;left:24px;right:24px;z-index:5}
+@@ .hl-top,@@ .hl-top.stay{position:relative!important;top:auto!important;padding:calc(44cqw + 2px) 9cqw 0!important;margin:0!important;background:none!important;box-shadow:none!important;transform:none!important;text-align:center}
+@@ .hl-top::before,@@ .hl-top::after{display:none!important}
+@@ .hl-top h1.cz{margin:0!important;font:500 19px/1.2 'Cinzel',serif!important;letter-spacing:.3em!important;text-transform:uppercase;color:#F4E2B4!important;text-shadow:none!important}
+@@ .hl-top p{margin:6px 0 0!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important;letter-spacing:0!important;text-transform:none!important}
+@@ .hl-top .hl-motto,@@ .hl-top .hgreet{font:500 9px 'Cinzel',serif!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:var(--tk)!important}
+@@ .hl-top .hgreet+.hl-line,@@ .hl-top .hl-line{font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:var(--tx)!important}
+@@ .hl-cards{padding:14px 9cqw 0!important;margin:0!important;display:block}
+@@ .hl-sec{margin:20px 0 0!important;padding:0!important;background:none!important;border:0!important}
+@@ .hl-card,@@ .hmine{background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding:8px 0 0!important;margin:0!important;border-radius:0!important}
+@@ .hl-card::before,@@ .hl-card::after{display:none!important}
+@@ .dshelf{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;text-align:center}
+@@ .dshelf h2,@@ .k-div span{font:500 9.5px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:var(--tk)!important;text-shadow:none!important}
+@@ .dshelf p{font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .k-div{margin:0 0 6px!important}
+@@ .k-div::before,@@ .k-div::after{background:linear-gradient(90deg,transparent,var(--tf),transparent)!important;opacity:.9}
+@@ .seg{background:none!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important}
+@R{box-shadow:none!important}
+@@ .k-div{background:none!important;box-shadow:none!important}
+@@ .k-div svg{display:none!important}
+@@ .hp-card .k-div{justify-content:center;margin:10px 0 0!important}
+@@ .hp-card .k-div::before,@@ .hp-card .k-div::after{display:none!important}
+@@ .hp-card .k-div span{color:var(--tk)!important}
+html body.tp.tp.tp[data-scene=journal] #app .hl-top{padding-top:calc(57cqw + 2px)!important}
+@media (max-height:700px){html body.tp.tp.tp[data-scene=journal] #app .hl-top{padding-top:calc(53cqw)!important}}
+@@ .pz-b::first-letter,@@ .pz-b p::first-letter{font:inherit!important;float:none!important;color:inherit!important;padding:0!important;margin:0!important;line-height:inherit!important;text-shadow:none!important;background:none!important}
+@@ .dw-t,@@ .hh-card h2{color:var(--tt)!important}
+@@ .hp-full{display:block;position:relative;width:56px;height:56px;margin:8px auto 0!important}
+@@ .hp-full img{position:absolute;left:0;top:0;width:100%!important;height:100%!important;filter:none!important}
+@@ .hp-full .lit{filter:drop-shadow(0 0 8px rgba(246,198,96,.6))!important}
+@@ .hp-card .btn svg,@@ .hp-card .btn .ic{display:none!important}
+@@ .hp-night .jp-new{display:none!important}
+@media (max-height:800px){@@ .hp-night .hp-sub,@@ .hp-held .hp-sub:last-of-type{display:none!important}}
+@@ .hp-held .hp-sub b{color:var(--tk)}
+@@ .hp-night .hp-full,@@ .hp-held .hp-full{display:none!important}
+@media (max-height:700px){
+ @@ .hh-date{display:none!important}
+ @@ .hh-head,@@ .hh-head.stay{padding-top:calc(50cqw) !important}
+ @@ .hh-greet{font-size:20px!important;margin-top:0!important}
+ @@ .hp-big,@@ .pz-t{font-size:24px!important}
+ @@ .hp-night .hp-ta{height:66px;min-height:0}
+ @@ .hp-card .k-div{margin-top:4px!important}
+ @@ .hp-sub{margin-top:6px!important;font-size:16px!important}
+ @@ .hl-top,@@ .hl-top.stay{padding-top:calc(41cqw) !important}
+}
+
+/* tiles: glass on the painted sky, a hairline and nothing more */
+@@ .dft,@@ .tr-s,@@ .dprof,@@ .evc,@@ .k-feat{background:rgba(11,16,36,.38)!important;border:0!important;border-image:none!important;box-shadow:inset 0 0 0 1px var(--tr)!important;border-radius:16px!important;color:var(--tx)!important}
+@@ .dft::before,@@ .dft::after,@@ .tr-s::before,@@ .tr-s::after{display:none!important}
+@@ .dft strong,@@ .tr-s strong,@@ .dprof strong{color:var(--tt)!important}
+@@ .dft span,@@ .tr-s span,@@ .dprof span{color:var(--tx)!important}
+@@ .lrow{background:none!important;border:0!important;border-top:1px solid var(--tr)!important;box-shadow:none!important;color:var(--tx)!important}
+@@ .lrow strong{color:var(--tt)!important}
+
+/* ---- the Moon's letter: a sheet of dawn-cream paper with its seal, in ink ---- */
+@@ .pop:has(.lt-box){background:rgba(5,7,18,.72)!important}
+@@ .pop-box.lt-box{position:fixed!important;left:50%!important;top:34px!important;bottom:104px!important;height:auto!important;max-height:none!important;width:calc(min(100vw,var(--appw)) - 44px)!important;max-width:none!important;transform:translateX(-50%)!important;margin:0!important;
+ overflow:auto;padding:26px 8% 190px!important;border-radius:14px!important;border:0!important;box-shadow:0 0 0 1px rgba(106,78,44,.5),0 14px 40px rgba(0,0,0,.6)!important;
+ background:#E4BF88 url(/art/temple/letter-sheet.webp) 50% 100%/100% auto no-repeat!important;color:#24160A!important}
+@@ .lt-box .cp-k{font:600 9.5px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:#4A2C0E!important;text-align:center}
+@@ .lt-box h2{font:italic 600 27px/1.1 'Cormorant Garamond',serif!important;color:#24160A!important;margin:8px 0 10px!important;text-align:center}
+@@ .lt-box .lt-b p{font:500 16px/1.38 'Cormorant Garamond',serif!important;color:#24160A!important;margin:0 0 9px!important;text-align:left!important}
+@@ .lt-box .lt-b .lt-sig{font:italic 600 22px 'Cormorant Garamond',serif!important;color:#7A2E2E!important;text-align:right!important}
+@@ .lt-box .muted{color:#4A2C0E!important;font:italic 500 13px 'Cormorant Garamond',serif!important;margin-top:10px!important}
+@@ .lt-box .pop-x{background:rgba(255,248,230,.7)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #6b4318!important}

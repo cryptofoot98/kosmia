@@ -865,6 +865,8 @@ function moonLetter(ch){
  <p class="cp-k">Your letter for this Moon</p><h2 class="center">${nm?'Dear '+esc(nm)+',':'Dear you,'}</h2><div class="lt-b">${ps.map(p=>`<p>${p}</p>`).join('')}<p class="lt-sig">Kosmia</p></div>
  <p class="muted small center">Written here, from your own pages. It is never sent anywhere.</p></div></div>`;
 }
+// the day's moon, drawn in the temple's own gold: lit or still dark
+const tmoon=on=>`<span class="hp-full tm-hpm"><img src="/art/temple/moon-base.webp" alt=""><img class="lit" src="/art/temple/moon-full.webp" alt="" style="opacity:${on?1:0}"></span>`;
 const PATH=[['wfy','Written for You'],['stars','Your Stars'],['whisper','Whisper'],['reflect','Reflect']],PHASES=['waxing-crescent','first-quarter','waxing-gibbous','full-moon'];
 const pathDone=k=>({wfy:S.wfy===k,stars:S.readDay===k,whisper:!!S.revealed[k],reflect:!!S.notes[k]});
 const hourNow=()=>Number(fmt({hour:'numeric',hour12:false},new Date()));
@@ -872,11 +874,13 @@ const askDream=k=>{const h=hourNow();return h>=4&&h<12&&S.dreamAsk!==k};
 // in the first three nights of a chapter, a wish for it; in the evening, something to let go of before sleep
 const askIntent=()=>{const ch=chapterAt();return !!ch&&ch.day<=3&&!chWish(ch)&&S.intentAsk!==ch.key};
 const askNight=k=>{const h=hourNow();return (h>=18||h<4)&&S.released!==k};
-const pathOrder=k=>[...(askDream(k)?['dream']:[]),...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]),...(askNight(k)?['night']:[]),'held'];
+// Reflect belongs to the evening: by day, once the Whisper is turned, the morning is complete and the day is carried
+const evening=()=>{const h=hourNow();return h>=18||h<4};
+const pathOrder=k=>[...(askDream(k)?['dream']:[]),...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]).flatMap(x=>x==='reflect'&&!evening()?['carry',x]:[x]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
  const k=dkey(),dn=pathDone(k);
  if(V.hday!==k){V.hday=k;V.hstep=null}
- return V.hstep||(askDream(k)?'dream':askIntent()?'intent':(PATH.find(([x])=>!dn[x])||[askNight(k)?'night':'held'])[0]);
+ return V.hstep||(askDream(k)?'dream':askIntent()?'intent':(PATH.find(([x])=>!dn[x]&&(x!=='reflect'||evening()))||[!dn.reflect&&!evening()?'carry':askNight(k)?'night':'held'])[0]);
 }
 // to the next step (or back): leaving Your Stars counts it as read; the page returns to its head
 function pathMove(dir){
@@ -891,32 +895,34 @@ views.home=()=>{
  V.hstep=st;   // the step in view stays in view until the reader moves on, even once it counts as done
  if(st==='wfy'&&S.wfy!==k){S.wfy=k;save()}
  const dn=pathDone(k),done=PATH.filter(([x])=>dn[x]).length;
- const ritual=`<div class="hh-rit hh-path" aria-label="Today’s path, ${done} of 4 done">${PATH.map(([x,l],i)=>`<button class="rit${dn[x]?' on':''}${st===x?' cur':''}" data-act="hgo" data-k="${x}"${st===x?' aria-current="step"':''}><i aria-hidden="true">${pic('moons',dn[x]?PHASES[i]:'new-moon','rit-m')}</i><span>${l}</span></button>`).join('<span class="rit-j" aria-hidden="true"></span>')}</div>`;
+ const ritual=Temple.arc(PATH.map(([x,l])=>({k:x,label:l,on:!!dn[x],cur:st===x})),done===4);
  const next=(l='Continue')=>`<button class="btn" data-act="hnext">${l}</button>`;
  const playing=V.say===d.body;
  const card=(title,body,cls='')=>panel(`${orn(title)}${body}`,`gilt hp-card ${cls}`);
  let stage;
  if(st==='dream')stage=card('Good Morning',`<div class="hp-in"><p class="hp-big">Did you dream?</p><p class="hp-sub">Dreams fade within minutes of waking. Tell it while it is still close, however small or strange.</p>
   <div class="pz-acts"><button class="btn" data-act="hdream">Write it down</button><button class="btn ghost" data-act="hnodream">Not today</button></div></div>`,'hp-dream');
- else if(st==='intent'){const ch=chapterAt();stage=card('A New Chapter',`<div class="hp-in"><span class="hp-full">${pic('moons','new-moon','hp-fm')}</span><p class="hp-big">The New Moon in ${sIdx(ch.sign).name}</p><p class="hp-sub">A new chapter of your month begins. What would you like to grow before this Moon is full?</p><textarea class="hp-ta" id="hpwish" rows="3" placeholder="A wish, a hope, one small thing." aria-label="Your wish for this Moon"></textarea>
+ else if(st==='intent'){const ch=chapterAt();stage=card('A New Chapter',`<div class="hp-in">${tmoon(false)}<p class="hp-big">The New Moon in ${sIdx(ch.sign).name}</p><p class="hp-sub">A new chapter of your month begins. What would you like to grow before this Moon is full?</p><textarea class="hp-ta" id="hpwish" rows="3" placeholder="A wish, a hope, one small thing." aria-label="Your wish for this Moon"></textarea>
   <div class="pz-acts"><button class="btn" data-act="hwish">Plant it</button><button class="btn ghost" data-act="hnowish">Not this time</button></div><p class="hp-sub">It stays in your Journal, and the Moon will bring it back to you.</p></div>`,'hp-intent')}
- else if(st==='night')stage=card('Before You Sleep',`<div class="hp-in"><span class="hp-full">${moonPic(m,'hp-fm')}</span><p class="hp-big">What are you ready to let go of tonight?</p><p class="hp-sub">A worry, a word you wish you hadn’t said, a day that asked too much. Write it, then let it go.</p><textarea class="hp-ta" id="hprel" rows="4" placeholder="Nothing written here is kept unless you ask." aria-label="What you are letting go of"></textarea>
+ else if(st==='night')stage=card('Before You Sleep',`<div class="hp-in">${tmoon(true)}<p class="hp-big">What are you ready to let go of tonight?</p><p class="hp-sub">A worry, a word you wish you hadn’t said, a day that asked too much. Write it, then let it go.</p><textarea class="hp-ta" id="hprel" rows="4" placeholder="Nothing written here is kept unless you ask." aria-label="What you are letting go of"></textarea>
   <div class="pz-acts"><button class="btn" data-act="hlet">Let it go</button><button class="btn ghost" data-act="hrelkeep">Keep it instead</button></div><button class="jp-new" data-act="hnonight">Not tonight ${IC.chev}</button></div>`,'hp-night');
  else if(st==='wfy')stage=card('Written for You',`<div class="hp-in"><h2 class="pz-t">${esc(d.focus)}</h2><p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
   <div class="pz-b">${esc(d.body)}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
    if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
    return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
  else if(st==='stars')stage=`<div class="hh-stage s-${sign.id}">
-   <span class="hh-figbox" aria-hidden="true"><span class="hh-halo">${Kit.img('atlas/home-halo',{priority:true})}</span>${Kit.size(fig)?Kit.img(fig,{cls:'hh-fig',priority:true}):''}</span>
+   ${ui('plate-'+sign.id,'hh-plate',sign.name,true)}
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read the rest of today</button>${next()}</article>
   </div>`;
  else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over when you are ready. It was drawn for you.</p>'}${rev?'':'<button class="btn" data-act="reveal">Reveal</button>'}</div></div>
    ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p><div class="hp-acts"><button class="btn ghost" data-act="wpop">See the card</button>${next()}</div>`:''}`,'hp-whisper');
+ else if(st==='carry')stage=card('The Morning Is Complete',`<div class="hp-in"><p class="hp-big">Carry it with you</p><p class="hp-sub">You have read what was written for you, looked at your stars and turned your Whisper${rev?`, “${esc(c.title)}”`:''}. That is all the morning asks. Go and live the day.</p>
+  <p class="hp-sub hp-tonight"><span>Tonight</span>The last Moon waits for the evening, when the day has something to tell you.</p><div class="pz-acts"><button class="btn ghost" data-act="hgo" data-k="reflect">Reflect now instead</button></div></div>`,'hp-carry');
  else if(st==='reflect')stage=card('Reflect',`<div class="hp-in"><p class="pz-q">“${esc(d.question)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
   <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div><p class="hp-sub">What you keep goes into your Journal.</p></div>`,'hp-reflect');
  else{const eve=hourNow()>=18||hourNow()<4,ch=chapterAt(),lt=ch&&(ch.len-ch.day<=2||ch.day<=3);
-  stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in"><span class="hp-full">${pic('moons','full-moon','hp-fm')}</span><p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
+  stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in">${tmoon(eve||done===4)}<p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
   <p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>
   ${lt?`<button class="btn ghost" data-act="hletter">${ch.day<=3?'Your letter from the last Moon':'Your letter for this Moon'}</button>`:''}${ch?`<p class="hp-sub">Night ${ch.day} of ${ch.len} in the ${sIdx(ch.sign).name} Moon’s chapter.</p>`:''}</div>`,'hp-held')};if(st==='held')stage+=energyCarousel(energySlides(now,m,sign,h));
  return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
@@ -2489,6 +2495,12 @@ const onboarding=()=>['welcome','join','reset'].includes(V.sec);
 const SCROLLS='.pop-box,.cpop,.en-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl,.hc-read';
 const scrollsOf=r=>[...r.querySelectorAll(SCROLLS)].map(e=>[e.className,e.scrollLeft,e.scrollTop]);
 const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='tarot'?V.tarot.stage:'',h?h.textContent.trim():''].join('/')};
+// the painted scene behind the place: Today's follows the hour (dawn by day, the lake in the evening, the candle at night's end)
+function sceneKey(){
+ const cur=navCur();
+ if(cur==='home'){const st=V.hstep,eve=evening();return st==='night'||(st==='held'&&eve)?'candle':eve?'lake':'dawn'}
+ return cur==='horoscope'?'sky':cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
+}
 function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&!onboarding();
  // a night page's subtitle belongs with its title, so it stays in place with it
@@ -2512,6 +2524,7 @@ function render(){
  if(authed)askDaily();
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
+ if(authed)Temple.set(sceneKey());else Temple.off();
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
  navH();tarotFit();
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
