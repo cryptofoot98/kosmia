@@ -4,7 +4,7 @@
 window.Temple=(()=>{
  const A='/art/temple/';
  // t: where the head's art ends, f: where the foot's art begins (as shares of the painting's height); tone: the colour of the words
- const SC={dawn:{t:.20,f:.70,c:'221,163,93',tone:'ink'},lake:{t:.20,f:.62,c:'18,26,44'},candle:{t:.14,f:.58,c:'20,24,36'},sky:{t:.22,f:.68,c:'16,24,42'},oracle:{t:.26,f:.60,c:'23,28,44'},journal:{t:.24,f:.57,c:'30,32,40'},you:{t:.24,f:.60,c:'20,32,50'},letter:{t:.22,f:.76,c:'220,166,85',tone:'ink'}};
+ const SC={dawn:{t:.20,f:.70,c:'221,163,93',tone:'ink'},lake:{t:.20,f:.62,c:'18,26,44'},candle:{t:.14,f:.58,c:'20,24,36'},sky:{t:.22,f:.68,c:'16,24,42'},oracle:{t:.26,f:.60,c:'23,28,44'},journal:{t:.24,f:.57,c:'30,32,40'},you:{t:.24,f:.60,c:'20,32,50'},letter:{t:.22,f:.76,c:'220,166,85',tone:'ink'},reading:{t:.30,f:.66,c:'10,16,32',dy:62,m:[.5007,.2052,.176]}};
  let back,front,cur='',arcEl,arcHtml='';
  const $=(t,c)=>{const e=document.createElement(t);e.className=c;return e};
  function build(){
@@ -19,10 +19,10 @@ window.Temple=(()=>{
   const W=back.clientWidth||390,H=innerHeight,IH=W*1968/912,k=Math.min(1,Math.max(0,(H-IH*.83)/(IH*.17)));
   // the painting is never squeezed or stretched: its head and foot keep their own proportions; the plain calm between them
   // is cropped from its middle on a short screen, and only widened (it is plain) on a tall one
-  const e=.96+.04*k,head=s.t*IH,foot=(e-s.f)*IH,mid=Math.max(0,H-head-foot),nat=(s.f-s.t)*IH,img=`url(${A}${cur}.webp)`;
+  const fs0=W/390,dyp=(s.dy||0)*fs0,e=.96+.04*k,head=s.t*IH-dyp,foot=(e-s.f)*IH,mid=Math.max(0,H-head-foot),nat=(s.f-s.t)*IH,img=`url(${A}${cur}.webp)`;
   const set=(el,o)=>Object.assign(el.style,o);
   const [bh,bm,bm2,ff,bv]=back.children,[fv,ft,fb]=front.children;
-  set(bh,{height:head+1+'px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:'0 0'});
+  set(bh,{height:head+1+'px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-dyp}px`});
   if(mid<=nat){const h1=Math.ceil(mid/2),h2=mid-h1;
    set(bm,{top:head+'px',height:h1+110+'px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-s.t*IH}px`});
    set(bm2,{top:head+h1+'px',height:h2+2+'px',display:'block',webkitMaskImage:'linear-gradient(transparent,#000 100px)',maskImage:'linear-gradient(transparent,#000 100px)',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-(s.f*IH-h2)}px`})}
@@ -38,13 +38,25 @@ window.Temple=(()=>{
   set(ft,{height:H-128*fs+'px',backgroundImage:fi,backgroundSize:`${FW*z}px ${FH*z}px`,backgroundPosition:`${ox}px ${-oy}px`});
   set(fb,{height:130*fs+'px',backgroundImage:fi,backgroundSize:`${FW*z}px ${FH*z}px`,backgroundPosition:`${ox}px calc(100% + ${oy}px)`});
   document.documentElement.style.setProperty('--t-foot',foot+'px');
+  if(s.m){const R=document.documentElement.style;R.setProperty('--t-my',(s.m[1]*IH-dyp)+'px');R.setProperty('--t-md',(s.m[2]*2*W)+'px');R.setProperty('--t-mh',head+'px')}
  }
  // where the page's words end against the foot of the painting: while they run over it, the art stands back so they read
  // Today's page is never scrolled: if its words are more than the room between the head and the menu, they are set a little smaller
+ // the sign's card (and the Whisper's) is as tall as the words beside it, never stretched: its width follows its height
+ function fitCard(){
+  const st=document.querySelector('#app .hh-stage,#app .hp-whisper .dw-row');if(!st)return;
+  const card=st.querySelector('.hh-plate,.scene.mini-w'),txt=st.querySelector('.hh-card,.dw-side');if(!card||!txt)return;
+  const W=st.getBoundingClientRect().width,set=w=>{card.style.setProperty('width',w+'px','important');card.style.setProperty('height',(w*1.5)+'px','important')};
+  let w=W*.41;set(w);
+  if(st.classList.contains('hh-stage'))for(let i=0;i<4;i++){const h=txt.getBoundingClientRect().height,n=Math.min(W*.5,Math.max(W*.41,h*2/3));if(Math.abs(n-w)<1)break;w=n;set(w)}
+ }
  function fitStage(){
+  fitCard();
   const h=document.querySelector('#app .home.hpath .hhero')||document.querySelector('#app .skyp .sk-body');if(!h)return;
   const kids=h.classList.contains('hhero')?[h.querySelector('.hp-stage')]:[...h.children];if(!kids[0])return;
-  kids.forEach(k=>k.style.zoom='');let z=1;while(h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
+  const acts=()=>h.querySelectorAll('.pz-acts,.hp-acts,.or-two,.btn');kids.forEach(k=>k.style.zoom='');acts().forEach(e=>e.style.zoom='');let z=1;while(h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
+  // the actions are never made smaller: they keep one size on every page
+  if(z<1)h.querySelectorAll('.pz-acts,.hp-acts').forEach(e=>e.style.zoom=(1/z).toFixed(3));else if(z===1)acts().forEach(e=>e.style.zoom='')
  }
  function fit(){fitStage();
   if(!back||!cur)return;const pg=document.getElementById('app')?.firstElementChild;if(!pg)return;

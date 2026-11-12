@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 610 |
-| In use, provisional | 566 |
+| Images | 611 |
+| In use, provisional | 567 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -173,6 +173,7 @@ their space before they load.
 | `public/art/temple/moon-full.webp` | 256×256 | 1:1 | yes | 16 | provisional |  |
 | `public/art/temple/moon-quarter.webp` | 256×256 | 1:1 | yes | 9 | provisional |  |
 | `public/art/temple/oracle.webp` | 912×1968 | 0.46:1 | no | 172 | provisional |  |
+| `public/art/temple/reading.webp` | 912×1968 | 0.46:1 | no | 160 | provisional |  |
 | `public/art/temple/sky.webp` | 912×1968 | 0.46:1 | no | 123 | provisional |  |
 | `public/art/temple/you.webp` | 912×1968 | 0.46:1 | no | 130 | provisional |  |
 

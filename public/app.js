@@ -1082,13 +1082,12 @@ function horoSign(){
  // (a swipe turns the page, and after the last brings in the next area of life while the head stays still); at the
  // foot, above the menu, an invitation to write about it and another to read for someone else, a mark for each page
  // between them
- return `<div class="hsp hframe sx s-${s.id}"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}<button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div>
- <div class="hsp-hero">${Kit.size('atlas/hsh-'+s.id)?ui('hsh-'+s.id,'hsp-img','',true):''}${ui('hsp-lily','hsp-vine','',true)}
-  ${constellation(s.id)}<span class="glyph hsp-g" aria-hidden="true">${s.g}</span>
-  <div class="hsp-t"><h1 style="--nl:${s.name.length}">${s.name}</h1><p class="hsp-d">${s.dates}</p><i class="hsp-star" aria-hidden="true"></i><p class="hsp-soul">${SIGN_DESC[s.id]}</p></div></div>
- <div class="sx-main">${per}${ctl}
+ return `<div class="hsp hframe sx s-${s.id} skyp pg pg-hs"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}<button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div>
+ <header class="sx-head"><span class="sx-pic" aria-hidden="true" style="${figVars(s.id)}"><span class="sp-moon"><img src="/art/atlas/home-halo.webp" alt=""></span><img class="wf-fg" src="/art/atlas/fg-${s.id}.webp" alt=""></span><h1 class="pg-t">${s.name}</h1><p class="pg-s">${s.dates}</p>${per}</header>
+ <div class="sx-main">${ctl}
  <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div>
- <div class="sx-ft"><button class="sx-a" data-act="hreflect" data-ref="${ref}">Write about it</button><div class="hc-pgs" role="group" aria-label="Pages"></div><button class="sx-a" data-act="spkopen">Read for someone else</button></div></div>
+ <div class="sx-ft"><div class="hc-pgs" role="group" aria-label="Pages"></div></div>
+ <div class="sx-acts"><button class="btn ghost" data-act="spkopen">Someone else</button><button class="btn" data-act="hreflect" data-ref="${ref}">Write about it</button></div></div>
  ${V.spk?signPick(ex):''}
  </div>`;
 }
@@ -2399,7 +2398,7 @@ function kasScene(){
    <button type="submit" class="kas-send" aria-label="Send" ${KS.busy||rec!=='idle'?'disabled':''}>${IC.send}</button></form>
   ${on&&rec!=='idle'?`<p class="kz-note">${rec==='listening'?'Listening… tap again when you have finished.':'Hearing your question…'}</p>`:''}
   ${has?'<button class="link kz-new" data-act="kasnew">Begin a new conversation</button>':''}`
-  :`<button class="btn" data-act="toauth">Sign in to speak with Kassandra</button>`}
+  :`<button class="btn" data-act="toauth">Sign in to speak</button>`}
   <p class="kz-note">Kassandra speaks in symbols, not certainties. She cannot give medical, legal or financial advice.</p>
  </div></div></div>`;
 }
@@ -2489,7 +2488,7 @@ function settingsPage(t){
   ${panel(`<h3>What Kosmia keeps</h3><p>Your email, chosen sign and name; your Whispers, reflections, journal, readings, bookmarks and connections; and, only if you agree, your birth details. Everything is private to your account and protected so that only you can read it.</p><p class="muted small">AI features send only what they need: the tarot cards drawn, a forecast’s sign and period, or what you type to Kassandra. While personalisation is on, a short summary of the themes you have been writing about, with a few lines in your own words, is sent each day to write your message and to help Kassandra know you. It is never shared or used for anything else.</p>`)}
   ${panel(`<h3>Consent</h3><label class="row consent"><input type="checkbox" id="p_birth" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my account</span></label><label class="row consent"><input type="checkbox" id="p_pz" ${st.personal!==false?'checked':''} class="cb"> <span>Personalise my daily message, Whisper and Kassandra from what I write in my Journal, reflections, tarot questions and dreams</span></label><label class="row consent"><input type="checkbox" id="p_kas" ${st.kPersonal?'checked':''} class="cb"> <span>Let Kassandra see my sign, chart placements and numbers when I talk with her</span></label>`)}
   ${panel(`<h3>Your data</h3><button class="btn ghost" data-act="export">Download my data</button><button class="btn ghost" data-act="delbirth">Delete my birth details</button><div class="rule"></div><h3>Delete account</h3><p class="muted small">This permanently removes your account and everything in it. It cannot be undone.</p>${V.confirmDel?`<div class="field"><label for="delc">Type DELETE to confirm</label><input type="text" id="delc" autocomplete="off"></div><div class="row"><button class="btn danger" data-act="delacct">Delete my account</button><button class="btn ghost" data-act="canceldel">Cancel</button></div>`:`<button class="btn ghost danger-t" data-act="askdel" ${C.user?'':'disabled'}>Delete my account</button>${C.user?'':'<p class="muted small">Sign in to manage an account.</p>'}`}`)}</div>`;
- if(t==='display')return `<div class="stack"><h1>Display</h1>${panel(`<label class="row"><input type="checkbox" id="d_rm" ${st.reduce?'checked':''} class="cb"> Reduce motion (no card flips or sparkles)</label><label class="row"><input type="checkbox" id="d_lg" ${st.large?'checked':''} class="cb"> Larger text</label><p class="muted small">Kosmia also follows your device’s reduced-motion setting.</p>`)}${panel(`<h3>Time zone</h3><div class="field"><label for="d_tz">Days, weeks and events use</label><select id="d_tz"><option value="">This device (${esc(DEVICE_TZ)})</option>${(Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):[]).map(z=>`<option ${st.tz===z?'selected':''}>${z}</option>`).join('')}</select></div>`)}${panel(`<h3>Kassandra</h3><label class="row"><input type="checkbox" id="d_vo" ${st.voiceOut?'checked':''} class="cb"> Read Kassandra’s replies aloud</label>`)}</div>`;
+ if(t==='display')return `<div class="stack"><h1>Display</h1>${panel(`<label class="row"><input type="checkbox" id="d_rm" ${st.reduce?'checked':''} class="cb"> Reduce motion (no card flips or sparkles)</label><label class="row"><input type="checkbox" id="d_lg" ${st.large?'checked':''} class="cb"> Larger text</label><label class="row"><input type="checkbox" id="d_hp" ${st.haptics!==false?'checked':''} class="cb"> Soft haptics (a light tap as you move)</label><p class="muted small">Kosmia also follows your device’s reduced-motion setting.</p>`)}${panel(`<h3>Time zone</h3><div class="field"><label for="d_tz">Days, weeks and events use</label><select id="d_tz"><option value="">This device (${esc(DEVICE_TZ)})</option>${(Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):[]).map(z=>`<option ${st.tz===z?'selected':''}>${z}</option>`).join('')}</select></div>`)}${panel(`<h3>Kassandra</h3><label class="row"><input type="checkbox" id="d_vo" ${st.voiceOut?'checked':''} class="cb"> Read Kassandra’s replies aloud</label>`)}</div>`;
  const acct=!C.enabled?'<h3>Local mode</h3><p class="muted">Accounts and sync are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<h3>Signed in</h3><p class="muted">${esc(C.user.email||'')} · synced across your devices.</p>`
   :`<h3>Not signed in</h3><p class="muted">Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
@@ -2506,7 +2505,34 @@ const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='ta
 function sceneKey(){
  const cur=navCur();
  if(cur==='home'){const st=V.hstep,eve=evening();return st==='night'||(st==='held'&&eve)?'candle':eve?'lake':'dawn'}
- return cur==='horoscope'?'sky':cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
+ return cur==='horoscope'?(tab()==='sign'?'reading':'sky'):cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
+}
+const FIGP={"aries":[105.0,-1.2,4.8],"taurus":[107.1,-1.6,1.7],"gemini":[111.1,-6.8,-0.0],"cancer":[102.2,-1.6,4.9],"leo":[109.6,-4.0,5.5],"virgo":[101.2,-0.8,7.1],"libra":[103.3,-3.9,4.0],"scorpio":[105.0,-1.6,5.7],"sagittarius":[119.5,-10.8,-0.6],"capricorn":[104.5,-5.0,4.5],"aquarius":[104.2,-1.2,7.2],"pisces":[98.6,-1.0,12.7]};
+const figVars=id=>{const f=FIGP[id]||[95,2,8];return `--fw:${f[0]}%;--fl:${f[1]}%;--ft:${f[2]}%`};
+// the first time in, three quiet scenes say how the place works, each in the golden ring of the sign's own sky
+function welcomeView(){
+ if(S.welcomed||!(S.sign&&!onboarding())||V.sec!=='home')return '';
+ const i=Math.min(2,V.wl||0),nm=firstName(),sg0=sg(S.sign);
+ const phase=n=>{const rx=[0,.56,0,.56][n%4]*48,sw=n===3?1:0,lit=n>=4?'<circle cx="50" cy="50" r="49" fill="#fff"/>':n?`<path d="M50 2A48 48 0 0 1 50 98A${rx} 48 0 0 ${sw} 50 2Z" fill="#fff"/>`:'';
+  return `<svg viewBox="0 0 100 100" class="wl-ph"><defs><filter id="wf${n}"><feGaussianBlur stdDeviation="1.1"/></filter><mask id="wm${n}"><g filter="url(#wf${n})">${lit}</g></mask></defs><image href="/art/temple/moon-base.webp" width="100" height="100"/><image href="/art/temple/moon-full.webp" width="100" height="100" mask="url(#wm${n})"/></svg>`};
+ const art=[
+  `<div class="wl-moon">${phase(0)}<div class="wl-ph wl-lit">${phase(1)}</div></div>`,
+  `<div class="wl-moon wl-cycle">${[0,1,2,3,4].map(n=>`<div class="f f${n}">${phase(n)}</div>`).join('')}</div>`,
+  `<div class="wl-fig" style="${figVars(sg0.id)}"><span class="sp-moon"><img src="/art/atlas/home-halo.webp" alt=""></span><img class="wf-fg" src="/art/atlas/fg-${sg0.id}.webp" alt=""></div>`][i];
+ const W=[
+  [`Welcome${nm?', '+esc(nm):''}`,'Kosmia is a quiet place to meet yourself beneath the stars. Come as you are. Nothing here is a test.','Kosmia'],
+  ['Today is a small ritual','A few pages each day: written for you, your stars, your Whisper. The Moon grows with each one, and is full when your day is whole.','Each day'],
+  ['Swipe, then go deeper','Swipe sideways to move between pages. Under every title, a row of sections takes you further into that place.',`${sg0.name} · your sky`]][i];
+ const extra=[
+  `<div class="wl-ex wl-sparks"><i></i><i></i><i></i></div>`,
+  `<div class="wl-ex wl-steps">${['Written for you','Your stars','Your Whisper','Reflect'].map((t,k)=>`<span style="--k:${k}"><b></b>${t}</span>`).join('')}</div>`,
+  `<div class="wl-ex wl-mock"><div class="wl-pill"><span>Stars</span><span>Now</span><span>Calendar</span><i></i></div><div class="wl-hand"></div></div>`][i];
+ const tw=Array.from({length:18},(_,k)=>`<i style="left:${(k*53+11)%97}%;top:${(k*37+7)%58}%;--d:${(k%6)*.6}s"></i>`).join('');
+ return `<div class="wl" role="dialog" aria-modal="true" aria-label="Welcome"><div class="wl-in" data-i="${i}"><div class="wl-sky"></div><div class="wl-tw" aria-hidden="true">${tw}</div>
+  <div class="wl-art${i===2?' open':''}">${art}</div>
+  <div class="wl-flow"><p class="wl-k">${W[2]}</p><h2>${W[0]}</h2><p class="wl-p">${W[1]}</p>${extra}</div>
+  <div class="wl-foot"><div class="wl-dots">${[0,1,2].map(x=>`<i class="${x===i?'on':''}"></i>`).join('')}</div>
+  <div class="wl-acts">${i<2?'<button class="btn ghost" data-act="wlskip">Skip</button>':''}<button class="btn" data-act="wlnext">${i<2?'Next':'Begin'}</button></div></div></div></div>`;
 }
 function render(){
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&!onboarding();
@@ -2515,7 +2541,7 @@ function render(){
  // the notebook stays where it was on the screen while its pages turn (swapping the page in would scroll to the top)
  const keep=sec==='tarot'&&tab()==='notebook'?scrollY:null,y=scrollY,sc=scrollsOf(app);
  const mst=(app.querySelector('.mn-scroll')||{}).scrollTop||0;
- app.innerHTML=html+(V.share?sharePop():'');V.prevSec=sec;
+ app.innerHTML=html+(V.share?sharePop():'')+welcomeView();V.prevSec=sec;
  const scr=screenOf(app);
  render.keepMs=scr===render.scr?mst:0;
  if(scr===render.scr){window.scrollTo(0,y);app.querySelectorAll(SCROLLS).forEach((e,i)=>{const s=sc[i];if(s&&s[0]===e.className){e.scrollLeft=s[1];e.scrollTop=s[2]}})}
@@ -2534,6 +2560,8 @@ function render(){
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
  if(authed)Temple.set(sceneKey());else Temple.off();
+ document.documentElement.classList.toggle('nos',authed&&!!document.querySelector('#app .home.hpath,#app .skyp,#app .mnp,#app .kz'));
+ if(authed&&sec==='home'&&!V.arrived&&!S.settings.reduce&&!matchMedia('(prefers-reduced-motion: reduce)').matches){V.arrived=true;document.body.classList.add('arrive');haptic();setTimeout(()=>document.body.classList.remove('arrive'),2800)}else if(authed&&sec==='home')V.arrived=true;
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
  navH();tarotFit();
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
@@ -2546,7 +2574,7 @@ function render(){
 // the night pages: their title, tabs and search stand still, and only what is under them moves, between them and the menu
 function subFix(){
  const m=$('#app .mnp');if(!m||m.querySelector('.mn-scroll'))return;
- let from=m.querySelector('.mn-hd');if(!from)return;from=from.nextElementSibling;
+ let from=m.querySelector('.mn-hd,.en-top');if(!from)return;from=from.nextElementSibling;
  while(from&&from.matches('.mn-sub,.gtabs,.seg,.fscroll,.field,[role=group],.pf-id'))from=from.nextElementSibling;
  if(!from)return;
  const w=document.createElement('div');w.className='mn-scroll';let n=from;const ks=[];while(n){ks.push(n);n=n.nextElementSibling}
@@ -2771,9 +2799,20 @@ function jNew(){const j={id:uuid(),day:dkey(),kind:'reflection',title:'',body:''
 function refocus(id){const el=$('#'+id);if(el){el.focus();const n=el.value.length;try{el.setSelectionRange(n,n)}catch(e){}}}
 
 document.addEventListener('submit',e=>{if(e.target.id==='kas-f'){e.preventDefault();const i=$('#kas-in');const v=i.value;i.value='';kasSend(v)}});
+// a light tap under the finger where the device allows it: vibration on phones that have it, and on iPhone (iOS 17.4+) the
+// tap a hidden switch gives when it is toggled in answer to a touch. It never fires with reduced motion or when switched off.
+const HAP={el:null};
+function haptic(kind){
+ if(S.settings.reduce||S.settings.haptics===false)return;
+ try{if(navigator.vibrate){navigator.vibrate(kind==='done'?[10,50,16]:6);return}
+  if(!HAP.el){const l=document.createElement('label');l.setAttribute('aria-hidden','true');l.style.cssText='position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');l.append(i);document.body.append(l);HAP.el=l}
+  HAP.el.click();if(kind==='done')setTimeout(()=>HAP.el&&HAP.el.click(),90)}catch(e){}
+}
+const HAP_DONE=['hkeep','hlet','hwish','reveal','hdream','hnodream','hrelkeep','hnonight','hnowish'];
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-go],[data-nav],[data-act],[data-sign],[data-sign2],[data-period],[data-pick],[data-planet],[data-calview],[data-ctab],[data-ins]');
  if(!t)return;
+ haptic(HAP_DONE.includes(t.dataset.act)?'done':'tap');
  if(t.dataset.go)return go(t.dataset.go,t.dataset.t||null);
  if(t.dataset.nav==='journal')return go('tarot','journal');
  if(t.dataset.nav)return go(t.dataset.nav);
@@ -2819,6 +2858,8 @@ document.addEventListener('click',e=>{
  if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k),t.dataset.dir?+t.dataset.dir:0);V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
  if(a==='spkopen'){V.spk=true;return render()}
+ if(a==='wlnext'){V.wl=(V.wl||0)+1;if(V.wl>=3){S.welcomed=true;V.wl=0;save()}return render()}
+ if(a==='wlskip'){S.welcomed=true;V.wl=0;save();return render()}
  if(a==='pgcat'){const g=t.dataset.g,l=PGC[g].map(x=>x[0]),f=l.indexOf(pgCur(g)),n=l.indexOf(t.dataset.k);if(n<0||n===f)return;V.pdir=n>f?1:-1;S.pgc=S.pgc||{};S.pgc[g]=t.dataset.k;save();return render()}
  if(a==='jsub'){V.jsub=t.dataset.k||null;if(!V.jsub)V.jsearch=null;return render()}
  if(a==='spkclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.spk=false;return render()}
@@ -2994,7 +3035,7 @@ document.addEventListener('change',e=>{
  if(V.sec!=='settings')return;
  const n=S.notif,st=S.settings;
  const map={n_on:()=>n.on=i.checked,n_wh:()=>n.whisper=i.checked,n_ev:()=>n.events=i.checked,n_mo:()=>n.monthly=i.checked,n_an:()=>n.annual=i.checked,n_time:()=>n.time=i.value,n_q:()=>n.quiet=i.checked,n_qf:()=>n.quietFrom=i.value,n_qt:()=>n.quietTo=i.value,
-  p_kas:()=>st.kPersonal=i.checked,p_pz:()=>{st.personal=i.checked;pzCache.k=''},d_rm:()=>st.reduce=i.checked,d_lg:()=>st.large=i.checked,d_vo:()=>st.voiceOut=i.checked,d_tz:()=>{st.tz=i.value;EVC.k='';chartCache.k=''},
+  p_kas:()=>st.kPersonal=i.checked,p_pz:()=>{st.personal=i.checked;pzCache.k=''},d_rm:()=>st.reduce=i.checked,d_lg:()=>st.large=i.checked,d_hp:()=>st.haptics=i.checked,d_vo:()=>st.voiceOut=i.checked,d_tz:()=>{st.tz=i.value;EVC.k='';chartCache.k=''},
   p_birth:()=>{S.birthConsent=i.checked}};
  if(map[id]){map[id]();save();syncProfile();toast('Saved');if(/^d_/.test(id))render()}
 });
