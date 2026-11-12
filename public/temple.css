@@ -29,14 +29,14 @@ html body.tp.tp.tp #app,html body.tp.tp.tp #app>*{background:none!important}
 html body.tp.tp.tp #nav#nav .in{height:70px!important;margin:0 calc(50% - var(--pw) / 2 + 27px) 30px!important;padding:0 8px!important;border:0!important;border-radius:35px!important;
  background:linear-gradient(180deg,rgba(18,24,52,.36),rgba(7,10,24,.44))!important;-webkit-backdrop-filter:blur(7px)!important;backdrop-filter:blur(7px)!important;
  box-shadow:inset 0 0 0 1px #C8A25A,inset 0 0 0 3px rgba(7,10,24,.5),inset 0 0 0 4px rgba(200,162,90,.35),0 10px 24px rgba(0,0,0,.45)!important}
-html body.tp.tp.tp #nav#nav .in button{height:100%!important;color:rgba(241,226,188,.8)!important;font-family:'Cinzel',serif!important;font-weight:600!important;font-size:9.5px!important;letter-spacing:.05em!important}
+html body.tp.tp.tp #nav#nav .in button{height:100%!important;color:rgba(241,226,188,.8)!important;font-family:'Cinzel',serif!important;font-weight:600!important;font-size:11px!important;letter-spacing:.05em!important}
 html body.tp.tp.tp #nav#nav .in button[aria-current=page]{color:#F6DA97!important}
 html body.tp.tp.tp #nav#nav .in button::before{width:38px!important;height:38px!important}
 
 /* ---- the words ---- */
 html body.tp.tp.tp #app{color:var(--tx)}
 html body.tp.tp.tp #app .orn{margin:0!important;padding:0!important;background:none!important;border:0!important}
-html body.tp.tp.tp #app .orn h2{display:block!important;margin:0!important;padding:0!important;text-align:center!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:9.5px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important;background:none!important;text-shadow:none!important;line-height:1.4!important}
+html body.tp.tp.tp #app .orn h2{display:block!important;margin:0!important;padding:0!important;text-align:center!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:11px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important;background:none!important;text-shadow:none!important;line-height:1.4!important}
 html body.tp.tp.tp #app .orn::before,html body.tp.tp.tp #app .orn::after{display:none!important}
 html body.tp.tp.tp #app .orn h2 span{color:inherit!important;text-shadow:none!important;background:none!important}
 html body.tp.tp.tp #app .orn h2 svg,html body.tp.tp.tp #app .orn h2 .k-ico{display:none!important}
@@ -50,7 +50,7 @@ html body.tp.tp.tp #app .home .hbar,html body.tp.tp.tp #app .home .hh-top,html b
 html body.tp.tp.tp #app .home .hh-fix{position:absolute!important;top:30px!important;right:26px!important;z-index:5;gap:4px;margin:0!important;width:auto!important}
 html body.tp.tp.tp #app .home .hh-fix .ibtn,html body.tp.tp.tp #app .home .hh-fix .avatar{width:30px!important;height:30px!important;min-width:0!important}
 html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:44cqw 7cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
-html body.tp.tp.tp #app .hh-date{order:-1;margin:0!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:9.5px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important}
+html body.tp.tp.tp #app .hh-date{order:-1;margin:0!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:11px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important}
 html body.tp.tp.tp #app .hh-greet{margin:6px 0 0!important;font:italic 600 22px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
 html body.tp.tp.tp #app .hhero{padding:6px 7cqw 0!important;color:var(--tx)!important}
 html body.tp.tp.tp #app .hh-stage{margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;padding:0!important;grid-template-columns:none!important}
@@ -75,15 +75,15 @@ html body.tp.tp.tp #app .hp-card .orn{margin:10px 0 0!important}
 html body.tp.tp.tp #app .hp-big,html body.tp.tp.tp #app .pz-t{margin:6px 0 0!important;font:italic 600 28px/1.08 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
 html body.tp.tp.tp #app .hp-sub,html body.tp.tp.tp #app .pz-b,html body.tp.tp.tp #app .dw-msg{margin:9px 0 0!important;font:500 17px/1.36 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important}
 html body.tp.tp.tp #app .pz-q{margin:8px 0 0!important;font:italic 600 24px/1.14 'Cormorant Garamond',serif!important;color:var(--tt)!important}
-html body.tp.tp.tp #app .hp-tonight span{display:block;font:500 9.5px 'Cinzel',serif;letter-spacing:.24em;text-transform:uppercase;color:var(--tk);margin-bottom:4px}
+html body.tp.tp.tp #app .hp-tonight span{display:block;font:500 11px 'Cinzel',serif;letter-spacing:.24em;text-transform:uppercase;color:var(--tk);margin-bottom:4px}
 html body.tp.tp.tp #app .pz-moon{margin:8px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
 html body.tp.tp.tp #app .pz-moon .pz-mi{display:none!important}
 html body.tp.tp.tp #app .cp-you{margin:12px 0 0!important;padding:10px 0 0!important;border:0!important;border-top:1px solid var(--tr)!important;background:none!important;font:italic 500 16px/1.3 'Cormorant Garamond',serif!important;color:var(--tq)!important;box-shadow:none!important}
-html body.tp.tp.tp #app .cp-you span{display:block;font:500 9.5px 'Cinzel',serif!important;font-style:normal!important;letter-spacing:.2em;text-transform:uppercase;color:var(--tk)!important;margin-bottom:3px}
+html body.tp.tp.tp #app .cp-you span{display:block;font:500 11px 'Cinzel',serif!important;font-style:normal!important;letter-spacing:.2em;text-transform:uppercase;color:var(--tk)!important;margin-bottom:3px}
 html body.tp.tp.tp #app .hp-ta{width:100%;margin-top:9px!important;border:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px var(--tf)!important;background:rgba(255,255,255,.04)!important;padding:10px 12px!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-align:left}
 html body.tp.tp.tp #app .hp-ta::placeholder{color:var(--tx);opacity:.6}
 html body.tp.tp.tp #app .pz-acts,html body.tp.tp.tp #app .hp-acts{display:flex!important;flex-direction:row!important;justify-content:center;align-items:center;gap:10px;width:100%;margin-top:14px!important}
-html body.tp.tp.tp #app .hp-card .btn,html body.tp.tp.tp #app .hh-card .btn{flex:1 1 0;min-width:0;max-width:200px;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
+html body.tp.tp.tp #app .hp-card .btn,html body.tp.tp.tp #app .hh-card .btn{flex:1 1 0;min-width:0;max-width:200px;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
 html body.tp.tp.tp #app .hp-card .btn:not(.ghost),html body.tp.tp.tp #app .hh-card .btn:not(.ghost){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
 html body.tp.tp.tp #app .hp-card .btn.ghost,html body.tp.tp.tp #app .hh-card .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important}
 html body.tp.tp.tp #app .hh-plate{width:70px;height:auto;margin:8px auto 0;border-radius:4px;box-shadow:0 0 0 1px #8a6630,0 8px 16px -6px #000}
@@ -91,8 +91,8 @@ html body.tp.tp.tp #app .hh-card{background:none!important;border:0!important;bo
 html body.tp.tp.tp #app .hh-card .hh-name{display:flex;flex-direction:column;align-items:center;gap:0}
 html body.tp.tp.tp #app .hh-card .glyph{display:none!important}
 html body.tp.tp.tp #app .hh-card h2{margin:8px 0 0!important;font:500 14px 'Cinzel',serif!important;letter-spacing:.34em!important;text-transform:uppercase;color:#F4E2B4!important}
-html body.tp.tp.tp #app .hh-card .hh-name p{margin:2px 0 0!important;font:italic 500 13px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
-html body.tp.tp.tp #app .hh-card .keys{margin:3px 0 0!important;font:500 7.5px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
+html body.tp.tp.tp #app .hh-card .hh-name p{margin:2px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+html body.tp.tp.tp #app .hh-card .keys{margin:3px 0 0!important;font:500 10.5px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
 html body.tp.tp.tp #app .hh-card .hh-text{margin:10px 0 0!important;font:500 17px/1.36 'Cormorant Garamond',serif!important;color:var(--tx)!important}
 
 html body.tp.tp.tp #app .hh-stage .hh-halo,html body.tp.tp.tp #app .hh-stage .hh-figbox{display:none!important}
@@ -107,14 +107,14 @@ html body.tp.tp.tp #app .hl-top,html body.tp.tp.tp #app .hl-top.stay{position:re
 html body.tp.tp.tp #app .hl-top::before,html body.tp.tp.tp #app .hl-top::after{display:none!important}
 html body.tp.tp.tp #app .hl-top h1.cz{margin:0!important;font:500 19px/1.2 'Cinzel',serif!important;letter-spacing:.3em!important;text-transform:uppercase;color:#F4E2B4!important;text-shadow:none!important}
 html body.tp.tp.tp #app .hl-top p{margin:6px 0 0!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important;letter-spacing:0!important;text-transform:none!important}
-html body.tp.tp.tp #app .hl-top .hl-motto,html body.tp.tp.tp #app .hl-top .hgreet{font:500 9px 'Cinzel',serif!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:var(--tk)!important}
+html body.tp.tp.tp #app .hl-top .hl-motto,html body.tp.tp.tp #app .hl-top .hgreet{font:500 10.5px 'Cinzel',serif!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:var(--tk)!important}
 html body.tp.tp.tp #app .hl-top .hgreet+.hl-line,html body.tp.tp.tp #app .hl-top .hl-line{font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:var(--tx)!important}
 html body.tp.tp.tp #app .hl-cards{padding:14px 7cqw 0!important;margin:0!important;display:block}
 html body.tp.tp.tp #app .hl-sec{margin:20px 0 0!important;padding:0!important;background:none!important;border:0!important}
 html body.tp.tp.tp #app .hl-card,html body.tp.tp.tp #app .hmine{background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding:8px 0 0!important;margin:0!important;border-radius:0!important}
 html body.tp.tp.tp #app .hl-card::before,html body.tp.tp.tp #app .hl-card::after{display:none!important}
 html body.tp.tp.tp #app .dshelf{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;text-align:center}
-html body.tp.tp.tp #app .dshelf h2,html body.tp.tp.tp #app .k-div span{font:500 9.5px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:var(--tk)!important;text-shadow:none!important}
+html body.tp.tp.tp #app .dshelf h2,html body.tp.tp.tp #app .k-div span{font:500 11px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:var(--tk)!important;text-shadow:none!important}
 html body.tp.tp.tp #app .dshelf p{font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
 html body.tp.tp.tp #app .k-div{margin:0 0 6px!important}
 html body.tp.tp.tp #app .k-div::before,html body.tp.tp.tp #app .k-div::after{background:linear-gradient(90deg,transparent,var(--tf),transparent)!important;opacity:.9}
@@ -161,11 +161,11 @@ html body.tp.tp.tp #app .pop:has(.lt-box){background:rgba(5,7,18,.72)!important}
 html body.tp.tp.tp #app .pop-box.lt-box{position:fixed!important;left:50%!important;top:34px!important;bottom:104px!important;height:auto!important;max-height:none!important;width:calc(min(100vw,var(--appw)) - 44px)!important;max-width:none!important;transform:translateX(-50%)!important;margin:0!important;
  overflow:auto;padding:26px 8% 190px!important;border-radius:14px!important;border:0!important;box-shadow:0 0 0 1px rgba(106,78,44,.5),0 14px 40px rgba(0,0,0,.6)!important;
  background:#E4BF88 url(/art/temple/letter-sheet.webp) 50% 100%/100% auto no-repeat!important;color:#24160A!important}
-html body.tp.tp.tp #app .lt-box .cp-k{font:600 9.5px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:#4A2C0E!important;text-align:center}
+html body.tp.tp.tp #app .lt-box .cp-k{font:600 11px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:#4A2C0E!important;text-align:center}
 html body.tp.tp.tp #app .lt-box h2{font:italic 600 27px/1.1 'Cormorant Garamond',serif!important;color:#24160A!important;margin:8px 0 10px!important;text-align:center}
 html body.tp.tp.tp #app .lt-box .lt-b p{font:500 16px/1.38 'Cormorant Garamond',serif!important;color:#24160A!important;margin:0 0 9px!important;text-align:left!important}
 html body.tp.tp.tp #app .lt-box .lt-b .lt-sig{font:italic 600 22px 'Cormorant Garamond',serif!important;color:#7A2E2E!important;text-align:right!important}
-html body.tp.tp.tp #app .lt-box .muted{color:#4A2C0E!important;font:italic 500 13px 'Cormorant Garamond',serif!important;margin-top:10px!important}
+html body.tp.tp.tp #app .lt-box .muted{color:#4A2C0E!important;font:italic 500 15px 'Cormorant Garamond',serif!important;margin-top:10px!important}
 html body.tp.tp.tp #app .lt-box .pop-x{background:rgba(255,248,230,.7)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #6b4318!important}
 
 /* Today's pages: a quiet row of dots under the page, a swipe slides the page in from its side */
@@ -189,7 +189,7 @@ html body.tp.tp.tp #app .hp-whisper .dw-side .btn{align-self:center!important;ma
 html body.tp.tp.tp #app .hh-card .hh-text{font-size:16.5px!important;margin-top:8px!important}
 
 /* one set of action buttons everywhere on Today: the same size, gold for the main action, dark glass with a gold line for the other */
-html body.tp.tp.tp #app .hp-whisper .dw-side .btn{flex:none;width:200px;max-width:100%;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+html body.tp.tp.tp #app .hp-whisper .dw-side .btn{flex:none;width:200px;max-width:100%;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
 html body.tp.tp.tp #app .hp-card .hp-acts .ibtn{flex:none}
 /* the painting stays whole beneath the words; they read by a soft halo of the scene's own colour */
 html body.tp.tp.tp #app .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(14,20,38,.85),0 0 16px rgba(14,20,38,.6)!important}
@@ -205,3 +205,269 @@ html body.tp.tp.tp #app .hp-dots button.on::before{opacity:1;box-shadow:0 0 8px 
 html body.tp.tp.tp #app .orn h2,html body.tp.tp.tp #app .hp-card .k-div span{font-weight:700!important}
 html body.tp.tp.tp #app .orn h2,html body.tp.tp.tp #app .hp-card .k-div span{font-size:10.5px!important;color:#3A200A!important;text-shadow:0 0 5px rgba(255,236,190,.95),0 0 11px rgba(255,226,160,.8)!important}
 body:not([data-tone=ink]) #app .orn h2,body:not([data-tone=ink]) #app .hp-card .k-div span{color:#F0D898!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 14px rgba(12,16,36,.7)!important}
+
+/* ---- Today stands still: the moon, greeting, dots and the page's title are fixed; the page's words sit in the room between
+   them and the menu and never need scrolling (they are set a little smaller if they must) ---- */
+html body.tp.tp.tp #app .home.hpath{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;display:flex;flex-direction:column;overflow:hidden}
+html body.tp.tp.tp #app .home.hpath .hh-head{flex:none}
+html body.tp.tp.tp #app .home.hpath .hhero{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;display:flex!important;flex-direction:column;padding:4px 7cqw 4px!important}
+html body.tp.tp.tp #app .home.hpath .hhero::-webkit-scrollbar{display:none}
+html body.tp.tp.tp #app .home.hpath .hp-stage{margin:auto 0!important;width:100%}
+html body.tp.tp.tp #app .hh-head .orn{margin:4px 0 0!important;width:100%}
+html body.tp.tp.tp #app .hh-head .orn h2{display:flex!important;align-items:center;justify-content:center;gap:10px}
+html body.tp.tp.tp #app .hh-head .orn h2::before,html body.tp.tp.tp #app .hh-head .orn h2::after{content:''!important;display:block!important;flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--tf))!important}
+html body.tp.tp.tp #app .hh-head .orn h2::after{background:linear-gradient(90deg,var(--tf),transparent)!important}
+html body.tp.tp.tp #app .hh-head .orn h2 span{white-space:nowrap}
+@media (max-height:760px){
+ html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{padding-top:36cqw!important}
+ .tm-arc{transform:scale(.84);transform-origin:50% 0}
+}
+/* the stars: the sign's card on the left, its words on the right */
+html body.tp.tp.tp #app .hh-stage{flex-direction:row!important;align-items:center!important;gap:4cqw}
+html body.tp.tp.tp #app .hh-stage .hh-plate{flex:none;width:38cqw!important;max-width:none!important;margin-top:0!important}
+html body.tp.tp.tp #app .hh-stage .hh-card{flex:1 1 0;min-width:0;width:auto!important;align-items:flex-start;text-align:left}
+html body.tp.tp.tp #app .hh-stage .hh-card .hh-name{align-items:flex-start}
+html body.tp.tp.tp #app .hh-stage .hh-card h2{margin:0!important;letter-spacing:.28em!important}
+html body.tp.tp.tp #app .hh-stage .hh-card .keys{text-align:left}
+html body.tp.tp.tp #app .hh-stage .hh-card .hh-text{margin:7px 0 0!important;font-size:15.5px!important;line-height:1.3!important}
+html body.tp.tp.tp #app .hh-stage .pz-acts{flex-direction:column!important;align-items:stretch;gap:6px;margin-top:9px!important}
+html body.tp.tp.tp #app .hh-stage .pz-acts .btn{max-width:none;height:36px;flex:none}
+/* the Whisper: its card on the left, its words on the right, what is for you below */
+html body.tp.tp.tp #app .hp-whisper .dw.dw-row{flex-direction:row!important;align-items:center;gap:4cqw}
+html body.tp.tp.tp #app .hp-whisper .dw-row .scene.mini-w{flex:none;width:38cqw!important;max-width:none;margin:0}
+html body.tp.tp.tp #app .hp-whisper .dw-side{flex:1 1 0;min-width:0;align-items:flex-start;text-align:left}
+html body.tp.tp.tp #app .hp-whisper .dw-t{font-size:22px!important}
+html body.tp.tp.tp #app .hp-whisper .dw-side .dw-msg{font-size:15.5px!important;line-height:1.3!important;text-align:left}
+html body.tp.tp.tp #app .hp-whisper .dw-side .btn{width:100%!important}
+html body.tp.tp.tp #app .hp-whisper .cp-you{margin-top:8px!important;padding-top:7px!important;font-size:15px!important}
+html body.tp.tp.tp #app .hp-whisper .hp-acts{margin-top:9px!important}
+html body.tp.tp.tp #app .hp-whisper .hp-acts .btn{height:38px}
+html body.tp.tp.tp #app .hp-eve{margin-top:12px!important;padding-top:10px!important;border-top:1px solid var(--tr)!important;font-size:16px!important;line-height:1.3!important;font-style:italic}
+@media (max-height:800px){html body.tp.tp.tp #app .hp-held .hp-chap{display:none!important}}
+html body.tp.tp.tp #app .hp-reflect .hp-ta{min-height:0;height:96px}
+html body.tp.tp.tp #app .hh-head .orn h2{width:100%}
+/* every word of Today in light gold with a dark halo: it reads on the dawn sky, the sea and the night alike */
+html body.tp.tp.tp #app .home.hpath .hp-stage,html body.tp.tp.tp #app .home.hpath .hh-head .orn{--tx:#FBF0D2;--tt:#FFF6DC;--tk:#F3D790;--tq:#F7E4B4;--tr:rgba(243,215,144,.45);--tf:rgba(243,215,144,.6)}
+html body.tp.tp.tp #app .home.hpath .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span,.cp-you,.cp-you span),html body.tp.tp.tp #app .home.hpath .hh-head .orn span{text-shadow:0 0 3px rgba(12,16,36,.85),0 0 9px rgba(12,16,36,.8),0 1px 14px rgba(12,16,36,.65)!important}
+html body.tp.tp.tp #app .home.hpath .hh-head .orn h2{color:#F3D790!important}
+html body.tp.tp.tp #app .home.hpath .hp-ta{color:#FFF6DC!important;background:rgba(12,16,36,.4)!important}
+html body.tp.tp.tp #app .home.hpath .hp-ta::placeholder{color:#F3E4BC;opacity:.75}
+@media (max-height:760px){
+ html body.tp.tp.tp #app .hp-wfy .pz-moon{display:none!important}
+ html body.tp.tp.tp #app .hp-wfy .pz-t{font-size:23px!important;margin-top:0!important}
+ html body.tp.tp.tp #app .hp-wfy .pz-b{font-size:16px!important;line-height:1.27!important;margin-top:6px!important}
+ html body.tp.tp.tp #app .hp-wfy .cp-you{font-size:14.5px!important;margin-top:7px!important;padding-top:6px!important;line-height:1.25!important}
+ html body.tp.tp.tp #app .hp-wfy .hp-acts{margin-top:8px!important}
+ html body.tp.tp.tp #app .hp-wfy .hp-acts .btn{height:38px}
+}
+html body.tp.tp.tp #app .hh-stage{align-items:flex-start!important}
+html body.tp.tp.tp #app .hh-stage .hh-plate{margin-top:3px!important}
+/* by day the words sit on a soft panel of dark glass, so they read on the bright dawn sky and across the sea alike */
+html body.tp.tp.tp[data-tone=ink] #app .home.hpath .hp-stage{background:rgba(18,22,44,.46)!important;border-radius:18px;padding:12px 13px!important;box-shadow:inset 0 0 0 1px rgba(243,215,144,.28)}
+html body.tp.tp.tp[data-tone=ink] #app .home.hpath .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span,.cp-you,.cp-you span){text-shadow:0 0 3px rgba(10,14,30,.7),0 1px 6px rgba(10,14,30,.6)!important}
+html body.tp.tp.tp[data-tone=ink] #app .home.hpath .hp-stage{width:100%}
+html body.tp.tp.tp #app .hp-held .hp-sub.hp-eve:last-of-type{display:block!important}
+html body.tp.tp.tp #app .hp-held .hp-in>.btn{flex:none;max-width:none;width:auto;padding:0 20px!important;margin-top:10px}
+html body.tp.tp.tp #app .hh-stage{flex-wrap:wrap!important}
+html body.tp.tp.tp #app .hh-stage .pz-acts{flex:0 0 100%!important;flex-direction:row!important;margin-top:12px!important;gap:10px}
+html body.tp.tp.tp #app .hh-stage .pz-acts .btn{flex:1 1 0;height:42px;max-width:none}
+/* the sign's card and the Whisper's card are the same size */
+html body.tp.tp.tp #app .hh-stage .hh-plate,html body.tp.tp.tp #app .hp-whisper .dw-row .scene.mini-w{width:38cqw!important;height:57cqw!important;aspect-ratio:2/3;object-fit:cover}
+
+/* ---- Your Sky: one screen. Your sign and the time tabs stand still; the reading, the sky now and three doorways sit below ---- */
+html body.tp.tp.tp #app .skyp{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;display:flex;flex-direction:column;overflow:hidden;padding:0!important;container-type:inline-size;color:var(--tx)}
+html body.tp.tp.tp #app .skyp .sk-head{flex:none;position:relative!important;padding:34px 7cqw 0!important;display:flex;flex-direction:column;align-items:center;text-align:center}
+html body.tp.tp.tp #app .sk-k{margin:0;font:600 11px 'Cinzel',serif;letter-spacing:.34em;text-transform:uppercase;color:var(--tk);text-shadow:0 0 6px rgba(10,14,30,.8)}
+html body.tp.tp.tp #app .sk-med{display:block;width:58px;height:58px;margin:8px 0 0}
+html body.tp.tp.tp #app .sk-med img,html body.tp.tp.tp #app .sk-med .gmed-i{width:100%!important;height:100%!important;display:block}
+html body.tp.tp.tp #app .sk-n{margin:6px 0 0!important;font:500 24px/1 'Cinzel',serif!important;letter-spacing:.3em!important;text-indent:.3em;text-transform:uppercase;color:#FBEFCB!important;text-shadow:0 0 8px rgba(10,14,30,.8)!important}
+html body.tp.tp.tp #app .sk-dt{margin:3px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.8)}
+html body.tp.tp.tp #app .sk-ky{margin:3px 0 0!important;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.18em;text-transform:uppercase;color:var(--tk)!important}
+html body.tp.tp.tp #app .skyp .sk-head [role=group]{width:100%;margin-top:11px}
+html body.tp.tp.tp #app .skyp .seg{width:100%;display:flex;height:36px;border-radius:18px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+html body.tp.tp.tp #app .skyp .seg button{flex:1;font:600 11px 'Cinzel',serif!important;letter-spacing:.12em!important;text-transform:uppercase;color:var(--tx)!important;border-radius:18px}
+html body.tp.tp.tp #app .skyp .seg button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important}
+html body.tp.tp.tp #app .sk-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 7cqw 4px;gap:8px}
+html body.tp.tp.tp #app .sk-read{text-align:center}
+html body.tp.tp.tp #app .sk-read .hm-q{margin:0!important;font:italic 500 19px/1.28 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 6px rgba(10,14,30,.85),0 0 14px rgba(10,14,30,.6)!important}
+html body.tp.tp.tp #app .sk-read .btn{margin:12px auto 0!important;display:flex;align-items:center;justify-content:center;width:100%;max-width:260px;height:44px;padding:0 6px!important;border-radius:22px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+html body.tp.tp.tp #app .sk-now{display:flex;align-items:center;gap:12px;width:100%;padding:9px 4px;border:0;border-top:1px solid var(--tr);border-bottom:1px solid var(--tr);background:none;color:var(--tx);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body.tp.tp.tp #app .sk-now .sk-mi{width:38px;height:38px;flex:none}
+html body.tp.tp.tp #app .sk-now>span{flex:1;min-width:0;font:italic 500 16px/1.2 'Cormorant Garamond',serif;text-shadow:0 0 6px rgba(10,14,30,.85)}
+html body.tp.tp.tp #app .sk-now b{display:block;font:600 10.5px 'Cinzel',serif;font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:var(--tk);margin-bottom:2px}
+html body.tp.tp.tp #app .sk-now i{display:block;font-size:14px;opacity:.85}
+html body.tp.tp.tp #app .sk-now svg{width:16px;height:16px;flex:none;color:var(--tk)}
+html body.tp.tp.tp #app .sk-doors{display:flex;justify-content:space-around;gap:6px}
+html body.tp.tp.tp #app .sk-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;border:0;background:none;color:var(--tk);cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body.tp.tp.tp #app .sk-d svg{width:38px;height:38px;padding:8px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--tf);background:rgba(14,20,40,.45)}
+html body.tp.tp.tp #app .sk-d span{font:600 10.5px 'Cinzel',serif;letter-spacing:.18em;text-transform:uppercase;text-shadow:0 0 6px rgba(10,14,30,.85)}
+html body.tp.tp.tp #app .skyp .seg button[aria-selected=true]{color:#24160A!important;text-shadow:none!important;font-weight:700!important}
+html body.tp.tp.tp #app .skyp .seg button::before,html body.tp.tp.tp #app .skyp .seg button::after{display:none!important}
+html body.tp.tp.tp #app .skyp .seg button{border:0!important;box-shadow:none!important}
+
+/* ---- Sky's sub-screens: a compact head and tabs that stand still, a list that moves between them and the menu ---- */
+html body.tp.tp.tp #app .mnp{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;min-height:0!important;display:flex!important;flex-direction:column;gap:8px!important;overflow:hidden;padding:0 7cqw!important}
+html body.tp.tp.tp #app .mnp .mn-bar{flex:none;position:absolute;left:0;right:0;top:28px}
+html body.tp.tp.tp #app .mnp .mn-hd{flex:none;height:auto!important;padding:34px 0 0!important;text-align:center}
+html body.tp.tp.tp #app .mnp .mn-hd h1{margin:0!important;font:500 21px/1.1 'Cinzel',serif!important;letter-spacing:.26em!important;text-indent:.26em;text-transform:uppercase;color:#FBEFCB!important;background:none!important;-webkit-text-fill-color:#FBEFCB!important;text-shadow:0 0 8px rgba(10,14,30,.8)!important}
+html body.tp.tp.tp #app .mnp .mn-hd :is(.orn,.k-div,svg.mn-orn,.mn-or){display:none!important}
+html body.tp.tp.tp #app .mnp .mn-sub{margin:4px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-align:center;text-shadow:0 0 6px rgba(10,14,30,.85)}
+html body.tp.tp.tp #app .mnp :is(.gtabs,.seg,.fscroll,.field){flex:none}
+html body.tp.tp.tp #app .mnp .gtabs,html body.tp.tp.tp #app .mnp .seg{background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border-radius:18px}
+html body.tp.tp.tp #app .mn-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;margin:0 -7cqw;padding:2px 7cqw 14px;-webkit-mask-image:linear-gradient(transparent,#000 10px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(transparent,#000 10px,#000 calc(100% - 16px),transparent);display:flex;flex-direction:column;gap:10px}
+html body.tp.tp.tp #app .mn-scroll::-webkit-scrollbar{display:none}
+@media (max-height:760px){html body.tp.tp.tp #app .mnp .mn-sub{display:none}}
+/* choosing someone else's sign: all twelve on one screen */
+html body.tp.tp.tp #app .cpop.spk .cp-in{padding:calc(env(safe-area-inset-top,0px) + 30px) 7% calc(var(--navh,0px) + 14px)!important;gap:8px!important}
+html body.tp.tp.tp #app .cpop.spk .cp-t{font-size:22px!important;margin:0!important}
+html body.tp.tp.tp #app .cpop.spk .spk-d{margin:0!important}
+html body.tp.tp.tp #app .cpop.spk .spk-z{gap:8px 4px!important}
+html body.tp.tp.tp #app .mnp .mn-hd h1{font-size:18px!important;letter-spacing:.2em!important;text-indent:.2em;white-space:nowrap}
+html body.tp.tp.tp #app .mnp .mn-hd{padding-top:38px!important}
+@media (max-height:760px){html body.tp.tp.tp #app .mnp .mn-hd p,html body.tp.tp.tp #app .mnp .mn-hd~p.mn-sub{display:none!important}}
+html body.tp.tp.tp #app .mnp .mn-bar{display:flex!important;justify-content:space-between;align-items:center;padding:0 2px;z-index:6;width:auto!important;height:36px}
+html body.tp.tp.tp #app .mnp .mn-bar .ibtn{position:static!important;margin:0!important}
+html body.tp.tp.tp #app .mnp .mn-bar .mn-r{position:static!important;display:flex;gap:4px;margin:0!important}
+html body.tp.tp.tp #app .mnp .mn-bar .ibtn{width:36px;height:36px;color:#F1DFB4!important;background:rgba(14,20,40,.5)!important;border-radius:50%}
+html body.tp.tp.tp #app .mnp .mn-bar{transform:none!important;left:7cqw!important;right:7cqw!important}
+html body.tp.tp.tp #app .mnp.lb .mn-hd h1{font-size:17px!important;letter-spacing:.14em!important;text-indent:.14em}
+
+/* ---- Oracle, Journal and You: the same layout as Sky ---- */
+html body.tp.tp.tp #app .pg-or .sk-head{padding-top:37cqw!important}
+html body.tp.tp.tp #app .pg-jn .sk-head{padding-top:25cqw!important}
+html body.tp.tp.tp #app .pg-you .sk-head{padding-top:41cqw!important}
+html body.tp.tp.tp #app .pg-jn:has(.pg-scroll) .sk-head{padding-top:44px!important}
+html body.tp.tp.tp #app .pg-t{margin:0!important;font:500 22px/1.1 'Cinzel',serif!important;letter-spacing:.3em!important;text-indent:.3em;text-transform:uppercase;color:#FBEFCB!important;-webkit-text-fill-color:#FBEFCB!important;background:none!important;text-shadow:0 0 8px rgba(10,14,30,.85)!important}
+html body.tp.tp.tp #app .pg-s{margin:5px 0 0!important;font:italic 500 16px/1.2 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+html body.tp.tp.tp #app .pg .sk-body{justify-content:space-evenly;padding-top:4px}
+html body.tp.tp.tp #app .pg-scroll{overflow-y:auto!important;justify-content:flex-start!important;scrollbar-width:none;gap:10px}
+html body.tp.tp.tp #app .pg-scroll::-webkit-scrollbar{display:none}
+html body.tp.tp.tp #app .pg-l{display:flex;align-items:center;gap:10px;margin:0 0 6px;font:600 10.5px 'Cinzel',serif;letter-spacing:.26em;text-transform:uppercase;color:var(--tk);text-shadow:0 0 6px rgba(10,14,30,.85)}
+html body.tp.tp.tp #app .pg-l::before,html body.tp.tp.tp #app .pg-l::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--tf))}
+html body.tp.tp.tp #app .pg-l::after{background:linear-gradient(90deg,var(--tf),transparent)}
+html body.tp.tp.tp #app .pg .sk-d .sk-di{display:block;width:46px;height:46px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
+html body.tp.tp.tp #app .pg .sk-d .sk-di img{width:100%;height:100%;object-fit:cover;display:block}
+html body.tp.tp.tp #app .pg .sk-d span{text-align:center;line-height:1.2;font-size:10.5px}
+html body.tp.tp.tp #app .pg .sk-doors{gap:2px}
+html body.tp.tp.tp #app .or-k{display:flex;align-items:center;gap:14px}
+html body.tp.tp.tp #app .or-k .tk-m{flex:none;width:25cqw;aspect-ratio:3/4;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
+html body.tp.tp.tp #app .or-k .tk-m img{width:100%;height:100%;object-fit:cover;display:block}
+html body.tp.tp.tp #app .or-k h3{margin:0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 8px rgba(10,14,30,.85)}
+html body.tp.tp.tp #app .or-k p{margin:4px 0 0!important;font:500 16px/1.28 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+html body.tp.tp.tp #app .or-k .btn,html body.tp.tp.tp #app .or-two .btn,html body.tp.tp.tp #app .jr-q .btn{height:42px;border-radius:21px!important;padding:0 18px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+html body.tp.tp.tp #app .or-k .btn{margin-top:10px;width:100%}
+html body.tp.tp.tp #app .or-two{display:flex;gap:10px}
+html body.tp.tp.tp #app .or-two .btn{flex:1;padding:0 6px!important}
+html body.tp.tp.tp #app .or-two .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important}
+html body.tp.tp.tp #app .or-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+html body.tp.tp.tp #app .or-chip{padding:8px 10px;border:0;border-radius:17px;background:rgba(14,20,40,.55);box-shadow:inset 0 0 0 1px var(--tf);color:var(--tt);font:600 10.5px "Cinzel",serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body.tp.tp.tp #app .jr-q{text-align:center;display:flex;flex-direction:column;align-items:center}
+html body.tp.tp.tp #app .jr-q .jp-k{margin:0!important;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.24em;text-transform:uppercase;color:var(--tk)!important}
+html body.tp.tp.tp #app .jr-q .jp-q{margin:6px 0 0!important;font:italic 500 21px/1.25 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 8px rgba(10,14,30,.85),0 0 16px rgba(10,14,30,.6)}
+html body.tp.tp.tp #app .jr-q .btn{margin-top:12px!important;width:100%;max-width:280px}
+html body.tp.tp.tp #app .jr-q .jp-new{margin-top:8px;background:none;border:0;color:var(--tt);font:italic 500 15px 'Cormorant Garamond',serif;text-shadow:0 0 6px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .jr-ch .js3{display:flex;justify-content:space-around;text-align:center}
+html body.tp.tp.tp #app .jr-ch .js3 strong{display:block;font:500 26px/1 'Cormorant Garamond',serif;color:#FFF6DC;text-shadow:0 0 8px rgba(10,14,30,.85)}
+html body.tp.tp.tp #app .jr-ch .js3 span{font:600 10.5px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)}
+html body.tp.tp.tp #app .jlib.pg .jl-bar{position:absolute!important;left:7cqw;right:7cqw;top:28px;z-index:6;display:flex;justify-content:space-between}
+html body.tp.tp.tp #app .pg .list{display:flex;flex-direction:column;gap:8px}
+html body.tp.tp.tp #app .pg .lrow{background:rgba(14,20,40,.5)!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tr)!important;border:0!important;padding:8px 10px!important}
+html body.tp.tp.tp #app .jlib.pg .jl-bar{transform:none!important;width:auto!important;height:36px!important;right:7cqw!important;left:7cqw!important}
+html body.tp.tp.tp #app .jlib.pg .jl-bar>.ibtn,html body.tp.tp.tp #app .jlib.pg .jl-acts .ibtn{position:static!important;width:36px;height:36px;color:#F1DFB4!important;background:rgba(14,20,40,.5)!important;border-radius:50%}
+html body.tp.tp.tp #app .jlib.pg .jl-acts{position:static!important;display:flex;gap:4px;margin:0!important}
+html body.tp.tp.tp #app .pg .field .inp{background:rgba(14,20,40,.55)!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important;border-radius:20px!important}
+html body.tp.tp.tp #app .pg .field input{color:#FFF6DC!important;background:none!important}
+html body.tp.tp.tp #app .pg .field input::placeholder{color:#F3E4BC;opacity:.7}
+html body.tp.tp.tp #app .pg-jn:has(.pg-scroll) .pg-t{font-size:19px!important;letter-spacing:.18em!important;text-indent:.18em}
+
+/* ---- every night page: soft glass instead of ornate frames and beige notes ---- */
+html body.tp.tp.tp #app .mnp .mbox,html body.tp.tp.tp #app .mnp .mbox.ornate,html body.tp.tp.tp #app .mnp .panel,html body.tp.tp.tp #app .mnp .card{background:rgba(14,20,40,.52)!important;border:0!important;border-image:none!important;box-shadow:inset 0 0 0 1px var(--tr)!important;border-radius:16px!important;color:var(--tx)!important;padding:14px 16px!important}
+html body.tp.tp.tp #app .mnp .mbox::before,html body.tp.tp.tp #app .mnp .mbox::after,html body.tp.tp.tp #app .mnp .panel::before,html body.tp.tp.tp #app .mnp .panel::after{display:none!important}
+html body.tp.tp.tp #app .mnp .mbox>.ck,html body.tp.tp.tp #app .mnp .mbox>.corner,html body.tp.tp.tp #app .mnp .mbox>svg.orn-c,html body.tp.tp.tp #app .mnp .mbox>i{display:none!important}
+html body.tp.tp.tp #app .mnp .note,html body.tp.tp.tp #app .mnp .mn-note,html body.tp.tp.tp #app .mnp p.note{background:rgba(14,20,40,.52)!important;color:var(--tx)!important;border:0!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tr)!important;padding:10px 14px!important}
+html body.tp.tp.tp #app .mnp :is(h2,h3,.kick,.k-div span){color:var(--tk)!important}
+html body.tp.tp.tp #app .mnp :is(p,li,label,.muted,.small){color:var(--tx)!important}
+html body.tp.tp.tp #app .mnp .inp,html body.tp.tp.tp #app .mnp select,html body.tp.tp.tp #app .mnp textarea,html body.tp.tp.tp #app .mnp input:not([type=checkbox]):not([type=radio]){background:rgba(8,12,28,.55)!important;color:#FFF6DC!important;border:0!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border-radius:12px!important}
+html body.tp.tp.tp #app .mnp .btn:not(.ghost):not(.sm){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;border-radius:22px!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45)!important}
+html body.tp.tp.tp #app .mnp .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important;border-radius:22px!important}
+
+/* the profile and the dreams */
+html body.tp.tp.tp #app .mnp .pf-id{flex:none;display:flex;align-items:center;gap:14px;padding:4px 0}
+html body.tp.tp.tp #app .pf-id .pf-pic{position:relative;display:block;flex:none;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
+html body.tp.tp.tp #app .pf-id .pf-pic img,html body.tp.tp.tp #app .pf-id .pf-pic .avatar{width:100%;height:100%;object-fit:cover}
+html body.tp.tp.tp #app .pf-id .pf-cam{position:absolute;right:0;bottom:0;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#BE9247;color:#24160A}
+html body.tp.tp.tp #app .pf-id .pf-cam svg{width:12px;height:12px}
+html body.tp.tp.tp #app .pf-id h2{margin:0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-transform:none;letter-spacing:0}
+html body.tp.tp.tp #app .pf-id .pf-sign{margin:2px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+html body.tp.tp.tp #app .pf-id .keys{margin:2px 0 0!important;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
+html body.tp.tp.tp #app .pfn .pf-body{display:flex;flex-direction:column;gap:10px}
+html body.tp.tp.tp #app .pg-dr>.ibtn{position:absolute;left:7cqw;top:28px;z-index:6;width:36px;height:36px;color:#F1DFB4!important;background:rgba(14,20,40,.5)!important;border-radius:50%}
+html body.tp.tp.tp #app .pg-dr .sk-head{padding-top:37cqw!important}
+html body.tp.tp.tp #app .dr-in{text-align:center}
+html body.tp.tp.tp #app .dr-lead{margin:0 0 12px!important;font:500 17px/1.3 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+html body.tp.tp.tp #app .pg-dr .symrow{display:flex;justify-content:space-between;gap:4px}
+html body.tp.tp.tp #app .pg-dr .symrow button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;color:var(--tk);cursor:pointer}
+html body.tp.tp.tp #app .pg-dr .symrow img,html body.tp.tp.tp #app .pg-dr .symrow .sym-i{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px var(--tf)}
+html body.tp.tp.tp #app .pg-dr .symrow strong{font:600 10.5px 'Cinzel',serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 0 6px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .pg-dr .dr-note{text-align:center;font:italic 500 15px 'Cormorant Garamond',serif;color:var(--tx);margin:0}
+
+/* ---- a place is a row of pages: the strip under the title, a swipe between them ---- */
+html body.tp.tp.tp #app .pg .sk-head .pg-strip{width:100%;margin-top:11px;display:flex;height:36px;border-radius:18px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+html body.tp.tp.tp #app .pg .pg-strip button{flex:1;border:0!important;box-shadow:none!important;border-radius:18px;background:none;font:600 11px 'Cinzel',serif!important;letter-spacing:.14em!important;text-transform:uppercase;color:var(--tx)!important;cursor:pointer}
+html body.tp.tp.tp #app .pg .pg-strip button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;font-weight:700!important;text-shadow:none!important}
+html body.tp.tp.tp #app .pg .sk-body{justify-content:center}
+html body.tp.tp.tp #app .pg-page{display:flex;flex-direction:column;gap:18px;width:100%}
+.pg-page.slr{animation:slr .38s cubic-bezier(.2,.7,.2,1)}
+.pg-page.sll{animation:sll .38s cubic-bezier(.2,.7,.2,1)}
+body.reduce .pg-page.slr,body.reduce .pg-page.sll{animation:none}
+html body.tp.tp.tp #app .pg-in{margin:0;text-align:center;font:italic 500 17px/1.3 'Cormorant Garamond',serif;color:var(--tx);text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+html body.tp.tp.tp #app .pg-grid{display:grid;grid-template-columns:repeat(var(--c,2),1fr);gap:16px 8px}
+html body.tp.tp.tp #app .pg-tile{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border:0;background:none;color:var(--tt);text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body.tp.tp.tp #app .pg-ti{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf);background:rgba(14,20,40,.45);color:var(--tk);font-style:normal}
+html body.tp.tp.tp #app .pg-grid[style*="--c:2"] .pg-ti{width:78px;height:78px}
+html body.tp.tp.tp #app .pg-ti img{width:100%;height:100%;object-fit:cover;display:block}
+html body.tp.tp.tp #app .pg-ti svg{width:60%;height:60%}
+html body.tp.tp.tp #app .pg-tile b{font:600 11px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;color:#FFF6DC;text-shadow:0 0 6px rgba(10,14,30,.9);margin-top:4px}
+html body.tp.tp.tp #app .pg-tile span{font:italic 500 15px/1.15 'Cormorant Garamond',serif;color:var(--tx);text-shadow:0 0 6px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .or-pr{display:flex;flex-direction:column;gap:7px}
+html body.tp.tp.tp #app .or-p{padding:10px 14px;border:0;border-radius:16px;background:rgba(14,20,40,.55);box-shadow:inset 0 0 0 1px var(--tf);color:var(--tt);font:italic 500 15px/1.2 'Cormorant Garamond',serif;text-align:center;cursor:pointer}
+html body.tp.tp.tp #app .skyp .seg.pg-strip button[aria-selected=true]{color:#24160A!important;-webkit-text-fill-color:#24160A!important;text-shadow:none!important}
+html body.tp.tp.tp #app .pg-sky .sk-head{padding-top:30px!important}
+html body.tp.tp.tp #app .pg-jn .sk-head{padding-top:25cqw!important}
+html body.tp.tp.tp #app .pg-sky .sk-k{margin-bottom:4px}
+html body.tp.tp.tp #app .sk-who{display:flex;align-items:center;gap:14px;justify-content:center}
+html body.tp.tp.tp #app .sk-who .sk-med{margin:0;width:64px;height:64px;flex:none}
+html body.tp.tp.tp #app .sk-who .sk-n{margin:0!important;font:500 24px/1 'Cinzel',serif!important;letter-spacing:.24em!important;text-indent:0;text-align:left}
+html body.tp.tp.tp #app .sk-who .sk-dt,html body.tp.tp.tp #app .sk-who .sk-ky{text-align:left}
+html body.tp.tp.tp #app .pg-sky .sk-body .seg{width:100%;display:flex;height:36px;border-radius:18px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+html body.tp.tp.tp #app .pg-sky .sk-body .seg button{flex:1;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.1em!important;text-transform:uppercase;color:var(--tx)!important;border:0!important;border-radius:18px;background:none}
+html body.tp.tp.tp #app .pg-sky .sk-body .seg button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;text-shadow:none!important}
+html body.tp.tp.tp #app .sk-moon{text-align:center}
+html body.tp.tp.tp #app .sk-moon .sk-bm{width:96px;height:96px;display:block;margin:0 auto}
+html body.tp.tp.tp #app .sk-moon h2{margin:8px 0 0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-transform:none;letter-spacing:0}
+html body.tp.tp.tp #app .sk-moon p{margin:2px 0 0!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .sk-moon .sk-ml{margin-top:8px!important;font-style:normal!important;font-weight:500}
+html body.tp.tp.tp #app .pg-page>.btn{align-self:center;width:100%;max-width:280px;height:44px;border-radius:22px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45)!important}
+html body.tp.tp.tp #app .pg-scroll .pg-page{padding-bottom:8px}
+html body.tp.tp.tp #app .pg-jn .pg-scroll{justify-content:flex-start!important}
+html body.tp.tp.tp #app .pg-tile .pg-ti img,html body.tp.tp.tp #app .pg-tile .pg-ti .moon-pic,html body.tp.tp.tp #app .pg-tile .pg-ti svg.moon-svg{width:100%;height:100%}
+html body.tp.tp.tp #app .ins-in .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+html body.tp.tp.tp #app .ins-in .stat{background:rgba(14,20,40,.52)!important;border:0!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tr)!important;padding:10px 4px!important;text-align:center}
+html body.tp.tp.tp #app .ins-in .stat strong{display:block;font:500 26px/1 'Cormorant Garamond',serif;color:#FFF6DC!important}
+html body.tp.tp.tp #app .ins-in .stat span{font:600 10.5px 'Cinzel',serif;letter-spacing:.14em;text-transform:uppercase;color:var(--tk)!important}
+html body.tp.tp.tp #app .ins-in .sec-h{margin:14px 0 8px!important;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.24em;text-transform:uppercase;color:var(--tk)!important;text-align:center}
+html body.tp.tp.tp #app .ins-in .tbar{display:flex;align-items:center;gap:10px;margin:6px 0;color:var(--tx)}
+html body.tp.tp.tp #app .ins-in .tbar span{flex:0 0 96px;font:italic 500 15px 'Cormorant Garamond',serif}
+html body.tp.tp.tp #app .ins-in .tbar i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+html body.tp.tp.tp #app .ins-in .tbar i b{display:block;height:100%;background:linear-gradient(90deg,#BE9247,#EFD79B)}
+html body.tp.tp.tp #app .ins-in .tbar em{font-style:normal;font:600 11px 'Cinzel',serif;color:var(--tk)}
+html body.tp.tp.tp #app .ins-in .tb-i{width:34px;height:34px;border-radius:50%;object-fit:cover}
+html body.tp.tp.tp #app .ins-in .pill{display:inline-block;margin:3px;padding:6px 12px;border-radius:16px;background:rgba(14,20,40,.55);box-shadow:inset 0 0 0 1px var(--tf);color:var(--tt)}
+html body.tp.tp.tp #app .ins-in .seg{width:100%;display:flex;height:34px;margin-bottom:10px;border-radius:17px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+html body.tp.tp.tp #app .ins-in .seg button{flex:1;border:0!important;background:none;color:var(--tx)!important;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.14em;text-transform:uppercase;border-radius:17px}
+html body.tp.tp.tp #app .ins-in .seg button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important}
+html body.tp.tp.tp #app .pg-jn .sk-head,html body.tp.tp.tp #app .pg-jn:has(.pg-scroll) .sk-head{padding-top:46px!important}
+html body.tp.tp.tp #app .skyp .ins-in .seg button[aria-selected=true]{color:#24160A!important;-webkit-text-fill-color:#24160A!important;text-shadow:none!important;font-weight:700!important}
+html body.tp.tp.tp #app .pg-jn .pg-t{font-size:20px!important}
+html body.tp.tp.tp #app .pg .pg-strip button{font-size:10.5px!important;letter-spacing:.07em!important;padding:0 2px!important}
+html body.tp.tp.tp #app .pg-sky .sk-body .seg button{font-size:10.5px!important;letter-spacing:.08em!important}

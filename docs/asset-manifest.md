@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 576 |
-| In use, provisional | 532 |
+| Images | 610 |
+| In use, provisional | 566 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -60,17 +60,37 @@ their space before they load.
 | `public/art/atlas/hz-love.webp` | 360×360 | 1:1 | yes | 52 | provisional |  |
 | `public/art/atlas/hz-money.webp` | 360×360 | 1:1 | yes | 57 | provisional |  |
 | `public/art/atlas/hz-overview.webp` | 360×360 | 1:1 | yes | 57 | provisional |  |
+| `public/art/atlas/ic-alerts.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-ball.webp` | 256×256 | 1:1 | yes | 32 | provisional |  |
+| `public/art/atlas/ic-birth.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-book.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-career.webp` | 256×256 | 1:1 | yes | 32 | provisional |  |
+| `public/art/atlas/ic-celtic.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-display.webp` | 256×256 | 1:1 | yes | 30 | provisional |  |
+| `public/art/atlas/ic-dream.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-love.webp` | 256×256 | 1:1 | yes | 32 | provisional |  |
+| `public/art/atlas/ic-one.webp` | 256×256 | 1:1 | yes | 32 | provisional |  |
+| `public/art/atlas/ic-ppf.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
+| `public/art/atlas/ic-privacy.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-profile.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-sanctuary.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-scg.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
+| `public/art/atlas/ic-someone.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
 | `public/art/atlas/jen-mid.webp` | 850×1120 | 0.76:1 | no | 120 | provisional |  |
 | `public/art/atlas/jen-night.webp` | 850×1850 | 0.46:1 | no | 250 | provisional |  |
 | `public/art/atlas/jrn-mid.webp` | 850×1580 | 0.54:1 | no | 166 | provisional |  |
 | `public/art/atlas/jrn-night.webp` | 850×1850 | 0.46:1 | no | 269 | provisional |  |
 | `public/art/atlas/kas-scene.webp` | 780×1690 | 6:13 | no | 359 | provisional |  |
 | `public/art/atlas/kas-scene2.webp` | 1086×1448 | 3:4 | no | 399 | provisional |  |
+| `public/art/atlas/night-lily-bot-bare.webp` | 944×738 | 1.28:1 | no | 44 | provisional |  |
 | `public/art/atlas/night-lily-bot.webp` | 944×738 | 1.28:1 | no | 80 | provisional |  |
 | `public/art/atlas/night-lily-front.webp` | 944×738 | 1.28:1 | yes | 84 | provisional |  |
 | `public/art/atlas/night-lily-mid.webp` | 944×820 | 1.15:1 | no | 89 | provisional |  |
+| `public/art/atlas/night-lily-top-bare.webp` | 944×330 | 2.86:1 | no | 26 | provisional |  |
+| `public/art/atlas/night-lily-top-nomoon.webp` | 944×330 | 2.86:1 | no | 40 | provisional |  |
 | `public/art/atlas/night-lily-top.webp` | 944×330 | 2.86:1 | no | 52 | provisional |  |
 | `public/art/atlas/night-lily.webp` | 944×1888 | 1:2 | no | 209 | provisional |  |
+| `public/art/atlas/night-top-front.webp` | 944×330 | 2.86:1 | yes | 61 | provisional |  |
 | `public/art/atlas/nvi-discover.webp` | 512×512 | 1:1 | yes | 52 | provisional |  |
 | `public/art/atlas/nvi-home.webp` | 512×512 | 1:1 | yes | 118 | provisional |  |
 | `public/art/atlas/nvi-horoscope.webp` | 512×512 | 1:1 | yes | 86 | provisional |  |
@@ -141,6 +161,20 @@ their space before they load.
 | `public/art/share/t5.webp` | 1080×1671 | 0.65:1 | no | 300 | provisional |  |
 | `public/art/share/tarot.webp` | 1080×1521 | 0.71:1 | no | 409 | provisional |  |
 | `public/art/share/whisper.webp` | 1080×1517 | 0.71:1 | no | 365 | provisional |  |
+| `public/art/temple/candle.webp` | 912×1968 | 0.46:1 | no | 183 | provisional |  |
+| `public/art/temple/dawn.webp` | 912×1968 | 0.46:1 | no | 309 | provisional |  |
+| `public/art/temple/frame.webp` | 912×1968 | 0.46:1 | yes | 40 | provisional |  |
+| `public/art/temple/journal.webp` | 912×1968 | 0.46:1 | no | 218 | provisional |  |
+| `public/art/temple/lake.webp` | 912×1968 | 0.46:1 | no | 153 | provisional |  |
+| `public/art/temple/letter-sheet.webp` | 912×1674 | 0.54:1 | no | 140 | provisional |  |
+| `public/art/temple/letter.webp` | 912×1968 | 0.46:1 | no | 196 | provisional |  |
+| `public/art/temple/moon-base.webp` | 256×256 | 1:1 | yes | 10 | provisional |  |
+| `public/art/temple/moon-crescent.webp` | 256×256 | 1:1 | yes | 7 | provisional |  |
+| `public/art/temple/moon-full.webp` | 256×256 | 1:1 | yes | 16 | provisional |  |
+| `public/art/temple/moon-quarter.webp` | 256×256 | 1:1 | yes | 9 | provisional |  |
+| `public/art/temple/oracle.webp` | 912×1968 | 0.46:1 | no | 172 | provisional |  |
+| `public/art/temple/sky.webp` | 912×1968 | 0.46:1 | no | 123 | provisional |  |
+| `public/art/temple/you.webp` | 912×1968 | 0.46:1 | no | 130 | provisional |  |
 
 ## The Zodiac Affinity page’s backdrop: a golden sun with a woman’s face and a crescent moon with a man’s face facing each other over the Milky Way, clouds, lilies, roses and daisies (supplied by the owner)
 
@@ -727,18 +761,18 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
-| `public/art/atlas/plate-aquarius.webp` | 640×960 | 2:3 | no | 242 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-aries.webp` | 640×960 | 2:3 | no | 225 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-cancer.webp` | 640×960 | 2:3 | no | 242 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-capricorn.webp` | 640×960 | 2:3 | no | 218 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-gemini.webp` | 640×960 | 2:3 | no | 238 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-leo.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-libra.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-pisces.webp` | 640×960 | 2:3 | no | 216 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-sagittarius.webp` | 640×960 | 2:3 | no | 234 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-scorpio.webp` | 640×960 | 2:3 | no | 226 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-taurus.webp` | 640×960 | 2:3 | no | 241 | provisional | below the 780 px it needs at 2× |
-| `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 214 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-aquarius.webp` | 640×960 | 2:3 | no | 283 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-aries.webp` | 640×960 | 2:3 | no | 271 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-cancer.webp` | 640×960 | 2:3 | no | 283 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-capricorn.webp` | 640×960 | 2:3 | no | 261 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-gemini.webp` | 640×960 | 2:3 | no | 278 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-leo.webp` | 640×960 | 2:3 | no | 282 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-libra.webp` | 640×960 | 2:3 | no | 283 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-pisces.webp` | 640×960 | 2:3 | no | 253 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-sagittarius.webp` | 640×960 | 2:3 | no | 275 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-scorpio.webp` | 640×960 | 2:3 | no | 265 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-taurus.webp` | 640×960 | 2:3 | no | 282 | provisional | below the 780 px it needs at 2× |
+| `public/art/atlas/plate-virgo.webp` | 640×960 | 2:3 | no | 257 | provisional | below the 780 px it needs at 2× |
 
 ## The Cosmic Profile page’s backdrop: the planets, a full moon, a sun-faced wheel and a spiral galaxy over golden clouds (supplied by the owner)
 

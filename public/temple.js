@@ -40,7 +40,13 @@ window.Temple=(()=>{
   document.documentElement.style.setProperty('--t-foot',foot+'px');
  }
  // where the page's words end against the foot of the painting: while they run over it, the art stands back so they read
- function fit(){
+ // Today's page is never scrolled: if its words are more than the room between the head and the menu, they are set a little smaller
+ function fitStage(){
+  const h=document.querySelector('#app .home.hpath .hhero')||document.querySelector('#app .skyp .sk-body');if(!h)return;
+  const kids=h.classList.contains('hhero')?[h.querySelector('.hp-stage')]:[...h.children];if(!kids[0])return;
+  kids.forEach(k=>k.style.zoom='');let z=1;while(h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
+ }
+ function fit(){fitStage();
   if(!back||!cur)return;const pg=document.getElementById('app')?.firstElementChild;if(!pg)return;
   const foot=parseFloat(document.documentElement.style.getPropertyValue('--t-foot'))||0;
   back.classList.toggle('dim',pg.getBoundingClientRect().bottom>innerHeight-foot+6);
