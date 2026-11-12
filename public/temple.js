@@ -9,19 +9,25 @@ window.Temple=(()=>{
  const $=(t,c)=>{const e=document.createElement(t);e.className=c;return e};
  function build(){
   if(back)return;
-  back=$('div','');back.id='t-back';back.setAttribute('aria-hidden','true');back.append($('i','tb-head'),$('i','tb-mid'),$('i','tb-foot'),$('i','tb-veil'));
+  back=$('div','');back.id='t-back';back.setAttribute('aria-hidden','true');back.append($('i','tb-head'),$('i','tb-mid'),$('i','tb-mid2'),$('i','tb-foot'),$('i','tb-veil'));
   front=$('div','');front.id='t-front';front.setAttribute('aria-hidden','true');front.append($('i','tf-veil'),$('i','tf-frt'),$('i','tf-frb'));
   document.body.prepend(back,front);
   addEventListener('resize',()=>{layout();fit()},{passive:true});addEventListener('scroll',fit,{passive:true});
  }
  function layout(){
   const s=SC[cur];if(!s||!back)return;
-  const W=back.clientWidth||390,H=innerHeight,IH0=W*1968/912,k=Math.min(1,Math.max(0,(H-IH0*.83)/(IH0*.17)));
-  const v=.85+.15*k,e=.96+.04*k,IH=IH0*v,head=s.t*IH,foot=(e-s.f)*IH,mid=Math.max(0,H-head-foot),ms=mid/(s.f-s.t),img=`url(${A}${cur}.webp)`;
+  const W=back.clientWidth||390,H=innerHeight,IH=W*1968/912,k=Math.min(1,Math.max(0,(H-IH*.83)/(IH*.17)));
+  // the painting is never squeezed or stretched: its head and foot keep their own proportions; the plain calm between them
+  // is cropped from its middle on a short screen, and only widened (it is plain) on a tall one
+  const e=.96+.04*k,head=s.t*IH,foot=(e-s.f)*IH,mid=Math.max(0,H-head-foot),nat=(s.f-s.t)*IH,img=`url(${A}${cur}.webp)`;
   const set=(el,o)=>Object.assign(el.style,o);
-  const [bh,bm,ff,bv]=back.children,[fv,ft,fb]=front.children;
+  const [bh,bm,bm2,ff,bv]=back.children,[fv,ft,fb]=front.children;
   set(bh,{height:head+1+'px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:'0 0'});
-  set(bm,{top:head+'px',height:mid+2+'px',backgroundImage:img,backgroundSize:`${W}px ${ms}px`,backgroundPosition:`0 ${-s.t*ms}px`});
+  if(mid<=nat){const h1=Math.ceil(mid/2),h2=mid-h1;
+   set(bm,{top:head+'px',height:h1+110+'px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-s.t*IH}px`});
+   set(bm2,{top:head+h1+'px',height:h2+2+'px',display:'block',webkitMaskImage:'linear-gradient(transparent,#000 100px)',maskImage:'linear-gradient(transparent,#000 100px)',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-(s.f*IH-h2)}px`})}
+  else{const ms=mid/(s.f-s.t);bm.style.maskImage=bm.style.webkitMaskImage='none';
+   set(bm,{top:head+'px',height:mid+2+'px',backgroundImage:img,backgroundSize:`${W}px ${ms}px`,backgroundPosition:`0 ${-s.t*ms}px`});bm2.style.display='none'}
   set(ff,{height:foot+'px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-s.f*IH}px`});
   back.style.backgroundColor=`rgb(${s.c})`;
   set(bv,{height:foot+'px',background:`linear-gradient(rgba(${s.c},0),rgba(${s.c},.9) ${Math.min(120,foot*.5)}px)`});

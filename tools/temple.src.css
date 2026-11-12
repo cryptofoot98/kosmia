@@ -12,7 +12,7 @@ body.tp #t-back,body.tp #t-front{display:block}
 #t-back .tb-head{top:0}
 #t-back .tb-foot,#t-back .tb-veil{bottom:0}
 #t-back .tb-head{transition:opacity .5s}
-#t-back.scrolled .tb-head{opacity:.4}
+#t-back.scrolled .tb-head{opacity:.7}
 #t-back .tb-veil{opacity:0;transition:opacity .5s}
 #t-back.dim .tb-veil{opacity:0}
 #t-front .tf-veil{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000 40px);mask-image:linear-gradient(transparent,#000 40px)}
@@ -54,7 +54,7 @@ html body.tp{background:transparent!important}
 @@ .hhero{padding:6px 9cqw 0!important;color:var(--tx)!important}
 @@ .hh-stage{margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;padding:0!important;grid-template-columns:none!important}
 @@ .hh-stage .hh-card{width:100%!important;max-width:none!important;margin:0!important;left:auto!important;right:auto!important;position:relative!important}
-@@ .hh-stage .hh-plate{width:40cqw!important;max-width:170px;margin-top:2px!important;border-radius:6px!important;position:relative!important;left:auto!important;right:auto!important;float:none!important}
+@@ .hh-stage .hh-plate{width:49cqw!important;max-width:210px;margin-top:2px!important;border-radius:6px!important;position:relative!important;left:auto!important;right:auto!important;float:none!important}
 .tm-arc{position:absolute;left:0;top:0;width:100cqw;height:48.7cqw;z-index:3;pointer-events:none}
 .tm-orn{position:absolute;left:0;top:0;width:100%;height:100%}
 .tm-mo{position:absolute;display:block;padding:0;margin:0;border:0;background:none;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -178,7 +178,7 @@ body.reduce .hp-stage.slr,body.reduce .hp-stage.sll{animation:none}
 
 /* the Whisper's card large above its words, centred */
 @@ .hp-whisper .dw.dw-row{display:flex!important;flex-direction:column;align-items:center;gap:8px}
-@@ .hp-whisper .dw-row .scene.mini-w{width:40cqw!important;max-width:170px;margin:0 auto}
+@@ .hp-whisper .dw-row .scene.mini-w{width:49cqw!important;max-width:210px;margin:0 auto}
 @@ .hp-whisper .dw-side{align-items:center;text-align:center;gap:4px}
 @@ .hp-whisper .dw-side .dw-msg{-webkit-line-clamp:unset!important;display:block!important;margin:2px 0 0!important}
 @@ .hp-whisper .dw-t{margin:4px 0 0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important}
