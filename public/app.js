@@ -895,7 +895,7 @@ views.home=()=>{
  V.hstep=st;   // the step in view stays in view until the reader moves on, even once it counts as done
  if(st==='wfy'&&S.wfy!==k){S.wfy=k;save()}
  const dn=pathDone(k),done=PATH.filter(([x])=>dn[x]).length;
- const ritual=Temple.arc(PATH.map(([x,l])=>({k:x,label:l,on:!!dn[x],cur:st===x})),done===4);
+ Temple.arc(PATH.map(([x,l])=>({k:x,label:l,on:!!dn[x],cur:st===x})),done===4);
  const next=(l='Continue')=>`<button class="btn" data-act="hnext">${l}</button>`;
  const playing=V.say===d.body;
  const sd=V.hdir||0;V.hdir=0;
@@ -930,7 +930,7 @@ views.home=()=>{
   ${lt?`<button class="btn ghost" data-act="hletter">${ch.day<=3?'Your letter from the last Moon':'Your letter for this Moon'}</button>`:''}${ch?`<p class="hp-sub">Night ${ch.day} of ${ch.len} in the ${sIdx(ch.sign).name} Moon’s chapter.</p>`:''}</div>`,'hp-held')};if(st==='held')stage+=energyCarousel(energySlides(now,m,sign,h));
  return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>Come as you are. <span>You are known here.</span></small></div></div>
-  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${dots}${ritual}</header>
+  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${dots}</header>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`<div class="hp-stage${sd?' sl'+(sd>0?'r':'l'):''}" data-step="${st}" aria-live="polite">${stage}</div>`})}
  ${V.wpop?whisperPop(c):''}${V.letter?moonLetter(V.letter):''}</div>`;
 };

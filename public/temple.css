@@ -1,8 +1,8 @@
 /* generated from tools/temple.src.css by tools/temple-build.py; edit the source */
 /* The Temple of Kosmia: one calm painted place behind every screen, a fine gold frame, a translucent menu within it.
    html body.tp.tp.tp #app stands for a selector prefix strong enough to beat the older rules (many of them !important); html body.tp.tp.tp #nav#nav the same for the menu. */
-:root{--tx:#EBD9AC;--tk:#E3C27E;--tt:#F1DDA6;--tq:#F3E2BA;--tr:rgba(227,194,126,.3);--tf:rgba(227,194,126,.5)}
-body[data-tone=ink]{--tx:#24160A;--tk:#4A2C0E;--tt:#24160A;--tq:#7A2E2E;--tr:rgba(106,78,44,.35);--tf:rgba(106,78,44,.55)}
+:root{--tx:#F2E5BE;--tk:#EBCB86;--tt:#F7E9BC;--tq:#F3E2BA;--tr:rgba(227,194,126,.3);--tf:rgba(227,194,126,.5)}
+body[data-tone=ink]{--tx:#1E1206;--tk:#3A200A;--tt:#24160A;--tq:#7A2E2E;--tr:rgba(106,78,44,.35);--tf:rgba(106,78,44,.55)}
 
 /* ---- the shell: the scene held still behind the page, its foot and the frame laid over it ---- */
 #t-back,#t-front{display:none;position:fixed;top:0;bottom:0;left:50%;width:min(100vw,var(--appw));transform:translateX(-50%);pointer-events:none}
@@ -49,20 +49,22 @@ html body.tp.tp.tp #app .home{position:relative;container-type:inline-size;paddi
 html body.tp.tp.tp #app .home .hbar,html body.tp.tp.tp #app .home .hh-top,html body.tp.tp.tp #app .home .hhero .ks-bg,html body.tp.tp.tp #app .home .hhero .stars,html body.tp.tp.tp #app .home .hhero>i{display:none!important}
 html body.tp.tp.tp #app .home .hh-fix{position:absolute!important;top:30px!important;right:26px!important;z-index:5;gap:4px;margin:0!important;width:auto!important}
 html body.tp.tp.tp #app .home .hh-fix .ibtn,html body.tp.tp.tp #app .home .hh-fix .avatar{width:30px!important;height:30px!important;min-width:0!important}
-html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:calc(47cqw + 2cqw) 7cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
+html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:44cqw 7cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
 html body.tp.tp.tp #app .hh-date{order:-1;margin:0!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:9.5px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important}
 html body.tp.tp.tp #app .hh-greet{margin:6px 0 0!important;font:italic 600 22px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
 html body.tp.tp.tp #app .hhero{padding:6px 7cqw 0!important;color:var(--tx)!important}
 html body.tp.tp.tp #app .hh-stage{margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;padding:0!important;grid-template-columns:none!important}
 html body.tp.tp.tp #app .hh-stage .hh-card{width:100%!important;max-width:none!important;margin:0!important;left:auto!important;right:auto!important;position:relative!important}
 html body.tp.tp.tp #app .hh-stage .hh-plate{width:47cqw!important;max-width:210px;margin-top:2px!important;border-radius:6px!important;position:relative!important;left:auto!important;right:auto!important;float:none!important}
-.tm-arc{position:absolute;left:0;top:0;width:100cqw;height:48.7cqw;z-index:3;pointer-events:none}
+#t-arc{position:absolute;left:0;top:0;width:100%;height:50cqw;container-type:inline-size;pointer-events:none}
+.tm-arc{position:absolute;left:0;top:0;width:100cqw;height:48.7cqw;pointer-events:none}
 .tm-orn{position:absolute;left:0;top:0;width:100%;height:100%}
 .tm-mo{position:absolute;display:block;padding:0;margin:0;border:0;background:none;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
 span.tm-mo{pointer-events:none;cursor:default}
+.tm-mo svg{position:absolute;left:0;top:0;width:100%;height:100%;display:block;overflow:visible}
 .tm-mo img{position:absolute;left:0;top:0;width:100%;height:100%;display:block;max-width:none}
-.tm-mo .lit{opacity:0;transition:opacity .9s;filter:drop-shadow(0 0 5px rgba(246,198,96,.55))}
-.tm-mo.on .lit{opacity:1}
+.tm-mo .lit{transition:opacity .9s;filter:drop-shadow(0 0 5px rgba(246,198,96,.55))}
+.tm-mo.on{filter:drop-shadow(0 0 14px rgba(246,206,120,.75));animation:tmbr 3.6s ease-in-out infinite}
 .tm-mo.flip{transform:scaleX(-1)}
 .tm-mo.cur{filter:drop-shadow(0 0 7px rgba(246,206,120,.7));animation:tmbr 3.6s ease-in-out infinite}
 @keyframes tmbr{50%{filter:drop-shadow(0 0 10px rgba(246,206,120,.9))}}
@@ -137,7 +139,7 @@ html body.tp.tp.tp #app .hp-held .hp-sub b{color:var(--tk)}
 html body.tp.tp.tp #app .hp-night .hp-full,html body.tp.tp.tp #app .hp-held .hp-full{display:none!important}
 @media (max-height:700px){
  html body.tp.tp.tp #app .hh-date{display:none!important}
- html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{padding-top:calc(50cqw) !important}
+ html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{padding-top:45cqw !important}
  html body.tp.tp.tp #app .hh-greet{font-size:20px!important;margin-top:0!important}
  html body.tp.tp.tp #app .hp-big,html body.tp.tp.tp #app .pz-t{font-size:24px!important}
  html body.tp.tp.tp #app .hp-night .hp-ta{height:66px;min-height:0}
@@ -193,3 +195,13 @@ html body.tp.tp.tp #app .hp-card .hp-acts .ibtn{flex:none}
 html body.tp.tp.tp #app .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(14,20,38,.85),0 0 16px rgba(14,20,38,.6)!important}
 html body.tp.tp.tp[data-tone=ink] #app .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(247,205,130,.9),0 0 16px rgba(247,205,130,.7)!important}
 html body.tp.tp.tp #app .hh-card .pz-acts .btn,html body.tp.tp.tp #app .hp-card .pz-acts .btn,html body.tp.tp.tp #app .hp-card .hp-acts .btn{margin:0!important;width:auto!important;flex:1 1 0!important;max-width:200px!important}
+
+/* the header always in light gold with a soft dark halo, so it reads on the dusk sky, the dawn and the night alike */
+html body.tp.tp.tp #app .hh-greet{color:#FBEFCB!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 16px rgba(12,16,36,.75)!important}
+html body.tp.tp.tp #app .hh-date{color:#F0D898!important;font-weight:600!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 14px rgba(12,16,36,.7)!important}
+html body.tp.tp.tp #app .hp-dots button::before{background:#F6E6B6!important;opacity:.55;box-shadow:0 0 4px rgba(12,16,36,.9)}
+html body.tp.tp.tp #app .hp-dots button.on::before{opacity:1;box-shadow:0 0 8px 2px rgba(246,214,130,.85),0 0 3px rgba(12,16,36,.9)}
+/* small gold titles: heavier */
+html body.tp.tp.tp #app .orn h2,html body.tp.tp.tp #app .hp-card .k-div span{font-weight:700!important}
+html body.tp.tp.tp #app .orn h2,html body.tp.tp.tp #app .hp-card .k-div span{font-size:10.5px!important;color:#3A200A!important;text-shadow:0 0 5px rgba(255,236,190,.95),0 0 11px rgba(255,226,160,.8)!important}
+body:not([data-tone=ink]) #app .orn h2,body:not([data-tone=ink]) #app .hp-card .k-div span{color:#F0D898!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 14px rgba(12,16,36,.7)!important}
