@@ -15,7 +15,7 @@ body.tp #t-back,body.tp #t-front{display:block}
 #t-back .tb-head{transition:opacity .5s}
 #t-back.scrolled .tb-head{opacity:.4}
 #t-back .tb-veil{opacity:0;transition:opacity .5s}
-#t-back.dim .tb-veil{opacity:1}
+#t-back.dim .tb-veil{opacity:0}
 #t-front .tf-veil{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000 40px);mask-image:linear-gradient(transparent,#000 40px)}
 #t-front .tf-frt{top:0}#t-front .tf-frb{bottom:0}
 html:has(body.tp){background:#0B1024!important}
@@ -81,11 +81,9 @@ html body.tp.tp.tp #app .cp-you span{display:block;font:500 9.5px 'Cinzel',serif
 html body.tp.tp.tp #app .hp-ta{width:100%;margin-top:9px!important;border:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px var(--tf)!important;background:rgba(255,255,255,.04)!important;padding:10px 12px!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-align:left}
 html body.tp.tp.tp #app .hp-ta::placeholder{color:var(--tx);opacity:.6}
 html body.tp.tp.tp #app .pz-acts,html body.tp.tp.tp #app .hp-acts{display:flex!important;flex-direction:row!important;justify-content:center;align-items:center;gap:10px;width:100%;margin-top:14px!important}
-html body.tp.tp.tp #app .hp-card .btn,html body.tp.tp.tp #app .hh-card .btn{flex:1 1 0;min-width:0;max-width:200px;height:40px;padding:0 6px!important;border-radius:20px!important;white-space:nowrap;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
+html body.tp.tp.tp #app .hp-card .btn,html body.tp.tp.tp #app .hh-card .btn{flex:1 1 0;min-width:0;max-width:200px;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
 html body.tp.tp.tp #app .hp-card .btn:not(.ghost),html body.tp.tp.tp #app .hh-card .btn:not(.ghost){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
-html body.tp.tp.tp #app .hp-card .btn.ghost{background:rgba(11,16,36,.5)!important;color:var(--tk)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
-html body.tp.tp.tp[data-tone=ink] #app .hp-card .btn:not(.ghost),html body.tp.tp.tp[data-tone=ink] #app .hh-card .btn:not(.ghost){background:linear-gradient(#3b2817,#22150b)!important;color:#F1E2BC!important;box-shadow:inset 0 0 0 1px #22150b,inset 0 0 0 2px rgba(231,201,135,.45)!important}
-html body.tp.tp.tp[data-tone=ink] #app .hp-card .btn.ghost{background:rgba(255,248,230,.6)!important;color:#3a2512!important;box-shadow:inset 0 0 0 1px #6b4318!important}
+html body.tp.tp.tp #app .hp-card .btn.ghost,html body.tp.tp.tp #app .hh-card .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important}
 html body.tp.tp.tp #app .hh-plate{width:70px;height:auto;margin:8px auto 0;border-radius:4px;box-shadow:0 0 0 1px #8a6630,0 8px 16px -6px #000}
 html body.tp.tp.tp #app .hh-card{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--tx)!important}
 html body.tp.tp.tp #app .hh-card .hh-name{display:flex;flex-direction:column;align-items:center;gap:0}
@@ -187,3 +185,11 @@ html body.tp.tp.tp #app .hp-whisper .dw-side .dw-msg{-webkit-line-clamp:unset!im
 html body.tp.tp.tp #app .hp-whisper .dw-t{margin:4px 0 0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important}
 html body.tp.tp.tp #app .hp-whisper .dw-side .btn{align-self:center!important;margin-top:8px!important}
 html body.tp.tp.tp #app .hh-card .hh-text{font-size:16.5px!important;margin-top:8px!important}
+
+/* one set of action buttons everywhere on Today: the same size, gold for the main action, dark glass with a gold line for the other */
+html body.tp.tp.tp #app .hp-whisper .dw-side .btn{flex:none;width:200px;max-width:100%;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+html body.tp.tp.tp #app .hp-card .hp-acts .ibtn{flex:none}
+/* the painting stays whole beneath the words; they read by a soft halo of the scene's own colour */
+html body.tp.tp.tp #app .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(14,20,38,.85),0 0 16px rgba(14,20,38,.6)!important}
+html body.tp.tp.tp[data-tone=ink] #app .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(247,205,130,.9),0 0 16px rgba(247,205,130,.7)!important}
+html body.tp.tp.tp #app .hh-card .pz-acts .btn,html body.tp.tp.tp #app .hp-card .pz-acts .btn,html body.tp.tp.tp #app .hp-card .hp-acts .btn{margin:0!important;width:auto!important;flex:1 1 0!important;max-width:200px!important}
