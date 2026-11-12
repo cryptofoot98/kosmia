@@ -33,8 +33,10 @@ window.Temple=(()=>{
   set(bv,{height:foot+'px',background:`linear-gradient(rgba(${s.c},0),rgba(${s.c},.9) ${Math.min(120,foot*.5)}px)`});
   set(fv,{height:'138px',backgroundImage:img,backgroundSize:`${W}px ${IH}px`,backgroundPosition:`0 ${-(s.f*IH+foot-138)}px`});
   const fs=W/390,fi=`url(${A}frame.webp)`,FW=W,FH=1968*W/912;
-  set(ft,{height:H-128*fs+'px',backgroundImage:fi,backgroundSize:`${FW}px ${FH}px`,backgroundPosition:'0 0'});
-  set(fb,{height:130*fs+'px',backgroundImage:fi,backgroundSize:`${FW}px ${FH}px`,backgroundPosition:'0 100%'});
+  // the frame drawn a little larger than the screen, so its gold line runs closer to the edges and leaves the page more room
+  const z=1.035,ox=-(z-1)/2*FW,oy=10*fs;
+  set(ft,{height:H-128*fs+'px',backgroundImage:fi,backgroundSize:`${FW*z}px ${FH*z}px`,backgroundPosition:`${ox}px ${-oy}px`});
+  set(fb,{height:130*fs+'px',backgroundImage:fi,backgroundSize:`${FW*z}px ${FH*z}px`,backgroundPosition:`${ox}px calc(100% + ${oy}px)`});
   document.documentElement.style.setProperty('--t-foot',foot+'px');
  }
  // where the page's words end against the foot of the painting: while they run over it, the art stands back so they read

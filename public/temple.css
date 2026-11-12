@@ -49,13 +49,13 @@ html body.tp.tp.tp #app .home{position:relative;container-type:inline-size;paddi
 html body.tp.tp.tp #app .home .hbar,html body.tp.tp.tp #app .home .hh-top,html body.tp.tp.tp #app .home .hhero .ks-bg,html body.tp.tp.tp #app .home .hhero .stars,html body.tp.tp.tp #app .home .hhero>i{display:none!important}
 html body.tp.tp.tp #app .home .hh-fix{position:absolute!important;top:30px!important;right:26px!important;z-index:5;gap:4px;margin:0!important;width:auto!important}
 html body.tp.tp.tp #app .home .hh-fix .ibtn,html body.tp.tp.tp #app .home .hh-fix .avatar{width:30px!important;height:30px!important;min-width:0!important}
-html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:calc(49cqw + 2cqw) 9cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
+html body.tp.tp.tp #app .hh-head,html body.tp.tp.tp #app .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:calc(47cqw + 2cqw) 7cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
 html body.tp.tp.tp #app .hh-date{order:-1;margin:0!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:9.5px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important}
 html body.tp.tp.tp #app .hh-greet{margin:6px 0 0!important;font:italic 600 22px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
-html body.tp.tp.tp #app .hhero{padding:6px 9cqw 0!important;color:var(--tx)!important}
+html body.tp.tp.tp #app .hhero{padding:6px 7cqw 0!important;color:var(--tx)!important}
 html body.tp.tp.tp #app .hh-stage{margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;padding:0!important;grid-template-columns:none!important}
 html body.tp.tp.tp #app .hh-stage .hh-card{width:100%!important;max-width:none!important;margin:0!important;left:auto!important;right:auto!important;position:relative!important}
-html body.tp.tp.tp #app .hh-stage .hh-plate{width:49cqw!important;max-width:210px;margin-top:2px!important;border-radius:6px!important;position:relative!important;left:auto!important;right:auto!important;float:none!important}
+html body.tp.tp.tp #app .hh-stage .hh-plate{width:47cqw!important;max-width:210px;margin-top:2px!important;border-radius:6px!important;position:relative!important;left:auto!important;right:auto!important;float:none!important}
 .tm-arc{position:absolute;left:0;top:0;width:100cqw;height:48.7cqw;z-index:3;pointer-events:none}
 .tm-orn{position:absolute;left:0;top:0;width:100%;height:100%}
 .tm-mo{position:absolute;display:block;padding:0;margin:0;border:0;background:none;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -101,13 +101,13 @@ html body.tp.tp.tp #app .orn *{text-shadow:none!important;box-shadow:none!import
 /* ---- the other places: a title under the head's art, the sections as open words, no plates ---- */
 html body.tp.tp.tp #app .land{position:relative;padding-left:0!important;padding-right:0!important}
 html body.tp.tp.tp #app .land .jl-bar{position:absolute!important;top:28px!important;left:24px;right:24px;z-index:5}
-html body.tp.tp.tp #app .hl-top,html body.tp.tp.tp #app .hl-top.stay{position:relative!important;top:auto!important;padding:calc(44cqw + 2px) 9cqw 0!important;margin:0!important;background:none!important;box-shadow:none!important;transform:none!important;text-align:center}
+html body.tp.tp.tp #app .hl-top,html body.tp.tp.tp #app .hl-top.stay{position:relative!important;top:auto!important;padding:calc(44cqw + 2px) 7cqw 0!important;margin:0!important;background:none!important;box-shadow:none!important;transform:none!important;text-align:center}
 html body.tp.tp.tp #app .hl-top::before,html body.tp.tp.tp #app .hl-top::after{display:none!important}
 html body.tp.tp.tp #app .hl-top h1.cz{margin:0!important;font:500 19px/1.2 'Cinzel',serif!important;letter-spacing:.3em!important;text-transform:uppercase;color:#F4E2B4!important;text-shadow:none!important}
 html body.tp.tp.tp #app .hl-top p{margin:6px 0 0!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important;letter-spacing:0!important;text-transform:none!important}
 html body.tp.tp.tp #app .hl-top .hl-motto,html body.tp.tp.tp #app .hl-top .hgreet{font:500 9px 'Cinzel',serif!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:var(--tk)!important}
 html body.tp.tp.tp #app .hl-top .hgreet+.hl-line,html body.tp.tp.tp #app .hl-top .hl-line{font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:var(--tx)!important}
-html body.tp.tp.tp #app .hl-cards{padding:14px 9cqw 0!important;margin:0!important;display:block}
+html body.tp.tp.tp #app .hl-cards{padding:14px 7cqw 0!important;margin:0!important;display:block}
 html body.tp.tp.tp #app .hl-sec{margin:20px 0 0!important;padding:0!important;background:none!important;border:0!important}
 html body.tp.tp.tp #app .hl-card,html body.tp.tp.tp #app .hmine{background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding:8px 0 0!important;margin:0!important;border-radius:0!important}
 html body.tp.tp.tp #app .hl-card::before,html body.tp.tp.tp #app .hl-card::after{display:none!important}
@@ -179,7 +179,7 @@ body.reduce .hp-stage.slr,body.reduce .hp-stage.sll{animation:none}
 
 /* the Whisper's card large above its words, centred */
 html body.tp.tp.tp #app .hp-whisper .dw.dw-row{display:flex!important;flex-direction:column;align-items:center;gap:8px}
-html body.tp.tp.tp #app .hp-whisper .dw-row .scene.mini-w{width:49cqw!important;max-width:210px;margin:0 auto}
+html body.tp.tp.tp #app .hp-whisper .dw-row .scene.mini-w{width:47cqw!important;max-width:210px;margin:0 auto}
 html body.tp.tp.tp #app .hp-whisper .dw-side{align-items:center;text-align:center;gap:4px}
 html body.tp.tp.tp #app .hp-whisper .dw-side .dw-msg{-webkit-line-clamp:unset!important;display:block!important;margin:2px 0 0!important}
 html body.tp.tp.tp #app .hp-whisper .dw-t{margin:4px 0 0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important}
