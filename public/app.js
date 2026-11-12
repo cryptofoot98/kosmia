@@ -886,7 +886,7 @@ function pathStep(){
 function pathMove(dir){
  const k=dkey(),o=pathOrder(k),st=pathStep(),i=Math.max(0,o.indexOf(st)),n=Math.min(o.length-1,Math.max(0,i+dir));
  if(st==='stars'&&dir>0&&S.readDay!==k){S.readDay=k;save()}
- if(n===i)return;V.hstep=o[n];render();window.scrollTo(0,0);
+ if(n===i)return;V.hstep=o[n];V.hdir=n>i?1:-1;render();window.scrollTo(0,0);
 }
 views.home=()=>{
  if(!A||!K)return needLib();
@@ -898,6 +898,9 @@ views.home=()=>{
  const ritual=Temple.arc(PATH.map(([x,l])=>({k:x,label:l,on:!!dn[x],cur:st===x})),done===4);
  const next=(l='Continue')=>`<button class="btn" data-act="hnext">${l}</button>`;
  const playing=V.say===d.body;
+ const sd=V.hdir||0;V.hdir=0;
+ const ord=pathOrder(k),LB={dream:'Your dream',intent:'Your wish',wfy:'Written for You',stars:'Your Stars',whisper:'Your Whisper',carry:'Carry it with you',reflect:'Reflect',night:'Before You Sleep',held:'Your day'};
+ const dots=`<nav class="hp-dots" aria-label="Today’s pages, swipe to move between them">${ord.map(x=>`<button data-act="hgo" data-k="${x}" aria-label="${LB[x]||x}"${x===st?' aria-current="step" class="on"':''}></button>`).join('')}</nav>`;
  const card=(title,body,cls='')=>panel(`${orn(title)}${body}`,`gilt hp-card ${cls}`);
  let stage;
  if(st==='dream')stage=card('Good Morning',`<div class="hp-in"><p class="hp-big">Did you dream?</p><p class="hp-sub">Dreams fade within minutes of waking. Tell it while it is still close, however small or strange.</p>
@@ -912,7 +915,7 @@ views.home=()=>{
    return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
  else if(st==='stars')stage=`<div class="hh-stage s-${sign.id}">
    ${ui('plate-'+sign.id,'hh-plate',sign.name,true)}
-   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><button class="btn" data-act="tohoroscope">Read the rest of today</button>${next()}</article>
+   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p><div class="pz-acts"><button class="btn" data-act="tohoroscope">Full reading</button>${next()}</div></article>
   </div>`;
  else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over when you are ready. It was drawn for you.</p>'}${rev?'':'<button class="btn" data-act="reveal">Reveal</button>'}</div></div>
@@ -928,8 +931,8 @@ views.home=()=>{
  return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <div class="hh-acts hh-fix">${jdoor()}<button class="ibtn" data-go="settings" data-t="notifications" aria-label="Notifications">${IC.bell}</button>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>Come as you are. <span>You are known here.</span></small></div></div>
-  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${ritual}</header>
- ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`<div class="hp-stage" data-step="${st}" aria-live="polite">${stage}</div>`})}
+  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${dots}${ritual}</header>
+ ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`<div class="hp-stage${sd?' sl'+(sd>0?'r':'l'):''}" data-step="${st}" aria-live="polite">${stage}</div>`})}
  ${V.wpop?whisperPop(c):''}${V.letter?moonLetter(V.letter):''}</div>`;
 };
 
@@ -2535,7 +2538,7 @@ function render(){
 }
 // Today's path: a clearly sideways swipe on the step, once let go, brings the next step (or the one before)
 function hswipe(){
- const s=$('.hp-stage');if(!s)return;let x0=null,y0=0;
+ const s=$('.home.hpath');if(!s)return;let x0=null,y0=0;
  s.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY},{passive:true});
  s.addEventListener('touchend',e=>{if(x0==null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
   if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5&&!e.target.closest('textarea,.en-car'))pathMove(dx<0?1:-1)},{passive:true});
@@ -2828,7 +2831,7 @@ document.addEventListener('click',e=>{
   if(a==='hlet'&&x&&!S.settings.reduce){x.classList.add('hp-gone');x.value='';return setTimeout(done,1400)}return done()}
  if(a==='hletter'){const ch=chapterAt();V.letter=ch&&ch.day<=3&&V.sec==='home'?lastChapter(ch)||ch:ch;return render()}
  if(a==='letterclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.letter=null;return render()}
- if(a==='hgo'){V.hstep=t.dataset.k;render();return window.scrollTo(0,0)}
+ if(a==='hgo'){const o=pathOrder(dkey());V.hdir=o.indexOf(t.dataset.k)<o.indexOf(pathStep())?-1:1;V.hstep=t.dataset.k;render();return window.scrollTo(0,0)}
  if(a==='hdream'){S.dreamAsk=dkey();save();return go('discover','new-dream')}
  if(a==='hnodream'){S.dreamAsk=dkey();save();V.hstep=null;render();return window.scrollTo(0,0)}
  if(a==='hkeep'){const v=($('#hpta')||{}).value||'',k=dkey();if(!v.trim()){toast('Write a few words first');const x=$('#hpta');if(x)x.focus();return}
