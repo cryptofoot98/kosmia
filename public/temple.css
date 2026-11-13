@@ -662,3 +662,12 @@ html body.tp.tp.tp #app .sx .sx-pic{background:#a98238!important}
 /* the whole figure, with the sign's own element, set to fill the Moon's circle (the position is worked out for each sign) */
 html body.tp.tp.tp #app .sx .sx-pic .wf-fg,.wf-fg,.wl-fig .wf-fg{left:var(--fl,2%)!important;top:var(--ft,8%)!important;width:var(--fw,95%)!important;height:auto!important;transform:none!important}
 .sp-moon img,html body.tp.tp.tp #app .sx .sx-pic .sp-moon img{max-width:none!important}
+
+/* ---- the way back to the day: shown on any page entered from Today's path ---- */
+#rtpill{position:fixed;z-index:60;left:0;right:0;margin:0 auto;width:max-content;bottom:calc(var(--navh,64px) + 14px);display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);height:38px;padding:0 18px;border:0;border-radius:19px;cursor:pointer;white-space:nowrap;font:600 11px 'Cinzel',serif;letter-spacing:.12em;text-transform:uppercase;color:#24160A;background:linear-gradient(#EFD79B,#BE9247);box-shadow:inset 0 0 0 1px #8a6630,0 4px 18px rgba(0,0,0,.45),0 0 18px rgba(227,194,126,.3);animation:wlRise .6s cubic-bezier(.2,.7,.2,1) both}
+#rtpill span{font-size:18px;line-height:1;margin-top:-2px}
+#rtpill small{font:italic 600 14px 'Cormorant Garamond',serif;letter-spacing:0;text-transform:none;opacity:.85;padding-left:8px;border-left:1px solid rgba(36,22,10,.35)}
+html body.tp.tp.tp #app .hp-dr{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 0;padding:8px 12px;border:0;border-radius:18px;background:rgba(16,18,36,.5);box-shadow:inset 0 0 0 1px rgba(231,200,135,.45);color:#F3D790;font:italic 600 16px 'Cormorant Garamond',serif;cursor:pointer}
+html body.tp.tp.tp #app .hp-dr svg{width:18px;height:18px;flex:none}
+
+body.has-ret html body.tp.tp.tp #app .skyp,body.has-ret html body.tp.tp.tp #app .mnp,body.has-ret html body.tp.tp.tp #app .hsp.sx,html body.has-ret.tp.tp.tp #app .skyp,html body.has-ret.tp.tp.tp #app .mnp,html body.has-ret.tp.tp.tp #app .hsp.sx,html body.has-ret.tp.tp.tp #app .kz-talk{bottom:calc(var(--navh,64px) + 58px)!important}

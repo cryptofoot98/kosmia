@@ -876,11 +876,11 @@ const askIntent=()=>{const ch=chapterAt();return !!ch&&ch.day<=3&&!chWish(ch)&&S
 const askNight=k=>{const h=hourNow();return (h>=18||h<4)&&S.released!==k};
 // Reflect belongs to the evening: by day, once the Whisper is turned, the morning is complete and the day is carried
 const evening=()=>{const h=hourNow();return h>=18||h<4};
-const pathOrder=k=>[...(askDream(k)?['dream']:[]),...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]).flatMap(x=>x==='reflect'&&!evening()?['carry',x]:[x]),...(askNight(k)?['night']:[]),'held'];
+const pathOrder=k=>[...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]).flatMap(x=>x==='reflect'&&!evening()?['carry',x]:[x]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
  const k=dkey(),dn=pathDone(k);
  if(V.hday!==k){V.hday=k;V.hstep=null}
- return V.hstep||(askDream(k)?'dream':askIntent()?'intent':(PATH.find(([x])=>!dn[x]&&(x!=='reflect'||evening()))||[!dn.reflect&&!evening()?'carry':askNight(k)?'night':'held'])[0]);
+ return V.hstep||(askIntent()?'intent':(PATH.find(([x])=>!dn[x]&&(x!=='reflect'||evening()))||[!dn.reflect&&!evening()?'carry':askNight(k)?'night':'held'])[0]);
 }
 // to the next step (or back): leaving Your Stars counts it as read; the page returns to its head
 function pathMove(dir){
@@ -913,7 +913,7 @@ views.home=()=>{
  else if(st==='wfy')stage=card('Written for You',`<div class="hp-in"><h2 class="pz-t">${esc(d.focus)}</h2><p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
   <div class="pz-b">${esc(d.body)}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
    if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
-   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
+   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}${askDream(k)?`<button class="hp-dr" data-act="hdream">${IC.moon||''}Did you dream? Write it down</button>`:''}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
  else if(st==='stars')stage=(ttl='Your Stars')&&`<div class="hh-stage s-${sign.id}">
    ${ui('plate-'+sign.id,'hh-plate',sign.name,true)}
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p></article>
@@ -2557,6 +2557,8 @@ function render(){
  if(authed)$('#navin').innerHTML=Kit.nav(NAV,navCur());
  if(authed){const yb=$('#navin [data-nav=you]');if(yb)yb.style.setProperty('--ico',`url(/art/atlas/sgm-${S.sign||'aries'}.webp)`)}
  if(authed)askDaily();
+ if(sec==='home')V.ret=null;
+ {let rp=$('#rtpill');if(authed&&V.ret&&sec!=='home'){if(!rp){rp=document.createElement('button');rp.id='rtpill';rp.dataset.act='hreturn';document.body.append(rp)}rp.innerHTML=`<span aria-hidden="true">‹</span> Back to your day<small>${V.ret.label}</small>`}else if(rp)rp.remove();document.body.classList.toggle('has-ret',!!(authed&&V.ret&&sec!=='home'))}
  document.body.classList.toggle('onboarding',!authed);
  document.body.dataset.sec=sec;document.body.classList.remove('still');
  if(authed)Temple.set(sceneKey());else Temple.off();
@@ -2849,11 +2851,11 @@ document.addEventListener('click',e=>{
  // Kassandra
  if(a==='kasmic')return voiceRec('kas');
  if(a==='kasfocus'){const i=$('#kas-in');if(i)i.focus();return}
- if(a==='kasask'){V.tpop=null;if(V.sec!=='kassandra')V.kasFrom={sec:V.sec,t:tab()};if(V.sec!=='kassandra')go('kassandra','chat');return kasSend(t.dataset.q)}
+ if(a==='kasask'){V.tpop=null;if(V.sec==='home'&&pathStep()==='reflect')V.ret={step:'reflect',label:'Reflect'};if(V.sec!=='kassandra')V.kasFrom={sec:V.sec,t:tab()};if(V.sec!=='kassandra')go('kassandra','chat');return kasSend(t.dataset.q)}
  if(a==='kasnew')return kasNew();
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
- if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
+ if(a==='tohoroscope'){if(V.sec==='home'&&pathStep()==='stars'){S.readDay=dkey();save();V.ret={step:'whisper',label:'Your Whisper'}}V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
  if(a==='hpg'){const c=$('.hcar');return c&&c.show&&c.show(+t.dataset.pg,+t.dataset.pg<(c.pg||0)?-1:1)}
  if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k),t.dataset.dir?+t.dataset.dir:0);V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
@@ -2884,6 +2886,7 @@ document.addEventListener('click',e=>{
  // a reflection on the day written for the reader, its theme as the page's title
  if(a==='pzspeak')return speakText(myDay().body);
  if(a==='hnext')return pathMove(1);
+ if(a==='hreturn'){const r=V.ret;V.ret=null;if(r)V.hstep=r.step;return go('home')}
  if(a==='hwish'){const v=(($('#hpwish')||{}).value||'').trim(),ch=chapterAt();if(!v){toast('Write a few words first');const x=$('#hpwish');if(x)x.focus();return}
   const j={id:uuid(),day:dkey(),kind:'reflection',title:`${WISH} in ${sIdx(ch.sign).name}`,body:v,at:new Date().toISOString()};S.journal.push(j);save();C.saveJournal&&C.saveJournal(j);
   V.hstep=null;render();window.scrollTo(0,0);return toast('Planted. The Moon will bring it back to you')}
@@ -2896,7 +2899,7 @@ document.addEventListener('click',e=>{
  if(a==='hletter'){const ch=chapterAt();V.letter=ch&&ch.day<=3&&V.sec==='home'?lastChapter(ch)||ch:ch;return render()}
  if(a==='letterclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.letter=null;return render()}
  if(a==='hgo'){const o=pathOrder(dkey());V.hdir=o.indexOf(t.dataset.k)<o.indexOf(pathStep())?-1:1;V.hstep=t.dataset.k;render();return window.scrollTo(0,0)}
- if(a==='hdream'){S.dreamAsk=dkey();save();return go('discover','new-dream')}
+ if(a==='hdream'){S.dreamAsk=dkey();save();V.ret={step:'wfy',label:'Written for You'};return go('discover','new-dream')}
  if(a==='hnodream'){S.dreamAsk=dkey();save();V.hstep=null;render();return window.scrollTo(0,0)}
  if(a==='hkeep'){const v=($('#hpta')||{}).value||'',k=dkey();if(!v.trim()){toast('Write a few words first');const x=$('#hpta');if(x)x.focus();return}
   S.notes[k]=v.trim();save();syncFortune(k);V.hstep=askNight(k)?'night':'held';render();window.scrollTo(0,0);return toast('Kept in your Journal')}
