@@ -183,7 +183,7 @@ body.reduce .hp-stage.slr,body.reduce .hp-stage.sll{animation:none}
 @@ .hp-whisper .dw-row .scene.mini-w{width:47cqw!important;max-width:210px;margin:0 auto}
 @@ .hp-whisper .dw-side{align-items:center;text-align:center;gap:4px}
 @@ .hp-whisper .dw-side .dw-msg{-webkit-line-clamp:unset!important;display:block!important;margin:2px 0 0!important}
-@@ .hp-whisper .dw-t{margin:4px 0 0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important}
+@@ .hp-whisper .dw-t{margin:4px 0 0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important}
 @@ .hp-whisper .dw-side .btn{align-self:center!important;margin-top:8px!important}
 @@ .hh-card .hh-text{font-size:16.5px!important;margin-top:8px!important}
 
@@ -351,7 +351,7 @@ body:not([data-tone=ink]) #app .orn h2,body:not([data-tone=ink]) #app .hp-card .
 @@ .or-k{display:flex;align-items:center;gap:14px}
 @@ .or-k .tk-m{flex:none;width:25cqw;aspect-ratio:3/4;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
 @@ .or-k .tk-m img{width:100%;height:100%;object-fit:cover;display:block}
-@@ .or-k h3{margin:0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 8px rgba(10,14,30,.85)}
+@@ .or-k h3{margin:0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 8px rgba(10,14,30,.85)}
 @@ .or-k p{margin:4px 0 0!important;font:500 16px/1.28 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
 @@ .or-k .btn,@@ .or-two .btn,@@ .jr-q .btn{height:42px;border-radius:21px!important;padding:0 18px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
 @@ .or-k .btn{margin-top:10px;width:100%}
@@ -396,7 +396,7 @@ body:not([data-tone=ink]) #app .orn h2,body:not([data-tone=ink]) #app .hp-card .
 @@ .pf-id .pf-pic img,@@ .pf-id .pf-pic .avatar{width:100%;height:100%;object-fit:cover}
 @@ .pf-id .pf-cam{position:absolute;right:0;bottom:0;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#BE9247;color:#24160A}
 @@ .pf-id .pf-cam svg{width:12px;height:12px}
-@@ .pf-id h2{margin:0!important;font:italic 600 24px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-transform:none;letter-spacing:0}
+@@ .pf-id h2{margin:0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-transform:none;letter-spacing:0}
 @@ .pf-id .pf-sign{margin:2px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
 @@ .pf-id .keys{margin:2px 0 0!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
 @@ .pfn .pf-body{display:flex;flex-direction:column;gap:10px}
@@ -716,3 +716,26 @@ body.reduce .hp-ch svg{animation:none!important}
 /* the sign's card is never under the old glass blur of the text block */
 @@ .hh-stage .hh-card,@@ .hh-stage .hh-card *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 @@ .hh-stage .hh-pw{position:relative;z-index:2}
+
+/* ---- the Whisper's card, held up: a box of the app's own glass over Today, which still shows around it ---- */
+@@ .wpc{background:rgba(12,22,52,.5)!important;-webkit-backdrop-filter:blur(7px) saturate(1.1)!important;backdrop-filter:blur(7px) saturate(1.1)!important;display:flex;align-items:center!important;justify-content:center;overflow:hidden!important;padding:calc(env(safe-area-inset-top,0px) + 56px) 5vw calc(var(--navh,64px) + 22px)!important;box-sizing:border-box}
+@@ .wpc .wpc-in{position:relative;width:100%!important;max-width:380px!important;max-height:100%;margin:0!important;padding:16px 16px 14px!important;display:flex!important;flex-direction:column;align-items:center;gap:6px!important;border-radius:22px;background:linear-gradient(rgba(20,32,70,.74),rgba(12,20,48,.82))!important;border:0!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(231,200,135,.6),0 14px 40px rgba(0,0,0,.5),0 0 30px rgba(120,150,230,.12)!important;animation:wpBox .5s cubic-bezier(.2,.8,.2,1)}
+@@ .wpc .wpc-in>.cp-x{top:8px!important;right:8px!important;width:34px!important;height:34px!important;background:rgba(10,14,30,.6)!important;color:#F3D790!important}
+@@ .wpc .cp-k{margin:0!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.2em;color:#F3D790!important;text-shadow:none!important}
+@@ .wpc .wp-body{width:100%;flex:1 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none;text-align:left;-webkit-mask-image:linear-gradient(#000 calc(100% - 22px),transparent);mask-image:linear-gradient(#000 calc(100% - 22px),transparent);padding-bottom:14px}
+@@ .wpc .wp-body::-webkit-scrollbar{display:none}
+@@ .wpc .wp-top{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+@@ .wpc .cp-card{flex:none;width:min(52vw,min(210px,calc((100svh - 330px)*.6)))!important;margin:0 auto!important;filter:drop-shadow(0 0 16px rgba(243,210,140,.4)) drop-shadow(0 8px 16px rgba(0,0,0,.5))!important;animation:wpCard .7s cubic-bezier(.2,.8,.2,1) .15s both!important}
+@@ .wpc .wp-side{width:100%;min-width:0;text-align:center}
+@@ .wpc .cp-t{margin:0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;text-transform:none!important;letter-spacing:0!important;background:none!important;-webkit-text-fill-color:#FFF6DC!important;color:#FFF6DC!important;text-shadow:none!important;text-align:center}
+@@ .wpc .cp-keys{margin:4px 0 0!important;font:500 11px 'Cinzel',serif!important;letter-spacing:.06em!important;color:#F3D790!important;line-height:1.35!important}
+@@ .wpc .cp-you span{display:block!important;margin-bottom:3px;font:500 11px 'Cinzel',serif!important;font-style:normal!important;letter-spacing:.2em;text-transform:uppercase;color:#F3D790!important}
+@@ .wpc .cp-msg{margin:7px 0 0!important;font:500 18px/1.3 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
+@@ .wpc .cp-you{margin:12px 0 0!important;padding:10px 0 0!important;border:0!important;border-top:1px solid rgba(243,215,144,.4)!important;background:none!important;font:italic 500 18px/1.3 'Cormorant Garamond',serif!important;color:#FBF0D2!important;text-align:left}
+@@ .wpc .cp-ref{margin:8px 0 0!important;font:italic 500 16px/1.3 'Cormorant Garamond',serif!important;color:#E9D6A0!important}
+@@ .wpc .cp-rule{display:none}
+@@ .wpc .wpc-acts{flex:none;margin-top:8px!important;gap:10px}
+@@ .wpc .wpc-acts .btn{height:44px;min-height:44px;border-radius:22px;font:600 11px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,0 0 18px rgba(227,194,126,.25)!important}
+@@ .wpc .wpc-acts .ibtn{width:44px;height:44px;border-radius:50%;background:rgba(16,18,36,.6)!important;color:#F3D790!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.6)!important}
+@keyframes wpBox{from{opacity:0;transform:translateY(46px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes wpCard{from{opacity:0;transform:translateY(24px) rotateY(70deg)}to{opacity:1;transform:none}}

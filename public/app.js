@@ -816,9 +816,10 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
  const saved=S.saved.some(x=>x.date===k);
  return `<div class="cpop wpc" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="cp-in wpc-in">
  <button class="cp-x" data-act="wpopclose" aria-label="Close">×</button>
- <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
- <div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
- <p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
+ <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p>
+ <div class="wp-body"><div class="wp-top"><div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
+ <div class="wp-side"><h2 class="cp-t">${esc(c.title)}</h2><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p></div></div>
+ ${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p></div>
  <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div>
  </div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
