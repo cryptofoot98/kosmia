@@ -712,3 +712,7 @@ body.reduce .hp-ch svg{animation:none!important}
 @@ .hh-stage .hh-card .keys{white-space:nowrap;letter-spacing:.05em!important;font-size:min(11px,2.9cqw)!important}
 
 
+
+/* the sign's card is never under the old glass blur of the text block */
+@@ .hh-stage .hh-card,@@ .hh-stage .hh-card *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+@@ .hh-stage .hh-pw{position:relative;z-index:2}

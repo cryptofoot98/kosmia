@@ -713,3 +713,7 @@ html body.tp.tp.tp #app .hh-stage .hh-pw .hh-plate{float:none!important;width:10
 html body.tp.tp.tp #app .hh-stage .hh-card .keys{white-space:nowrap;letter-spacing:.05em!important;font-size:min(11px,2.9cqw)!important}
 
 
+
+/* the sign's card is never under the old glass blur of the text block */
+html body.tp.tp.tp #app .hh-stage .hh-card,html body.tp.tp.tp #app .hh-stage .hh-card *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html body.tp.tp.tp #app .hh-stage .hh-pw{position:relative;z-index:2}

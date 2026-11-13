@@ -165,7 +165,7 @@ their space before they load.
 | `public/art/temple/dawn.webp` | 912×1968 | 0.46:1 | no | 309 | provisional |  |
 | `public/art/temple/frame.webp` | 912×1968 | 0.46:1 | yes | 40 | provisional |  |
 | `public/art/temple/journal.webp` | 912×1968 | 0.46:1 | no | 218 | provisional |  |
-| `public/art/temple/lake.webp` | 912×1968 | 0.46:1 | no | 153 | provisional |  |
+| `public/art/temple/lake.webp` | 912×1968 | 0.46:1 | no | 151 | provisional |  |
 | `public/art/temple/letter-sheet.webp` | 912×1674 | 0.54:1 | no | 140 | provisional |  |
 | `public/art/temple/letter.webp` | 912×1968 | 0.46:1 | no | 196 | provisional |  |
 | `public/art/temple/moon-base.webp` | 256×256 | 1:1 | yes | 10 | provisional |  |
