@@ -679,3 +679,37 @@ body.has-ret html body.tp.tp.tp #app .skyp,body.has-ret html body.tp.tp.tp #app 
 .xs-x{position:absolute;z-index:2;top:8px;right:10px;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;color:#F3D790;font:400 26px/1 'Cormorant Garamond',serif;background:rgba(10,14,30,.72);box-shadow:inset 0 0 0 1px rgba(231,200,135,.6)}
 @keyframes xsUp{from{transform:translateY(100%)}to{transform:none}}
 html.emb #nav{display:none!important}
+
+/* ---- Today: larger words that fit the room, no Continue buttons, dots that say "swipe" ---- */
+html body.tp.tp.tp #app .home.hpath .hp-stage :is(.hp-sub,.pz-b,.hh-text,.dw-msg,.cp-you){font-size:var(--fz,19px)!important;line-height:1.3!important}
+html body.tp.tp.tp #app .home.hpath .hp-stage :is(.hp-big,.pz-t){font-size:calc(var(--fz,19px) * 1.4)!important}
+html body.tp.tp.tp #app .home.hpath .hp-stage .pz-q{font-size:calc(var(--fz,19px) * 1.25)!important}
+html body.tp.tp.tp #app .home.hpath .hp-stage .dw-t{font-size:calc(var(--fz,19px) * 1.2)!important}
+html body.tp.tp.tp #app .hh-stage{display:block!important}
+html body.tp.tp.tp #app .hh-stage::after{content:'';display:block;clear:both}
+html body.tp.tp.tp #app .hh-stage .hh-plate{float:left!important;display:block!important;width:36cqw!important;height:54cqw!important;aspect-ratio:2/3;object-fit:cover;margin:0 4cqw 4px 0!important}
+html body.tp.tp.tp #app .hh-stage .hh-card{display:block!important;width:auto!important;flex:none}
+html body.tp.tp.tp #app .hh-stage .hh-card .hh-text{margin-top:8px!important}
+html body.tp.tp.tp #app .hp-dots{align-items:center;gap:0}
+html body.tp.tp.tp #app .hp-dots button.hp-ch{width:30px;height:26px;display:grid;place-items:center}
+html body.tp.tp.tp #app .hp-dots button.hp-ch::before{display:none!important}
+html body.tp.tp.tp #app .hp-dots .hp-ch svg{width:9px;height:15px;fill:none;stroke:#F6E6B6;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(246,214,130,.9));animation:hpNudgeR 2.4s ease-in-out infinite}
+html body.tp.tp.tp #app .hp-dots .hp-ch.l svg{animation-name:hpNudgeL}
+html body.tp.tp.tp #app .hp-dots .hp-ch.off{visibility:hidden}
+html body.tp.tp.tp #app .hp-dots button:not(.hp-ch)::before{width:7px;height:7px;margin:-3.5px 0 0 -3.5px;opacity:.6}
+html body.tp.tp.tp #app .hp-dots button.on::before{width:22px!important;height:7px!important;margin:-3.5px 0 0 -11px!important;border-radius:4px!important;opacity:1}
+@keyframes hpNudgeR{0%,55%,100%{transform:none;opacity:.55}25%{transform:translateX(4px);opacity:1}}
+@keyframes hpNudgeL{0%,55%,100%{transform:none;opacity:.55}25%{transform:translateX(-4px);opacity:1}}
+body.reduce .hp-ch svg{animation:none!important}
+
+html body.tp.tp.tp #app .hp-wfy{position:relative}
+html body.tp.tp.tp #app .hp-wfy .hp-acts{position:absolute!important;top:6px;right:8px;margin:0!important;width:auto!important}
+html body.tp.tp.tp #app .hp-wfy .hp-acts .ibtn{width:34px;height:34px}
+html body.tp.tp.tp #app .hp-dr{margin:8px 0 0!important}
+
+/* ---- the sign's card on Today: opens to its details; its keywords on one line ---- */
+html body.tp.tp.tp #app .hh-stage .hh-pw{float:left;display:block;width:36cqw;height:54cqw;margin:0 4cqw 4px 0;padding:0;border:0;background:transparent!important;box-shadow:none!important;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body.tp.tp.tp #app .hh-stage .hh-pw .hh-plate{float:none!important;width:100%!important;height:100%!important;margin:0!important}
+html body.tp.tp.tp #app .hh-stage .hh-card .keys{white-space:nowrap;letter-spacing:.05em!important;font-size:min(11px,2.9cqw)!important}
+
+

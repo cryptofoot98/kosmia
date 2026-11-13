@@ -908,7 +908,7 @@ views.home=()=>{
  const playing=V.say===d.body;
  const sd=V.hdir||0;V.hdir=0;
  const ord=pathOrder(k),LB={dream:'Your dream',intent:'Your wish',wfy:'Written for You',stars:'Your Stars',whisper:'Your Whisper',carry:'Carry it with you',reflect:'Reflect',night:'Before You Sleep',held:'Your day'};
- const dots=`<nav class="hp-dots" aria-label="Today’s pages, swipe to move between them">${ord.map(x=>`<button data-act="hgo" data-k="${x}" aria-label="${LB[x]||x}"${x===st?' aria-current="step" class="on"':''}></button>`).join('')}</nav>`;
+ const oi=ord.indexOf(st),dots=`<nav class="hp-dots" aria-label="Today’s pages, swipe to move between them"><button class="hp-ch l${oi<=0?' off':''}" data-act="hprev" aria-label="Previous page" tabindex="-1"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button>${ord.map(x=>`<button data-act="hgo" data-k="${x}" aria-label="${LB[x]||x}"${x===st?' aria-current="step" class="on"':''}></button>`).join('')}<button class="hp-ch r${oi>=ord.length-1?' off':''}" data-act="hnext" aria-label="Next page" tabindex="-1"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav>`;
  let ttl='';
  const card=(title,body,cls='')=>{ttl=title;return panel(body,`gilt hp-card ${cls}`)};
  let stage;
@@ -919,17 +919,16 @@ views.home=()=>{
  else if(st==='night')stage=card('Before You Sleep',`<div class="hp-in">${tmoon(true)}<p class="hp-big">What are you ready to let go of tonight?</p><p class="hp-sub">A worry, a word you wish you hadn’t said, a day that asked too much. Write it, then let it go.</p><textarea class="hp-ta" id="hprel" rows="4" placeholder="Nothing written here is kept unless you ask." aria-label="What you are letting go of"></textarea>
   <div class="pz-acts"><button class="btn" data-act="hlet">Let it go</button><button class="btn ghost" data-act="hrelkeep">Keep it instead</button></div><button class="jp-new" data-act="hnonight">Not tonight ${IC.chev}</button></div>`,'hp-night');
  else if(st==='wfy')stage=card('Written for You',`<div class="hp-in"><h2 class="pz-t">${esc(d.focus)}</h2><p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
-  <div class="pz-b">${esc(d.body)}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
+  ${askDream(k)?`<button class="hp-dr" data-act="hdream">${IC.moon||''}Did you dream? Write it down</button>`:''}<div class="pz-b">${esc(d.body)}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
    if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
-   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}${askDream(k)?`<button class="hp-dr" data-act="hdream">${IC.moon||''}Did you dream? Write it down</button>`:''}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>${next()}</div></div>`,'hp-wfy');
+   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div></div>`,'hp-wfy');
  else if(st==='stars')stage=(ttl='Your Stars')&&`<div class="hh-stage s-${sign.id}">
-   ${ui('plate-'+sign.id,'hh-plate',sign.name,true)}
-   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(short)}</p></article>
-   <div class="pz-acts"><button class="btn ghost" data-act="tohoroscope">Full reading</button>${next()}</div>
+   <div class="hh-pw">${ui('plate-'+sign.id,'hh-plate',sign.name,true)}</div>
+   <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(h.body)}</p></article>
   </div>`;
  else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over when you are ready. It was drawn for you.</p>'}${rev?'':'<button class="btn" data-act="reveal">Reveal</button>'}</div></div>
-   ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p><div class="hp-acts"><button class="btn ghost" data-act="wpop">See the card</button>${next()}</div>`:''}`,'hp-whisper');
+   ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}`,'hp-whisper');
  else if(st==='carry')stage=card('The Morning Is Complete',`<div class="hp-in"><p class="hp-big">Carry it with you</p><p class="hp-sub">You have read what was written for you, looked at your stars and turned your Whisper${rev?`, “${esc(c.title)}”`:''}. That is all the morning asks. Go and live the day.</p>
   <p class="hp-sub hp-tonight"><span>Tonight</span>The last Moon waits for the evening, when the day has something to tell you.</p><div class="pz-acts"><button class="btn ghost" data-act="hgo" data-k="reflect">Reflect now instead</button></div></div>`,'hp-carry');
  else if(st==='reflect')stage=card('Reflect',`<div class="hp-in"><p class="pz-q">“${esc(d.question)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
@@ -2896,6 +2895,7 @@ document.addEventListener('click',e=>{
  // a reflection on the day written for the reader, its theme as the page's title
  if(a==='pzspeak')return speakText(myDay().body);
  if(a==='hnext')return pathMove(1);
+ if(a==='hprev')return pathMove(-1);
  if(a==='hreturn'){const r=V.ret;V.ret=null;if(r)V.hstep=r.step;return go('home')}
  if(a==='hwish'){const v=(($('#hpwish')||{}).value||'').trim(),ch=chapterAt();if(!v){toast('Write a few words first');const x=$('#hpwish');if(x)x.focus();return}
   const j={id:uuid(),day:dkey(),kind:'reflection',title:`${WISH} in ${sIdx(ch.sign).name}`,body:v,at:new Date().toISOString()};S.journal.push(j);save();C.saveJournal&&C.saveJournal(j);

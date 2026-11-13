@@ -44,7 +44,7 @@ window.Temple=(()=>{
  // Today's page is never scrolled: if its words are more than the room between the head and the menu, they are set a little smaller
  // the sign's card (and the Whisper's) is as tall as the words beside it, never stretched: its width follows its height
  function fitCard(){
-  const st=document.querySelector('#app .hh-stage,#app .hp-whisper .dw-row');if(!st)return;
+  const st=document.querySelector('#app .hp-whisper .dw-row');if(!st)return;
   const card=st.querySelector('.hh-plate,.scene.mini-w'),txt=st.querySelector('.hh-card,.dw-side');if(!card||!txt)return;
   const W=st.getBoundingClientRect().width,set=w=>{card.style.setProperty('width',w+'px','important');card.style.setProperty('height',(w*1.5)+'px','important')};
   let w=W*.41;set(w);
@@ -54,7 +54,7 @@ window.Temple=(()=>{
   fitCard();
   const h=document.querySelector('#app .home.hpath .hhero')||document.querySelector('#app .skyp .sk-body');if(!h)return;
   const kids=h.classList.contains('hhero')?[h.querySelector('.hp-stage')]:[...h.children];if(!kids[0])return;
-  const acts=()=>h.querySelectorAll('.pz-acts,.hp-acts,.or-two,.btn');kids.forEach(k=>k.style.zoom='');acts().forEach(e=>e.style.zoom='');let z=1;while(h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
+  const acts=()=>h.querySelectorAll('.pz-acts,.hp-acts,.or-two,.btn');kids.forEach(k=>k.style.zoom='');acts().forEach(e=>e.style.zoom='');let z=1;if(h.classList.contains('hhero')){let f=21;for(;f>17;f-=.5){h.style.setProperty('--fz',f+'px');if(h.scrollHeight<=h.clientHeight+1)break}h.style.setProperty('--fz',f+'px')}while(!h.classList.contains('hhero')&&h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
   // the actions are never made smaller: they keep one size on every page
   if(z<1)h.querySelectorAll('.pz-acts,.hp-acts').forEach(e=>e.style.zoom=(1/z).toFixed(3));else if(z===1)acts().forEach(e=>e.style.zoom='')
  }
