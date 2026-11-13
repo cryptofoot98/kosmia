@@ -61,6 +61,14 @@ try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);S=Object.assig
 if(S.matches.length&&!S.conns.some(c=>c.kind==='zodiac')){S.matches.forEach(m=>S.conns.push({id:uuid(),kind:'zodiac',name:'',data:{a:m[0],b:m[1]},note:''}));}
 S.readings.forEach(r=>{if(!r.id)r.id=r.rid||uuid()});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+// a page opened inside a sheet over Today runs as its own small copy of the app, without the menu; when the sheet closes, Today reads back what it kept
+const EMB=window.self!==window.top&&/[?&]emb=1/.test(location.search);if(EMB)document.documentElement.classList.add('emb');
+function reloadS(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);S=Object.assign(fresh(),o);['birth','notif','settings'].forEach(k=>S[k]=Object.assign(fresh()[k],o[k]||{}))}}catch(e){}}
+function openSheet(sec,t,q){const u=pathFor(sec,t,q);V.xsrc=u+(u.includes('?')?'&':'?')+'emb=1';V.xopen=true;mountSheet()}
+function mountSheet(){let x=document.getElementById('xsheet');if(!V.xopen){if(x)x.remove();return}
+ if(x)return;x=document.createElement('div');x.id='xsheet';x.dataset.act='xclose';x.innerHTML=`<div class="xs-box" role="dialog" aria-modal="true" aria-label="Opened from Today"><iframe title="Opened from Today" src="${V.xsrc}"></iframe></div>`;document.body.append(x)}
+function closeSheet(){if(!V.xopen)return;V.xopen=false;mountSheet();reloadS();if(V.xnext){V.hstep=V.xnext;V.xnext=null;V.hdir=1}render()}
+addEventListener('message',e=>{if(e.origin===location.origin&&e.data==='kosmia-close')closeSheet()});
 const TZ=()=>S.settings.tz||DEVICE_TZ;
 
 /* ---------- cloud sync (Supabase) ---------- */
@@ -2553,7 +2561,7 @@ function render(){
  jxRender();enCar();hcar();hswipe();skswipe();subFix();tileUp();stayHeads();stayFade();footFit();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
- $('#nav').hidden=!authed;document.body.classList.toggle('has-nav',authed);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
+ $('#nav').hidden=!authed||EMB;document.body.classList.toggle('has-nav',authed&&!EMB);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
  if(authed)$('#navin').innerHTML=Kit.nav(NAV,navCur());
  if(authed){const yb=$('#navin [data-nav=you]');if(yb)yb.style.setProperty('--ico',`url(/art/atlas/sgm-${S.sign||'aries'}.webp)`)}
  if(authed)askDaily();
@@ -2833,7 +2841,8 @@ document.addEventListener('click',e=>{
  }
  const a=t.dataset.act;if(!a)return;
  if(a==='jint')return;
- if(a==='back')return goBack();
+ if(a==='back'){if(EMB)return parent.postMessage('kosmia-close',location.origin);return goBack()}
+ if(a==='xclose'){if(e.target.id==='xsheet')closeSheet();return}
  if(a==='chartopen'){V.chartOpen=true;V.chartInterp=t.dataset.k==='interp';V.chartTab=V.chartInterp?'chart':t.dataset.k;render();return window.scrollTo(0,0)}
  if(a==='reveal')return reveal();
  if(a==='rmphoto'){delete S.photo;save();render();return toast('Your picture has been removed.')}
@@ -2855,7 +2864,8 @@ document.addEventListener('click',e=>{
  if(a==='kasnew')return kasNew();
  if(a==='kasdel'){const i=S.bookmarks.findIndex(b=>b.id===t.dataset.id);if(i>=0){const b=S.bookmarks[i];S.bookmarks.splice(i,1);save();C.deleteBookmark&&C.deleteBookmark('chat',b.ref)}return render()}
  // horoscope
- if(a==='tohoroscope'){if(V.sec==='home'&&pathStep()==='stars'){S.readDay=dkey();save();V.ret={step:'whisper',label:'Your Whisper'}}V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
+ if(a==='tohoroscope'&&V.sec==='home'&&!EMB){S.readDay=dkey();save();V.xnext='whisper';return openSheet('horoscope','sign',{sign:t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:''})}
+ if(a==='tohoroscope'){V.exploreSign=t.dataset.sign&&t.dataset.sign!==S.sign?t.dataset.sign:null;V.hcat=t.dataset.cat||'overview';if(t.dataset.period)V.period=t.dataset.period;else if(V.sec!=='horoscope')V.period='daily';return go('horoscope','sign')}
  if(a==='hpg'){const c=$('.hcar');return c&&c.show&&c.show(+t.dataset.pg,+t.dataset.pg<(c.pg||0)?-1:1)}
  if(a==='hcat'){const c=$('.hcar');if(c&&c.go)return c.go(HCATS.findIndex(x=>x[0]===t.dataset.k),t.dataset.dir?+t.dataset.dir:0);V.hcat=t.dataset.k;render();const r=$('.hread');return r&&r.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
  if(a==='hspeak'){const ex=V.exploreSign||S.sign;return speakText(horoscope(ex,V.hcat,V.period).body)}
@@ -2899,7 +2909,7 @@ document.addEventListener('click',e=>{
  if(a==='hletter'){const ch=chapterAt();V.letter=ch&&ch.day<=3&&V.sec==='home'?lastChapter(ch)||ch:ch;return render()}
  if(a==='letterclose'){if(e.target.closest('.pop-box')&&!e.target.closest('.pop-x'))return;V.letter=null;return render()}
  if(a==='hgo'){const o=pathOrder(dkey());V.hdir=o.indexOf(t.dataset.k)<o.indexOf(pathStep())?-1:1;V.hstep=t.dataset.k;render();return window.scrollTo(0,0)}
- if(a==='hdream'){S.dreamAsk=dkey();save();V.ret={step:'wfy',label:'Written for You'};return go('discover','new-dream')}
+ if(a==='hdream'){S.dreamAsk=dkey();save();return openSheet('discover','new-dream')}
  if(a==='hnodream'){S.dreamAsk=dkey();save();V.hstep=null;render();return window.scrollTo(0,0)}
  if(a==='hkeep'){const v=($('#hpta')||{}).value||'',k=dkey();if(!v.trim()){toast('Write a few words first');const x=$('#hpta');if(x)x.focus();return}
   S.notes[k]=v.trim();save();syncFortune(k);V.hstep=askNight(k)?'night':'held';render();window.scrollTo(0,0);return toast('Kept in your Journal')}

@@ -671,3 +671,11 @@ html body.tp.tp.tp #app .hp-dr{display:flex;align-items:center;justify-content:c
 html body.tp.tp.tp #app .hp-dr svg{width:18px;height:18px;flex:none}
 
 body.has-ret html body.tp.tp.tp #app .skyp,body.has-ret html body.tp.tp.tp #app .mnp,body.has-ret html body.tp.tp.tp #app .hsp.sx,html body.has-ret.tp.tp.tp #app .skyp,html body.has-ret.tp.tp.tp #app .mnp,html body.has-ret.tp.tp.tp #app .hsp.sx,html body.has-ret.tp.tp.tp #app .kz-talk{bottom:calc(var(--navh,64px) + 58px)!important}
+
+/* ---- a page opened from Today, as a sheet over it ---- */
+#xsheet{position:fixed;inset:0;z-index:80;background:rgba(5,8,20,.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);display:flex;align-items:flex-end;justify-content:center;animation:wlLit .3s ease-out}
+.xs-box{position:relative;width:min(100vw,var(--appw,480px));height:calc(100% - 46px - env(safe-area-inset-top,0px));border-radius:22px 22px 0 0;overflow:hidden;background:#0a1020;box-shadow:0 -6px 30px rgba(0,0,0,.55),inset 0 0 0 1px rgba(231,200,135,.55);animation:xsUp .45s cubic-bezier(.2,.7,.2,1)}
+.xs-box iframe{width:100%;height:100%;border:0;display:block;background:#0a1020}
+.xs-x{position:absolute;z-index:2;top:8px;right:10px;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;color:#F3D790;font:400 26px/1 'Cormorant Garamond',serif;background:rgba(10,14,30,.72);box-shadow:inset 0 0 0 1px rgba(231,200,135,.6)}
+@keyframes xsUp{from{transform:translateY(100%)}to{transform:none}}
+html.emb #nav{display:none!important}
