@@ -890,7 +890,9 @@ const evening=()=>{const h=hourNow();return h>=18||h<4};
 const pathOrder=k=>[...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
  const k=dkey(),dn=pathDone(k);
- if(V.hday!==k){V.hday=k;V.hstep=null}
+ if(V.hday!==k){V.hday=k;V.hstep=null;
+  // opening the app again the same day: land on the page after the last one that was read
+  const L=S.hlast,o=pathOrder(k),i=L&&L.day===k?o.indexOf(L.step):-1;if(i>=0)V.hstep=o[Math.min(i+1,o.length-1)]}
  return V.hstep||(askIntent()?'intent':(PATH.find(([x])=>!dn[x]&&(x!=='reflect'||evening()))||[askNight(k)?'night':'held'])[0]);
 }
 // to the next step (or back): leaving Your Stars counts it as read; the page returns to its head
@@ -904,6 +906,7 @@ views.home=()=>{
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
  const nm=firstName(),short=hSum(h.body),fig='atlas/fg-'+sign.id,d=myDay(),st=pathStep();
  V.hstep=st;   // the step in view stays in view until the reader moves on, even once it counts as done
+ clearTimeout(V.hseen);V.hseen=setTimeout(()=>{if(V.hstep===st&&!(S.hlast&&S.hlast.day===k&&S.hlast.step===st)){S.hlast={day:k,step:st};save()}},2500);   // a page counts as seen once it has been in view a moment
  if(st==='wfy'&&S.wfy!==k){S.wfy=k;save()}
  const dn=pathDone(k),done=PATH.filter(([x])=>dn[x]).length;
  Temple.arc(PATH.map(([x,l])=>({k:x,label:l,on:!!dn[x],cur:st===x})),done===4);
@@ -3055,7 +3058,7 @@ document.addEventListener('change',e=>{
  if(map[id]){map[id]();save();syncProfile();toast('Saved');if(/^d_/.test(id))render()}
 });
 // With accounts enabled, only a saved session opens straight onto a page; everyone else starts at onboarding.
-if(S.sign&&(!C.enabled||C.hasStoredSession())){applyLocation()}else V.sec='welcome';
+if(S.sign&&(!C.enabled||C.hasStoredSession())){applyLocation();if(!EMB&&V.sec!=='home'&&!onboarding()){V.sec='home';V.tab.home='today';history.replaceState(history.state,'','/')}}   // opening the app always lands on Todayelse V.sec='welcome';
 render();
 C.onError(()=>toast('Could not sync. Your changes are kept on this device.'));
 C.onAuth(u=>{if(u)pullMerge();else render()});
