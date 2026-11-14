@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 611 |
-| In use, provisional | 567 |
+| Images | 612 |
+| In use, provisional | 568 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -954,6 +954,7 @@ their space before they load.
 | `public/art/cats/general.webp` | 160×160 | 1:1 | yes | 20 | provisional |  |
 | `public/art/cats/health.webp` | 160×160 | 1:1 | yes | 14 | provisional |  |
 | `public/art/cats/history.webp` | 160×160 | 1:1 | yes | 14 | provisional |  |
+| `public/art/cats/houses.webp` | 232×232 | 1:1 | yes | 29 | provisional |  |
 | `public/art/cats/insights.webp` | 160×160 | 1:1 | yes | 14 | provisional |  |
 | `public/art/cats/lifepath.webp` | 160×160 | 1:1 | yes | 6 | provisional |  |
 | `public/art/cats/love.webp` | 160×160 | 1:1 | yes | 12 | provisional |  |
