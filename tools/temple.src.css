@@ -1,0 +1,767 @@
+/* The Temple of Kosmia: one calm painted place behind every screen, a fine gold frame, a translucent menu within it.
+   @@ stands for a selector prefix strong enough to beat the older rules (many of them !important); @N the same for the menu. */
+:root{--tx:#F2E5BE;--tk:#EBCB86;--tt:#F7E9BC;--tq:#F3E2BA;--tr:rgba(227,194,126,.3);--tf:rgba(227,194,126,.5)}
+body[data-tone=ink]{--tx:#1E1206;--tk:#3A200A;--tt:#24160A;--tq:#7A2E2E;--tr:rgba(106,78,44,.35);--tf:rgba(106,78,44,.55)}
+
+/* ---- the shell: the scene held still behind the page, its foot and the frame laid over it ---- */
+#t-back,#t-front{display:none;position:fixed;top:0;bottom:0;left:50%;width:min(100vw,var(--appw));transform:translateX(-50%);pointer-events:none}
+body.tp #t-back,body.tp #t-front{display:block}
+#t-back{z-index:-1}
+#t-front{z-index:14}
+#t-back i,#t-front i{position:absolute;left:0;right:0;display:block;background-repeat:no-repeat}
+#t-back .tb-head{top:0}
+#t-back .tb-foot,#t-back .tb-veil{bottom:0}
+#t-back .tb-head{transition:opacity .5s}
+#t-back.scrolled .tb-head{opacity:.7}
+#t-back .tb-veil{opacity:0;transition:opacity .5s}
+#t-back.dim .tb-veil{opacity:0}
+#t-front .tf-veil{bottom:0;-webkit-mask-image:linear-gradient(transparent,#000 40px);mask-image:linear-gradient(transparent,#000 40px)}
+#t-front .tf-frt{top:0}#t-front .tf-frb{bottom:0}
+html:has(body.tp){background:#0B1024!important}
+html body.tp{background:transparent!important}
+@R::after,@N::before,@N::after{display:none!important}
+@R{padding-bottom:calc(var(--t-foot,260px) + 4px)!important}
+@R>*::before,@R>*::after{background:none!important;box-shadow:none!important;border:0!important;-webkit-mask-image:none!important;mask-image:none!important}
+@R,@R>*{background:none!important}
+
+/* ---- the menu: floating inside the frame, translucent ---- */
+@N .in{height:70px!important;margin:0 calc(50% - var(--pw) / 2 + 27px) 30px!important;padding:0 8px!important;border:0!important;border-radius:35px!important;
+ background:linear-gradient(180deg,rgba(18,24,52,.36),rgba(7,10,24,.44))!important;-webkit-backdrop-filter:blur(7px)!important;backdrop-filter:blur(7px)!important;
+ box-shadow:inset 0 0 0 1px #C8A25A,inset 0 0 0 3px rgba(7,10,24,.5),inset 0 0 0 4px rgba(200,162,90,.35),0 10px 24px rgba(0,0,0,.45)!important}
+@N .in button{height:100%!important;color:rgba(241,226,188,.8)!important;font-family:'Cinzel',serif!important;font-weight:600!important;font-size:11px!important;letter-spacing:.05em!important}
+@N .in button[aria-current=page]{color:#F6DA97!important}
+@N .in button::before{width:38px!important;height:38px!important}
+
+/* ---- the words ---- */
+@R{color:var(--tx)}
+@@ .orn{margin:0!important;padding:0!important;background:none!important;border:0!important}
+@@ .orn h2{display:block!important;margin:0!important;padding:0!important;text-align:center!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:11px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important;background:none!important;text-shadow:none!important;line-height:1.4!important}
+@@ .orn::before,@@ .orn::after{display:none!important}
+@@ .orn h2 span{color:inherit!important;text-shadow:none!important;background:none!important}
+@@ .orn h2 svg,@@ .orn h2 .k-ico{display:none!important}
+@@ .orn h2::before,@@ .orn h2::after{display:none!important}
+@@ .card,@@ .panel,@@ .card.gilt,@@ .card.ornate{background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding-left:0!important;padding-right:0!important}
+@@ .card::before,@@ .card::after{display:none!important}
+
+/* ---- Today ---- */
+@@ .home{position:relative;container-type:inline-size;padding:0 !important}
+@@ .home .hbar,@@ .home .hh-top,@@ .home .hhero .ks-bg,@@ .home .hhero .stars,@@ .home .hhero>i{display:none!important}
+@@ .home .hh-fix{position:absolute!important;top:30px!important;right:26px!important;z-index:5;gap:4px;margin:0!important;width:auto!important}
+@@ .home .hh-fix .ibtn,@@ .home .hh-fix .avatar{width:30px!important;height:30px!important;min-width:0!important}
+@@ .hh-head,@@ .hh-head.stay{position:relative!important;top:auto!important;display:flex!important;flex-direction:column;align-items:center;text-align:center;padding:44cqw 7cqw 0!important;background:none!important;box-shadow:none!important;transform:none!important;margin:0!important}
+@@ .hh-date{order:-1;margin:0!important;font-family:'Cinzel',serif!important;font-weight:500!important;font-size:11px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--tk)!important}
+@@ .hh-greet{margin:6px 0 0!important;font:italic 600 22px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
+@@ .hhero{padding:6px 7cqw 0!important;color:var(--tx)!important}
+@@ .hh-stage{margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;padding:0!important;grid-template-columns:none!important}
+@@ .hh-stage .hh-card{width:100%!important;max-width:none!important;margin:0!important;left:auto!important;right:auto!important;position:relative!important}
+@@ .hh-stage .hh-plate{width:47cqw!important;max-width:210px;margin-top:2px!important;border-radius:6px!important;position:relative!important;left:auto!important;right:auto!important;float:none!important}
+#t-arc{position:absolute;left:0;top:0;width:100%;height:50cqw;container-type:inline-size;pointer-events:none}
+.tm-arc{position:absolute;left:0;top:0;width:100cqw;height:48.7cqw;pointer-events:none}
+.tm-orn{position:absolute;left:0;top:0;width:100%;height:100%}
+.tm-mo{position:absolute;display:block;padding:0;margin:0;border:0;background:none;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+span.tm-mo{pointer-events:none;cursor:default}
+.tm-mo svg{position:absolute;left:0;top:0;width:100%;height:100%;display:block;overflow:visible}
+.tm-mo img{position:absolute;left:0;top:0;width:100%;height:100%;display:block;max-width:none}
+.tm-mo .lit{transition:opacity .9s;filter:drop-shadow(0 0 5px rgba(246,198,96,.55))}
+.tm-mo.on{filter:drop-shadow(0 0 14px rgba(246,206,120,.75));animation:tmbr 3.6s ease-in-out infinite}
+.tm-mo.flip{transform:scaleX(-1)}
+.tm-mo.cur{filter:drop-shadow(0 0 7px rgba(246,206,120,.7));animation:tmbr 3.6s ease-in-out infinite}
+@keyframes tmbr{50%{filter:drop-shadow(0 0 10px rgba(246,206,120,.9))}}
+body.reduce .tm-mo.cur{animation:none}
+@@ .hp-card{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;color:var(--tx)}
+@@ .hp-in{padding:0!important;display:flex;flex-direction:column;align-items:center;text-align:center}
+@@ .hp-card .orn{margin:10px 0 0!important}
+@@ .hp-big,@@ .pz-t{margin:6px 0 0!important;font:italic 600 28px/1.08 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-shadow:none!important}
+@@ .hp-sub,@@ .pz-b,@@ .dw-msg{margin:9px 0 0!important;font:500 17px/1.36 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important}
+@@ .pz-q{margin:8px 0 0!important;font:italic 600 24px/1.14 'Cormorant Garamond',serif!important;color:var(--tt)!important}
+@@ .hp-tonight span{display:block;font:500 11px 'Cinzel',serif;letter-spacing:.24em;text-transform:uppercase;color:var(--tk);margin-bottom:4px}
+@@ .pz-moon{margin:8px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .pz-moon .pz-mi{display:none!important}
+@@ .cp-you{margin:12px 0 0!important;padding:10px 0 0!important;border:0!important;border-top:1px solid var(--tr)!important;background:none!important;font:italic 500 16px/1.3 'Cormorant Garamond',serif!important;color:var(--tq)!important;box-shadow:none!important}
+@@ .cp-you span{display:block;font:500 11px 'Cinzel',serif!important;font-style:normal!important;letter-spacing:.2em;text-transform:uppercase;color:var(--tk)!important;margin-bottom:3px}
+@@ .hp-ta{width:100%;margin-top:9px!important;border:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px var(--tf)!important;background:rgba(255,255,255,.04)!important;padding:10px 12px!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tt)!important;text-align:left}
+@@ .hp-ta::placeholder{color:var(--tx);opacity:.6}
+@@ .pz-acts,@@ .hp-acts{display:flex!important;flex-direction:row!important;justify-content:center;align-items:center;gap:10px;width:100%;margin-top:14px!important}
+@@ .hp-card .btn,@@ .hh-card .btn{flex:1 1 0;min-width:0;max-width:200px;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
+@@ .hp-card .btn:not(.ghost),@@ .hh-card .btn:not(.ghost){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+@@ .hp-card .btn.ghost,@@ .hh-card .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important}
+@@ .hh-plate{width:70px;height:auto;margin:8px auto 0;border-radius:4px;box-shadow:0 0 0 1px #8a6630,0 8px 16px -6px #000}
+@@ .hh-card{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--tx)!important}
+@@ .hh-card .hh-name{display:flex;flex-direction:column;align-items:center;gap:0}
+@@ .hh-card .glyph{display:none!important}
+@@ .hh-card h2{margin:8px 0 0!important;font:500 14px 'Cinzel',serif!important;letter-spacing:.34em!important;text-transform:uppercase;color:#F4E2B4!important}
+@@ .hh-card .hh-name p{margin:2px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .hh-card .keys{margin:3px 0 0!important;font:500 11px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
+@@ .hh-card .hh-text{margin:10px 0 0!important;font:500 17px/1.36 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+
+@@ .hh-stage .hh-halo,@@ .hh-stage .hh-figbox{display:none!important}
+@I .hh-date,@I .hh-greet{color:#F6E9C8!important;text-shadow:0 1px 6px rgba(40,20,40,.5)!important}
+@@ .orn{border:0!important;box-shadow:none!important}
+@@ .orn *{text-shadow:none!important;box-shadow:none!important}
+
+/* ---- the other places: a title under the head's art, the sections as open words, no plates ---- */
+@@ .land{position:relative;padding-left:0!important;padding-right:0!important}
+@@ .land .jl-bar{position:absolute!important;top:28px!important;left:24px;right:24px;z-index:5}
+@@ .hl-top,@@ .hl-top.stay{position:relative!important;top:auto!important;padding:calc(44cqw + 2px) 7cqw 0!important;margin:0!important;background:none!important;box-shadow:none!important;transform:none!important;text-align:center}
+@@ .hl-top::before,@@ .hl-top::after{display:none!important}
+@@ .hl-top h1.cz{margin:0!important;font:500 19px/1.2 'Cinzel',serif!important;letter-spacing:.3em!important;text-transform:uppercase;color:#F4E2B4!important;text-shadow:none!important}
+@@ .hl-top p{margin:6px 0 0!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:none!important;letter-spacing:0!important;text-transform:none!important}
+@@ .hl-top .hl-motto,@@ .hl-top .hgreet{font:500 11px 'Cinzel',serif!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:var(--tk)!important}
+@@ .hl-top .hgreet+.hl-line,@@ .hl-top .hl-line{font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:var(--tx)!important}
+@@ .hl-cards{padding:14px 7cqw 0!important;margin:0!important;display:block}
+@@ .hl-sec{margin:20px 0 0!important;padding:0!important;background:none!important;border:0!important}
+@@ .hl-card,@@ .hmine{background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding:8px 0 0!important;margin:0!important;border-radius:0!important}
+@@ .hl-card::before,@@ .hl-card::after{display:none!important}
+@@ .dshelf{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;text-align:center}
+@@ .dshelf h2,@@ .k-div span{font:500 11px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:var(--tk)!important;text-shadow:none!important}
+@@ .dshelf p{font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .k-div{margin:0 0 6px!important}
+@@ .k-div::before,@@ .k-div::after{background:linear-gradient(90deg,transparent,var(--tf),transparent)!important;opacity:.9}
+@@ .seg{background:none!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important}
+@R{box-shadow:none!important}
+@@ .k-div{background:none!important;box-shadow:none!important}
+@@ .k-div svg{display:none!important}
+@@ .hp-card .k-div{justify-content:center;margin:10px 0 0!important}
+@@ .hp-card .k-div::before,@@ .hp-card .k-div::after{display:none!important}
+@@ .hp-card .k-div span{color:var(--tk)!important}
+html body.tp.tp.tp[data-scene=journal] #app .hl-top{padding-top:calc(57cqw + 2px)!important}
+@media (max-height:700px){html body.tp.tp.tp[data-scene=journal] #app .hl-top{padding-top:calc(53cqw)!important}}
+@@ .pz-b::first-letter,@@ .pz-b p::first-letter{font:inherit!important;float:none!important;color:inherit!important;padding:0!important;margin:0!important;line-height:inherit!important;text-shadow:none!important;background:none!important}
+@@ .dw-t,@@ .hh-card h2{color:var(--tt)!important}
+@@ .hp-full{display:block;position:relative;width:56px;height:56px;margin:8px auto 0!important}
+@@ .hp-full img{position:absolute;left:0;top:0;width:100%!important;height:100%!important;filter:none!important}
+@@ .hp-full .lit{filter:drop-shadow(0 0 8px rgba(246,198,96,.6))!important}
+@@ .hp-card .btn svg,@@ .hp-card .btn .ic{display:none!important}
+@@ .hp-night .jp-new{display:none!important}
+@media (max-height:800px){@@ .hp-night .hp-sub,@@ .hp-held .hp-sub:last-of-type{display:none!important}}
+@@ .hp-held .hp-sub b{color:var(--tk)}
+@@ .hp-night .hp-full,@@ .hp-held .hp-full{display:none!important}
+@media (max-height:700px){
+ @@ .hh-date{display:none!important}
+ @@ .hh-head,@@ .hh-head.stay{padding-top:45cqw !important}
+ @@ .hh-greet{font-size:20px!important;margin-top:0!important}
+ @@ .hp-big,@@ .pz-t{font-size:24px!important}
+ @@ .hp-night .hp-ta{height:66px;min-height:0}
+ @@ .hp-card .k-div{margin-top:4px!important}
+ @@ .hp-sub{margin-top:6px!important;font-size:16px!important}
+ @@ .hl-top,@@ .hl-top.stay{padding-top:calc(41cqw) !important}
+}
+
+/* tiles: glass on the painted sky, a hairline and nothing more */
+@@ .dft,@@ .tr-s,@@ .dprof,@@ .evc,@@ .k-feat{background:rgba(11,16,36,.38)!important;border:0!important;border-image:none!important;box-shadow:inset 0 0 0 1px var(--tr)!important;border-radius:16px!important;color:var(--tx)!important}
+@@ .dft::before,@@ .dft::after,@@ .tr-s::before,@@ .tr-s::after{display:none!important}
+@@ .dft strong,@@ .tr-s strong,@@ .dprof strong{color:var(--tt)!important}
+@@ .dft span,@@ .tr-s span,@@ .dprof span{color:var(--tx)!important}
+@@ .lrow{background:none!important;border:0!important;border-top:1px solid var(--tr)!important;box-shadow:none!important;color:var(--tx)!important}
+@@ .lrow strong{color:var(--tt)!important}
+
+/* ---- the Moon's letter: a sheet of dawn-cream paper with its seal, in ink ---- */
+@@ .pop:has(.lt-box){background:rgba(5,7,18,.72)!important}
+@@ .pop-box.lt-box{position:fixed!important;left:50%!important;top:34px!important;bottom:104px!important;height:auto!important;max-height:none!important;width:calc(min(100vw,var(--appw)) - 44px)!important;max-width:none!important;transform:translateX(-50%)!important;margin:0!important;
+ overflow:auto;padding:26px 8% 190px!important;border-radius:14px!important;border:0!important;box-shadow:0 0 0 1px rgba(106,78,44,.5),0 14px 40px rgba(0,0,0,.6)!important;
+ background:#E4BF88 url(/art/temple/letter-sheet.webp) 50% 100%/100% auto no-repeat!important;color:#24160A!important}
+@@ .lt-box .cp-k{font:600 11px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:#4A2C0E!important;text-align:center}
+@@ .lt-box h2{font:italic 600 27px/1.1 'Cormorant Garamond',serif!important;color:#24160A!important;margin:8px 0 10px!important;text-align:center}
+@@ .lt-box .lt-b p{font:500 16px/1.38 'Cormorant Garamond',serif!important;color:#24160A!important;margin:0 0 9px!important;text-align:left!important}
+@@ .lt-box .lt-b .lt-sig{font:italic 600 22px 'Cormorant Garamond',serif!important;color:#7A2E2E!important;text-align:right!important}
+@@ .lt-box .muted{color:#4A2C0E!important;font:italic 500 15px 'Cormorant Garamond',serif!important;margin-top:10px!important}
+@@ .lt-box .pop-x{background:rgba(255,248,230,.7)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #6b4318!important}
+
+/* Today's pages: a quiet row of dots under the page, a swipe slides the page in from its side */
+@@ .hp-dots{display:flex;justify-content:center;gap:0;margin:2px 0 -8px;position:relative;z-index:4}
+@@ .hp-dots button{width:26px;height:26px;padding:0;border:0;background:none;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@@ .hp-dots button::before{content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--tk);opacity:.4;transition:all .3s}
+@@ .hp-dots button.on::before{width:8px;height:8px;margin:-4px 0 0 -4px;opacity:1;box-shadow:0 0 8px 1px var(--tk)}
+@keyframes slr{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:none}}
+@keyframes sll{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:none}}
+.hp-stage.slr{animation:slr .38s cubic-bezier(.2,.7,.2,1)}
+.hp-stage.sll{animation:sll .38s cubic-bezier(.2,.7,.2,1)}
+body.reduce .hp-stage.slr,body.reduce .hp-stage.sll{animation:none}
+
+/* the Whisper's card large above its words, centred */
+@@ .hp-whisper .dw.dw-row{display:flex!important;flex-direction:column;align-items:center;gap:8px}
+@@ .hp-whisper .dw-row .scene.mini-w{width:47cqw!important;max-width:210px;margin:0 auto}
+@@ .hp-whisper .dw-side{align-items:center;text-align:center;gap:4px}
+@@ .hp-whisper .dw-side .dw-msg{-webkit-line-clamp:unset!important;display:block!important;margin:2px 0 0!important}
+@@ .hp-whisper .dw-t{margin:4px 0 0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:var(--tt)!important}
+@@ .hp-whisper .dw-side .btn{align-self:center!important;margin-top:8px!important}
+@@ .hh-card .hh-text{font-size:16.5px!important;margin-top:8px!important}
+
+/* one set of action buttons everywhere on Today: the same size, gold for the main action, dark glass with a gold line for the other */
+@@ .hp-whisper .dw-side .btn{flex:none;width:200px;max-width:100%;height:42px;padding:0 6px!important;border-radius:21px!important;white-space:nowrap;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+@@ .hp-card .hp-acts .ibtn{flex:none}
+/* the painting stays whole beneath the words; they read by a soft halo of the scene's own colour */
+@@ .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(14,20,38,.85),0 0 16px rgba(14,20,38,.6)!important}
+@I .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span){text-shadow:0 0 7px rgba(247,205,130,.9),0 0 16px rgba(247,205,130,.7)!important}
+@@ .hh-card .pz-acts .btn,@@ .hp-card .pz-acts .btn,@@ .hp-card .hp-acts .btn{margin:0!important;width:auto!important;flex:1 1 0!important;max-width:200px!important}
+
+/* the header always in light gold with a soft dark halo, so it reads on the dusk sky, the dawn and the night alike */
+@@ .hh-greet{color:#FBEFCB!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 16px rgba(12,16,36,.75)!important}
+@@ .hh-date{color:#F0D898!important;font-weight:600!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 14px rgba(12,16,36,.7)!important}
+@@ .hp-dots button::before{background:#F6E6B6!important;opacity:.55;box-shadow:0 0 4px rgba(12,16,36,.9)}
+@@ .hp-dots button.on::before{opacity:1;box-shadow:0 0 8px 2px rgba(246,214,130,.85),0 0 3px rgba(12,16,36,.9)}
+/* small gold titles: heavier */
+@@ .orn h2,@@ .hp-card .k-div span{font-weight:700!important}
+@@ .orn h2,@@ .hp-card .k-div span{font-size:11px!important;color:#3A200A!important;text-shadow:0 0 5px rgba(255,236,190,.95),0 0 11px rgba(255,226,160,.8)!important}
+body:not([data-tone=ink]) #app .orn h2,body:not([data-tone=ink]) #app .hp-card .k-div span{color:#F0D898!important;text-shadow:0 0 6px rgba(12,16,36,.9),0 0 14px rgba(12,16,36,.7)!important}
+
+/* ---- Today stands still: the moon, greeting, dots and the page's title are fixed; the page's words sit in the room between
+   them and the menu and never need scrolling (they are set a little smaller if they must) ---- */
+@@ .home.hpath{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;display:flex;flex-direction:column;overflow:hidden}
+@@ .home.hpath .hh-head{flex:none}
+@@ .home.hpath .hhero{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;display:flex!important;flex-direction:column;padding:4px 7cqw 4px!important}
+@@ .home.hpath .hhero::-webkit-scrollbar{display:none}
+@@ .home.hpath .hp-stage{margin:auto 0!important;width:100%}
+@@ .hh-head .orn{margin:4px 0 0!important;width:100%}
+@@ .hh-head .orn h2{display:flex!important;align-items:center;justify-content:center;gap:10px}
+@@ .hh-head .orn h2::before,@@ .hh-head .orn h2::after{content:''!important;display:block!important;flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--tf))!important}
+@@ .hh-head .orn h2::after{background:linear-gradient(90deg,var(--tf),transparent)!important}
+@@ .hh-head .orn h2 span{white-space:nowrap}
+@media (max-height:760px){
+ @@ .hh-head,@@ .hh-head.stay{padding-top:36cqw!important}
+ .tm-arc{transform:scale(.84);transform-origin:50% 0}
+}
+/* the stars: the sign's card on the left, its words on the right */
+@@ .hh-stage{flex-direction:row!important;align-items:center!important;gap:4cqw}
+@@ .hh-stage .hh-plate{flex:none;width:38cqw!important;max-width:none!important;margin-top:0!important}
+@@ .hh-stage .hh-card{flex:1 1 0;min-width:0;width:auto!important;align-items:flex-start;text-align:left}
+@@ .hh-stage .hh-card .hh-name{align-items:flex-start}
+@@ .hh-stage .hh-card h2{margin:0!important;letter-spacing:.28em!important}
+@@ .hh-stage .hh-card .keys{text-align:left}
+@@ .hh-stage .hh-card .hh-text{margin:7px 0 0!important;font-size:15.5px!important;line-height:1.3!important}
+@@ .hh-stage .pz-acts{flex-direction:column!important;align-items:stretch;gap:6px;margin-top:9px!important}
+@@ .hh-stage .pz-acts .btn{max-width:none;height:36px;flex:none}
+/* the Whisper: its card on the left, its words on the right, what is for you below */
+@@ .hp-whisper .dw.dw-row{flex-direction:row!important;align-items:center;gap:4cqw}
+@@ .hp-whisper .dw-row .scene.mini-w{flex:none;width:38cqw!important;max-width:none;margin:0}
+@@ .hp-whisper .dw-side{flex:1 1 0;min-width:0;align-items:flex-start;text-align:left}
+@@ .hp-whisper .dw-t{font-size:22px!important}
+@@ .hp-whisper .dw-side .dw-msg{font-size:15.5px!important;line-height:1.3!important;text-align:left}
+@@ .hp-whisper .dw-side .btn{width:100%!important}
+@@ .hp-whisper .cp-you{margin-top:8px!important;padding-top:7px!important;font-size:15px!important}
+@@ .hp-whisper .hp-acts{margin-top:9px!important}
+@@ .hp-whisper .hp-acts .btn{height:38px}
+@@ .hp-eve{margin-top:12px!important;padding-top:10px!important;border-top:1px solid var(--tr)!important;font-size:16px!important;line-height:1.3!important;font-style:italic}
+@media (max-height:800px){@@ .hp-held .hp-chap{display:none!important}}
+@@ .hp-reflect .hp-ta{min-height:0;height:96px}
+@@ .hh-head .orn h2{width:100%}
+/* every word of Today in light gold with a dark halo: it reads on the dawn sky, the sea and the night alike */
+@@ .home.hpath .hp-stage,@@ .home.hpath .hh-head .orn{--tx:#FBF0D2;--tt:#FFF6DC;--tk:#F3D790;--tq:#F7E4B4;--tr:rgba(243,215,144,.45);--tf:rgba(243,215,144,.6)}
+@@ .home.hpath .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span,.cp-you,.cp-you span),@@ .home.hpath .hh-head .orn span{text-shadow:0 0 3px rgba(12,16,36,.85),0 0 9px rgba(12,16,36,.8),0 1px 14px rgba(12,16,36,.65)!important}
+@@ .home.hpath .hh-head .orn h2{color:#F3D790!important}
+@@ .home.hpath .hp-ta{color:#FFF6DC!important;background:rgba(12,16,36,.4)!important}
+@@ .home.hpath .hp-ta::placeholder{color:#F3E4BC;opacity:.75}
+@media (max-height:760px){
+ @@ .hp-wfy .pz-moon{display:none!important}
+ @@ .hp-wfy .pz-t{font-size:23px!important;margin-top:0!important}
+ @@ .hp-wfy .pz-b{font-size:16px!important;line-height:1.27!important;margin-top:6px!important}
+ @@ .hp-wfy .cp-you{font-size:14.5px!important;margin-top:7px!important;padding-top:6px!important;line-height:1.25!important}
+ @@ .hp-wfy .hp-acts{margin-top:8px!important}
+ @@ .hp-wfy .hp-acts .btn{height:38px}
+}
+@@ .hh-stage{align-items:flex-start!important}
+@@ .hh-stage .hh-plate{margin-top:3px!important}
+/* by day the words sit on a soft panel of dark glass, so they read on the bright dawn sky and across the sea alike */
+@I .home.hpath .hp-stage{background:rgba(18,22,44,.46)!important;border-radius:18px;padding:12px 13px!important;box-shadow:inset 0 0 0 1px rgba(243,215,144,.28)}
+@I .home.hpath .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.pz-q,.hh-text,.dw-msg,.keys,.hh-name p,.orn span,.cp-you,.cp-you span){text-shadow:0 0 3px rgba(10,14,30,.7),0 1px 6px rgba(10,14,30,.6)!important}
+@I .home.hpath .hp-stage{width:100%}
+@@ .hp-held .hp-sub.hp-eve:last-of-type{display:block!important}
+@@ .hp-held .hp-in>.btn{flex:none;max-width:none;width:auto;padding:0 20px!important;margin-top:10px}
+@@ .hh-stage{flex-wrap:wrap!important}
+@@ .hh-stage .pz-acts{flex:0 0 100%!important;flex-direction:row!important;margin-top:12px!important;gap:10px}
+@@ .hh-stage .pz-acts .btn{flex:1 1 0;height:42px;max-width:none}
+/* the sign's card and the Whisper's card are the same size */
+@@ .hh-stage .hh-plate,@@ .hp-whisper .dw-row .scene.mini-w{width:38cqw!important;height:57cqw!important;aspect-ratio:2/3;object-fit:cover}
+
+/* ---- Your Sky: one screen. Your sign and the time tabs stand still; the reading, the sky now and three doorways sit below ---- */
+@@ .skyp{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;display:flex;flex-direction:column;overflow:hidden;padding:0!important;container-type:inline-size;color:var(--tx)}
+@@ .skyp .sk-head{flex:none;position:relative!important;padding:34px 7cqw 0!important;display:flex;flex-direction:column;align-items:center;text-align:center}
+@@ .sk-k{margin:0;font:600 11px 'Cinzel',serif;letter-spacing:.34em;text-transform:uppercase;color:var(--tk);text-shadow:0 0 6px rgba(10,14,30,.8)}
+@@ .sk-med{display:block;width:58px;height:58px;margin:8px 0 0}
+@@ .sk-med img,@@ .sk-med .gmed-i{width:100%!important;height:100%!important;display:block}
+@@ .sk-n{margin:6px 0 0!important;font:500 24px/1 'Cinzel',serif!important;letter-spacing:.3em!important;text-indent:.3em;text-transform:uppercase;color:#FBEFCB!important;text-shadow:0 0 8px rgba(10,14,30,.8)!important}
+@@ .sk-dt{margin:3px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.8)}
+@@ .sk-ky{margin:3px 0 0!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.18em;text-transform:uppercase;color:var(--tk)!important}
+@@ .skyp .sk-head [role=group]{width:100%;margin-top:11px}
+@@ .skyp .seg{width:100%;display:flex;height:36px;border-radius:18px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+@@ .skyp .seg button{flex:1;font:600 11px 'Cinzel',serif!important;letter-spacing:.12em!important;text-transform:uppercase;color:var(--tx)!important;border-radius:18px}
+@@ .skyp .seg button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important}
+@@ .sk-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 7cqw 4px;gap:8px}
+@@ .sk-read{text-align:center}
+@@ .sk-read .hm-q{margin:0!important;font:italic 500 19px/1.28 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 6px rgba(10,14,30,.85),0 0 14px rgba(10,14,30,.6)!important}
+@@ .sk-read .btn{margin:12px auto 0!important;display:flex;align-items:center;justify-content:center;width:100%;max-width:260px;height:44px;padding:0 6px!important;border-radius:22px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+@@ .sk-now{display:flex;align-items:center;gap:12px;width:100%;padding:9px 4px;border:0;border-top:1px solid var(--tr);border-bottom:1px solid var(--tr);background:none;color:var(--tx);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@@ .sk-now .sk-mi{width:38px;height:38px;flex:none}
+@@ .sk-now>span{flex:1;min-width:0;font:italic 500 16px/1.2 'Cormorant Garamond',serif;text-shadow:0 0 6px rgba(10,14,30,.85)}
+@@ .sk-now b{display:block;font:600 11px 'Cinzel',serif;font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:var(--tk);margin-bottom:2px}
+@@ .sk-now i{display:block;font-size:14px;opacity:.85}
+@@ .sk-now svg{width:16px;height:16px;flex:none;color:var(--tk)}
+@@ .sk-doors{display:flex;justify-content:space-around;gap:6px}
+@@ .sk-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;border:0;background:none;color:var(--tk);cursor:pointer;-webkit-tap-highlight-color:transparent}
+@@ .sk-d svg{width:38px;height:38px;padding:8px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--tf);background:rgba(14,20,40,.45)}
+@@ .sk-d span{font:600 11px 'Cinzel',serif;letter-spacing:.18em;text-transform:uppercase;text-shadow:0 0 6px rgba(10,14,30,.85)}
+@@ .skyp .seg button[aria-selected=true]{color:#24160A!important;text-shadow:none!important;font-weight:700!important}
+@@ .skyp .seg button::before,@@ .skyp .seg button::after{display:none!important}
+@@ .skyp .seg button{border:0!important;box-shadow:none!important}
+
+/* ---- Sky's sub-screens: a compact head and tabs that stand still, a list that moves between them and the menu ---- */
+@@ .mnp{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;min-height:0!important;display:flex!important;flex-direction:column;gap:8px!important;overflow:hidden;padding:0 7cqw!important}
+@@ .mnp .mn-bar{flex:none;position:absolute;left:0;right:0;top:28px}
+@@ .mnp .mn-hd{flex:none;height:auto!important;padding:34px 0 0!important;text-align:center}
+@@ .mnp .mn-hd h1{margin:0!important;font:500 21px/1.1 'Cinzel',serif!important;letter-spacing:.26em!important;text-indent:.26em;text-transform:uppercase;color:#FBEFCB!important;background:none!important;-webkit-text-fill-color:#FBEFCB!important;text-shadow:0 0 8px rgba(10,14,30,.8)!important}
+@@ .mnp .mn-hd :is(.orn,.k-div,svg.mn-orn,.mn-or){display:none!important}
+@@ .mnp .mn-sub{margin:4px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-align:center;text-shadow:0 0 6px rgba(10,14,30,.85)}
+@@ .mnp :is(.gtabs,.seg,.fscroll,.field){flex:none}
+@@ .mnp .gtabs,@@ .mnp .seg{background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border-radius:18px}
+@@ .mn-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;margin:0 -7cqw;padding:2px 7cqw 14px;-webkit-mask-image:linear-gradient(transparent,#000 10px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(transparent,#000 10px,#000 calc(100% - 16px),transparent);display:flex;flex-direction:column;gap:10px}
+@@ .mn-scroll::-webkit-scrollbar{display:none}
+@media (max-height:760px){@@ .mnp .mn-sub{display:none}}
+/* choosing someone else's sign: all twelve on one screen */
+@@ .cpop.spk .cp-in{padding:calc(env(safe-area-inset-top,0px) + 30px) 7% calc(var(--navh,0px) + 14px)!important;gap:8px!important}
+@@ .cpop.spk .cp-t{font-size:22px!important;margin:0!important}
+@@ .cpop.spk .spk-d{margin:0!important}
+@@ .cpop.spk .spk-z{gap:8px 4px!important}
+@@ .mnp .mn-hd h1{font-size:18px!important;letter-spacing:.2em!important;text-indent:.2em;white-space:nowrap}
+@@ .mnp .mn-hd{padding-top:38px!important}
+@media (max-height:760px){@@ .mnp .mn-hd p,@@ .mnp .mn-hd~p.mn-sub{display:none!important}}
+@@ .mnp .mn-bar{display:flex!important;justify-content:space-between;align-items:center;padding:0 2px;z-index:6;width:auto!important;height:36px}
+@@ .mnp .mn-bar .ibtn{position:static!important;margin:0!important}
+@@ .mnp .mn-bar .mn-r{position:static!important;display:flex;gap:4px;margin:0!important}
+@@ .mnp .mn-bar .ibtn{width:36px;height:36px;color:#F1DFB4!important;background:rgba(14,20,40,.5)!important;border-radius:50%}
+@@ .mnp .mn-bar{transform:none!important;left:7cqw!important;right:7cqw!important}
+@@ .mnp.lb .mn-hd h1{font-size:17px!important;letter-spacing:.14em!important;text-indent:.14em}
+
+/* ---- Oracle, Journal and You: the same layout as Sky ---- */
+@@ .pg-or .sk-head{padding-top:37cqw!important}
+@@ .pg-jn .sk-head{padding-top:25cqw!important}
+@@ .pg-you .sk-head{padding-top:41cqw!important}
+@@ .pg-jn:has(.pg-scroll) .sk-head{padding-top:44px!important}
+@@ .pg-t{margin:0!important;font:500 22px/1.1 'Cinzel',serif!important;letter-spacing:.3em!important;text-indent:.3em;text-transform:uppercase;color:#FBEFCB!important;-webkit-text-fill-color:#FBEFCB!important;background:none!important;text-shadow:0 0 8px rgba(10,14,30,.85)!important}
+@@ .pg-s{margin:5px 0 0!important;font:italic 500 16px/1.2 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+@@ .pg .sk-body{justify-content:space-evenly;padding-top:4px}
+@@ .pg-scroll{overflow-y:auto!important;justify-content:flex-start!important;scrollbar-width:none;gap:10px}
+@@ .pg-scroll::-webkit-scrollbar{display:none}
+@@ .pg-l{display:flex;align-items:center;gap:10px;margin:0 0 6px;font:600 11px 'Cinzel',serif;letter-spacing:.26em;text-transform:uppercase;color:var(--tk);text-shadow:0 0 6px rgba(10,14,30,.85)}
+@@ .pg-l::before,@@ .pg-l::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--tf))}
+@@ .pg-l::after{background:linear-gradient(90deg,var(--tf),transparent)}
+@@ .pg .sk-d .sk-di{display:block;width:46px;height:46px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
+@@ .pg .sk-d .sk-di img{width:100%;height:100%;object-fit:cover;display:block}
+@@ .pg .sk-d span{text-align:center;line-height:1.2;font-size:11px}
+@@ .pg .sk-doors{gap:2px}
+@@ .or-k{display:flex;align-items:center;gap:14px}
+@@ .or-k .tk-m{flex:none;width:25cqw;aspect-ratio:3/4;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
+@@ .or-k .tk-m img{width:100%;height:100%;object-fit:cover;display:block}
+@@ .or-k h3{margin:0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 8px rgba(10,14,30,.85)}
+@@ .or-k p{margin:4px 0 0!important;font:500 16px/1.28 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+@@ .or-k .btn,@@ .or-two .btn,@@ .jr-q .btn{height:42px;border-radius:21px!important;padding:0 18px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important}
+@@ .or-k .btn{margin-top:10px;width:100%}
+@@ .or-two{display:flex;gap:10px}
+@@ .or-two .btn{flex:1;padding:0 6px!important}
+@@ .or-two .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important}
+@@ .or-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+@@ .or-chip{padding:8px 10px;border:0;border-radius:17px;background:rgba(14,20,40,.55);box-shadow:inset 0 0 0 1px var(--tf);color:var(--tt);font:600 11px "Cinzel",serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@@ .jr-q{text-align:center;display:flex;flex-direction:column;align-items:center}
+@@ .jr-q .jp-k{margin:0!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.24em;text-transform:uppercase;color:var(--tk)!important}
+@@ .jr-q .jp-q{margin:6px 0 0!important;font:italic 500 21px/1.25 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-shadow:0 0 8px rgba(10,14,30,.85),0 0 16px rgba(10,14,30,.6)}
+@@ .jr-q .btn{margin-top:12px!important;width:100%;max-width:280px}
+@@ .jr-q .jp-new{margin-top:8px;background:none;border:0;color:var(--tt);font:italic 500 15px 'Cormorant Garamond',serif;text-shadow:0 0 6px rgba(10,14,30,.9)}
+@@ .jr-ch .js3{display:flex;justify-content:space-around;text-align:center}
+@@ .jr-ch .js3 strong{display:block;font:500 26px/1 'Cormorant Garamond',serif;color:#FFF6DC;text-shadow:0 0 8px rgba(10,14,30,.85)}
+@@ .jr-ch .js3 span{font:600 11px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)}
+@@ .jlib.pg .jl-bar{position:absolute!important;left:7cqw;right:7cqw;top:28px;z-index:6;display:flex;justify-content:space-between}
+@@ .pg .list{display:flex;flex-direction:column;gap:8px}
+@@ .pg .lrow{background:rgba(14,20,40,.5)!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tr)!important;border:0!important;padding:8px 10px!important}
+@@ .jlib.pg .jl-bar{transform:none!important;width:auto!important;height:36px!important;right:7cqw!important;left:7cqw!important}
+@@ .jlib.pg .jl-bar>.ibtn,@@ .jlib.pg .jl-acts .ibtn{position:static!important;width:36px;height:36px;color:#F1DFB4!important;background:rgba(14,20,40,.5)!important;border-radius:50%}
+@@ .jlib.pg .jl-acts{position:static!important;display:flex;gap:4px;margin:0!important}
+@@ .pg .field .inp{background:rgba(14,20,40,.55)!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important;border-radius:20px!important}
+@@ .pg .field input{color:#FFF6DC!important;background:none!important}
+@@ .pg .field input::placeholder{color:#F3E4BC;opacity:.7}
+@@ .pg-jn:has(.pg-scroll) .pg-t{font-size:19px!important;letter-spacing:.18em!important;text-indent:.18em}
+
+/* ---- every night page: soft glass instead of ornate frames and beige notes ---- */
+@@ .mnp .mbox,@@ .mnp .mbox.ornate,@@ .mnp .panel,@@ .mnp .card{background:rgba(14,20,40,.52)!important;border:0!important;border-image:none!important;box-shadow:inset 0 0 0 1px var(--tr)!important;border-radius:16px!important;color:var(--tx)!important;padding:14px 16px!important}
+@@ .mnp .mbox::before,@@ .mnp .mbox::after,@@ .mnp .panel::before,@@ .mnp .panel::after{display:none!important}
+@@ .mnp .mbox>.ck,@@ .mnp .mbox>.corner,@@ .mnp .mbox>svg.orn-c,@@ .mnp .mbox>i{display:none!important}
+@@ .mnp .note,@@ .mnp .mn-note,@@ .mnp p.note{background:rgba(14,20,40,.52)!important;color:var(--tx)!important;border:0!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tr)!important;padding:10px 14px!important}
+@@ .mnp :is(h2,h3,.kick,.k-div span){color:var(--tk)!important}
+@@ .mnp :is(p,li,label,.muted,.small){color:var(--tx)!important}
+@@ .mnp .inp,@@ .mnp select,@@ .mnp textarea,@@ .mnp input:not([type=checkbox]):not([type=radio]){background:rgba(8,12,28,.55)!important;color:#FFF6DC!important;border:0!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border-radius:12px!important}
+@@ .mnp .btn:not(.ghost):not(.sm){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;border-radius:22px!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45)!important}
+@@ .mnp .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important;border-radius:22px!important}
+
+/* the profile and the dreams */
+@@ .mnp .pf-id{flex:none;display:flex;align-items:center;gap:14px;padding:4px 0}
+@@ .pf-id .pf-pic{position:relative;display:block;flex:none;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf)}
+@@ .pf-id .pf-pic img,@@ .pf-id .pf-pic .avatar{width:100%;height:100%;object-fit:cover}
+@@ .pf-id .pf-cam{position:absolute;right:0;bottom:0;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#BE9247;color:#24160A}
+@@ .pf-id .pf-cam svg{width:12px;height:12px}
+@@ .pf-id h2{margin:0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-transform:none;letter-spacing:0}
+@@ .pf-id .pf-sign{margin:2px 0 0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:var(--tx)!important}
+@@ .pf-id .keys{margin:2px 0 0!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;color:var(--tk)!important}
+@@ .pfn .pf-body{display:flex;flex-direction:column;gap:10px}
+@@ .pg-dr>.ibtn{position:absolute;left:7cqw;top:28px;z-index:6;width:36px;height:36px;color:#F1DFB4!important;background:rgba(14,20,40,.5)!important;border-radius:50%}
+@@ .pg-dr .sk-head{padding-top:37cqw!important}
+@@ .dr-in{text-align:center}
+@@ .dr-lead{margin:0 0 12px!important;font:500 17px/1.3 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+@@ .pg-dr .symrow{display:flex;justify-content:space-between;gap:4px}
+@@ .pg-dr .symrow button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;color:var(--tk);cursor:pointer}
+@@ .pg-dr .symrow img,@@ .pg-dr .symrow .sym-i{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px var(--tf)}
+@@ .pg-dr .symrow strong{font:600 11px 'Cinzel',serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 0 6px rgba(10,14,30,.9)}
+@@ .pg-dr .dr-note{text-align:center;font:italic 500 15px 'Cormorant Garamond',serif;color:var(--tx);margin:0}
+
+/* ---- a place is a row of pages: the strip under the title, a swipe between them ---- */
+@@ .pg .sk-head .pg-strip{width:100%;margin-top:11px;display:flex;height:36px;border-radius:18px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+@@ .pg .pg-strip button{flex:1;border:0!important;box-shadow:none!important;border-radius:18px;background:none;font:600 11px 'Cinzel',serif!important;letter-spacing:.14em!important;text-transform:uppercase;color:var(--tx)!important;cursor:pointer}
+@@ .pg .pg-strip button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;font-weight:700!important;text-shadow:none!important}
+@@ .pg .sk-body{justify-content:center}
+@@ .pg-page{display:flex;flex-direction:column;gap:18px;width:100%}
+.pg-page.slr{animation:slr .38s cubic-bezier(.2,.7,.2,1)}
+.pg-page.sll{animation:sll .38s cubic-bezier(.2,.7,.2,1)}
+body.reduce .pg-page.slr,body.reduce .pg-page.sll{animation:none}
+@@ .pg-in{margin:0;text-align:center;font:italic 500 17px/1.3 'Cormorant Garamond',serif;color:var(--tx);text-shadow:0 0 6px rgba(10,14,30,.9),0 0 14px rgba(10,14,30,.6)}
+@@ .pg-grid{display:grid;grid-template-columns:repeat(var(--c,2),1fr);gap:16px 8px}
+@@ .pg-tile{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border:0;background:none;color:var(--tt);text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@@ .pg-ti{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf);background:rgba(14,20,40,.45);color:var(--tk);font-style:normal}
+@@ .pg-grid[style*="--c:2"] .pg-ti{width:78px;height:78px}
+@@ .pg-ti img{width:100%;height:100%;object-fit:cover;display:block}
+@@ .pg-ti svg{width:60%;height:60%}
+@@ .pg-tile b{font:600 11px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;color:#FFF6DC;text-shadow:0 0 6px rgba(10,14,30,.9);margin-top:4px}
+@@ .pg-tile span{font:italic 500 15px/1.15 'Cormorant Garamond',serif;color:var(--tx);text-shadow:0 0 6px rgba(10,14,30,.9)}
+@@ .or-pr{display:flex;flex-direction:column;gap:7px}
+@@ .or-p{padding:10px 14px;border:0;border-radius:16px;background:rgba(14,20,40,.55);box-shadow:inset 0 0 0 1px var(--tf);color:var(--tt);font:italic 500 15px/1.2 'Cormorant Garamond',serif;text-align:center;cursor:pointer}
+@@ .skyp .seg.pg-strip button[aria-selected=true]{color:#24160A!important;-webkit-text-fill-color:#24160A!important;text-shadow:none!important}
+@@ .pg-sky .sk-head{padding-top:30px!important}
+@@ .pg-jn .sk-head{padding-top:25cqw!important}
+@@ .pg-sky .sk-k{margin-bottom:4px}
+@@ .sk-who{display:flex;align-items:center;gap:14px;justify-content:center}
+@@ .sk-who .sk-med{margin:0;width:64px;height:64px;flex:none}
+@@ .sk-who .sk-n{margin:0!important;font:500 24px/1 'Cinzel',serif!important;letter-spacing:.24em!important;text-indent:0;text-align:left}
+@@ .sk-who .sk-dt,@@ .sk-who .sk-ky{text-align:left}
+@@ .pg-sky .sk-body .seg{width:100%;display:flex;height:36px;border-radius:18px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+@@ .pg-sky .sk-body .seg button{flex:1;font:600 11px 'Cinzel',serif!important;letter-spacing:.1em!important;text-transform:uppercase;color:var(--tx)!important;border:0!important;border-radius:18px;background:none}
+@@ .pg-sky .sk-body .seg button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;text-shadow:none!important}
+@@ .sk-moon{text-align:center}
+@@ .sk-moon .sk-bm{width:96px;height:96px;display:block;margin:0 auto}
+@@ .sk-moon h2{margin:8px 0 0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;color:#FFF6DC!important;text-transform:none;letter-spacing:0}
+@@ .sk-moon p{margin:2px 0 0!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-shadow:0 0 6px rgba(10,14,30,.9)}
+@@ .sk-moon .sk-ml{margin-top:8px!important;font-style:normal!important;font-weight:500}
+@@ .pg-page>.btn{align-self:center;width:100%;max-width:280px;height:44px;border-radius:22px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45)!important}
+@@ .pg-scroll .pg-page{padding-bottom:8px}
+@@ .pg-jn .pg-scroll{justify-content:flex-start!important}
+@@ .pg-tile .pg-ti img,@@ .pg-tile .pg-ti .moon-pic,@@ .pg-tile .pg-ti svg.moon-svg{width:100%;height:100%}
+@@ .ins-in .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@@ .ins-in .stat{background:rgba(14,20,40,.52)!important;border:0!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tr)!important;padding:10px 4px!important;text-align:center}
+@@ .ins-in .stat strong{display:block;font:500 26px/1 'Cormorant Garamond',serif;color:#FFF6DC!important}
+@@ .ins-in .stat span{font:600 11px 'Cinzel',serif;letter-spacing:.14em;text-transform:uppercase;color:var(--tk)!important}
+@@ .ins-in .sec-h{margin:14px 0 8px!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.24em;text-transform:uppercase;color:var(--tk)!important;text-align:center}
+@@ .ins-in .tbar{display:flex;align-items:center;gap:10px;margin:6px 0;color:var(--tx)}
+@@ .ins-in .tbar span{flex:0 0 96px;font:italic 500 15px 'Cormorant Garamond',serif}
+@@ .ins-in .tbar i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+@@ .ins-in .tbar i b{display:block;height:100%;background:linear-gradient(90deg,#BE9247,#EFD79B)}
+@@ .ins-in .tbar em{font-style:normal;font:600 11px 'Cinzel',serif;color:var(--tk)}
+@@ .ins-in .tb-i{width:34px;height:34px;border-radius:50%;object-fit:cover}
+@@ .ins-in .pill{display:inline-block;margin:3px;padding:6px 12px;border-radius:16px;background:rgba(14,20,40,.55);box-shadow:inset 0 0 0 1px var(--tf);color:var(--tt)}
+@@ .ins-in .seg{width:100%;display:flex;height:34px;margin-bottom:10px;border-radius:17px;background:rgba(14,20,40,.5)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+@@ .ins-in .seg button{flex:1;border:0!important;background:none;color:var(--tx)!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.14em;text-transform:uppercase;border-radius:17px}
+@@ .ins-in .seg button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important}
+@@ .pg-jn .sk-head,@@ .pg-jn:has(.pg-scroll) .sk-head{padding-top:46px!important}
+@@ .skyp .ins-in .seg button[aria-selected=true]{color:#24160A!important;-webkit-text-fill-color:#24160A!important;text-shadow:none!important;font-weight:700!important}
+@@ .pg-jn .pg-t{font-size:20px!important}
+@@ .pg .pg-strip button{font-size:11px!important;letter-spacing:.07em!important;padding:0 2px!important}
+@@ .pg-sky .sk-body .seg button{font-size:11px!important;letter-spacing:.08em!important}
+
+/* ---- one set of measures for the whole app: the page never scrolls where it is fixed, titles never fade, and every action
+   and panel keeps the same size, spacing, type and colour ---- */
+:root{--btn-h:44px;--pad:16px}
+html.nos,html.nos body{overflow:hidden!important;height:100%;overscroll-behavior:none}
+html.nos #t-back.scrolled .tb-head{opacity:1!important}
+@@ :is(.hh-head,.mn-hd,.hl-top,.sk-head,.stay){opacity:1!important;pointer-events:auto!important;transform:none!important}
+@@ :is(.home.hpath,.skyp,.mnp,.pfn) .btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--btn-h)!important;height:var(--btn-h)!important;padding:0 18px!important;border-radius:calc(var(--btn-h) / 2)!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;white-space:nowrap;line-height:1}
+@@ :is(.home.hpath,.skyp,.mnp,.pfn) .btn.sm{min-height:38px!important;height:38px!important;border-radius:19px!important}
+@@ :is(.home.hpath,.skyp,.mnp,.pfn) .btn:not(.ghost){background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)!important;-webkit-text-fill-color:#24160A}
+@@ :is(.home.hpath,.skyp,.mnp,.pfn) .btn.ghost{background:rgba(16,18,36,.62)!important;color:#F1DDA8!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)!important;-webkit-text-fill-color:#F1DDA8}
+@@ :is(.home.hpath,.skyp) .pz-acts,@@ :is(.home.hpath,.skyp) .hp-acts,@@ .or-two,@@ .hh-stage .pz-acts{display:flex!important;flex-direction:row!important;gap:10px!important;margin-top:var(--pad)!important;width:100%}
+@@ :is(.home.hpath,.skyp) :is(.pz-acts,.hp-acts,.or-two) .btn{flex:1 1 0;min-width:0;max-width:none}
+@@ .home.hpath .hp-stage{padding:var(--pad)!important;box-sizing:border-box}
+@@ .home.hpath .hp-stage>:last-child{margin-bottom:0!important}
+@@ .hp-whisper .dw-side .btn,@@ .or-k .btn,@@ .jr-q .btn,@@ .sk-read .btn,@@ .pg-page>.btn{width:100%!important;max-width:none}
+
+/* ---- a sign's reading: the same layout as every place ---- */
+@@ .hsp.sx{position:fixed!important;left:0!important;right:0!important;top:0!important;bottom:calc(var(--navh,64px) + 10px)!important;margin:0 auto!important;width:min(100vw,var(--appw))!important;height:auto!important;min-height:0!important;display:flex!important;flex-direction:column;overflow:hidden;padding:0!important;container-type:inline-size;background:none!important;--u:3.9px}
+@@ .sx .hsp-hero{display:none!important}
+@@ .sx .hsp-bar{position:absolute!important;left:7cqw!important;right:7cqw!important;top:28px!important;z-index:6;display:flex!important;justify-content:space-between;align-items:center;width:auto!important;height:36px!important;transform:none!important;pointer-events:none}
+@@ .sx .hsp-bar>*{pointer-events:auto}
+@@ .sx .hsp-r{display:flex;gap:6px}
+@@ .sx .hsp-bar .ibtn{position:static!important;width:36px;height:36px;border-radius:50%;background:rgba(14,20,40,.55)!important;color:#F1DFB4!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important}
+@@ .sx .sx-head{flex:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 7cqw 0}
+@@ .sx .sx-pic{display:block;width:76px;height:76px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--tf),0 0 18px rgba(227,194,126,.3)}
+@@ .sx .sx-pic img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+@@ .sx .sx-head .pg-t{margin-top:8px!important;font-size:21px!important}
+@@ .sx .sx-head .pg-s{font-size:15px!important}
+@@ .sx .sx-head .keys{display:inline}
+@@ .sx .sx-per{display:flex!important;width:100%;height:36px;margin:10px 0 0!important;gap:0!important;border-radius:18px;background:rgba(14,20,40,.5);box-shadow:inset 0 0 0 1px var(--tf)}
+@@ .sx .sx-per::before,@@ .sx .sx-per::after{display:none!important}
+@@ .sx .sx-per button{flex:1;border-radius:18px;font:600 11px 'Cinzel',serif!important;letter-spacing:.08em!important;text-transform:uppercase;color:var(--tx)!important;text-shadow:none!important;padding:0!important}
+@@ .sx .sx-per button[aria-selected=true]{background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;font-weight:700!important}
+@@ .sx .sx-per button[aria-selected=true]::after{display:none!important}
+@@ .sx .sx-main{position:static!important;flex:1 1 auto;min-height:0;display:flex!important;flex-direction:column;padding:6px 7cqw 4px!important;gap:8px;inset:auto!important}
+@@ .sx .hc-ctl{flex:none;margin:0!important}
+@@ .sx .hcar{flex:1 1 auto!important;min-height:0;margin:0!important;padding:var(--pad);box-sizing:border-box;border-radius:18px;background:rgba(18,22,44,.46);box-shadow:inset 0 0 0 1px rgba(243,215,144,.28)}
+@@ .sx .hc-slide .read p{text-align:left!important;font:500 17px/1.38 'Cormorant Garamond',serif!important;color:#FFF6DC!important;-webkit-hyphens:none;hyphens:none;text-shadow:0 0 3px rgba(10,14,30,.7),0 0 8px rgba(10,14,30,.6)!important}
+@@ .sx .sx-ft{flex:none;height:14px;margin:0!important;display:flex;justify-content:center}
+@@ .sx .sx-acts{flex:none;display:flex;gap:10px;margin-top:2px}
+@@ .sx .sx-acts .btn{flex:1 1 0;min-width:0}
+@@ .sx .sx-per button{flex:1 1 0!important;min-width:0}
+@@ .skyp .sx-per button[aria-selected=true],@@ .sx .sx-per button[aria-selected=true]{color:#24160A!important;-webkit-text-fill-color:#24160A!important}
+@@ .sx .sx-pic{width:64px;height:64px}
+@@ .sx .sx-head{padding-top:32px}
+
+/* ---- the sign's reading: its own painted sky, the medallion set in the golden ring ---- */
+@@ .sx .sx-head{position:relative;padding-top:calc(var(--t-my,112px) + var(--t-md,117px) * .66 + 2px)!important}
+@@ .sx .sx-pic{position:absolute!important;left:50%;top:var(--t-my,112px);width:var(--t-md,117px)!important;height:var(--t-md,117px)!important;transform:translate(-50%,-50%);display:block;border-radius:50%;box-shadow:0 0 22px rgba(227,194,126,.28);overflow:visible}
+@@ .sx .sx-pic img,@@ .sx .sx-pic .gmed-i{width:100%!important;height:100%!important;display:block;object-fit:contain}
+@@ .sx .sx-head .pg-t{margin-top:0!important}
+@@ .sx .sx-head .pg-s{margin-top:2px!important}
+/* the time: one clean pill, the chosen time lit inside it */
+@@ .sx .sx-per{padding:3px;gap:2px!important;height:38px;border-radius:19px;background:rgba(10,16,34,.6)}
+@@ .sx .sx-per button{height:100%;border-radius:16px;letter-spacing:.1em!important}
+@@ .sx .sx-per button[aria-selected=true]{box-shadow:inset 0 1px 0 1px rgba(255,246,214,.4),0 0 10px rgba(227,194,126,.3)}
+/* the actions are sized to what each screen asks of them: the main action is the wider, the other is quieter */
+@@ :is(.home.hpath,.skyp) :is(.pz-acts,.hp-acts,.sx-acts) .btn:not(.ghost){flex:1.4 1 0}
+@@ :is(.home.hpath,.skyp) :is(.pz-acts,.hp-acts,.sx-acts) .btn.ghost{flex:1 1 0}
+@@ :is(.home.hpath,.skyp) :is(.pz-acts,.hp-acts,.sx-acts) .btn.ghost{height:40px!important;min-height:40px!important;border-radius:20px!important;font-size:11px!important}
+@@ .sx .sx-acts{align-items:center}
+
+/* ---- arriving: the sky opens, the Moon and the greeting rise into place ---- */
+@keyframes arrBg{from{opacity:0}to{opacity:1}}
+@keyframes arrRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes arrMoon{0%{opacity:0;transform:scale(.82)}60%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes arrGlow{0%{filter:drop-shadow(0 0 0 rgba(246,206,120,0))}50%{filter:drop-shadow(0 0 22px rgba(246,206,120,.8))}100%{filter:drop-shadow(0 0 6px rgba(246,206,120,.3))}}
+body.arrive #t-back{animation:arrBg 1.4s ease-out both}
+body.arrive .tm-arc{animation:arrBg 1.8s ease-out both}
+body.arrive .tm-mo{animation:arrMoon 1.6s cubic-bezier(.2,.7,.2,1) .2s both,arrGlow 2.4s ease-out .2s both}
+body.arrive .hh-head>*{animation:arrRise 1s cubic-bezier(.2,.7,.2,1) both}
+body.arrive .hh-head>:nth-child(2){animation-delay:.25s}
+body.arrive .hh-head>:nth-child(3){animation-delay:.45s}
+body.arrive .hh-head>:nth-child(n+4){animation-delay:.65s}
+body.arrive .hhero{animation:arrRise 1s cubic-bezier(.2,.7,.2,1) .8s both}
+body.arrive #nav{animation:arrRise 1s ease-out 1s both}
+/* ---- Kassandra's chamber: the same glass, the same buttons, nothing that scrolls but her words ---- */
+@@ .kz-talk{position:fixed!important;left:50%!important;transform:translateX(-50%);width:min(100vw,var(--appw));top:calc(var(--top) + var(--w) * 1.0 + 6px)!important;bottom:calc(var(--navh,64px) + 10px)!important;padding:0 7vw!important;display:flex!important;box-sizing:border-box}
+@@ .kz-card{flex:1 1 auto;min-height:0;overflow:hidden;background:rgba(18,22,44,.5)!important;border:0!important;border-radius:18px!important;box-shadow:inset 0 0 0 1px rgba(243,215,144,.28)!important;padding:var(--pad)!important;gap:10px}
+@@ .kz-card::before,@@ .kz-card::after{display:none!important}
+@@ .kz-thread{flex:1 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none}
+@@ .kz-thread::-webkit-scrollbar{display:none}
+@@ .kz-say{font:italic 500 19px/1.35 'Cormorant Garamond',serif!important;color:#FFF6DC!important}
+@@ .kz .kas-m{font:500 17px/1.38 'Cormorant Garamond',serif;color:#FBF0D2}
+@@ .kz .kas-m.user{color:#F3D790;font-style:italic}
+@@ .kz-card .btn{height:var(--btn-h);min-height:var(--btn-h);border-radius:calc(var(--btn-h) / 2);font:600 11px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;white-space:normal;line-height:1.15}
+@@ .kz-pr{display:flex;flex-direction:row;flex-wrap:wrap;gap:7px;justify-content:center}
+@@ .kz-pr .pill-b{width:auto;min-height:36px;padding:8px 14px;border-radius:18px;background:rgba(14,20,40,.55)!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important;color:#FFF6DC!important;font:italic 500 15px/1.2 'Cormorant Garamond',serif}
+@@ .kz-f{border:0!important;background:rgba(8,12,28,.55)!important;box-shadow:inset 0 0 0 1px var(--tf)!important}
+@@ .kz-note{font:italic 500 14px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-align:center}
+@media (max-height:760px){@@ .kz{--top:-64px!important}}
+@@ .sx .sx-pic{overflow:hidden!important;border-radius:50%}
+@@ .sx .sx-pic img{transform:scale(1.14)}
+
+/* ---- the Journal's page for writing: the same head and glass as the rest ---- */
+@@ .mnp .mbox>.mb-c{display:none!important}
+@@ .mnp .en-top{flex:none;position:relative!important;padding:36px 0 0!important;text-align:center;height:auto!important;min-height:0!important}
+@@ .mnp .en-top h1.cz{margin:0!important;font:500 18px/1.15 'Cinzel',serif!important;letter-spacing:.14em!important;text-indent:.14em;color:#FBEFCB!important;-webkit-text-fill-color:#FBEFCB!important;background:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 8px rgba(10,14,30,.85)!important}
+@@ .mnp .en-top .mn-orn{display:none!important}
+@@ .mnp .en-top p{margin:3px 0 0!important;font:italic 500 15px/1.25 'Cormorant Garamond',serif!important;color:var(--tx)!important;text-transform:none!important;letter-spacing:0!important;text-shadow:0 0 6px rgba(10,14,30,.9)}
+@@ .mnp .en-top .en-k{font:600 11px 'Cinzel',serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;color:var(--tk)!important;font-style:normal!important}
+@media (max-height:760px){@@ .mnp .en-top .en-k,@@ .mnp .en-top .en-sky{display:none!important}}
+@@ .mnp .hsave{height:36px;padding:0 16px;border:0;border-radius:18px;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;font:700 11px 'Cinzel',serif!important;letter-spacing:.16em;text-transform:uppercase;box-shadow:inset 0 0 0 1px #8a6630}
+@@ .mnp .je-box{background:rgba(8,12,28,.55)!important;border-radius:14px!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important}
+@@ .mnp textarea.je{color:#FFF6DC!important;font:500 18px/1.4 'Cormorant Garamond',serif!important;background:none!important}
+@@ .mnp .prompts .pr{border:0!important;border-radius:16px!important;background:rgba(14,20,40,.55)!important;box-shadow:inset 0 0 0 1px var(--tf)!important;color:var(--tt)!important;font:italic 500 16px/1.25 'Cormorant Garamond',serif!important;padding:10px 14px!important;text-align:left}
+@@ .mnp .en-top{padding-top:68px!important}
+@@ .mnp .en-top h1.cz{font-size:19px!important}
+
+/* ---- the sign's figure, set in the golden ring against its moon ---- */
+.wf-halo{position:absolute;left:30%;top:8%;width:82%;aspect-ratio:1;display:block}
+.wf-halo img{width:100%;height:100%;display:block}
+.wf-fg{position:absolute;left:-7%;top:-3%;width:190%!important;height:auto!important;max-width:none;display:block}
+@@ .sx .sx-pic{background:radial-gradient(circle at 60% 35%,#1a2650,#0a1226 70%);box-shadow:0 0 0 1px rgba(243,215,144,.35),0 0 24px rgba(227,194,126,.3)}
+@@ .sx .sx-pic img{transform:none}
+@@ .sx .sx-pic .wf-fg{width:190%!important;height:auto!important}
+@@ .sx .sx-pic .wf-halo img{width:100%!important;height:100%!important}
+/* ---- the first welcome: three small scenes ---- */
+@keyframes wlTw{0%,100%{opacity:.15}50%{opacity:1}}
+@keyframes wlRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes wlLit{from{opacity:0}to{opacity:1}}
+@keyframes wlCyc{0%,19%{opacity:0}22%,38%{opacity:1}41%,100%{opacity:0}}
+@keyframes wlStep{0%,100%{opacity:.35}30%{opacity:1}}
+@keyframes wlPill{0%,12%{left:3px}38%,50%{left:calc(33.3% + 1px)}76%,100%{left:calc(66.6% - 1px)}}
+@keyframes wlHand{0%,12%{transform:translateX(-52px);opacity:0}20%{opacity:1}38%{transform:translateX(0)}50%{transform:translateX(0);opacity:1}62%{transform:translateX(52px);opacity:1}76%,100%{transform:translateX(52px);opacity:0}}
+.wl{position:fixed;inset:0;z-index:90;background:#070b1a;animation:wlLit .6s ease-out}
+.wl-in{position:relative;width:min(100vw,var(--appw));height:100%;margin:0 auto;container-type:inline-size;overflow:hidden;color:#FBF0D2}
+.wl-sky{position:absolute;inset:0;background:#0a1020 url(/art/temple/reading.webp) 50% 0/100% auto no-repeat}
+.wl-sky::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(7,11,26,.9) 82%)}
+.wl-tw i{position:absolute;width:3px;height:3px;border-radius:50%;background:#F6DA97;box-shadow:0 0 6px 1px rgba(246,214,130,.8);animation:wlTw 3.6s ease-in-out var(--d,0s) infinite}
+.wl-art{position:absolute;left:50%;top:44.28cqw;width:27cqw;height:27cqw;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;animation:wlLit 1s ease-out .2s both}
+.wl-moon{position:relative;width:100%;height:100%}
+.wl-ph{position:absolute;inset:0;width:100%;height:100%}
+.wl-lit{opacity:0;animation:wlLit 2.2s ease-in-out .9s forwards}
+.wl-cycle .f{position:absolute;inset:0;opacity:0;animation:wlCyc 7.5s linear infinite}
+.wl-cycle .f0{animation-delay:-1.5s}.wl-cycle .f1{animation-delay:0s}.wl-cycle .f2{animation-delay:1.5s}.wl-cycle .f3{animation-delay:3s}.wl-cycle .f4{animation-delay:4.5s}
+.wl-fig{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 60% 35%,#1a2650,#0a1226 70%);box-shadow:0 0 0 1px rgba(243,215,144,.4)}
+.wl-flow{position:absolute;left:8%;right:8%;top:calc(44.28cqw + 20.5cqw);bottom:150px;display:flex;flex-direction:column;align-items:center;text-align:center;animation:wlRise .9s cubic-bezier(.2,.7,.2,1) .25s both}
+.wl-k{margin:0;font:600 11px 'Cinzel',serif;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:#F3D790;text-shadow:0 0 8px rgba(10,14,30,.9)}
+.wl-flow h2{margin:10px 0 0;font:italic 600 30px/1.1 'Cormorant Garamond',serif;color:#FFF6DC;text-shadow:0 0 10px rgba(10,14,30,.9)}
+.wl-p{margin:12px 0 0;font:500 18px/1.38 'Cormorant Garamond',serif;color:#FBF0D2;text-shadow:0 0 8px rgba(10,14,30,.95),0 0 18px rgba(10,14,30,.7)}
+.wl-ex{margin-top:18px;width:100%}
+.wl-sparks{display:flex;justify-content:center;gap:14px}
+.wl-sparks i{width:7px;height:7px;transform:rotate(45deg);background:#F3D790;box-shadow:0 0 8px rgba(246,214,130,.8)}
+.wl-steps{display:flex;justify-content:space-between;gap:4px}
+.wl-steps span{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font:italic 500 14px/1.15 'Cormorant Garamond',serif;color:#FBF0D2;animation:wlStep 4s ease-in-out calc(var(--k) * 1s) infinite}
+.wl-steps b{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#F6DA97,#BE9247);box-shadow:0 0 10px rgba(246,214,130,.8)}
+.wl-mock{position:relative;height:60px}
+.wl-pill{position:relative;display:flex;height:38px;border-radius:19px;background:rgba(10,16,34,.7);box-shadow:inset 0 0 0 1px rgba(243,215,144,.6)}
+.wl-pill span{flex:1;display:grid;place-items:center;font:600 11px 'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:#FBF0D2;position:relative;z-index:1}
+.wl-pill i{position:absolute;top:3px;bottom:3px;width:calc(33.3% - 2px);border-radius:16px;background:linear-gradient(#EFD79B,#BE9247);opacity:.35;animation:wlPill 6s ease-in-out infinite}
+.wl-hand{position:absolute;left:50%;top:26px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:radial-gradient(circle,rgba(255,246,214,.95),rgba(246,214,130,.35) 60%,transparent 72%);animation:wlHand 6s ease-in-out infinite}
+.wl-foot{position:absolute;left:7%;right:7%;bottom:calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:16px}
+.wl-dots{display:flex;gap:9px}
+.wl-dots i{width:7px;height:7px;border-radius:50%;background:rgba(243,215,144,.35);transition:all .3s}
+.wl-dots i.on{width:22px;border-radius:4px;background:#F6DA97;box-shadow:0 0 8px rgba(246,214,130,.8)}
+.wl-acts{display:flex;gap:10px;width:100%}
+.wl-acts .btn{flex:1.4 1 0;height:44px;min-height:44px;padding:0 18px;border-radius:22px;font:600 11px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;border:0;cursor:pointer;background:linear-gradient(#EFD79B,#BE9247);color:#24160A;box-shadow:inset 0 0 0 1px #8a6630,inset 0 1px 0 2px rgba(255,246,214,.45),0 0 18px rgba(227,194,126,.25)}
+.wl-acts .btn.ghost{flex:1 1 0;height:40px;min-height:40px;background:rgba(16,18,36,.62);color:#F1DDA8;box-shadow:inset 0 0 0 1px rgba(231,200,135,.7)}
+body.reduce .wl *,body.reduce .wl{animation:none!important}
+
+/* ---- the moon fills the whole ring; the sign's whole figure sits in front of it ---- */
+.sp-moon{position:absolute;inset:0;border-radius:50%;overflow:hidden;display:block;background:#0a1226}
+.sp-moon img{position:absolute;left:-3%;top:-3%;width:106%;height:106%;display:block;object-fit:cover}
+@@ .sx .sx-pic{overflow:visible!important;background:none!important;box-shadow:none!important;border-radius:50%}
+@@ .sx .sx-pic .sp-moon{box-shadow:0 0 0 1px rgba(243,215,144,.35),0 0 26px rgba(227,194,126,.35)}
+@@ .sx .sx-pic .sp-moon img{width:106%!important;height:106%!important}
+@@ .sx .sx-pic .wf-fg,.wf-fg{position:absolute!important;left:50%!important;top:51%!important;width:148%!important;height:auto!important;max-width:none;transform:translate(-50%,-50%)!important;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));pointer-events:none}
+.wl-art.open{overflow:visible;border-radius:0}
+.wl-fig{overflow:visible!important;background:none!important;box-shadow:none!important}
+.wl-fig .wf-fg{width:148%!important}
+.wl-art{width:34cqw;height:34cqw}
+@@ .sx .sx-head{padding-top:calc(var(--t-my,112px) + var(--t-md,117px) * .6 + 8px)!important}
+@@ .sx .sx-pic .wf-fg,.wf-fg{width:122%!important;top:50%!important;left:48%!important}
+.wl-fig .wf-fg{width:122%!important}
+
+/* the Moon is the whole disc inside the golden ring, with no gap; the figure is cut to the same circle and rests on it */
+@@ .sx .sx-pic{overflow:hidden!important;border-radius:50%!important;background:#0a1226!important;box-shadow:0 0 26px rgba(227,194,126,.35)!important}
+@@ .sx .sx-pic .sp-moon{box-shadow:none!important}
+@@ .sx .sx-pic .wf-fg,.wf-fg{left:-8%!important;top:-4%!important;width:192%!important;transform:none!important;filter:none!important}
+.wl-art,.wl-art.open{overflow:hidden!important;border-radius:50%!important;width:35.2cqw;height:35.2cqw}
+.wl-fig{overflow:hidden!important;border-radius:50%!important;background:#0a1226!important}
+.wl-fig .wf-fg{width:192%!important}
+.sp-moon{background:#a98238!important}
+.sp-moon img,@@ .sx .sx-pic .sp-moon img{left:-7%!important;top:-7%!important;width:114%!important;height:114%!important}
+@@ .sx .sx-pic{background:#a98238!important}
+.wl-fig{background:#a98238!important}
+/* the whole figure, with the sign's own element, set to fill the Moon's circle (the position is worked out for each sign) */
+@@ .sx .sx-pic .wf-fg,.wf-fg,.wl-fig .wf-fg{left:var(--fl,2%)!important;top:var(--ft,8%)!important;width:var(--fw,95%)!important;height:auto!important;transform:none!important}
+.sp-moon img,@@ .sx .sx-pic .sp-moon img{max-width:none!important}
+
+/* ---- the way back to the day: shown on any page entered from Today's path ---- */
+#rtpill{position:fixed;z-index:60;left:0;right:0;margin:0 auto;width:max-content;bottom:calc(var(--navh,64px) + 14px);display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);height:38px;padding:0 18px;border:0;border-radius:19px;cursor:pointer;white-space:nowrap;font:600 11px 'Cinzel',serif;letter-spacing:.12em;text-transform:uppercase;color:#24160A;background:linear-gradient(#EFD79B,#BE9247);box-shadow:inset 0 0 0 1px #8a6630,0 4px 18px rgba(0,0,0,.45),0 0 18px rgba(227,194,126,.3);animation:wlRise .6s cubic-bezier(.2,.7,.2,1) both}
+#rtpill span{font-size:18px;line-height:1;margin-top:-2px}
+#rtpill small{font:italic 600 14px 'Cormorant Garamond',serif;letter-spacing:0;text-transform:none;opacity:.85;padding-left:8px;border-left:1px solid rgba(36,22,10,.35)}
+@@ .hp-dr{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 0;padding:8px 12px;border:0;border-radius:18px;background:rgba(16,18,36,.5);box-shadow:inset 0 0 0 1px rgba(231,200,135,.45);color:#F3D790;font:italic 600 16px 'Cormorant Garamond',serif;cursor:pointer}
+@@ .hp-dr svg{width:18px;height:18px;flex:none}
+
+body.has-ret @@ .skyp,body.has-ret @@ .mnp,body.has-ret @@ .hsp.sx,html body.has-ret.tp.tp.tp #app .skyp,html body.has-ret.tp.tp.tp #app .mnp,html body.has-ret.tp.tp.tp #app .hsp.sx,html body.has-ret.tp.tp.tp #app .kz-talk{bottom:calc(var(--navh,64px) + 58px)!important}
+
+/* ---- a page opened from Today, as a sheet over it ---- */
+#xsheet{position:fixed;inset:0;z-index:80;background:rgba(5,8,20,.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);display:flex;align-items:flex-end;justify-content:center;animation:wlLit .3s ease-out}
+.xs-box{position:relative;width:min(100vw,var(--appw,480px));height:calc(100% - 46px - env(safe-area-inset-top,0px));border-radius:22px 22px 0 0;overflow:hidden;background:#0a1020;box-shadow:0 -6px 30px rgba(0,0,0,.55),inset 0 0 0 1px rgba(231,200,135,.55);animation:xsUp .45s cubic-bezier(.2,.7,.2,1)}
+.xs-box iframe{width:100%;height:100%;border:0;display:block;background:#0a1020}
+.xs-x{position:absolute;z-index:2;top:8px;right:10px;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;color:#F3D790;font:400 26px/1 'Cormorant Garamond',serif;background:rgba(10,14,30,.72);box-shadow:inset 0 0 0 1px rgba(231,200,135,.6)}
+@keyframes xsUp{from{transform:translateY(100%)}to{transform:none}}
+html.emb #nav{display:none!important}
+
+/* ---- Today: larger words that fit the room, no Continue buttons, dots that say "swipe" ---- */
+@@ .home.hpath .hp-stage :is(.hp-sub,.pz-b,.hh-text,.dw-msg,.cp-you){font-size:var(--fz,19px)!important;line-height:1.3!important}
+@@ .home.hpath .hp-stage :is(.hp-big,.pz-t){font-size:calc(var(--fz,19px) * 1.4)!important}
+@@ .home.hpath .hp-stage .pz-q{font-size:calc(var(--fz,19px) * 1.25)!important}
+@@ .home.hpath .hp-stage .dw-t{font-size:calc(var(--fz,19px) * 1.2)!important}
+@@ .hh-stage{display:block!important}
+@@ .hh-stage::after{content:'';display:block;clear:both}
+@@ .hh-stage .hh-plate{float:left!important;display:block!important;width:36cqw!important;height:54cqw!important;aspect-ratio:2/3;object-fit:cover;margin:0 4cqw 4px 0!important}
+@@ .hh-stage .hh-card{display:block!important;width:auto!important;flex:none}
+@@ .hh-stage .hh-card .hh-text{margin-top:8px!important}
+@@ .hp-dots{align-items:center;gap:0}
+@@ .hp-dots button.hp-ch{width:30px;height:26px;display:grid;place-items:center}
+@@ .hp-dots button.hp-ch::before{display:none!important}
+@@ .hp-dots .hp-ch svg{width:9px;height:15px;fill:none;stroke:#F6E6B6;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(246,214,130,.9));animation:hpNudgeR 2.4s ease-in-out infinite}
+@@ .hp-dots .hp-ch.l svg{animation-name:hpNudgeL}
+@@ .hp-dots .hp-ch.off{visibility:hidden}
+@@ .hp-dots button:not(.hp-ch)::before{width:7px;height:7px;margin:-3.5px 0 0 -3.5px;opacity:.6}
+@@ .hp-dots button.on::before{width:22px!important;height:7px!important;margin:-3.5px 0 0 -11px!important;border-radius:4px!important;opacity:1}
+@keyframes hpNudgeR{0%,55%,100%{transform:none;opacity:.55}25%{transform:translateX(4px);opacity:1}}
+@keyframes hpNudgeL{0%,55%,100%{transform:none;opacity:.55}25%{transform:translateX(-4px);opacity:1}}
+body.reduce .hp-ch svg{animation:none!important}
+
+@@ .hp-wfy{position:relative}
+@@ .hp-wfy .hp-acts{position:absolute!important;top:6px;right:8px;margin:0!important;width:auto!important}
+@@ .hp-wfy .hp-acts .ibtn{width:34px;height:34px}
+@@ .hp-dr{margin:8px 0 0!important}
+
+/* ---- the sign's card on Today: opens to its details; its keywords on one line ---- */
+@@ .hh-stage .hh-pw{float:left;display:block;width:36cqw;height:54cqw;margin:0 4cqw 4px 0;padding:0;border:0;background:transparent!important;box-shadow:none!important;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@@ .hh-stage .hh-pw .hh-plate{float:none!important;width:100%!important;height:100%!important;margin:0!important}
+@@ .hh-stage .hh-card .keys{white-space:nowrap;letter-spacing:.05em!important;font-size:min(11px,2.9cqw)!important}
+
+
+
+/* the sign's card is never under the old glass blur of the text block */
+@@ .hh-stage .hh-card,@@ .hh-stage .hh-card *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+@@ .hh-stage .hh-pw{position:relative;z-index:2}
+
+/* ---- the Whisper's card, held up: a box of the app's own glass over Today, which still shows around it ---- */
+@@ .wpc{background:rgba(12,22,52,.5)!important;-webkit-backdrop-filter:blur(7px) saturate(1.1)!important;backdrop-filter:blur(7px) saturate(1.1)!important;display:flex;align-items:center!important;justify-content:center;overflow:hidden!important;padding:calc(env(safe-area-inset-top,0px) + 56px) 5vw calc(var(--navh,64px) + 22px)!important;box-sizing:border-box}
+@@ .wpc .wpc-in{position:relative;width:100%!important;max-width:380px!important;max-height:100%;margin:0!important;padding:16px 16px 14px!important;display:flex!important;flex-direction:column;align-items:center;gap:6px!important;border-radius:22px;background:linear-gradient(rgba(20,32,70,.74),rgba(12,20,48,.82))!important;border:0!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(231,200,135,.6),0 14px 40px rgba(0,0,0,.5),0 0 30px rgba(120,150,230,.12)!important;animation:wpBox .5s cubic-bezier(.2,.8,.2,1)}
+@@ .wpc .wpc-in>.cp-x{top:8px!important;right:8px!important;width:34px!important;height:34px!important;background:rgba(10,14,30,.6)!important;color:#F3D790!important}
+@@ .wpc .cp-k{margin:0!important;font:600 11px 'Cinzel',serif!important;letter-spacing:.2em;color:#F3D790!important;text-shadow:none!important}
+@@ .wpc .wp-body{width:100%;flex:1 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none;text-align:left;-webkit-mask-image:linear-gradient(#000 calc(100% - 22px),transparent);mask-image:linear-gradient(#000 calc(100% - 22px),transparent);padding-bottom:14px}
+@@ .wpc .wp-body::-webkit-scrollbar{display:none}
+@@ .wpc .wp-top{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+@@ .wpc .cp-card{flex:none;width:min(52vw,min(210px,calc((100svh - 330px)*.6)))!important;margin:0 auto!important;filter:drop-shadow(0 0 16px rgba(243,210,140,.4)) drop-shadow(0 8px 16px rgba(0,0,0,.5))!important;animation:wpCard .7s cubic-bezier(.2,.8,.2,1) .15s both!important}
+@@ .wpc .wp-side{width:100%;min-width:0;text-align:center}
+@@ .wpc .cp-t{margin:0!important;font:italic 600 26px/1.1 'Cormorant Garamond',serif!important;text-transform:none!important;letter-spacing:0!important;background:none!important;-webkit-text-fill-color:#FFF6DC!important;color:#FFF6DC!important;text-shadow:none!important;text-align:center}
+@@ .wpc .cp-keys{margin:4px 0 0!important;font:500 11px 'Cinzel',serif!important;letter-spacing:.06em!important;color:#F3D790!important;line-height:1.35!important}
+@@ .wpc .cp-you span{display:block!important;margin-bottom:3px;font:500 11px 'Cinzel',serif!important;font-style:normal!important;letter-spacing:.2em;text-transform:uppercase;color:#F3D790!important}
+@@ .wpc .cp-msg{margin:7px 0 0!important;font:500 18px/1.3 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
+@@ .wpc .cp-you{margin:12px 0 0!important;padding:10px 0 0!important;border:0!important;border-top:1px solid rgba(243,215,144,.4)!important;background:none!important;font:italic 500 18px/1.3 'Cormorant Garamond',serif!important;color:#FBF0D2!important;text-align:left}
+@@ .wpc .cp-ref{margin:8px 0 0!important;font:italic 500 16px/1.3 'Cormorant Garamond',serif!important;color:#E9D6A0!important}
+@@ .wpc .cp-rule{display:none}
+@@ .wpc .wpc-acts{flex:none;margin-top:8px!important;gap:10px}
+@@ .wpc .wpc-acts .btn{height:44px;min-height:44px;border-radius:22px;font:600 11px 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase;background:linear-gradient(#EFD79B,#BE9247)!important;color:#24160A!important;box-shadow:inset 0 0 0 1px #8a6630,0 0 18px rgba(227,194,126,.25)!important}
+@@ .wpc .wpc-acts .ibtn{width:44px;height:44px;border-radius:50%;background:rgba(16,18,36,.6)!important;color:#F3D790!important;box-shadow:inset 0 0 0 1px rgba(231,200,135,.6)!important}
+@keyframes wpBox{from{opacity:0;transform:translateY(46px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes wpCard{from{opacity:0;transform:translateY(24px) rotateY(70deg)}to{opacity:1;transform:none}}
+/* small quiet notes under a page's content */
+@@ .home.hpath .hp-stage .hp-note{margin:8px 0 0!important;font:italic 600 14px/1.3 'Cormorant Garamond',serif!important;color:#F8E6B4!important;text-align:center;text-shadow:0 0 8px rgba(10,14,30,.9)}
+@@ .home.hpath .hp-whisper .dw-side .hp-note{text-align:left;margin-top:10px!important}
+/* a sky full of stars behind the Whisper's enlarged card */
+@@ .wpc::before,@@ .wpc::after{content:'';position:absolute;left:0;top:0;width:2.6px;height:2.6px;border-radius:50%;pointer-events:none;z-index:0}
+@@ .wpc::before{box-shadow:45.2vw 56.0svh 2px rgba(243,215,144,.9),50.8vw 58.7svh 0px rgba(214,228,255,.9),47.6vw 61.4svh 0px rgba(255,244,214,.95),44.7vw 14.2svh 3px rgba(214,228,255,.9),63.4vw 59.5svh 2px rgba(243,215,144,.9),65.4vw 61.6svh 0px rgba(214,228,255,.9),1.5vw 52.8svh 0px rgba(255,244,214,.95),19.0vw 24.2svh 0px rgba(243,215,144,.9),32.6vw 59.1svh 0px rgba(214,228,255,.9),23.4vw 29.4svh 0px rgba(214,228,255,.9),8.5vw 65.5svh 2px rgba(214,228,255,.9),99.6vw 84.0svh 1px rgba(243,215,144,.9),75.8vw 51.3svh 0px rgba(255,244,214,.95),56.3vw 10.8svh 0px rgba(243,215,144,.9),38.7vw 95.8svh 0px rgba(255,244,214,.95),21.0vw 91.0svh 2px rgba(243,215,144,.9),98.0vw 39.7svh 0px rgba(214,228,255,.9),62.9vw 77.9svh 1px rgba(243,215,144,.9),8.7vw 33.3svh 2px rgba(255,244,214,.95),13.5vw 70.7svh 0px rgba(255,244,214,.95),46.5vw 48.7svh 3px rgba(255,244,214,.95),44.7vw 19.1svh 0px rgba(243,215,144,.9),64.4vw 11.7svh 2px rgba(255,244,214,.95),0.0vw 86.4svh 3px rgba(243,215,144,.9),99.8vw 2.0svh 0px rgba(243,215,144,.9),99.6vw 60.2svh 3px rgba(255,244,214,.95),4.2vw 14.6svh 2px rgba(243,215,144,.9),1.0vw 61.0svh 1px rgba(243,215,144,.9),7.3vw 9.0svh 3px rgba(214,228,255,.9),24.3vw 60.1svh 1px rgba(214,228,255,.9),45.3vw 95.9svh 2px rgba(214,228,255,.9),13.6vw 38.6svh 0px rgba(243,215,144,.9),90.8vw 81.8svh 0px rgba(214,228,255,.9),19.0vw 73.9svh 3px rgba(255,244,214,.95),68.7vw 38.8svh 2px rgba(214,228,255,.9),7.8vw 4.7svh 0px rgba(255,244,214,.95),51.2vw 25.5svh 2px rgba(243,215,144,.9),42.1vw 90.5svh 2px rgba(243,215,144,.9),52.0vw 92.9svh 0px rgba(255,244,214,.95),22.8vw 55.9svh 3px rgba(214,228,255,.9),7.4vw 21.2svh 0px rgba(214,228,255,.9),1.7vw 26.9svh 2px rgba(255,244,214,.95),6.0vw 17.6svh 1px rgba(214,228,255,.9),57.2vw 13.2svh 1px rgba(255,244,214,.95),89.1vw 98.0svh 3px rgba(214,228,255,.9),94.7vw 59.0svh 0px rgba(243,215,144,.9),91.0vw 70.1svh 0px rgba(255,244,214,.95),59.8vw 7.5svh 0px rgba(214,228,255,.9),31.1vw 13.7svh 0px rgba(255,244,214,.95),45.3vw 36.8svh 0px rgba(214,228,255,.9),73.7vw 13.0svh 1px rgba(243,215,144,.9),8.5vw 47.3svh 0px rgba(243,215,144,.9),94.4vw 3.0svh 2px rgba(214,228,255,.9),1.5vw 66.2svh 2px rgba(214,228,255,.9),1.2vw 7.2svh 0px rgba(214,228,255,.9),11.6vw 25.7svh 2px rgba(214,228,255,.9),33.0vw 93.4svh 3px rgba(243,215,144,.9),44.1vw 83.8svh 0px rgba(214,228,255,.9),75.0vw 3.0svh 3px rgba(255,244,214,.95),48.1vw 23.0svh 0px rgba(243,215,144,.9),78.0vw 66.0svh 2px rgba(243,215,144,.9),89.6vw 36.8svh 0px rgba(214,228,255,.9),61.2vw 51.8svh 1px rgba(214,228,255,.9),93.0vw 49.8svh 0px rgba(243,215,144,.9),40.5vw 25.1svh 2px rgba(255,244,214,.95),88.0vw 38.4svh 3px rgba(243,215,144,.9),21.0vw 13.5svh 1px rgba(255,244,214,.95),71.1vw 95.0svh 1px rgba(255,244,214,.95),11.3vw 47.1svh 0px rgba(243,215,144,.9),38.3vw 52.0svh 1px rgba(214,228,255,.9),83.9vw 98.2svh 2px rgba(243,215,144,.9),7.5vw 3.1svh 3px rgba(255,244,214,.95),67.8vw 28.1svh 1px rgba(243,215,144,.9),64.9vw 56.4svh 0px rgba(243,215,144,.9),45.5vw 2.5svh 1px rgba(255,244,214,.95),77.9vw 79.7svh 0px rgba(243,215,144,.9),10.9vw 53.5svh 1px rgba(255,244,214,.95),68.4vw 19.9svh 2px rgba(243,215,144,.9),17.9vw 1.1svh 2px rgba(214,228,255,.9),71.4vw 17.9svh 1px rgba(243,215,144,.9),54.0vw 94.7svh 3px rgba(214,228,255,.9),99.7vw 15.9svh 0px rgba(255,244,214,.95),41.0vw 89.3svh 2px rgba(255,244,214,.95),45.1vw 19.7svh 0px rgba(243,215,144,.9),55.0vw 65.3svh 3px rgba(243,215,144,.9),46.4vw 65.1svh 0px rgba(255,244,214,.95),72.2vw 81.8svh 0px rgba(255,244,214,.95),24.2vw 39.0svh 0px rgba(243,215,144,.9),53.7vw 79.1svh 1px rgba(243,215,144,.9),91.0vw 85.6svh 1px rgba(214,228,255,.9),8.3vw 44.1svh 3px rgba(243,215,144,.9),76.8vw 48.7svh 0px rgba(255,244,214,.95),80.9vw 6.4svh 0px rgba(255,244,214,.95),53.3vw 68.7svh 0px rgba(243,215,144,.9),14.9vw 51.7svh 3px rgba(214,228,255,.9),68.9vw 94.6svh 2px rgba(214,228,255,.9),94.9vw 8.6svh 0px rgba(243,215,144,.9),52.7vw 29.0svh 3px rgba(214,228,255,.9),16.4vw 51.4svh 3px rgba(243,215,144,.9),31.2vw 38.1svh 3px rgba(255,244,214,.95),30.4vw 14.1svh 3px rgba(214,228,255,.9),27.3vw 49.8svh 2px rgba(214,228,255,.9),11.4vw 0.5svh 2px rgba(255,244,214,.95),53.8vw 4.4svh 2px rgba(214,228,255,.9),80.1vw 56.3svh 2px rgba(255,244,214,.95),69.1vw 6.6svh 3px rgba(243,215,144,.9),41.4vw 95.7svh 2px rgba(243,215,144,.9),24.6vw 49.3svh 1px rgba(243,215,144,.9),90.1vw 93.6svh 2px rgba(214,228,255,.9),31.7vw 19.1svh 3px rgba(255,244,214,.95),92.5vw 12.9svh 0px rgba(255,244,214,.95),19.4vw 22.7svh 1px rgba(243,215,144,.9),72.4vw 24.4svh 2px rgba(255,244,214,.95),50.0vw 58.2svh 3px rgba(214,228,255,.9),25.1vw 19.8svh 3px rgba(243,215,144,.9),2.3vw 63.3svh 3px rgba(214,228,255,.9),16.0vw 20.4svh 3px rgba(214,228,255,.9),21.8vw 21.6svh 3px rgba(214,228,255,.9),58.7vw 13.6svh 1px rgba(255,244,214,.95),31.6vw 31.5svh 0px rgba(255,244,214,.95),77.8vw 19.5svh 0px rgba(255,244,214,.95),88.9vw 13.3svh 0px rgba(243,215,144,.9),38.8vw 43.5svh 2px rgba(214,228,255,.9),79.0vw 12.6svh 2px rgba(214,228,255,.9),68.5vw 1.8svh 0px rgba(214,228,255,.9),68.2vw 91.1svh 1px rgba(255,244,214,.95),70.5vw 63.5svh 1px rgba(214,228,255,.9),99.9vw 83.3svh 0px rgba(243,215,144,.9),10.6vw 3.7svh 3px rgba(214,228,255,.9),51.5vw 56.9svh 0px rgba(255,244,214,.95),18.5vw 20.4svh 0px rgba(243,215,144,.9),92.7vw 9.5svh 0px rgba(255,244,214,.95),95.1vw 46.2svh 0px rgba(243,215,144,.9),39.1vw 42.6svh 1px rgba(243,215,144,.9),21.0vw 37.3svh 0px rgba(255,244,214,.95),18.1vw 45.4svh 1px rgba(243,215,144,.9),92.2vw 60.5svh 0px rgba(214,228,255,.9),79.2vw 32.4svh 0px rgba(214,228,255,.9),87.6vw 90.9svh 2px rgba(214,228,255,.9),60.0vw 50.4svh 1px rgba(243,215,144,.9),28.0vw 11.6svh 0px rgba(243,215,144,.9),13.3vw 33.0svh 3px rgba(214,228,255,.9),37.0vw 43.2svh 0px rgba(243,215,144,.9),20.7vw 18.5svh 1px rgba(243,215,144,.9),46.9vw 1.1svh 1px rgba(214,228,255,.9),90.3vw 5.0svh 1px rgba(214,228,255,.9),29.9vw 21.6svh 2px rgba(214,228,255,.9),18.2vw 7.7svh 3px rgba(243,215,144,.9),64.2vw 70.1svh 2px rgba(214,228,255,.9),2.3vw 61.5svh 0px rgba(243,215,144,.9),44.4vw 50.5svh 0px rgba(214,228,255,.9),37.6vw 9.8svh 1px rgba(243,215,144,.9),90.6vw 55.0svh 3px rgba(243,215,144,.9),96.7vw 56.8svh 0px rgba(214,228,255,.9),44.4vw 64.5svh 3px rgba(214,228,255,.9),66.8vw 95.5svh 2px rgba(255,244,214,.95),38.6vw 97.0svh 2px rgba(214,228,255,.9),61.1vw 5.9svh 2px rgba(243,215,144,.9),28.4vw 39.9svh 1px rgba(243,215,144,.9),53.0vw 48.3svh 1px rgba(214,228,255,.9),92.9vw 66.4svh 1px rgba(255,244,214,.95),1.4vw 24.5svh 0px rgba(214,228,255,.9),15.7vw 75.5svh 2px rgba(255,244,214,.95),89.8vw 74.8svh 0px rgba(214,228,255,.9),98.9vw 94.4svh 0px rgba(255,244,214,.95),43.0vw 47.8svh 0px rgba(255,244,214,.95),52.3vw 93.7svh 2px rgba(255,244,214,.95),97.9vw 81.7svh 3px rgba(214,228,255,.9),11.5vw 62.4svh 2px rgba(255,244,214,.95),20.4vw 5.2svh 3px rgba(255,244,214,.95);animation:wpTw 4.2s ease-in-out infinite}
+@@ .wpc::after{width:2px;height:2px;box-shadow:12.4vw 44.3svh 2px rgba(243,215,144,.85),60.1vw 64.0svh 2px rgba(243,215,144,.85),77.8vw 53.1svh 0px rgba(243,215,144,.85),73.4vw 23.8svh 0px rgba(200,220,255,.85),89.3vw 78.4svh 3px rgba(243,215,144,.85),27.5vw 61.0svh 3px rgba(200,220,255,.85),59.2vw 63.3svh 0px rgba(255,244,214,.9),95.2vw 50.2svh 0px rgba(200,220,255,.85),4.0vw 6.1svh 1px rgba(243,215,144,.85),42.5vw 62.3svh 0px rgba(255,244,214,.9),54.2vw 7.2svh 0px rgba(200,220,255,.85),16.1vw 23.5svh 1px rgba(243,215,144,.85),47.9vw 21.1svh 1px rgba(243,215,144,.85),74.5vw 83.9svh 0px rgba(255,244,214,.9),44.7vw 82.2svh 0px rgba(243,215,144,.85),42.4vw 25.8svh 0px rgba(243,215,144,.85),15.3vw 83.6svh 3px rgba(243,215,144,.85),29.1vw 75.9svh 0px rgba(243,215,144,.85),65.4vw 58.1svh 2px rgba(243,215,144,.85),7.9vw 8.3svh 3px rgba(200,220,255,.85),48.5vw 68.5svh 1px rgba(255,244,214,.9),7.6vw 21.3svh 3px rgba(255,244,214,.9),69.5vw 49.5svh 1px rgba(243,215,144,.85),88.2vw 21.9svh 1px rgba(243,215,144,.85),90.6vw 32.2svh 2px rgba(200,220,255,.85),59.5vw 90.2svh 1px rgba(243,215,144,.85),53.0vw 99.2svh 2px rgba(243,215,144,.85),22.1vw 96.8svh 3px rgba(255,244,214,.9),8.4vw 82.9svh 0px rgba(243,215,144,.85),67.7vw 58.5svh 0px rgba(200,220,255,.85),56.4vw 79.7svh 3px rgba(255,244,214,.9),83.6vw 56.3svh 0px rgba(255,244,214,.9),75.9vw 88.1svh 1px rgba(255,244,214,.9),22.1vw 5.8svh 0px rgba(200,220,255,.85),29.6vw 2.2svh 2px rgba(255,244,214,.9),58.2vw 30.5svh 3px rgba(255,244,214,.9),33.5vw 27.4svh 0px rgba(243,215,144,.85),8.5vw 63.4svh 0px rgba(255,244,214,.9),74.6vw 64.9svh 0px rgba(200,220,255,.85),22.0vw 76.5svh 3px rgba(243,215,144,.85),76.5vw 39.4svh 1px rgba(243,215,144,.85),67.2vw 49.4svh 3px rgba(200,220,255,.85),7.2vw 61.8svh 0px rgba(243,215,144,.85),75.7vw 98.6svh 1px rgba(255,244,214,.9),80.6vw 83.4svh 2px rgba(200,220,255,.85),64.0vw 52.4svh 0px rgba(255,244,214,.9),42.2vw 42.0svh 0px rgba(255,244,214,.9),74.1vw 99.1svh 2px rgba(200,220,255,.85),16.8vw 20.4svh 2px rgba(200,220,255,.85),29.2vw 97.0svh 0px rgba(243,215,144,.85),30.8vw 11.5svh 0px rgba(255,244,214,.9),91.2vw 75.3svh 0px rgba(200,220,255,.85),48.1vw 80.0svh 1px rgba(255,244,214,.9),19.8vw 35.9svh 3px rgba(255,244,214,.9),60.0vw 47.2svh 3px rgba(255,244,214,.9),44.2vw 89.5svh 2px rgba(255,244,214,.9),91.1vw 93.7svh 3px rgba(200,220,255,.85),47.9vw 26.0svh 2px rgba(243,215,144,.85),66.0vw 77.2svh 0px rgba(243,215,144,.85),86.3vw 39.9svh 0px rgba(255,244,214,.9),80.1vw 38.5svh 3px rgba(200,220,255,.85),77.4vw 78.8svh 0px rgba(200,220,255,.85),92.4vw 89.2svh 2px rgba(243,215,144,.85),45.0vw 24.7svh 2px rgba(200,220,255,.85),87.5vw 41.6svh 1px rgba(255,244,214,.9),25.9vw 86.9svh 3px rgba(255,244,214,.9),63.7vw 99.3svh 1px rgba(200,220,255,.85),53.5vw 15.1svh 0px rgba(255,244,214,.9),20.4vw 91.6svh 0px rgba(255,244,214,.9),8.2vw 27.0svh 3px rgba(255,244,214,.9),89.0vw 69.4svh 0px rgba(200,220,255,.85),58.7vw 85.7svh 1px rgba(255,244,214,.9),78.9vw 41.7svh 0px rgba(243,215,144,.85),20.8vw 54.3svh 3px rgba(243,215,144,.85),15.8vw 83.2svh 1px rgba(243,215,144,.85),31.1vw 7.6svh 1px rgba(243,215,144,.85),66.7vw 6.7svh 0px rgba(200,220,255,.85),14.1vw 66.8svh 2px rgba(200,220,255,.85),96.7vw 83.0svh 2px rgba(255,244,214,.9),86.4vw 71.2svh 2px rgba(255,244,214,.9),29.3vw 11.3svh 0px rgba(200,220,255,.85),20.7vw 61.6svh 1px rgba(200,220,255,.85),37.6vw 54.0svh 1px rgba(243,215,144,.85),75.5vw 55.6svh 0px rgba(243,215,144,.85),18.9vw 37.7svh 0px rgba(243,215,144,.85),31.0vw 27.4svh 2px rgba(200,220,255,.85),64.0vw 44.7svh 2px rgba(255,244,214,.9),10.2vw 62.2svh 0px rgba(200,220,255,.85),63.0vw 17.9svh 0px rgba(243,215,144,.85),3.6vw 46.3svh 0px rgba(255,244,214,.9),22.7vw 15.7svh 0px rgba(243,215,144,.85),40.7vw 7.3svh 2px rgba(200,220,255,.85),13.9vw 20.5svh 0px rgba(200,220,255,.85),38.6vw 33.1svh 2px rgba(200,220,255,.85),1.5vw 40.1svh 1px rgba(255,244,214,.9),66.0vw 60.9svh 0px rgba(243,215,144,.85),33.1vw 34.2svh 2px rgba(255,244,214,.9),55.7vw 20.5svh 1px rgba(243,215,144,.85),82.5vw 61.1svh 0px rgba(243,215,144,.85),76.7vw 90.3svh 3px rgba(255,244,214,.9),35.3vw 50.0svh 0px rgba(200,220,255,.85),71.3vw 98.7svh 3px rgba(200,220,255,.85),70.7vw 93.6svh 3px rgba(255,244,214,.9),62.7vw 19.8svh 0px rgba(255,244,214,.9),24.5vw 57.6svh 1px rgba(243,215,144,.85),9.2vw 87.3svh 1px rgba(243,215,144,.85),88.3vw 45.2svh 0px rgba(255,244,214,.9),90.4vw 54.3svh 3px rgba(255,244,214,.9),56.0vw 26.4svh 1px rgba(200,220,255,.85),14.6vw 93.4svh 0px rgba(243,215,144,.85),68.5vw 36.4svh 3px rgba(243,215,144,.85),83.1vw 18.6svh 3px rgba(255,244,214,.9),45.4vw 40.3svh 0px rgba(243,215,144,.85),75.6vw 84.7svh 2px rgba(200,220,255,.85),59.2vw 80.4svh 0px rgba(255,244,214,.9),20.0vw 46.8svh 0px rgba(200,220,255,.85),38.6vw 57.0svh 0px rgba(243,215,144,.85),52.0vw 26.4svh 3px rgba(243,215,144,.85),5.3vw 78.4svh 0px rgba(243,215,144,.85),95.9vw 60.0svh 2px rgba(243,215,144,.85),41.1vw 62.4svh 3px rgba(243,215,144,.85),75.2vw 48.6svh 2px rgba(200,220,255,.85),40.9vw 43.4svh 3px rgba(255,244,214,.9),90.5vw 52.6svh 3px rgba(200,220,255,.85),43.2vw 90.4svh 1px rgba(255,244,214,.9),29.6vw 61.6svh 2px rgba(200,220,255,.85),37.6vw 32.2svh 1px rgba(200,220,255,.85),87.7vw 24.4svh 2px rgba(255,244,214,.9),50.3vw 39.7svh 0px rgba(243,215,144,.85),69.5vw 52.6svh 0px rgba(200,220,255,.85);animation:wpTw 5.6s ease-in-out 1.7s infinite}
+@@ .wpc .wpc-in{z-index:1}
+@keyframes wpTw{0%,100%{opacity:.25}50%{opacity:1}}
+html body.reduce.tp.tp.tp #app .wpc::before,html body.reduce.tp.tp.tp #app .wpc::after{animation:none}
+@@ .home.hpath .hp-stage .hp-wq{margin:0 0 4px!important;font-size:15px!important}
+@@ .home.hpath .hp-stage .hp-bless{margin:6px 0 4px!important;font:italic 600 22px/1.25 'Cormorant Garamond',serif!important;color:#FFF3CF!important;text-shadow:0 0 12px rgba(10,14,30,.95),0 0 22px rgba(255,200,110,.35)}
+@@ .home.hpath .hp-held .hp-in:has(.hp-bless){transform:translateY(-64px)}
+/* ---- the main screens (Sky, Oracle, Journal, You) share one head: the title and its line, then the tabs, always at the same height ---- */
+@@ .pg .sk-head{padding-top:37cqw!important}
+@@ .pg .sk-head .pg-strip,@@ .pg .sk-head [role=group]{margin:11px 0 0!important}
+@@ .pg .sk-head .pg-t{font-size:22px!important;letter-spacing:.3em!important;text-indent:.3em!important}
+@@ .pg .sk-head .pg-s{font-size:16px!important;margin-top:5px!important}
+/* ---- quiet tabs: small spaced capitals, the chosen one in gold with a thin line beneath ---- */
+@@ .pg .sk-head .pg-strip,@@ .pg-sky .sk-body .seg,@@ .skyp .seg{height:30px!important;border-radius:0!important;background:none!important;box-shadow:none!important;gap:0}
+@@ .pg .pg-strip button,@@ .pg-sky .sk-body .seg button,@@ .skyp .seg button{position:relative;background:none!important;box-shadow:none!important;border-radius:0!important;color:rgba(251,240,210,.8)!important;-webkit-text-fill-color:rgba(251,240,210,.8)!important;font-weight:600!important;letter-spacing:.14em!important;text-shadow:0 0 8px rgba(10,14,30,.95),0 0 16px rgba(10,14,30,.7)!important}
+@@ .pg .pg-strip button:not(#x)::after,@@ .pg-sky .sk-body .seg button:not(#x)::after,@@ .skyp .seg button:not(#x)::after{display:block!important;content:'';position:absolute;left:50%;bottom:2px;width:0;height:2px;border-radius:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,#F6DA97,transparent);box-shadow:0 0 8px rgba(246,214,130,.7);transition:width .3s}
+@@ .pg .pg-strip button[aria-selected=true][aria-selected=true]:not(#x),@@ .pg-sky .sk-body .seg button[aria-selected=true][aria-selected=true]:not(#x),@@ .skyp .seg button[aria-selected=true][aria-selected=true]:not(#x){background:none!important;color:#F8E2A2!important;-webkit-text-fill-color:#F8E2A2!important;font-weight:700!important;text-shadow:0 0 8px rgba(10,14,30,.95),0 0 14px rgba(246,214,130,.35)!important}
+@@ .pg .pg-strip button[aria-selected=true][aria-selected=true]:not(#x)::after,@@ .pg-sky .sk-body .seg button[aria-selected=true][aria-selected=true]:not(#x)::after,@@ .skyp .seg button[aria-selected=true][aria-selected=true]:not(#x)::after{width:62%!important}
+/* Sky's read button: compact, not the full width */
+@@ .sk-read .btn:not(#x){width:auto!important;min-width:150px;max-width:220px!important;padding:0 26px!important}
