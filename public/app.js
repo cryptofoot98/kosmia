@@ -876,7 +876,7 @@ function moonLetter(ch){
 }
 // the day's moon, drawn in the temple's own gold: lit or still dark
 const tmoon=on=>`<span class="hp-full tm-hpm"><img src="/art/temple/moon-base.webp" alt=""><img class="lit" src="/art/temple/moon-full.webp" alt="" style="opacity:${on?1:0}"></span>`;
-const PATH=[['wfy','Written for You'],['stars','Your Stars'],['whisper','Whisper'],['reflect','Reflect']],PHASES=['waxing-crescent','first-quarter','waxing-gibbous','full-moon'];
+const PATH=[['stars','Your Stars'],['wfy','Written for You'],['whisper','Whisper'],['reflect','Reflect']],PHASES=['waxing-crescent','first-quarter','waxing-gibbous','full-moon'];
 const pathDone=k=>({wfy:S.wfy===k,stars:S.readDay===k,whisper:!!S.revealed[k],reflect:!!S.notes[k]});
 const hourNow=()=>Number(fmt({hour:'numeric',hour12:false},new Date()));
 const askDream=k=>{const h=hourNow();return h>=4&&h<12&&S.dreamAsk!==k};
@@ -884,6 +884,8 @@ const askDream=k=>{const h=hourNow();return h>=4&&h<12&&S.dreamAsk!==k};
 const askIntent=()=>{const ch=chapterAt();return !!ch&&ch.day<=3&&!chWish(ch)&&S.intentAsk!==ch.key};
 const askNight=k=>{const h=hourNow();return (h>=18||h<4)&&S.released!==k};
 // Reflect belongs to the evening: by day, once the Whisper is turned, the morning is complete and the day is carried
+const GOODNIGHT=['The day has done what it could. Let the candle hold the rest, and sleep.','Whatever today was, it was enough, and so are you. Rest well.','The stars kept watch all day above you. Now let them keep watch while you dream.','Be gentle with yourself tonight. Tomorrow arrives only when you are ready for it.','One small flame is all the dark needs. Carry yours into sleep.','You showed up for your day. That is a quiet kind of courage. Goodnight.','Let the night take what you no longer need to carry. Morning will bring you what you do.','The Moon is awake so you can rest. Close your eyes; you are held.'];
+const goodnight=k=>GOODNIGHT[[...k].reduce((a,x)=>a+x.charCodeAt(0),0)%GOODNIGHT.length];
 const evening=()=>{const h=hourNow();return h>=18||h<4};
 const pathOrder=k=>[...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
@@ -922,7 +924,7 @@ views.home=()=>{
  else if(st==='wfy')stage=card('Written for You',`<div class="hp-in"><h2 class="pz-t">${esc(d.focus)}</h2><p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
   <div class="pz-b">${esc(d.body)}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
    if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
-   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}<div class="hp-acts"><button class="ibtn${playing?' on':''}" data-act="pzspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button></div></div>`,'hp-wfy');
+   return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(th.text)}” ${th.ask}</p>`:''})()}</div>`,'hp-wfy');
  else if(st==='stars')stage=(ttl='Your Stars')&&`<div class="hh-stage s-${sign.id}">
    <div class="hh-pw">${ui('plate-'+sign.id,'hh-plate',sign.name,true)}</div>
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(h.body)}</p></article>
@@ -930,11 +932,11 @@ views.home=()=>{
  else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over when you are ready. It was drawn for you.</p><p class="hp-note">Tap the card to flip it. A whisper is a message from the cosmos.</p>'}</div></div>
    ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}`,'hp-whisper');
- else if(st==='reflect')stage=card('Reflect',`<div class="hp-in"><p class="pz-q">“${esc(d.question)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
-  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div><p class="hp-note">What you keep goes into your Journal.</p></div>`,'hp-reflect');
+ else if(st==='reflect'){const eve=evening();stage=card(eve?'Reflect on Your Day':'Reflect',`<div class="hp-in"><p class="hp-sub hp-wq">${eve?'The day is almost done. How was it? ':''}${rev?`Your Whisper was “${esc(c.title)}”.`:'A question from your Whisper.'}</p><p class="pz-q">“${esc(c.ref)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
+  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(c.ref)}">${IC.chat}Ask Kassandra</button></div><p class="hp-note">What you keep goes into your Journal.</p></div>`,'hp-reflect')}
  else{const eve=hourNow()>=18||hourNow()<4,ch=chapterAt(),lt=ch&&(ch.len-ch.day<=2||ch.day<=3);
   stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in">${tmoon(eve||done===4)}<p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
-  <p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>
+  ${eve?`<p class="hp-bless">${esc(goodnight(k))}</p>`:''}${eve?'':`<p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>`}
   ${lt?`<button class="btn ghost" data-act="hletter">${ch.day<=3?'Your letter from the last Moon':'Your letter for this Moon'}</button>`:''}${ch?`<p class="hp-sub hp-chap">Night ${ch.day} of ${ch.len} in the ${sIdx(ch.sign).name} Moon’s chapter.</p>`:''}${eve||done===4?'':`<p class="hp-sub hp-tonight hp-eve"><span>Tonight</span>Come back this evening for a quiet session. Reflect on your day and let go of what you do not need to carry. It completes the second part of your daily routine.</p>`}</div>`,'hp-held')};if(st==='held')stage+=energyCarousel(energySlides(now,m,sign,h));
  return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>Come as you are. <span>You are known here.</span></small></div></div>
