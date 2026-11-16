@@ -781,3 +781,35 @@ html body.tp.tp.tp #app .sx .hc-s.on:not(#x){opacity:1;transform:scale(1)}
 html body.tp.tp.tp #app .sx .hc-sl:not(#x){font-size:.58rem;letter-spacing:.1em}
 /* Written for You: the first letter of the message (the reader's name) set large */
 html body.tp.tp.tp #app .hp-wfy:not(#x) .pz-b::first-letter{float:left!important;font:600 2.7em/.8 'Cormorant Garamond',serif!important;color:#F6DA97!important;padding:5px 7px 0 0!important;text-shadow:0 0 10px rgba(246,214,130,.45)!important}
+/* ---- the sign's page, redesigned: one slim head, the areas in one row, the reading given the room ---- */
+html body.tp.tp.tp #app .sx .sx-head:not(#x){display:grid!important;grid-template-columns:58px 1fr;column-gap:14px;row-gap:0;align-content:start;align-items:center;text-align:left!important;padding:66px 7cqw 0!important;height:auto!important}
+html body.tp.tp.tp #app .sx .sx-pic:not(#x){position:relative!important;left:auto!important;top:auto!important;transform:none!important;width:58px!important;height:58px!important;grid-row:1/3;grid-column:1;border-radius:50%!important;overflow:hidden!important;box-shadow:0 0 0 1.5px rgba(243,215,144,.55),0 0 16px rgba(227,194,126,.35)!important}
+html body.tp.tp.tp #app .sx .sx-head .pg-t:not(#x){grid-column:2;align-self:end;margin:0!important;font-size:22px!important;letter-spacing:.24em!important;text-align:left!important;text-indent:0!important}
+html body.tp.tp.tp #app .sx .sx-head .pg-s:not(#x){grid-column:2;align-self:start;margin:2px 0 0!important;text-align:left!important;font-size:14px!important}
+html body.tp.tp.tp #app .sx .sx-per:not(#x){grid-column:1/-1;margin-top:6px!important;height:28px!important}
+html body.tp.tp.tp #app .sx .sx-main:not(#x){gap:8px!important;padding-top:4px!important}
+html body.tp.tp.tp #app .sx .hc-ctl:not(#x){margin:0!important;width:100%}
+html body.tp.tp.tp #app .sx .hc-arr{display:none!important}
+html body.tp.tp.tp #app .sx .hc-win:not(#x){margin:0!important;width:100%;-webkit-mask-image:none;mask-image:none;pointer-events:auto;overflow:visible}
+html body.tp.tp.tp #app .sx .hc-track:not(#x){transform:none!important;width:100%}
+html body.tp.tp.tp #app .sx .hc-s:not(#x){flex:1 1 0;padding:0;gap:1px;opacity:.5;transform:none;background:none;border:0;cursor:pointer;color:inherit}
+html body.tp.tp.tp #app .sx .hc-s.on:not(#x){opacity:1}
+html body.tp.tp.tp #app .sx .hc-m:not(#x){width:34px!important;height:34px!important}
+html body.tp.tp.tp #app .sx .hc-s.on .hc-m:not(#x){width:40px!important;height:40px!important}
+html body.tp.tp.tp #app .sx .hc-sl:not(#x){font-size:.5rem;letter-spacing:.06em}
+html body.tp.tp.tp #app .sx .hcar:not(#x){background:rgba(14,18,38,.66)!important;box-shadow:inset 0 0 0 1px rgba(243,215,144,.3)!important;border-radius:20px!important}
+html body.tp.tp.tp #app .sx .hc-slide .read p:not(#x){text-align:justify!important;-webkit-hyphens:auto;hyphens:auto;font-size:var(--rf,19px)!important;line-height:1.38!important}
+html body.tp.tp.tp #app .sx .sx-acts .btn:not(#x){height:40px!important;min-height:40px!important}
+/* the figure kept large: the painting at the left, the name, dates and time beside it */
+html body.tp.tp.tp #app .sx .sx-head:not(#x){grid-template-columns:136px 1fr;grid-template-rows:1fr auto auto 1fr;column-gap:16px;padding:58px 7cqw 0!important}
+html body.tp.tp.tp #app .sx .sx-pic:not(#x){width:136px!important;height:136px!important;grid-row:1/5;box-shadow:0 0 0 1.5px rgba(243,215,144,.6),0 0 0 5px rgba(10,16,34,.5),0 0 0 6px rgba(243,215,144,.3),0 0 26px rgba(227,194,126,.4)!important}
+html body.tp.tp.tp #app .sx .sx-head .pg-t:not(#x){grid-row:2;font-size:23px!important;letter-spacing:.2em!important;margin-top:14px!important}
+html body.tp.tp.tp #app .sx .sx-head .pg-s:not(#x){grid-row:3;font-size:15px!important}
+html body.tp.tp.tp #app .sx .sx-per:not(#x){grid-column:2;grid-row:4;align-self:end;margin:0 0 4px!important;height:28px!important}
+html body.tp.tp.tp #app .sx .sx-per button:not(#x){font-size:9.5px!important;letter-spacing:.06em!important}
+html body.tp.tp.tp #app .sx .sx-main:not(#x){padding-top:8px!important}
+html body.tp.tp.tp #app .sx .sx-ft:not(#x){height:0!important;margin:-8px 0 0!important;position:relative;top:-14px;overflow:visible;z-index:2}
+html body.tp.tp.tp #app .sx .hcar:not(#x){padding:12px 16px!important}
+html body.tp.tp.tp #app .sx .sx-head:not(#x){padding-top:64px!important}
+html body.tp.tp.tp #app .sx .sx-per:not(#x){width:calc(100% - 6px)}
+html body.tp.tp.tp #app .sx .sx-per button:not(#x){letter-spacing:.04em!important}

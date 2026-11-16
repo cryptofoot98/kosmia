@@ -155,9 +155,7 @@ function write(K,signId,cat,period,per,tz){
  else{const role=PLANET_ROLE[planet];body.push(open.text,`${role.replace(/^./,c=>c.toUpperCase())}${role.includes(',')?',':''} ${period==='yearly'?'ends the year':'is'} in ${NAMES[pSign]}${retro?' and moving backwards for now':''}, ${REL_CLAUSE[rel]}.`)}
  const lines=LINES[cat][rel],first=hash(seed)%lines.length;
  body.push(lines[first]);
- if(period==='monthly'||period==='yearly')body.push(lines[(first+1)%lines.length]);
- const [s,w]=VOICE[signId]||VOICE.aries;
- body.push(pick(TRAIT,seed+'t')(s,w,p));
+ // each reading is kept short enough to sit whole on one screen: the sky, what it means for the area, and one thing to do
  body.push(DO[period][cat]);
  const rels=['same','ease','friction','mirror','quiet'];
  const f=FOCUS[cat][period];

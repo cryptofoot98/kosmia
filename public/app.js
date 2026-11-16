@@ -1079,7 +1079,7 @@ function horoSign(){
  // medallions passing through like a carousel as the reading changes
  const pv=HCATS[(ci+n-1)%n][0],nx=HCATS[(ci+1)%n][0],playing=V.say===h.body;
  const ctl=`<div class="hc-ctl"><button class="hc-arr hc-pv" data-act="hcat" data-k="${pv}" data-dir="-1" aria-label="Back to ${CAT_INFO[pv][0]}">${IC.chev}</button>
-  <div class="hc-win" role="group" aria-label="Areas of life"><div class="hc-track" style="--p:${ci}">${HCATS.map(([k],x)=>`<span class="hc-s${x===ci?' on':''}" aria-hidden="${x!==ci}">${ui('hz-'+k,'hc-m','',true)}<span class="hc-sl">${CAT_INFO[k][0]}</span></span>`).join('')}</div></div>
+  <div class="hc-win" role="group" aria-label="Areas of life"><div class="hc-track" style="--p:${ci}">${HCATS.map(([k],x)=>`<button class="hc-s${x===ci?' on':''}" data-act="hcat" data-k="${k}" aria-pressed="${x===ci}" aria-label="${CAT_INFO[k][0]}">${ui('hz-'+k,'hc-m','',true)}<span class="hc-sl">${CAT_INFO[k][0]}</span></button>`).join('')}</div></div>
   <button class="hc-arr hc-nx" data-act="hcat" data-k="${nx}" data-dir="1" aria-label="Next, ${CAT_INFO[nx][0]}">${IC.chev}</button></div>`;
  const PSHORT={daily:'Today',weekly:'Week',monthly:'Month',yearly:'Year'};
  const per=`<div class="sx-per" role="tablist" aria-label="Time period">${PERIODS.map(([k])=>`<button role="tab" aria-selected="${V.period===k}" data-period="${k}">${PSHORT[k]}</button>`).join('')}</div>`;
@@ -2514,7 +2514,7 @@ const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='ta
 function sceneKey(){
  const cur=navCur();
  if(cur==='home'){const st=V.hstep,eve=evening();return st==='night'||(st==='held'&&eve)?'candle':eve?'lake':'dawn'}
- return cur==='horoscope'?(tab()==='sign'?'reading':'sky'):cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
+ return cur==='horoscope'?'sky':cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
 }
 const FIGP={"aries":[105.0,-1.2,4.8],"taurus":[107.1,-1.6,1.7],"gemini":[111.1,-6.8,-0.0],"cancer":[102.2,-1.6,4.9],"leo":[109.6,-4.0,5.5],"virgo":[101.2,-0.8,7.1],"libra":[103.3,-3.9,4.0],"scorpio":[105.0,-1.6,5.7],"sagittarius":[119.5,-10.8,-0.6],"capricorn":[104.5,-5.0,4.5],"aquarius":[104.2,-1.2,7.2],"pisces":[98.6,-1.0,12.7]};
 const figVars=id=>{const f=FIGP[id]||[95,2,8];return `--fw:${f[0]}%;--fl:${f[1]}%;--ft:${f[2]}%`};
@@ -2618,7 +2618,7 @@ let enT=0;
 function hcar(){
  const c=$('.hcar');if(!c)return;
  const R=c.querySelector('.hc-read'),T=$('.hc-track'),n=HCATS.length,arr=d=>$('.hc-ctl .hc-'+d),pg=c.closest('.hsp')||c;
- const line=(j,jump)=>{if(T){T.classList.toggle('jump',!!jump);T.style.setProperty('--p',j);T.querySelectorAll('.hc-s').forEach((b,x)=>{b.classList.toggle('on',x===j);b.setAttribute('aria-hidden',x!==j)});if(jump)requestAnimationFrame(()=>requestAnimationFrame(()=>T.classList.remove('jump')))}
+ const line=(j,jump)=>{if(T){T.classList.toggle('jump',!!jump);T.style.setProperty('--p',j);T.querySelectorAll('.hc-s').forEach((b,x)=>{b.classList.toggle('on',x===j);b.setAttribute('aria-pressed',x===j)});if(jump)requestAnimationFrame(()=>requestAnimationFrame(()=>T.classList.remove('jump')))}
   [['pv',(j+n-1)%n,'Back to '],['nx',(j+1)%n,'Next, ']].forEach(([d,x,w])=>{const b=arr(d);if(b){b.dataset.k=HCATS[x][0];b.setAttribute('aria-label',w+CAT_INFO[HCATS[x][0]][0])}})};
  const cur=()=>Math.max(0,HCATS.findIndex(x=>x[0]===V.hcat));
  line(cur());
@@ -2684,6 +2684,8 @@ function sxLay(sl){
   [...t.content.children].forEach(e=>{
    if(e.classList.contains('read'))[...e.children].forEach(q=>(q.textContent.match(/[^.!?…]+(?:[.!?…]+[’”"')\]]*\s*|$)/g)||[]).filter(x=>x.trim()).forEach((x,i)=>us.push({s:x,np:!i})));
    else us.push({h:e.outerHTML})});
+  // the reading is set as large as it can be while still sitting whole on the card; only when it cannot at the smallest size does it turn pages
+  let z=21;for(const f of [21,20,19,18.5,18,17.5,17,16.5,16,15.5,15]){z=f;M.style.setProperty('--rf',f+'px');if(fits(us,H))break}sl.style.setProperty('--rf',z+'px');
   sl.innerHTML=(fits(us,H)?[us]:even(us)).map(html).join('')}
  M.remove()}
 // the area in view laid out again (the others when they are next turned to), its page kept
