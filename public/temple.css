@@ -766,3 +766,18 @@ html body.tp.tp.tp #app .pg .pg-strip button[aria-selected=true][aria-selected=t
 html body.tp.tp.tp #app .pg .pg-strip button[aria-selected=true][aria-selected=true]:not(#x)::after,html body.tp.tp.tp #app .pg-sky .sk-body .seg button[aria-selected=true][aria-selected=true]:not(#x)::after,html body.tp.tp.tp #app .skyp .seg button[aria-selected=true][aria-selected=true]:not(#x)::after{width:62%!important}
 /* Sky's read button: compact, not the full width */
 html body.tp.tp.tp #app .sk-read .btn:not(#x){width:auto!important;min-width:150px;max-width:220px!important;padding:0 26px!important}
+/* sign reading: the time as the same quiet tabs as Sky */
+html body.tp.tp.tp #app .sx .sx-per:not(#x){height:30px!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;gap:0!important;margin-top:8px!important}
+html body.tp.tp.tp #app .sx .sx-per button:not(#x){position:relative;background:none!important;box-shadow:none!important;border-radius:0!important;color:rgba(251,240,210,.8)!important;-webkit-text-fill-color:rgba(251,240,210,.8)!important;font-weight:600!important;letter-spacing:.14em!important;text-shadow:0 0 8px rgba(10,14,30,.95),0 0 16px rgba(10,14,30,.7)!important}
+html body.tp.tp.tp #app .sx .sx-per button:not(#x)::after{display:block!important;content:'';position:absolute;left:50%;bottom:2px;width:0;height:2px;border-radius:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,#F6DA97,transparent);box-shadow:0 0 8px rgba(246,214,130,.7);transition:width .3s}
+html body.tp.tp.tp #app .sx .sx-per button[aria-selected=true][aria-selected=true]:not(#x){background:none!important;box-shadow:none!important;color:#F8E2A2!important;-webkit-text-fill-color:#F8E2A2!important;font-weight:700!important;text-shadow:0 0 8px rgba(10,14,30,.95),0 0 14px rgba(246,214,130,.35)!important}
+html body.tp.tp.tp #app .sx .sx-per button[aria-selected=true][aria-selected=true]:not(#x)::after{display:block!important;width:62%!important}
+/* the areas of life as a carousel: the chosen one in the middle, its neighbours either side fading away */
+html body.tp.tp.tp #app .sx .hc-ctl:not(#x){width:100%;gap:0}
+html body.tp.tp.tp #app .sx .hc-win:not(#x){flex:1 1 auto;width:auto;min-width:0;margin:-14px 0!important;-webkit-mask-image:linear-gradient(90deg,transparent,#000 24%,#000 76%,transparent);mask-image:linear-gradient(90deg,transparent,#000 24%,#000 76%,transparent)}
+html body.tp.tp.tp #app .sx .hc-track:not(#x){transform:translateX(calc(50% - 41px - var(--p,0) * 82px))}
+html body.tp.tp.tp #app .sx .hc-s:not(#x){flex:0 0 82px;flex-direction:column;gap:3px;padding:14px 0;opacity:.4;transform:scale(.82);transition:opacity .4s,transform .4s}
+html body.tp.tp.tp #app .sx .hc-s.on:not(#x){opacity:1;transform:scale(1)}
+html body.tp.tp.tp #app .sx .hc-sl:not(#x){font-size:.58rem;letter-spacing:.1em}
+/* Written for You: the first letter of the message (the reader's name) set large */
+html body.tp.tp.tp #app .hp-wfy:not(#x) .pz-b::first-letter{float:left!important;font:600 2.7em/.8 'Cormorant Garamond',serif!important;color:#F6DA97!important;padding:5px 7px 0 0!important;text-shadow:0 0 10px rgba(246,214,130,.45)!important}

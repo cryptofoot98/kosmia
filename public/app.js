@@ -889,11 +889,10 @@ const goodnight=k=>GOODNIGHT[[...k].reduce((a,x)=>a+x.charCodeAt(0),0)%GOODNIGHT
 const evening=()=>{const h=hourNow();return h>=18||h<4};
 const pathOrder=k=>[...(askIntent()?['intent']:[]),...PATH.map(x=>x[0]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
- const k=dkey(),dn=pathDone(k);
- if(V.hday!==k){V.hday=k;V.hstep=null;
-  // opening the app again the same day: land on the page after the last one that was read
-  const L=S.hlast,o=pathOrder(k),i=L&&L.day===k?o.indexOf(L.step):-1;if(i>=0)V.hstep=o[Math.min(i+1,o.length-1)]}
- return V.hstep||(askIntent()?'intent':(PATH.find(([x])=>!dn[x]&&(x!=='reflect'||evening()))||[askNight(k)?'night':'held'])[0]);
+ const k=dkey(),dn=pathDone(k),ev=evening();
+ // a new day, a new visit, or the evening arriving: land on the first page not yet seen or completed
+ if(V.hday!==k||V.hev!==ev){V.hday=k;V.hev=ev;V.hstep=null}
+ return V.hstep||(askIntent()?'intent':(PATH.find(([x])=>!dn[x])||[askNight(k)?'night':'held'])[0]);
 }
 // to the next step (or back): leaving Your Stars counts it as read; the page returns to its head
 function pathMove(dir){
@@ -906,7 +905,6 @@ views.home=()=>{
  const sign=sg(S.sign),now=new Date(),c=todayCard(),k=dkey(),rev=!!S.revealed[k],m=K.moon(now),h=horoscope(sign.id,'overview','daily');
  const nm=firstName(),short=hSum(h.body),fig='atlas/fg-'+sign.id,d=myDay(),st=pathStep();
  V.hstep=st;   // the step in view stays in view until the reader moves on, even once it counts as done
- clearTimeout(V.hseen);V.hseen=setTimeout(()=>{if(V.hstep===st&&!(S.hlast&&S.hlast.day===k&&S.hlast.step===st)){S.hlast={day:k,step:st};save()}},2500);   // a page counts as seen once it has been in view a moment
  if(st==='wfy'&&S.wfy!==k){S.wfy=k;save()}
  const dn=pathDone(k),done=PATH.filter(([x])=>dn[x]).length;
  Temple.arc(PATH.map(([x,l])=>({k:x,label:l,on:!!dn[x],cur:st===x})),done===4);
@@ -940,10 +938,10 @@ views.home=()=>{
  else{const eve=hourNow()>=18||hourNow()<4,ch=chapterAt(),lt=ch&&(ch.len-ch.day<=2||ch.day<=3);
   stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in">${tmoon(eve||done===4)}<p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):done===4?'The full Moon of your day':`${done} of 4 steps today`}</p>
   ${eve?`<p class="hp-bless">${esc(goodnight(k))}</p>`:''}${eve?'':`<p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” is with you today.`:'Your Whisper is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>`}
-  ${lt?`<button class="btn ghost" data-act="hletter">${ch.day<=3?'Your letter from the last Moon':'Your letter for this Moon'}</button>`:''}${ch?`<p class="hp-sub hp-chap">Night ${ch.day} of ${ch.len} in the ${sIdx(ch.sign).name} Moon’s chapter.</p>`:''}${eve||done===4?'':`<p class="hp-sub hp-tonight hp-eve"><span>Tonight</span>Come back this evening for a quiet session. Reflect on your day and let go of what you do not need to carry. It completes the second part of your daily routine.</p>`}</div>`,'hp-held')};if(st==='held')stage+=energyCarousel(energySlides(now,m,sign,h));
+  ${lt?`<button class="btn ghost" data-act="hletter">${ch.day<=3?'Your letter from the last Moon':'Your letter for this Moon'}</button>`:''}${ch?`<p class="hp-sub hp-chap">Night ${ch.day} of ${ch.len} in the ${sIdx(ch.sign).name} Moon’s chapter.</p>`:''}${eve||done===4?'':`<p class="hp-sub hp-tonight hp-eve"><span>Tonight</span>Come back this evening for a quiet session. Reflect on your day and let go of what you do not need to carry. It completes the second part of your daily routine.</p>`}</div>`,'hp-held')};if(st==='held'&&!evening())stage+=energyCarousel(energySlides(now,m,sign,h));
  return `<div class="home hbay hmoon hsun hpath"><div class="hbar">${ui('home-bar','hb-art')}<span class="hb-logo"><span class="hb-word">Kosmia</span>${Kit.icon('star',{cls:'hb-star'})}</span>${avatar()}</div>
  <header class="hh-head stay"><div class="hh-top"><div class="brand"><span class="hh-word">Kosmia</span><small>Come as you are. <span>You are known here.</span></small></div></div>
-  <h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1><p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${dots}${ttl?orn(ttl):''}</header>
+  ${st==='held'&&evening()?'':`<h1 class="hh-greet">${greet()}${nm?', '+esc(nm):''}</h1>`}<p class="hh-date">${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</p>${dots}${ttl?orn(ttl):''}</header>
  ${Kit.scene({cls:'hhero',bg:'atlas/home-sky',ratio:'auto',bgPos:'50% 0',priority:true,stars:true,bare:true,content:`<div class="hp-stage${sd?' sl'+(sd>0?'r':'l'):''}" data-step="${st}" aria-live="polite">${stage}</div>`})}
  ${V.wpop?whisperPop(c):''}${V.letter?moonLetter(V.letter):''}</div>`;
 };
