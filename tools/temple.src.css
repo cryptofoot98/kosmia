@@ -850,3 +850,31 @@ html body.reduce.tp.tp.tp #app .wpc::before,html body.reduce.tp.tp.tp #app .wpc:
 @@ .skd-q{margin:2px 0!important;text-align:center;font:italic 600 17px/1.25 'Cormorant Garamond',serif!important;color:#FFF3CF!important;text-shadow:0 0 8px rgba(10,14,30,.9)}
 @@ .skd-b .sx-acts{flex:none;display:flex;gap:10px}
 @@ .skd-b .sx-acts .btn{flex:1 1 0;min-width:0;height:40px;min-height:40px}
+/* the sky's tiles as a carousel: one large rounded tile at a time, its words easy to read */
+@@ .sky-l .sky-t{gap:12px;margin:0;padding:0;width:100%}
+@@ .sky-t .sky-c{flex:0 0 100%;scroll-snap-align:center;flex-direction:column;justify-content:center;gap:8px;padding:16px 18px 18px;min-height:206px;border-radius:26px;text-align:center;position:relative;background:rgba(14,18,38,.66);box-shadow:inset 0 0 0 1px rgba(243,215,144,.4),inset 0 0 0 5px rgba(10,16,34,.35),inset 0 0 0 6px rgba(243,215,144,.14)}
+@@ .sky-t .sky-c .sky-i,@@ .sky-t .sky-c>img{width:76px!important;height:76px!important}
+@@ .sky-t .sky-x{flex:none;align-items:center;width:100%}
+@@ .sky-t .sky-x strong{font-size:14px;letter-spacing:.14em;line-height:1.25}
+@@ .sky-t .sky-x em{font-size:16px;margin-top:2px}
+@@ .sky-t .sky-x>span{margin-top:6px;font-size:19px;line-height:1.25}
+@@ .sky-t .sky-go{position:absolute;right:14px;top:16px}
+@@ .sky-l .sky-d{margin-top:9px;gap:8px}
+@@ .sky-l .sky-d i{width:7px;height:7px}
+/* Ahead stays a list, its words larger */
+@@ .pg-sky .pg-page:has(.sky-list){gap:4px}
+@@ .sky-list{gap:6px}
+@@ .sky-list .sky-c{padding:7px 10px 8px 12px;gap:12px}
+@@ .sky-list .sky-c .sky-i,@@ .sky-list .sky-c>img{width:50px!important;height:50px!important}
+@@ .sky-list .sky-x strong{font-size:12.5px;letter-spacing:.1em}
+@@ .sky-list .sky-x em{font-size:15px}
+@@ .sky-list .sky-x>span{font-size:17.5px;line-height:1.15;margin-top:1px}
+@@ .sky-cal{margin:0!important;padding:2px 10px!important;font-size:16px!important}
+@@ .pg-sky .sk-body:has(.sky-list){padding-top:4px}
+@@ .pg-sky .sk-body:has(.sky-list){justify-content:flex-start!important;padding-top:0!important;padding-bottom:0!important}
+@@ .sky-list:not(#x){gap:5px}
+@@ .sky-list .sky-c:not(#x){padding:5px 10px 6px 12px}
+@@ .pg-sky .sk-body:has(.sky-list){padding-top:6px!important}
+@@ .pg-sky .pg-page:has(.sky-list){gap:8px}
+@@ .sky-list:not(#x){gap:7px}
+@@ .sky-list .sky-c:not(#x){padding:7px 10px 8px 12px}
