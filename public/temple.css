@@ -813,3 +813,41 @@ html body.tp.tp.tp #app .sx .hcar:not(#x){padding:12px 16px!important}
 html body.tp.tp.tp #app .sx .sx-head:not(#x){padding-top:64px!important}
 html body.tp.tp.tp #app .sx .sx-per:not(#x){width:calc(100% - 6px)}
 html body.tp.tp.tp #app .sx .sx-per button:not(#x){letter-spacing:.04em!important}
+/* ---- Sky, read for the reader: For you, Ahead, and one page for each thing in the sky ---- */
+html body.tp.tp.tp #app .pg-sky .sk-body:has(.sky-l){justify-content:flex-start;padding-top:10px;padding-bottom:4px}
+html body.tp.tp.tp #app .pg-sky .pg-page:has(.sky-l){gap:9px}
+html body.tp.tp.tp #app .sk-who .sk-go:not(#x){flex:none;margin:0 0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;height:36px!important;min-height:36px!important;padding:0 18px!important;border-radius:18px!important;font:600 10px 'Cinzel',serif!important;letter-spacing:.14em!important;text-transform:uppercase}
+html body.tp.tp.tp #app .pg-sky .sk-who:has(.sk-go){justify-content:flex-start;gap:12px}
+html body.tp.tp.tp #app .pg-sky .sk-who:has(.sk-go) .sk-med{width:56px;height:56px}
+html body.tp.tp.tp #app .pg-sky .sk-who:has(.sk-go) .sk-n{font-size:20px!important;letter-spacing:.2em!important}
+html body.tp.tp.tp #app .pg-sky .sk-who:has(.sk-go) .sk-ky{display:none}
+html body.tp.tp.tp #app .sky-k{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 0!important;font:600 10px 'Cinzel',serif!important;letter-spacing:.3em!important;text-transform:uppercase;color:#F3D790!important;text-shadow:0 0 8px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .sky-k svg{width:9px;height:9px}
+html body.tp.tp.tp #app .sky-l{display:flex;flex-direction:column;gap:7px;width:100%}
+html body.tp.tp.tp #app .sky-c{display:flex;align-items:center;gap:12px;width:100%;padding:8px 10px 8px 12px;box-sizing:border-box;border:0;border-radius:16px;background:rgba(14,18,38,.62);box-shadow:inset 0 0 0 1px rgba(243,215,144,.28);text-align:left;color:inherit;cursor:pointer}
+html body.tp.tp.tp #app .sky-c .sky-i,html body.tp.tp.tp #app .sky-c>img,html body.tp.tp.tp #app .skd-h .sky-i,html body.tp.tp.tp #app .skd-h>img{flex:none;width:46px!important;height:46px!important;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 7px rgba(243,210,140,.4))}
+html body.tp.tp.tp #app .sky-x{flex:1;min-width:0;display:flex;flex-direction:column}
+html body.tp.tp.tp #app .sky-x strong{font:600 11.5px/1.2 'Cinzel',serif;letter-spacing:.12em;text-transform:uppercase;color:#F8E2A2}
+html body.tp.tp.tp #app .sky-x em{font:italic 500 13px/1.2 'Cormorant Garamond',serif;color:rgba(251,240,210,.75)}
+html body.tp.tp.tp #app .sky-x>span{margin-top:2px;font:500 15px/1.2 'Cormorant Garamond',serif;color:#FBF0D2}
+html body.tp.tp.tp #app .sky-go{flex:none;color:#F1D79A;display:grid}
+html body.tp.tp.tp #app .sky-go svg{width:13px;height:13px}
+html body.tp.tp.tp #app .skd-m{align-self:center;flex:none;display:inline-flex;align-items:center;gap:6px;margin:2px 0 0!important;padding:6px 10px;border:0;background:none;font:italic 500 15px 'Cormorant Garamond',serif;color:#F3D790;text-shadow:0 0 8px rgba(10,14,30,.9);cursor:pointer}
+html body.tp.tp.tp #app .skd-m svg{width:10px;height:10px}
+/* the page for one thing in the sky */
+html body.tp.tp.tp #app .skd{position:fixed!important;left:0;right:0;top:0;bottom:calc(var(--navh,64px) + 10px);margin:0 auto!important;width:min(100vw,var(--appw));display:flex!important;flex-direction:column;overflow:hidden;padding:0!important;container-type:inline-size}
+html body.tp.tp.tp #app .skd-bar{position:absolute;left:7cqw;top:28px;z-index:3}
+html body.tp.tp.tp #app .skd-bar .ibtn{width:36px;height:36px;border-radius:50%;background:rgba(14,20,40,.55)!important;color:#F1DFB4!important;box-shadow:inset 0 0 0 1px var(--tf)!important;border:0!important}
+html body.tp.tp.tp #app .skd-h{flex:none;display:flex;align-items:center;gap:14px;padding:70px 7cqw 0}
+html body.tp.tp.tp #app .skd-h .sky-i,html body.tp.tp.tp #app .skd-h>img{width:60px!important;height:60px!important}
+html body.tp.tp.tp #app .skd-h .pg-t{margin:0!important;font-size:19px!important;letter-spacing:.16em!important;text-align:left!important;text-indent:0!important}
+html body.tp.tp.tp #app .skd-h .pg-s{margin:3px 0 0!important;text-align:left!important}
+html body.tp.tp.tp #app .skd-b{flex:1 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none;padding:10px 7cqw 6px;display:flex;flex-direction:column;gap:6px}
+html body.tp.tp.tp #app .skd-b::-webkit-scrollbar{display:none}
+html body.tp.tp.tp #app .skd-b section{padding:7px 14px 8px;border-radius:16px;background:rgba(14,18,38,.6);box-shadow:inset 0 0 0 1px rgba(243,215,144,.22)}
+html body.tp.tp.tp #app .skd-b section.you{background:rgba(40,32,22,.62);box-shadow:inset 0 0 0 1px rgba(243,215,144,.55),0 0 16px rgba(227,194,126,.15)}
+html body.tp.tp.tp #app .skd-b h3{margin:0 0 3px!important;font:600 10px 'Cinzel',serif!important;letter-spacing:.24em!important;text-transform:uppercase;color:#F3D790!important}
+html body.tp.tp.tp #app .skd-b section p{margin:0!important;font:500 15.5px/1.27 'Cormorant Garamond',serif!important;color:#FBF0D2!important;text-align:left;text-shadow:none!important}
+html body.tp.tp.tp #app .skd-q{margin:2px 0!important;text-align:center;font:italic 600 17px/1.25 'Cormorant Garamond',serif!important;color:#FFF3CF!important;text-shadow:0 0 8px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .skd-b .sx-acts{flex:none;display:flex;gap:10px}
+html body.tp.tp.tp #app .skd-b .sx-acts .btn{flex:1 1 0;min-width:0;height:40px;min-height:40px}

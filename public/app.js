@@ -1047,20 +1047,66 @@ const readOthers=()=>`<section class="hl-sec rfse">${Kit.divider('Read for Someo
  <p class="hso">A partner, a friend, a child: open the sky they were born beneath.</p>
  <div class="signs12 sg-car">${SIGNS.map(s=>`<button class="sgn${s.id===S.sign?' me':''}" data-act="tohoroscope" data-sign="${s.id}">${med(s.id,'sgn-i')}<span>${s.id===S.sign?'✦ '+s.name:s.name}</span></button>`).join('')}</div>
  </section>`;
+// Sky, read for the reader: each thing in the sky with what it is, what it means for them (how its sign sits with theirs,
+// the area of life it touches by their Sun sign, whether the planet is their ruler), one thing to do and a question
+const RULER={aries:'Mars',taurus:'Venus',gemini:'Mercury',cancer:'Moon',leo:'Sun',virgo:'Mercury',libra:'Venus',scorpio:'Pluto',sagittarius:'Jupiter',capricorn:'Saturn',aquarius:'Uranus',pisces:'Neptune'};
+const REL_IN={same:'in your own sign',mirror:'in your opposite sign',ease:'in a sign that flows with yours',friction:'in a sign that presses on yours',quiet:'in a sign that sits apart from yours'};
+const REL_FEEL={same:'You feel this one first, and most directly.',mirror:'It reaches you through other people: watch what they reflect back to you.',ease:'It works with you, so things here come more easily.',friction:'It asks something of you: expect a little tension, and growth from it.',quiet:'It works quietly in the background for you.'};
+const skyRel=si=>{const me=SIGNS.indexOf(sg(S.sign)),d=((si-me)%12+12)%12;return {rel:d===0?'same':d===6?'mirror':[2,4,8,10].includes(d)?'ease':[3,9].includes(d)?'friction':'quiet',area:HOUSE[d]}};
+const areaShort=a=>a.split(',')[0].split(' and ')[0];
+function skyItems(){
+ const now=new Date(),m=K.moon(now),dm=d=>ymdLong(dkey(d),{day:'numeric',month:'long'}),up=upcoming().filter(e=>e.date>now),out=[];
+ {const r=skyRel(m.sign),sn=sIdx(m.sign).name;
+  out.push({id:'moon',date:now,img:moonPic(m,'sky-i'),title:`Moon in ${sn}`,when:`Today · ${m.name}`,line:`${cap(REL_IN[r.rel])}. Today your feelings turn towards ${areaShort(r.area)}.`,
+   fact:`Tonight the Moon is a ${m.name} in ${sn}. ${MOON_LINE[m.name]||''}`,
+   you:`The Moon is ${REL_IN[r.rel]}. ${REL_FEEL[r.rel]} It lights ${r.area}, so that is where your feelings gather today.`,
+   act:RITUAL[m.name]||'Give yourself ten quiet minutes tonight.',q:'What am I feeling today that I have not yet said aloud?',more:'moon',moreL:'The Moon’s full page'})}
+ const rxs=K.retrogrades(now,new Date(+now+120*DAY)),rx=rxs.find(w=>w.start&&w.start<=now&&(!w.end||w.end>=now))||rxs.find(w=>w.start&&w.start>now);
+ if(rx){const on=rx.start<=now,P=rx.planet,mine=RULER[S.sign]===P,r=skyRel(K.signIdx(K.lon(P,on?now:rx.start)));
+  out.push({id:'rx',date:on?now:rx.start,soon:on,img:ui('pl-'+P.toLowerCase(),'sky-i'),title:`${P} retrograde`,when:on?`Now, until ${rx.end?dm(rx.end):'next year'}`:`From ${dm(rx.start)}${rx.end?' to '+dm(rx.end):''}`,
+   line:`${mine?P+' is your ruling planet, so you feel this more than most.':'A time to review '+PM[P]+'.'} It touches ${areaShort(r.area)}.`,
+   fact:`${P} appears to stop and move backwards against the stars. It is an effect of Earth’s own orbit; the planet never truly reverses.`,
+   you:`${mine?`${P} is the ruling planet of ${sg(S.sign).name}, so you feel this more than most. `:''}Traditionally a time to review ${PM[P]}: to revisit and revise rather than launch. ${P} is ${REL_IN[r.rel]}, touching ${r.area}. ${REL_FEEL[r.rel]}`,
+   act:'Finish or revisit one thing you left half-done before you begin anything new.',q:'What deserves a second look?',more:'planets',moreL:'Where the planets are now'})}
+ up.filter(e=>['moon','eclipse','conjunction','season','meteor','planet'].includes(e.type)).slice(0,5).forEach(e=>{const i=evInfo(e),r=e.sign!=null?skyRel(e.sign):null,sn=e.sign!=null?sIdx(e.sign).name:'';
+  const pn=(e.name.match(/Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto/)||[])[0];
+  out.push({id:'ev:'+evRef(e),date:e.date,ev:true,sig:!!r,img:pn?ui('pl-'+pn.toLowerCase(),'sky-i'):e.type==='season'?ui('pl-sun','sky-i'):evArt(e,true).replace('ev-r','sky-i'),title:esc(e.name)+(sn&&e.type==='moon'?` in ${sn}`:''),when:dm(e.date),
+   line:r?`${cap(REL_IN[r.rel])}. It touches ${areaShort(r.area)}.`:'A night to look up, for everyone.',
+   fact:i.fact,you:r?`${i.sym} For you it falls ${REL_IN[r.rel]}, lighting ${r.area}. ${REL_FEEL[r.rel]}`:`${i.sym} There is no sign to read here, only something beautiful to see.`,
+   act:RITUAL[e.name]||(r?`Mark the date, and give ${areaShort(r.area)} ten quiet minutes that day.`:'Mark the date, step outside and look up.'),q:i.ref||'What would I like to notice that day?',more:'events',moreL:'All events'})});
+ {const si=K.signIdx(K.positions(now)[0].lon),sun=sIdx(si),r=skyRel(si);
+  out.push({id:'sun',date:now,season:true,img:ui('pl-sun','sky-i'),title:`Sun in ${sun.name}`,when:`${sun.name} season`,line:`${cap(REL_IN[r.rel])}. This month’s light falls on ${areaShort(r.area)}.`,
+   fact:`The Sun is moving through ${sun.name}, as it does at this time every year. Each season lasts about a month.`,
+   you:`${sun.name} season colours everyone’s days: ${SIGN_KEYS[sun.id].join(', ').toLowerCase()}. The Sun is ${REL_IN[r.rel]}, so for about a month it lights ${r.area}. ${REL_FEEL[r.rel]}`,
+   act:`Choose one small thing to tend this month in ${areaShort(r.area)}.`,q:`What is asking for my attention in ${areaShort(r.area)}?`,more:'planets',moreL:'Where the planets are now'})}
+ return out;
+}
+// For you: what matters most today, at most three; Ahead: what is coming, in order
+const skyToday=()=>{const it=skyItems(),now=new Date(),pick=[it.find(x=>x.id==='moon'),it.find(x=>x.id==='rx'&&(x.soon||x.date-now<30*DAY)),it.find(x=>x.ev&&x.sig&&x.date-now<21*DAY),it.find(x=>x.id==='sun')].filter(Boolean);return pick.slice(0,3)};
+const skyAhead=()=>skyItems().filter(x=>x.ev||(x.id==='rx'&&!x.soon)).sort((a,b)=>a.date-b.date).slice(0,4);
+const skyRow=x=>`<button class="sky-c" data-act="skd" data-id="${esc(x.id)}">${x.img}<span class="sky-x"><strong>${x.title}</strong><em>${x.when}</em><span>${x.line}</span></span><span class="sky-go">${IC.chev}</span></button>`;
+function skyDetail(x){
+ return `<div class="land hland hnight skyp pg pg-sky skd"><div class="skd-bar">${iconBtn('back','data-act="skdx"','Back')}</div>
+ <header class="skd-h">${x.img}<div><h1 class="pg-t">${x.title}</h1><p class="pg-s">${x.when}</p></div></header>
+ <div class="skd-b"><section><h3>What is happening</h3><p>${esc(x.fact)}</p></section>
+ <section class="you"><h3>What it means for you</h3><p>${esc(x.you)}</p></section>
+ <section><h3>One thing to do</h3><p>${esc(x.act)}</p></section>
+ <p class="skd-q">“${esc(x.q)}”</p>
+ <div class="sx-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(x.q)}">${IC.chat}Ask Kassandra</button><button class="btn" data-act="skdwrite" data-t="${esc(x.title)}">${IC.quill}Write about it</button></div>
+ <button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button></div></div>`}
 views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
+ if(V.skd){const x=skyItems().find(i=>i.id===V.skd);if(x)return skyDetail(x);V.skd=null}
  const sign=sg(S.sign),nm=firstName(),pl=PLABEL[V.period],pw=PWORD[V.period];
  const ov=horoscope(S.sign,'overview',V.period),first=(String(ov.body||'').match(/^[^.!?]*[.!?]/)||[''])[0].trim();
  const read=V.period==='daily'&&S.readDay===dkey();
  // Your Sky is a row of pages under one head: Horoscope, the sky now, the Calendar and the Library, each on one screen
  const now=new Date(),mn=K.moon(now),ev=nextEvent(now),qt=V.period==='daily'?(String(myDay().body).match(/^[^.!?]*[.!?]/)||[''])[0]:first,sc=pgCur('sky');
  let pg;
- if(sc==='hor')pg=`<div class="sk-who">${glyphMed(sign.id,'sk-med')}<div><h2 class="sk-n">${sign.name}</h2><p class="sk-dt">${sign.dates}</p><p class="sk-ky">${keys(SIGN_KEYS[sign.id])}</p></div></div><div role="group" aria-label="Time period">${seg([['daily','Today'],['weekly','Week'],['monthly','Month'],['yearly','Year']],V.period,'period')}</div>
-  <div class="sk-read">${qt?`<p class="hm-q">“${esc(qt)}”</p>`:''}<button class="btn hm-go${read?' on':''}" data-act="tohoroscope">${read?'✦ Read again':'Read more'}</button></div>`;
- else if(sc==='now')pg=`<div class="sk-moon">${moonPic(mn,'sk-bm')}<h2>${mn.name}</h2><p>in ${sIdx(mn.sign).name}</p><p class="sk-ml">${esc(MOON_LINE[mn.name]||'')}</p></div>
-  <div class="pg-grid" style="--c:3">${tile('data-go="discover" data-t="moon"','The Moon','Phase and meaning',moonPic(mn,''))}${tile('data-go="discover" data-t="planets"','Planets','Where they are now',ui('pl-jupiter',''))}${tile('data-go="discover" data-t="events"','Events','What is coming',ui('pl-sun',''))}</div>`;
- else if(sc==='cal')pg=`<p class="pg-in">The next days of the sky</p><div class="list">${upcoming().filter(e=>e.date>=now).slice(0,3).map(e=>lrow(evArt(e,true),esc(e.name),ymdLong(dkey(e.date),{day:'numeric',month:'long'}),'data-go="discover" data-t="calendar"')).join('')}</div><button class="btn" data-go="discover" data-t="calendar">Open the Cosmic Calendar</button>`;
+ if(sc==='hor')pg=`<div class="sk-who">${glyphMed(sign.id,'sk-med')}<div><h2 class="sk-n">${sign.name}</h2><p class="sk-dt">${sign.dates}</p><p class="sk-ky">${keys(SIGN_KEYS[sign.id])}</p></div><button class="btn hm-go sk-go${read?' on':''}" data-act="tohoroscope">${read?'Read again':'Read'}</button></div>
+  <p class="sky-k">${Kit.icon('star')}<span>Your sky today</span>${Kit.icon('star')}</p><div class="sky-l">${skyToday().map(skyRow).join('')}</div>`;
+ else if(sc==='ahead')pg=`<p class="sky-k">${Kit.icon('star')}<span>Coming for you</span>${Kit.icon('star')}</p><div class="sky-l">${skyAhead().map(skyRow).join('')}</div><button class="skd-m" data-go="discover" data-t="calendar">Open the Cosmic Calendar ${IC.chev}</button>`;
  else pg=`<p class="pg-in">The old knowledge, open to you</p><div class="pg-grid" style="--c:2">${tile('data-act="libgo" data-tab="guides"','Guides','Beginner’s guides',ui('ic-book',''))}${tile('data-act="libgo" data-tab="signs"','Zodiac signs','All twelve',ui('m-'+S.sign,''))}${tile('data-act="libgo" data-tab="planets"','Planets','What each one speaks of',pic('cats','planets',''))}${tile('data-act="libgo" data-tab="houses"','Houses','Twelve areas of life',pic('cats','houses',''))}</div>`;
  return `<div class="land hland hnight skyp pg pg-sky"><header class="hl-top stay sk-head"><h1 class="pg-t">${nm?esc(nm)+'’s sky':'Your sky'}</h1><p class="pg-s">What the stars say, now</p>${pgStrip('sky')}</header>
  <div class="sk-body"><div class="pg-page${pgDir()}">${pg}</div></div></div>
@@ -1114,7 +1160,7 @@ const SVGI=(p,s=1.2)=>`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor
 const door=(at,label,inner)=>`<button class="sk-d" ${at}>${inner}<span>${label}</span></button>`;
 const doorArt=(at,label,img)=>door(at,label,`<i class="sk-di">${ui(img,'')}</i>`);
 const DI={profile:'<circle cx="16" cy="12" r="5"/><path d="M6 27c1-6 5-9 10-9s9 3 10 9"/>',birth:'<path d="M16 4v6M16 22v6M4 16h6M22 16h6"/><circle cx="16" cy="16" r="4"/>',bell:'<path d="M8 23h16l-2-3v-6a6 6 0 0 0-12 0v6zM13 26a3 3 0 0 0 6 0"/>',lock:'<rect x="8" y="14" width="16" height="12" rx="2"/><path d="M11 14v-3a5 5 0 0 1 10 0v3"/>',star:'<path d="M16 5l3 8 8 .6-6.2 5.2 2 8.2L16 22.6 9.2 27l2-8.2L5 13.6 13 13z"/>',book:'<path d="M6 7h6v18H6zM13 5h6v20h-6zM21 9l5 1.4-4 15.2-5-1.4z"/>',cal:'<rect x="6" y="8" width="20" height="18" rx="2"/><path d="M6 14h20M11 5v6M21 5v6"/>',list:'<path d="M9 9h16M9 16h16M9 23h16M5 9h.1M5 16h.1M5 23h.1"/>',pen:'<path d="M8 25l1-5L22 7l4 4L13 24zM19 10l4 4"/>',two:'<circle cx="12" cy="13" r="5"/><circle cx="21" cy="13" r="5"/><path d="M6 26c1-4 4-6 6-6M26 26c-1-4-4-6-6-6"/>'};
-const PGC={sky:[['hor','Stars'],['now','Now'],['cal','Calendar'],['lib','Library']],jn:[['tonight','Tonight'],['pages','Pages'],['cal','Calendar'],['ins','Insights']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Codex'],['circle','Circle'],['details','Details']]};
+const PGC={sky:[['hor','For you'],['ahead','Ahead'],['lib','Library']],jn:[['tonight','Tonight'],['pages','Pages'],['cal','Calendar'],['ins','Insights']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Codex'],['circle','Circle'],['details','Details']]};
 const pgCur=g=>{const c=(S.pgc||{})[g],l=PGC[g];return l.some(x=>x[0]===c)?c:l[0][0]};
 const pgStrip=g=>`<div class="seg pg-strip" role="tablist" aria-label="Sections">${PGC[g].map(([k,l])=>`<button role="tab" aria-selected="${k===pgCur(g)}" data-act="pgcat" data-g="${g}" data-k="${k}">${l}</button>`).join('')}</div>`;
 const pgDir=()=>{const d=V.pdir||0;V.pdir=0;return d?` sl${d>0?'r':'l'}`:''};
@@ -2513,6 +2559,7 @@ const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='ta
 // the painted scene behind the place: Today's follows the hour (dawn by day, the lake in the evening, the candle at night's end)
 function sceneKey(){
  const cur=navCur();
+ if(cur!=='horoscope')V.skd=null;
  if(cur==='home'){const st=V.hstep,eve=evening();return st==='night'||(st==='held'&&eve)?'candle':eve?'lake':'dawn'}
  return cur==='horoscope'?'sky':cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
 }
@@ -2876,6 +2923,9 @@ document.addEventListener('click',e=>{
  if(a==='spkopen'){V.spk=true;return render()}
  if(a==='wlnext'){V.wl=(V.wl||0)+1;if(V.wl>=3){S.welcomed=true;V.wl=0;save()}return render()}
  if(a==='wlskip'){S.welcomed=true;V.wl=0;save();return render()}
+ if(a==='skd'){V.skd=t.dataset.id;render();return window.scrollTo(0,0)}
+ if(a==='skdx'){V.skd=null;return render()}
+ if(a==='skdwrite'){const j={id:uuid(),day:dkey(),kind:'reflection',title:t.dataset.t,body:'',at:new Date().toISOString()};S.journal.push(j);save();V.skd=null;openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='pgcat'){const g=t.dataset.g,l=PGC[g].map(x=>x[0]),f=l.indexOf(pgCur(g)),n=l.indexOf(t.dataset.k);if(n<0||n===f)return;V.pdir=n>f?1:-1;S.pgc=S.pgc||{};S.pgc[g]=t.dataset.k;save();return render()}
  if(a==='jsub'){V.jsub=t.dataset.k||null;if(!V.jsub)V.jsearch=null;return render()}
  if(a==='spkclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.spk=false;return render()}
