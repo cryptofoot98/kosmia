@@ -184,6 +184,7 @@ const SPREADS={
  career:{s:'Career',n:'Career Reading',p:['Where you are','Your strengths','The obstacle','Action to take','Where it tends']},
  celtic:{s:'Celtic Cross',n:'Celtic Cross',p:['The present','The challenge','The foundation','The past','The crown','The near future','Yourself','Your surroundings','Hopes and fears','The outcome']}
 };
+const SPREAD_FOR={one:'A clear word for today',ppf:'How you got here, where it leads',scg:'When you feel stuck',love:'You, them and what lies between',career:'Strengths, obstacle, next step',celtic:'The deepest look of all'};
 function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRandomValues(r);for(let i=a.length-1;i>0;i--){const j=r[i]%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 /* ---------- sections and routes: five destinations in the bottom bar, each with its own pages; the profile opens from the avatar ---------- */
 // [page slug, title]; the first page of each section is its landing
@@ -1087,7 +1088,7 @@ const skyToday=()=>{const it=skyItems(),now=new Date(),pick=[it.find(x=>x.id==='
 const skyAhead=()=>skyItems().filter(x=>x.ev||(x.id==='rx'&&!x.soon)).sort((a,b)=>a.date-b.date).slice(0,4);
 const skyRow=x=>`<button class="sky-c" data-act="skd" data-id="${esc(x.id)}">${x.img}<span class="sky-x"><strong>${x.title}</strong><em>${x.when}</em><span>${x.line}</span></span><span class="sky-go">${IC.chev}</span></button>`;
 // the tiles as a carousel: one large tile at a time, turning by itself, swiped by hand
-const skyCar=l=>`<div class="sky-l"><div class="en-track sky-t" aria-roledescription="carousel">${l.map(skyRow).join('')}</div><div class="en-dots sky-d" aria-hidden="true">${l.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div></div>`;
+const skyCar=l=>`<div class="sky-l"><div class="en-track sky-t" aria-roledescription="carousel">${l.map(skyRow).join('')}</div><nav class="hp-dots sky-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skymove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="en-dots sky-d" aria-hidden="true">${l.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skymove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>`;
 function skyDetail(x){
  return `<div class="land hland hnight skyp pg pg-sky skd"><div class="skd-bar">${iconBtn('back','data-act="skdx"','Back')}</div>
  <header class="skd-h">${x.img}<div><h1 class="pg-t">${x.title}</h1><p class="pg-s">${x.when}</p></div></header>
@@ -1183,11 +1184,13 @@ views.tarot=()=>{
  // (the daily step, the same Whisper as on Home) and the readings, each way of reading one tap from its own spread
  const nm=firstName();
  const oc=pgCur('or');let pg;
- if(oc==='kas')pg=`<section class="or-k"><span class="tk-m">${ui('kassandra','tk-i')}</span><div><h3>She is listening</h3><p>Speak or write your question. She knows your sign, your chart and your day.</p><button class="btn" data-act="kasgo">Ask Kassandra</button></div></section>
-  <section>${pgl('Or begin with')}<div class="or-pr">${kasPrompts().slice(0,2).map(q=>`<button class="or-p" data-act="kasask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div></section>`;
- else if(oc==='cards')pg=`<p class="pg-in">Hold a question in your heart, then choose how deeply to look.</p><div class="pg-grid" style="--c:3">${Object.entries(SPREADS).map(([sk,x])=>tile(`data-act="tspreadgo" data-k="${sk}"`,x.s.replace(' · ','·'),`${x.p.length} card${x.p.length>1?'s':''}`,ui('ic-'+({one:'one',ppf:'ppf',scg:'scg',love:'love',career:'career',celtic:'celtic'}[sk]||'one'),''))).join('')}</div>`;
- else pg=`<section class="dr-in"><p class="dr-lead">Tell Kassandra what you saw, and uncover what it is asking you to notice.</p><div class="or-two"><button class="btn" data-go="discover" data-t="new-dream">Bring a dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Dream journal</button></div></section>
-  <section>${pgl('Common symbols')}<div class="symrow">${['water','flying','snake','house','death'].map(id=>{const x=dsym(id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(x.name.replace(/^(The|A|An) /,''))}">${artOf(x.art,'sym-i')}<strong>${x.name.replace(/^The /,'')}</strong></button>`}).join('')}</div></section>`;
+ if(oc==='kas'){const has=KS.msgs.length>0,last=has?[...KS.msgs].reverse().find(m=>m.role==='user'):null;
+  pg=`<section class="or-k"><span class="tk-m">${ui('kassandra','tk-i')}</span><div><h3>${has?'She remembers':'She is listening'}</h3><p>${has&&last?`You last asked: “${esc(clip(last.content,70))}”`:'Speak or write your question. She knows your sign, your chart and your day.'}</p><button class="btn" data-act="kasgo">${has?'Continue':'Ask Kassandra'}</button></div></section>
+  <section>${pgl(has?'Or ask her':'Or begin with')}<div class="or-pr">${kasPrompts().slice(0,2).map(q=>`<button class="or-p" data-act="kasask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div></section>`}
+ else if(oc==='cards')pg=`<div class="sky-l sky-list or-list">${Object.entries(SPREADS).map(([sk,x])=>`<button class="sky-c" data-act="tspreadgo" data-k="${sk}">${ui('ic-'+sk,'sky-i')}<span class="sky-x"><strong>${x.s}</strong><span>${SPREAD_FOR[sk]}</span></span><span class="or-n">${x.p.length} card${x.p.length>1?'s':''}</span><span class="sky-go">${IC.chev}</span></button>`).join('')}</div>`;
+ else{const ld=dreams()[0];pg=`<section class="dr-in"><p class="dr-lead">Tell Kassandra what you saw, and uncover what it is asking you to notice.</p><div class="or-two"><button class="btn" data-go="discover" data-t="new-dream">Bring a dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Dream journal</button></div></section>
+  ${ld&&ld.text?`<div class="sky-l sky-list or-list"><button class="sky-c" data-go="discover" data-t="dream-journal">${ui('d-dream','sky-i')}<span class="sky-x"><strong>Your last dream</strong><span>“${esc(clip(ld.text,60))}”</span></span><span class="sky-go">${IC.chev}</span></button></div>`:''}
+  <section>${pgl('Common symbols')}<div class="symrow">${['water','flying','snake','house','death'].map(id=>{const x=dsym(id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(x.name.replace(/^(The|A|An) /,''))}">${artOf(x.art,'sym-i')}<strong>${x.name.replace(/^The /,'')}</strong></button>`}).join('')}</div></section>`}
  return `<div class="land tland hnight tnight skyp pg pg-or"><header class="hl-top stay sk-head"><h1 class="pg-t">Oracle</h1><p class="pg-s">${nm?esc(nm)+', what':'What'} do you seek?</p>${pgStrip('or')}</header>
  <div class="sk-body"><div class="pg-page${pgDir()}">${pg}</div></div></div>`;
 };
@@ -1203,9 +1206,10 @@ function whisperView(){
 function tarotView(){
  const T=V.tarot,sp=SPREADS[T.spread];
  // 1. the reading type and the question; Shuffle draws a fresh deck
- if(T.stage==='setup')return `<div class="mnp trd">${mnHead('Card Reading')}<p class="mn-sub">What is yet to be revealed?</p>
-  <div class="list spreads" role="radiogroup" aria-label="Reading type">${Object.entries(SPREADS).map(([k,x])=>`<button class="lrow${T.spread===k?' on':''}" role="radio" aria-checked="${T.spread===k}" data-act="tspread" data-k="${k}"><span class="lr-i">${pic('spreads',k,'th')}</span><span class="lr-t"><strong>${x.s}</strong><span class="sp-n">${x.p.length} card${x.p.length>1?'s':''}</span></span><span class="lr-c tick" aria-hidden="true"></span></button>`).join('')}</div>
-  <div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button></div>`;
+ if(T.stage==='setup')return `<div class="mnp trd trs">${mnHead('Card Reading')}
+  <div class="trs-sp">${ui('ic-'+T.spread,'trs-i')}<h2>${sp.s}</h2><p class="trs-f">${SPREAD_FOR[T.spread]||''}</p>${sp.p.join(' · ')===sp.s?`<p class="trs-p">${sp.p.length} cards</p>`:`<p class="trs-p">${sp.p.length>5?sp.p.length+' cards, from the present to the outcome':sp.p.join(' · ')}</p>`}</div>
+  <div class="field"><label for="q">Your question (optional)</label><input type="text" id="q" value="${esc(T.q)}" placeholder="Ask about anything: love, work, a choice…"></div><button class="btn" data-act="shuffle">Shuffle the cards</button>
+  <button class="skd-m" data-act="tspreadback">Choose another reading ${IC.chev}</button></div>`;
  // 2. pick face-down cards; the reveal opens by itself once enough are chosen
  if(T.stage==='pick')return `<div class="mnp trd">${mnHead(`Choose ${sp.p.length} card${sp.p.length>1?'s':''}`)}<p class="mn-sub">${sp.n} · ${T.picks.length} of ${sp.p.length} chosen</p><div class="grid5">${T.deck.slice(0,20).map((c,i)=>`<button class="mini" aria-label="Card ${i+1}" aria-pressed="${T.picks.includes(i)}" data-pick="${i}"></button>`).join('')}</div></div>`;
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
@@ -2926,6 +2930,7 @@ document.addEventListener('click',e=>{
  if(a==='spkopen'){V.spk=true;return render()}
  if(a==='wlnext'){V.wl=(V.wl||0)+1;if(V.wl>=3){S.welcomed=true;V.wl=0;save()}return render()}
  if(a==='wlskip'){S.welcomed=true;V.wl=0;save();return render()}
+ if(a==='skymove'){const T=$('.sky-t');if(!T)return;const n=T.children.length,i=Math.round(T.scrollLeft/Math.max(1,T.clientWidth));return T.scrollTo({left:((i+ +t.dataset.d+n)%n)*T.clientWidth,behavior:'smooth'})}
  if(a==='skd'){V.skd=t.dataset.id;render();return window.scrollTo(0,0)}
  if(a==='skdx'){V.skd=null;return render()}
  if(a==='skdwrite'){const j={id:uuid(),day:dkey(),kind:'reflection',title:t.dataset.t,body:'',at:new Date().toISOString()};S.journal.push(j);save();V.skd=null;openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
@@ -3054,6 +3059,7 @@ document.addEventListener('click',e=>{
   t.disabled=true;C.updatePassword(v).then(()=>{toast('Password updated');if(V.sec==='reset')go('home','today',{replace:true});else{t.disabled=false;$('#npw').value=''}},x=>{t.disabled=false;toast(authMsg(x))});return}
  const T=V.tarot;
  if(a==='tspreadgo'){newReading();V.tarot.spread=t.dataset.k;return go('tarot','reading')}
+ if(a==='tspreadback'){S.pgc=S.pgc||{};S.pgc.or='cards';save();return go('tarot')}
  if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}

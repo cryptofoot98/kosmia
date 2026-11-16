@@ -878,3 +878,23 @@ html body.reduce.tp.tp.tp #app .wpc::before,html body.reduce.tp.tp.tp #app .wpc:
 @@ .pg-sky .pg-page:has(.sky-list){gap:8px}
 @@ .sky-list:not(#x){gap:7px}
 @@ .sky-list .sky-c:not(#x){padding:7px 10px 8px 12px}
+/* ---- every row of swiping dots shares Today's design: small round dots, the one in view a glowing bar ---- */
+@@ .en-dots:not(#x){display:flex;align-items:center;justify-content:center;gap:0!important;margin:0}
+@@ .en-dots i:not(#x),@@ .sx .hc-pd:not(#x){display:block;position:relative;width:26px!important;height:26px!important;padding:0;border:0;background:none!important;box-shadow:none!important;border-radius:0;transform:none}
+@@ .en-dots i:not(#x)::before,@@ .sx .hc-pd:not(#x)::before{content:'';position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border:0;border-radius:50%;transform:none;background:#F6E6B6;opacity:.6;box-shadow:0 0 4px rgba(12,16,36,.9);transition:all .3s}
+@@ .en-dots i.on:not(#x)::before,@@ .sx .hc-pd.on:not(#x)::before{width:22px;height:7px;margin:-3.5px 0 0 -11px;border-radius:4px;opacity:1;background:#F6E6B6;box-shadow:0 0 8px 2px rgba(246,214,130,.85),0 0 3px rgba(12,16,36,.9)}
+@@ .sky-l .sky-dn{margin:2px 0 -6px}
+@@ .sx .hc-pgs:not(#x){height:26px;align-items:center}
+/* ---- Oracle: the readings as a readable list, and the reading's first step with only the spread chosen ---- */
+@@ .pg-or .sk-body:has(.or-list){justify-content:flex-start!important;padding-top:6px!important;padding-bottom:0!important}
+@@ .pg-or .pg-page:has(.or-list){gap:10px}
+@@ .or-list:not(#x){gap:6px}
+@@ .or-list .sky-c:not(#x){padding:5px 10px 6px 12px;gap:12px}
+@@ .or-list .sky-c .sky-i,@@ .or-list .sky-c>img{width:40px!important;height:40px!important}
+@@ .or-list .sky-x strong{font-size:12.5px}
+@@ .or-n{flex:none;font:italic 500 14px 'Cormorant Garamond',serif;color:rgba(251,240,210,.75)}
+@@ .trs .trs-sp{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin:6px 0 4px;padding:16px 18px 18px;border-radius:26px;background:rgba(14,18,38,.66);box-shadow:inset 0 0 0 1px rgba(243,215,144,.4),inset 0 0 0 5px rgba(10,16,34,.35),inset 0 0 0 6px rgba(243,215,144,.14)}
+@@ .trs .trs-i,@@ .trs .trs-sp>img{width:76px!important;height:76px!important;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 8px rgba(243,210,140,.45))}
+@@ .trs .trs-sp h2{margin:4px 0 0!important;font:600 15px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase;color:#F8E2A2!important}
+@@ .trs .trs-f{margin:0!important;font:500 19px/1.25 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
+@@ .trs .trs-p{margin:2px 0 0!important;font:italic 500 15px/1.25 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.75)!important}
