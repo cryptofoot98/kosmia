@@ -271,7 +271,7 @@ history.scrollRestoration='manual';
 function newReading(){const T=V.tarot;T.stage='setup';T.q='';T.picks=[];T.drawn=null;T.ai='';T.aiState='';T.savedId=null;V.tpop=null}
 function go(sec,t,opt={}){
  if(sec==='discover'&&(!t||t==='home')){sec='horoscope';t=null}
- stopAudio();V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.spk=false;V.jsub=null;V.insPop=false;V.letter=null;jLeave();jeLeave();
+ stopAudio();V.confirmDel=false;V.edit=null;V.tpop=null;V.cpEdit=false;V.spop=null;V.sheet=null;V.wpop=false;V.spk=false;V.jsub=null;V.insPop=false;V.letter=null;jLeave();jeLeave();
  history.replaceState(Object.assign({},history.state,{scroll:scrollY}),'');
  if(sec==='tarot'&&t==='reading')newReading();
  if(sec==='discover')V.ns={};
@@ -584,7 +584,7 @@ async function submitJoin(e){
    // with email confirmation on, the account waits for its link; otherwise the reader is signed in and asked, if they
    // wish, when they were born
    V.busy=false;V.obHold=true;V.ob=r.session?'birth':'verify';render();
-  }else{await C.signIn(email,pw);S.email=email;save();V.busy=false}
+  }else{if(S.email&&S.email.toLowerCase()!==email.toLowerCase()){const js=V.joinSign;try{localStorage.removeItem('kosmia.h')}catch(x){}S=fresh();KS.msgs=[];V.joinSign=js}await C.signIn(email,pw);S.email=email;save();V.busy=false}
   // signing in: the auth listener runs pullMerge, which opens Kosmia once the profile has a sign
  }catch(x){V.busy=false;syncJoin();if(err)err.textContent=authMsg(x)}
 }
@@ -1163,7 +1163,7 @@ const SVGI=(p,s=1.2)=>`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor
 const door=(at,label,inner)=>`<button class="sk-d" ${at}>${inner}<span>${label}</span></button>`;
 const doorArt=(at,label,img)=>door(at,label,`<i class="sk-di">${ui(img,'')}</i>`);
 const DI={profile:'<circle cx="16" cy="12" r="5"/><path d="M6 27c1-6 5-9 10-9s9 3 10 9"/>',birth:'<path d="M16 4v6M16 22v6M4 16h6M22 16h6"/><circle cx="16" cy="16" r="4"/>',bell:'<path d="M8 23h16l-2-3v-6a6 6 0 0 0-12 0v6zM13 26a3 3 0 0 0 6 0"/>',lock:'<rect x="8" y="14" width="16" height="12" rx="2"/><path d="M11 14v-3a5 5 0 0 1 10 0v3"/>',star:'<path d="M16 5l3 8 8 .6-6.2 5.2 2 8.2L16 22.6 9.2 27l2-8.2L5 13.6 13 13z"/>',book:'<path d="M6 7h6v18H6zM13 5h6v20h-6zM21 9l5 1.4-4 15.2-5-1.4z"/>',cal:'<rect x="6" y="8" width="20" height="18" rx="2"/><path d="M6 14h20M11 5v6M21 5v6"/>',list:'<path d="M9 9h16M9 16h16M9 23h16M5 9h.1M5 16h.1M5 23h.1"/>',pen:'<path d="M8 25l1-5L22 7l4 4L13 24zM19 10l4 4"/>',two:'<circle cx="12" cy="13" r="5"/><circle cx="21" cy="13" r="5"/><path d="M6 26c1-4 4-6 6-6M26 26c-1-4-4-6-6-6"/>'};
-const PGC={sky:[['hor','For you'],['ahead','Ahead'],['lib','Library']],jn:[['tonight','Write'],['pages','Pages'],['ins','Patterns']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Codex'],['circle','Circle'],['details','Details']]};
+const PGC={sky:[['hor','For you'],['ahead','Ahead'],['lib','Library']],jn:[['tonight','Write'],['pages','Pages'],['ins','Patterns']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Your sky'],['circle','Your circle'],['details','Account']]};
 const pgCur=g=>{const c=(S.pgc||{})[g],l=PGC[g];return l.some(x=>x[0]===c)?c:l[0][0]};
 const pgStrip=g=>`<div class="seg pg-strip" role="tablist" aria-label="Sections">${PGC[g].map(([k,l])=>`<button role="tab" aria-selected="${k===pgCur(g)}" data-act="pgcat" data-g="${g}" data-k="${k}">${l}</button>`).join('')}</div>`;
 const pgDir=()=>{const d=V.pdir||0;V.pdir=0;return d?` sl${d>0?'r':'l'}`:''};
@@ -2504,17 +2504,30 @@ async function voiceRec(target){
 function kasStopRec(cancel){if(KS.rec&&KS.rec.state!=='inactive'){KS.cancel=!!cancel;KS.rec.stop()}KS.rec=null;clearTimeout(KS.timer)}
 
 /* ---------- Your Profile (from the avatar on Home): the account, sign, birth details, notifications, display, privacy and plan ---------- */
+const delBlock=()=>V.confirmDel?`<section class="yo-del"><h3>Delete ${C.user?'your account and ':''}everything</h3><p>This permanently removes ${C.user?'your account and ':''}all you have kept: journal pages, reflections, saved cards, readings, dreams and your birth details. It cannot be undone.</p>
+  <div class="field"><label for="delc">Type DELETE to confirm</label><input type="text" id="delc" autocomplete="off" autocapitalize="characters"></div>
+  <div class="sx-acts"><button class="btn" data-act="canceldel">Keep it all</button><button class="btn ghost" data-act="delacct">Delete</button></div></section>`
+ :`<button class="skd-m sky-cal yo-dl" data-act="askdel">Delete ${C.user?'my account and ':''}everything I have kept ${IC.chev}</button>`;
 views.you=()=>{
  const nm=firstName(),sign=sg(S.sign);let line=`${sign.name} Sun`;
  try{if(hasBirthDate()&&K){const ch=myChart(),pl=n=>{const x=ch.pl.find(q=>q.n===n);return x?sIdx(x.sign).name:''},asc=ch.ang&&!S.birth.unk?sIdx(Math.floor(ch.ang.asc/30)).name:'';
   line=[pl('Sun')&&'Sun '+pl('Sun'),pl('Moon')&&!ch.moonRange&&'Moon '+pl('Moon'),asc&&'Rising '+asc].filter(Boolean).join(' · ')||line}}catch(e){}
  const yc=pgCur('you'),gt=(t,l,s,im)=>tileArt(`data-go="discover" data-t="${t}"`,l,s,im),ICD={profile:'ic-profile',birth:'ic-birth',bell:'ic-alerts',list:'ic-display',lock:'ic-privacy',star:'ic-sanctuary'},st=(sec,t,l,s,k)=>tile(`data-go="${sec}" data-t="${t}"`,l,s,ui(ICD[k],''));
  let pg;
- if(yc==='codex')pg=`<div class="pg-grid" style="--c:2">${gt('birth-chart','Birth chart','Your sky at birth','ex-chart')}${gt('life-path','Life path','The road you chose','ex-lifepath')}${gt('name-within','Your name','The music in it','ex-name')}${gt('cycles','My cycles','Your season now','m-'+S.sign)}</div>`;
- else if(yc==='circle')pg=`<p class="pg-in">Read for the people you love.</p><div class="pg-grid" style="--c:2">${gt('affinity','Signs','Two signs, one flow','ex-compat')}${gt('resonance','Names','Numerology of two names','ex-resonance')}${gt('synastry','Birth charts','Two skies side by side','ex-chart')}${tile('data-act="spkopen"','Someone else','Read their sky',ui('ic-someone',''))}</div>`;
- else pg=`<div class="pg-grid" style="--c:3">${st('settings','account','Profile','Name and photo','profile')}${st('settings','birth','Birth','Day, time, place','birth')}${st('settings','notifications','Alerts','When we call','bell')}${st('settings','display','Display','Text and motion','list')}${st('settings','privacy','Privacy','Your data','lock')}${st('settings','subscription','Sanctuary','Membership','star')}</div>`;
+ // one row for each thing: its picture, its name, and what it holds for this reader
+ const row=(at,img,t,sub,x)=>`<button class="sky-c" ${at}>${img}<span class="sky-x"><strong>${t}</strong>${sub?`<em>${sub}</em>`:''}${x?`<span class="jn-x">${x}</span>`:''}</span><span class="sky-go">${IC.chev}</span></button>`;
+ const dr=(t,im,l,sub,x)=>row(`data-go="discover" data-t="${t}"`,ui(im,'sky-i'),l,sub,x),sr=(t,k,l,x)=>row(`data-go="settings" data-t="${t}"`,ui(ICD[k],'sky-i'),l,'',x);
+ if(yc==='codex'){const bd=hasBirthDate()?S.birth.date:'',N2=typeof N!=='undefined'?N:null;let lp='Add your birth date to find your number',nmL=S.fullName?'':'Add your full birth name to hear it',cy='Add your birth date to see your year',miss='';
+  try{if(bd&&N2){const l=N2.lifePath(bd).r.n;lp=`${l} · ${N2.MEANING[l][0]}`;cy=`You are in a Personal Year ${N2.personalYear(bd,Number(dkey().slice(0,4))).r.n}`}
+   if(S.fullName&&N2){const e=N2.name(S.fullName,S.settings.yMode).expression.r.n;nmL=`Expression ${e} · ${N2.MEANING[e][0]}`}}catch(e){}
+  miss=!bd?'Add your birth date to open them all':S.birth.unk||!S.birth.time?'Add your birth time for your Rising':!S.fullName?'Add your full birth name for its number':'';
+  pg=`<div class="sky-l sky-list or-list jn-list yo-list">${dr('birth-chart','ex-chart','Birth chart','',esc(line))}${dr('life-path','ex-lifepath','Life path','',lp)}${dr('name-within','ex-name','Your name','',nmL)}${dr('cycles','m-'+S.sign,'My cycles','',cy)}
+  ${row('data-go="discover" data-t="profile"',ui('ic-birth','sky-i'),'Birth details','',miss||'Your day, time and place of birth')}</div>`}
+ else if(yc==='circle')pg=`<p class="pg-in">Read for the people you love.</p><div class="sky-l sky-list or-list jn-list yo-list">${dr('affinity','ex-compat','Two signs','','How your sign flows with theirs')}${dr('resonance','ex-resonance','Two names','','The numbers in both your names')}${dr('synastry','ex-chart','Two birth charts','','Your skies side by side')}${row('data-act="spkopen"',ui('ic-someone','sky-i'),'Someone else’s sky','','Read today for another sign')}</div>`;
+ else pg=`<p class="yo-acct">${!C.enabled?'Kept on this device':C.user?'Signed in as '+esc(C.user.email||''):'Not signed in · kept on this device'}</p><div class="sky-l sky-list or-list jn-list yo-list">${sr('account','profile','Name and photo',esc(S.name||'Not set'))}${sr('notifications','bell','Notifications','Your daily horoscope, Whispers and events')}${sr('display','list','Display','Text size, motion, time zone and voice')}${sr('privacy','lock','Privacy and data','Consent, download and deletion')}${sr('subscription','star','Membership','Early access · everything is open')}</div>
+  ${C.user?'<button class="btn ghost yo-out" data-act="signout">Sign out</button>':C.enabled?'<button class="btn ghost yo-out" data-act="toauth">Sign in or create an account</button>':''}`;
  return `<div class="land hland hnight yland skyp pg pg-you"><header class="hl-top stay sk-head"><h1 class="pg-t">${nm?esc(nm):'You'}</h1><p class="pg-s">${esc(line)}</p>${pgStrip('you')}</header>
- <div class="sk-body"><div class="pg-page${pgDir()}">${pg}</div></div></div>${V.spk?signPick(S.sign):''}`;
+ <div class="sk-body pg-scroll"><div class="pg-page${pgDir()}">${pg}</div></div></div>${V.spk?signPick(S.sign):''}`;
 };
 views.settings=()=>{
  const t=tab();
@@ -2529,7 +2542,7 @@ views.settings=()=>{
   ${panel(`<div class="prem-cols"><div class="prem-col"><h3>Always free</h3>${li(['Your Daily Whisper','Your sign’s horoscope','Journal and reflections','Moon and Cosmic Calendar','One-card and three-card readings'])}</div>
    <div class="prem-col"><h3>The Sanctuary</h3>${li(['Written for You, every day','Kassandra, whenever you need her','Your birth chart and transits','Love, Career and Celtic Cross spreads','Compatibility in depth','Dream interpretation','Readings in Kassandra’s voice'])}</div></div>`,'ornate')}
   <div class="prem-plans"><div class="plan best"><i>Best value</i><b>Yearly</b><strong>$49.99</strong><small>$4.17 a month</small><small>7 days free</small></div><div class="plan"><b>Monthly</b><strong>$9.99</strong><small>a month</small><small>cancel anytime</small></div></div>
-  <button class="btn" disabled>The Sanctuary opens soon</button><p class="muted small center">Until then, everything above is yours.</p></div></div>`,'st')}
+  <button class="btn" disabled>The Sanctuary opens soon</button><p class="muted small center">Until then, everything above is yours.</p><div class="prem-del">${delBlock()}</div></div></div>`,'st')}
  if(t!=='account')return nightSub(subPage(settingsPage(t)),'st');
  const s=sg(S.sign),acct=!C.enabled?'<p class="muted">Accounts are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
@@ -2542,13 +2555,8 @@ views.settings=()=>{
  <div class="list">
  ${acc(glyphMed(s.id),'Your sign',s.name,`${signGrid('My sign',S.sign)}`)}
  ${acc(ui('ne-free','th'),'Display name',esc(S.name||'Not set'),`<div class="field"><label for="nm">Display name</label><input type="text" id="nm" value="${esc(S.name)}"></div><button class="btn sm" data-act="savename">Save</button>`)}
- ${lrow(ui('ex-chart','th round'),'Cosmic Profile',hasBirthDate()&&S.fullName?'Your birth details, chart and numbers':'Add your birth details for your chart and numbers','data-go="discover" data-t="profile"')}
- ${lrow(pic('cats','notifications','th'),'Notifications','Daily horoscope, Whispers and celestial events','data-go="settings" data-t="notifications"')}
- ${lrow(pic('cats','prefs','th'),'Display','Text size, motion, time zone and voice','data-go="settings" data-t="display"')}
- ${lrow(pic('cats','privacy','th'),'Privacy & Data','Consent, download and deletion','data-go="settings" data-t="privacy"')}
- ${lrow(pic('cats','collection','th'),'Membership','Kosmia · Early access','data-go="settings" data-t="subscription"')}
  ${C.user?acc(ui('t-history','th'),'Password','Change your password',`<div class="field"><label for="npw">New password</label><input id="npw" type="password" autocomplete="new-password" minlength="8"></div><button class="btn sm" data-act="setpw">Change password</button>`):''}
- </div><button class="btn ghost" data-act="signout">Sign out${C.user?'':' and clear this device'}</button></div></div>`;
+ </div>${C.user?'<button class="btn ghost" data-act="signout">Sign out</button>':''}</div></div>`;
 };
 /* ----- the profile's own pages: notifications, privacy and display ----- */
 function settingsPage(t){
@@ -3053,12 +3061,13 @@ document.addEventListener('click',e=>{
  if(a==='savenames'){S.fullName=$('#fn').value.trim();const an=$('#an'),ym=$('#ym');if(an)S.altName=an.value.trim();if(ym)S.settings.yMode=ym.value;save();syncProfile();if(!N.clean(S.fullName))toast('Enter your full name');return render()}
  // profile and account
  if(a==='savename'){S.name=$('#nm').value.trim();save();syncProfile();toast('Saved');return render()}
- if(a==='signout'){Promise.resolve(C.user&&C.signOut()).catch(()=>{});return signOutLocal()}
+ if(a==='signout'){Promise.resolve(C.user&&C.signOut()).catch(()=>{});V.auth='in';V.ob='welcome';V.sec='welcome';history.replaceState(null,'','/');render();window.scrollTo(0,0);return toast('Signed out. Everything you have kept will be here when you return.')}
  if(a==='export')return exportData();
  if(a==='delbirth'){if(!confirm('Delete your birth details from this device and your account?'))return;S.birth=fresh().birth;S.birthConsent=false;V.birthDraft=null;save();syncProfile();toast('Birth details deleted');return render()}
  if(a==='askdel'){V.confirmDel=true;return render()}
  if(a==='canceldel'){V.confirmDel=false;return render()}
- if(a==='delacct'){if(($('#delc').value||'').trim()!=='DELETE')return toast('Type DELETE to confirm');t.disabled=true;
+ if(a==='delacct'){if(($('#delc').value||'').trim().toUpperCase()!=='DELETE')return toast('Type DELETE to confirm');t.disabled=true;
+  if(!C.user){V.confirmDel=false;signOutLocal();return toast('Everything has been deleted from this device')}
   C.deleteAccount().then(()=>{V.confirmDel=false;signOutLocal();toast('Your account has been deleted')},x=>{t.disabled=false;toast(/function|does not exist|schema/i.test(x.message||'')?'Account deletion is not available yet. Please try again later.':(x.message||'Could not delete the account'))});return}
  if(a==='toauth'){V.joinSign=S.sign;V.ob=S.email?'signin':'account';V.sec='welcome';render();return window.scrollTo(0,0)}
  if(a==='forgot'){const em=$('#em'),email=em?em.value.trim():'';

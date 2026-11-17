@@ -942,3 +942,36 @@ html body.tp.tp.tp #app .jn-count{margin:0!important;text-align:center;font:600 
 html body.tp.tp.tp #app .pg-jn .sk-body:has(.jr-q):not(#x){padding-top:16px!important}
 html body.tp.tp.tp #app .pg-jn .pg-page:has(.jn-lead):not(#x){gap:8px}
 html body.tp.tp.tp #app .pg-jn .jn-bars:not(#x){padding:8px 14px;gap:4px}
+
+/* ---- You: Your sky (what the birth holds), Your circle (the people you love), Account (the app's own settings) ---- */
+html body.tp.tp.tp #app .pg-you .sk-body:has(.yo-list){justify-content:flex-start!important;padding-top:8px!important;padding-bottom:0!important}
+html body.tp.tp.tp #app .pg-you .pg-page:has(.yo-list){gap:8px}
+html body.tp.tp.tp #app .yo-list:not(#x) .sky-c{padding:6px 10px 7px 12px}
+html body.tp.tp.tp #app .yo-list .sky-c .sky-i,html body.tp.tp.tp #app .yo-list .sky-c>img{width:44px!important;height:44px!important;border-radius:50%!important}
+html body.tp.tp.tp #app .yo-acct{margin:0!important;text-align:center;font:italic 500 15px 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.8)!important;text-shadow:0 0 8px rgba(10,14,30,.9)}
+html body.tp.tp.tp #app .pg-you .pg-in{margin:0!important}
+
+html body.tp.tp.tp #app .yo-links{display:flex;justify-content:center;align-items:center;gap:22px;width:100%}
+html body.tp.tp.tp #app .yo-links .yo-dl:not(#x){color:rgba(251,240,210,.7)!important}
+html body.tp.tp.tp #app .yo-del{width:100%;padding:14px 16px;box-sizing:border-box;border-radius:16px;background:rgba(14,18,38,.72);box-shadow:inset 0 0 0 1px rgba(243,215,144,.3);display:flex;flex-direction:column;gap:10px}
+html body.tp.tp.tp #app .yo-del h3{margin:0!important;font:600 12px 'Cinzel',serif!important;letter-spacing:.2em!important;text-transform:uppercase;color:#F3D790!important;text-align:center}
+html body.tp.tp.tp #app .yo-del p{margin:0!important;font:500 16.5px/1.3 'Cormorant Garamond',serif!important;color:#FBF0D2!important;text-align:center}
+html body.tp.tp.tp #app .yo-del .field{margin:0!important}
+html body.tp.tp.tp #app .yo-del .sx-acts{display:flex;gap:10px}
+html body.tp.tp.tp #app .yo-del .sx-acts .btn{flex:1 1 0;min-width:0;height:42px;min-height:42px;margin:0!important}
+html body.tp.tp.tp #app .yo-del:not(#x) .field label{display:block;margin:0 0 4px!important;text-align:center;font:italic 500 15px 'Cormorant Garamond',serif!important;color:#F8E6B4!important;opacity:1!important}
+html body.tp.tp.tp #app .yo-del:not(#x) .field input{color:#FFF6DC!important;text-align:center;letter-spacing:.2em}
+html body.tp.tp.tp #app .yo-del:not(#x) .sx-acts .btn{padding:0 6px!important;font-size:10.5px!important;letter-spacing:.14em!important;white-space:nowrap}
+
+html body.tp.tp.tp #app .pg-you .yo-out:not(#x){align-self:center;width:auto!important;min-width:180px;height:40px!important;min-height:40px!important;margin:2px auto 0!important;padding:0 26px!important;border-radius:20px!important;font:600 10.5px 'Cinzel',serif!important;letter-spacing:.16em!important;text-transform:uppercase}
+html body #app .prem-del{margin-top:22px;padding-top:14px;border-top:1px solid rgba(243,215,144,.25);display:flex;flex-direction:column;align-items:center}
+html body #app .prem-del .yo-dl{background:none;border:0;font:italic 500 16px 'Cormorant Garamond',serif;color:rgba(251,240,210,.75);cursor:pointer}
+html body #app .prem-del .yo-dl svg{width:11px;height:11px;vertical-align:middle}
+html body #app .prem-del .yo-del{width:100%;padding:14px 16px;box-sizing:border-box;border-radius:16px;background:rgba(14,18,38,.72);box-shadow:inset 0 0 0 1px rgba(243,215,144,.3);display:flex;flex-direction:column;gap:10px}
+html body #app .prem-del .yo-del h3{margin:0;font:600 12px 'Cinzel',serif;letter-spacing:.2em;text-transform:uppercase;color:#F3D790;text-align:center}
+html body #app .prem-del .yo-del p{margin:0;font:500 16.5px/1.3 'Cormorant Garamond',serif;color:#FBF0D2;text-align:center}
+html body #app .prem-del .yo-del .field{margin:0}
+html body #app .prem-del .yo-del .field label{display:block;margin:0 0 4px;text-align:center;font:italic 500 15px 'Cormorant Garamond',serif;color:#F8E6B4}
+html body #app .prem-del .yo-del .field input{color:#FFF6DC;text-align:center;letter-spacing:.2em}
+html body #app .prem-del .yo-del .sx-acts{display:flex;gap:10px}
+html body #app .prem-del .yo-del .sx-acts .btn{flex:1 1 0;min-width:0;height:42px;min-height:42px;margin:0;padding:0 6px;font-size:10.5px;letter-spacing:.14em;white-space:nowrap}
