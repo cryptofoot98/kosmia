@@ -815,13 +815,12 @@ function sharePop(){const s=V.share,can=navigator.canShare&&navigator.canShare({
  <div class="sh-acts">${can?`<button class="btn" data-act="sharego">${IC.share} Share</button>`:''}<a class="btn${can?' ghost':''}" href="${s.url}" download="${s.file.name}">Save image</a></div></div></div>`}
 function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t:'whisper'}});
  const saved=S.saved.some(x=>x.date===k);
- return `<div class="cpop wpc" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><div class="cp-in wpc-in">
- <button class="cp-x" data-act="wpopclose" aria-label="Close">×</button>
- <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p>
- <div class="wp-body"><div class="wp-top"><div class="cp-card">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div>
- <div class="wp-side"><h2 class="cp-t">${esc(c.title)}</h2><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p></div></div>
- ${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p></div>
- <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div>
+ return `<div class="cpop wpz" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
+ <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
+ <div class="cp-card"><div class="scene flat" role="img" aria-label="${esc(c.title)}"><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+ <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>
+ ${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
+ <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div></div>
  </div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
@@ -931,8 +930,8 @@ views.home=()=>{
    <div class="hh-pw">${ui('plate-'+sign.id,'hh-plate',sign.name,true)}</div>
    <article class="hh-card" aria-label="Today’s horoscope for ${sign.name}"><div class="hh-name"><span class="glyph" aria-hidden="true">${sign.g}</span><div><h2${sign.name.length>7?' class="long"':''}>${sign.name}</h2><p>${SHORT_DATES(sign)}</p></div></div><p class="keys">${keys(SIGN_KEYS[sign.id])}</p><p class="hh-text">${esc(h.body)}</p></article>
   </div>`;
- else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
-   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">A card is waiting</h3><p class="dw-msg">Turn it over when you are ready. It was drawn for you.</p><p class="hp-note">Tap the card to flip it. A whisper is a message from the cosmos.</p>'}</div></div>
+ else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row${rev?'':' dw-wait'}"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+   <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">One card already knows your day</h3><p class="dw-msg">It was drawn before you woke. Touch it, and hear what it came to tell you.</p>'}</div></div>
    ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}`,'hp-whisper');
  else if(st==='reflect'){const eve=evening();stage=card(eve?'Reflect on Your Day':'Reflect',`<div class="hp-in"><p class="hp-sub hp-wq">${eve?'The day is almost done. How was it? ':''}${rev?`Your Whisper was “${esc(c.title)}”.`:'A question from your Whisper.'}</p><p class="pz-q">“${esc(c.ref)}”</p><textarea class="hp-ta" id="hpta" rows="5" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
   <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(c.ref)}">${IC.chat}Ask Kassandra</button></div><p class="hp-note">What you keep goes into your Journal.</p></div>`,'hp-reflect')}

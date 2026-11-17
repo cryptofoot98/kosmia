@@ -47,6 +47,8 @@ window.Temple=(()=>{
   const st=document.querySelector('#app .hp-whisper .dw-row');if(!st)return;
   const card=st.querySelector('.hh-plate,.scene.mini-w'),txt=st.querySelector('.hh-card,.dw-side');if(!card||!txt)return;
   const W=st.getBoundingClientRect().width,set=w=>{card.style.setProperty('width',w+'px','important');card.style.setProperty('height',(w*1.5)+'px','important')};
+  // the Whisper not yet turned: the card alone, as tall as the room above its two lines allows
+  if(st.classList.contains('dw-wait')){const hh=st.closest('.hhero');if(!hh)return;const cs=getComputedStyle(hh),room=hh.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-txt.getBoundingClientRect().height-14;return set(Math.max(130,Math.min(room/1.5,W*.8,300)))}
   let w=W*.41;set(w);
   if(st.classList.contains('hh-stage'))for(let i=0;i<4;i++){const h=txt.getBoundingClientRect().height,n=Math.min(W*.5,Math.max(W*.41,h*2/3));if(Math.abs(n-w)<1)break;w=n;set(w)}
  }
