@@ -152,16 +152,15 @@ function message(o){
  const lines=[];let mine='';
  const op=pick(OPEN[P.mood],seed+'o');lines.push(nm?`${nm}${op[0].toLowerCase()+op.slice(1)}.`:op+'.');
  lines.push(`The Moon moves through ${SIGN_NAMES[sky.moonSign]}, lighting ${sky.area}, and ${ELEMENT_TONE[ELEMENT(sky.moonSign)]}.`);
- if(sky.touch)lines.push(`${sky.touch.t==='Moon'?'Its path':sky.touch.t==='Sun'?'The Sun':sky.touch.t} ${ASPECT_WORD[sky.touch.a]} ${NATAL_ROLE[sky.touch.n]}, bringing ${ASPECT_GIFT[sky.touch.a]} ${th?T.short:'what matters most to you'}.`);
  if(T){
   mine=`${cap(when(th.since,o.today))} ${VIA[th.from.kind]||'you wrote about'} ${T.name}.`;
   lines.push(`${cap(when(th.since,o.today))} ${VIA[th.from.kind]||'you wrote about'} ${T.name}${T2?`, and about ${T2.short}`:''}. ${pick(HONOUR,seed+'h').replace('{g}',T.gift)}`);
-  lines.push(P.care?'Most of all, please reach out today to someone you trust, or to a local support line: you do not have to carry this alone, and you deserve to be held.':`One kind step for today: ${pick(T.step,seed+'s')}.`);
+  if(P.care)lines.push('Most of all, please reach out today to someone you trust, or to a local support line: you do not have to carry this alone, and you deserve to be held.');
  }else lines.push('Your story with Kosmia is only beginning. As you write and reflect, these words will grow more and more your own.');
- if(!P.care)lines.push(pick(GROW,seed+'g'));
+ if(!P.care&&!o.seek)lines.push(pick(GROW,seed+'g'));
  const question=T&&hash(seed+'qq')%2?T.q:pick(GROWQ.concat(['What would make today feel meaningful?','What are you ready to welcome in?','Where can you be a little braver today?']),seed+'q');
  const focus=T?T.title:'A Fresh Page';
- return {body:lines.join(' '),short:mine?lines[0]+' '+mine:'',question,focus,sky,theme:th&&th.k};
+ return {body:lines.join(' '),short:mine?lines[0]+' '+mine:'',question,focus,sky,theme:th&&th.k,step:T&&!P.care?pick(T.step,seed+'s'):'',care:!!P.care};
 }
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
 

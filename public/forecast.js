@@ -121,7 +121,7 @@ const QNAME={new_moon:'the New Moon',first_quarter:'the first quarter Moon',full
 // the calendar fact the reading opens with
 function opening(K,period,from,to,tz){
  const mid=new Date((+from+ +to)/2);
- if(period==='daily'){const m=K.moon(new Date(+from+12*36e5));return {text:`Today the Moon is in ${NAMES[m.sign]} and ${PHASE_WORDS[m.name]||m.name.toLowerCase()}.`,sign:m.sign}}
+ if(period==='daily'){const m=K.moon(new Date(+from+12*36e5));return {text:`Today the Moon is ${PHASE_WORDS[m.name]||m.name.toLowerCase()} in ${NAMES[m.sign]}.`,sign:m.sign}}
  if(period==='weekly'){
   const ph=K.lunarPhases(from,to)[0];
   if(ph)return {text:`This week, ${QNAME[ph.k]} arrives on ${WEEKDAY(new Date(K.ymdIn(tz,ph.date)+'T12:00:00Z'))}, in ${NAMES[ph.sign]}.`,sign:ph.sign};
