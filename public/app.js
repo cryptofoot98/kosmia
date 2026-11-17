@@ -1163,7 +1163,7 @@ const SVGI=(p,s=1.2)=>`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor
 const door=(at,label,inner)=>`<button class="sk-d" ${at}>${inner}<span>${label}</span></button>`;
 const doorArt=(at,label,img)=>door(at,label,`<i class="sk-di">${ui(img,'')}</i>`);
 const DI={profile:'<circle cx="16" cy="12" r="5"/><path d="M6 27c1-6 5-9 10-9s9 3 10 9"/>',birth:'<path d="M16 4v6M16 22v6M4 16h6M22 16h6"/><circle cx="16" cy="16" r="4"/>',bell:'<path d="M8 23h16l-2-3v-6a6 6 0 0 0-12 0v6zM13 26a3 3 0 0 0 6 0"/>',lock:'<rect x="8" y="14" width="16" height="12" rx="2"/><path d="M11 14v-3a5 5 0 0 1 10 0v3"/>',star:'<path d="M16 5l3 8 8 .6-6.2 5.2 2 8.2L16 22.6 9.2 27l2-8.2L5 13.6 13 13z"/>',book:'<path d="M6 7h6v18H6zM13 5h6v20h-6zM21 9l5 1.4-4 15.2-5-1.4z"/>',cal:'<rect x="6" y="8" width="20" height="18" rx="2"/><path d="M6 14h20M11 5v6M21 5v6"/>',list:'<path d="M9 9h16M9 16h16M9 23h16M5 9h.1M5 16h.1M5 23h.1"/>',pen:'<path d="M8 25l1-5L22 7l4 4L13 24zM19 10l4 4"/>',two:'<circle cx="12" cy="13" r="5"/><circle cx="21" cy="13" r="5"/><path d="M6 26c1-4 4-6 6-6M26 26c-1-4-4-6-6-6"/>'};
-const PGC={sky:[['hor','For you'],['ahead','Ahead'],['lib','Library']],jn:[['tonight','Tonight'],['pages','Pages'],['cal','Calendar'],['ins','Insights']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Codex'],['circle','Circle'],['details','Details']]};
+const PGC={sky:[['hor','For you'],['ahead','Ahead'],['lib','Library']],jn:[['tonight','Write'],['pages','Pages'],['ins','Patterns']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Codex'],['circle','Circle'],['details','Details']]};
 const pgCur=g=>{const c=(S.pgc||{})[g],l=PGC[g];return l.some(x=>x[0]===c)?c:l[0][0]};
 const pgStrip=g=>`<div class="seg pg-strip" role="tablist" aria-label="Sections">${PGC[g].map(([k,l])=>`<button role="tab" aria-selected="${k===pgCur(g)}" data-act="pgcat" data-g="${g}" data-k="${k}">${l}</button>`).join('')}</div>`;
 const pgDir=()=>{const d=V.pdir||0;V.pdir=0;return d?` sl${d>0?'r':'l'}`:''};
@@ -2086,13 +2086,22 @@ function journalLib(){
  const recAll=it.slice().sort(byNew),jc=pgCur('jn');
  const bar=`<div class="jl-bar">${iconBtn('back','data-act="back"','Back')}<div class="jl-acts"><button class="ibtn" data-act="sheet" data-k="new" aria-label="New entry">${IC.plus}</button></div></div>`;
  let pg;
- if(jc==='tonight')pg=`<section class="jr-q">${m?`<p class="jp-k">${esc(m.name)} in ${sIdx(m.sign).name}${rev?' · '+esc(c.title):''}</p>`:''}<p class="jp-q">“${esc(ask)}”</p><button class="btn" ${act}>${lab}</button><button class="jp-new" data-act="sheet" data-k="new">Or begin a new page ${IC.chev}</button></section>
-  <section class="jr-ch">${pgl(ch?'This Moon’s chapter':'Your path so far')}<div class="js3">${[[it.length,it.length===1?'Page kept':'Pages kept'],[chDays,chDays===1?'Day written':'Days written'],...(ch?[[`${ch.day}`,`Night of ${ch.len}`]]:[])].map(([v,l])=>`<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div></section>`;
- else if(jc==='pages')pg=`<div class="field"><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch||'')}" placeholder="Search your pages"></div></div><div class="list">${(q?items:recAll).map(p=>lrow(jThumb(p),jHeading(p),`${JKIND[p.t][0]} · ${relDay(p.day)}`,`data-act="jopen" data-k="${esc(jKey(p))}"`)).join('')||'<p class="jp-empty">Your first page is waiting. Whatever you write tonight will be kept here.</p>'}</div>`;
- else if(jc==='cal')pg=journalCal();
- else pg=`<div class="ins-in">${journalInsights()}</div>`;
+ const jr=(p,sub)=>{const x=plain(jText(p)||'');return `<button class="sky-c" data-act="jopen" data-k="${esc(jKey(p))}">${jThumb(p,'sky-i')}<span class="sky-x"><strong>${jHeading(p)}</strong><em>${sub||JKIND[p.t][0]+' · '+relDay(p.day)}</em>${x?`<span class="jn-x">${esc(clip(x,80))}</span>`:''}</span><span class="sky-go">${IC.chev}</span></button>`};
+ if(jc==='tonight')pg=`<section class="jr-q">${m?`<p class="jp-k">${esc(m.name)} in ${sIdx(m.sign).name}${rev?' · '+esc(c.title):''}</p>`:''}<p class="jp-q">“${esc(ask)}”</p><button class="btn" ${act}>${lab}</button></section>
+  <div class="sky-l sky-list or-list jn-list"><button class="sky-c" data-act="sheet" data-k="new">${ui('ne-free','sky-i')}<span class="sky-x"><strong>A new page</strong><span class="jn-x">A dream, a reading, a free thought</span></span><span class="sky-go">${IC.chev}</span></button>
+  ${recAll[0]?jr(recAll[0],'Your last page · '+relDay(recAll[0].day)):''}</div>`;
+ else if(jc==='pages'&&V.jcalOn)pg=`<button class="skd-m sky-cal" data-act="jcaltog">All pages as a list ${IC.chev}</button>${journalCal()}`;
+ else if(jc==='pages')pg=`<div class="jn-top"><div class="field"><div class="inp">${IC.search}<input type="search" id="jq" value="${esc(V.jsearch||'')}" placeholder="Search your pages"></div></div><button class="skd-m sky-cal" data-act="jcaltog">By date ${IC.chev}</button></div>
+  <div class="sky-l sky-list or-list jn-list">${(q?items:recAll).map(p=>jr(p)).join('')||`<p class="jp-empty">${q?'No page holds those words yet.':'Your first page is waiting. Whatever you write tonight will be kept here.'}</p>`}</div>`;
+ else{const sc=THEMES.map(([l,ic,re])=>[l,ic,it.reduce((n,p)=>n+((jText(p)+' '+(p.t==='j'?p.j.title:'')).toLowerCase().match(re)||[]).length,0)]).filter(x=>x[2]).sort((a,b)=>b[2]-a[2]).slice(0,4),tot=sc.reduce((n,x)=>n+x[2],0);
+  const cards={};it.forEach(p=>{if(p.t==='n')cards[p.o.title]=(cards[p.o.title]||0)+1;if(p.t==='r')p.r.cards.forEach(x=>cards[x.name]=(cards[x.name]||0)+1)});
+  const tc=Object.entries(cards).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  pg=`<p class="jn-lead">${sc.length?`${nm?esc(nm)+', you':'You'} return most to <b>${sc[0][0]}</b>${sc[1]?` and <b>${sc[1][0]}</b>`:''}.`:'Write a few pages, and the themes you return to will appear here.'}</p>
+  ${sc.length?`<div class="jn-bars">${sc.map(([l,ic,n])=>`<div class="jn-bar">${pic('cats',ic,'jn-bi')}<span>${l}</span><i><b style="width:${Math.round(n/sc[0][2]*100)}%"></b></i></div>`).join('')}</div>`:''}
+  ${tc.length?`<section class="jn-sec">${pgl('Cards that keep finding you')}<div class="jn-pills">${tc.map(([n,v])=>`<span>${esc(n)}${v>1?` <b>${v}</b>`:''}</span>`).join('')}</div></section>`:''}
+  <p class="jn-count">${it.length} ${it.length===1?'page':'pages'} kept${ch?` · ${chDays} ${chDays===1?'day':'days'} written this Moon`:''}</p>`}
  const main=`<header class="hl-top stay sk-head"><h1 class="pg-t">Journal</h1><p class="pg-s">${nm?esc(nm)+', your own sky':'Your own sky'}</p>${pgStrip('jn')}</header>
- <div class="sk-body${jc==='tonight'?'':' pg-scroll'}"><div class="pg-page${pgDir()}">${pg}</div></div>`;
+ <div class="sk-body${jc==='pages'?' pg-scroll':''}"><div class="pg-page${pgDir()}">${pg}</div></div>`;
  return `<div class="land jlib jnight skyp pg pg-jn">${bar}${main}</div>`+`${V.letter?moonLetter(V.letter):''}${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><p class="cp-k">Insights &amp; Themes</p><h2 class="center">${firstName()?esc(firstName())+', your words so far':'Your words so far'}</h2>${journalInsights()}</div></div>`:''}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
@@ -2993,6 +3002,7 @@ document.addEventListener('click',e=>{
  if(a==='jfmt')return jfmt(t.dataset.k);
  if(a==='jsavenow'){if(JE&&JS&&JS.p===JE)jflushSave();save();const s=$('#jsaved');if(s)s.textContent='Saved';return toast('Saved to your journal')}
  if(a==='jprompt'){const x=$('#je');if(!x)return;const q=(PROMPTS[(JE||{}).t]||PROMPTS.j)[+t.dataset.i];x.value=(x.value.trim()?x.value.replace(/\s+$/,'')+'\n\n':'')+q+'\n';x.dispatchEvent(new Event('input',{bubbles:true}));x.focus();x.setSelectionRange(x.value.length,x.value.length);return}
+ if(a==='jcaltog'){V.jcalOn=!V.jcalOn;return render()}
  if(a==='jcalm'){V.jcal={month:t.dataset.k,day:''};return render()}
  if(a==='jcald'){V.jcal.day=V.jcal.day===t.dataset.k?'':t.dataset.k;return render()}
  if(a==='inspop'){V.insPop=true;return render()}
