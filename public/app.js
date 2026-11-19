@@ -877,7 +877,13 @@ function moonLetter(ch){
 // the day's moon, drawn in the temple's own gold: lit or still dark
 const tmoon=on=>`<span class="hp-full tm-hpm"><img src="/art/temple/moon-base.webp" alt=""><img class="lit" src="/art/temple/moon-full.webp" alt="" style="opacity:${on?1:0}"></span>`;
 const PATH=[['whisper','Whisper'],['wfy','Written for You'],['carry','Carry'],['reflect','Reflect']],PHASES=['waxing-crescent','first-quarter','waxing-gibbous','full-moon'];
-const pathDone=k=>({wfy:S.wfy===k,whisper:!!S.revealed[k],carry:!!(S.carry||{})[k],reflect:!!S.notes[k]});
+const pathDone=k=>({wfy:S.wfy===k,whisper:!!S.revealed[k],carry:!!((S.carry||{})[k]||(evening()&&(S.ncarry||{})[k])),reflect:!!S.notes[k]});
+// what is offered to carry through the night, when the evening comes and nothing was chosen for the day
+const NSEEK={peace:['Let the day be finished, exactly as it is','Take three slow breaths before you sleep'],
+ love:['Fall asleep thinking of someone who loves you','Forgive yourself one thing from today'],
+ direction:['Let the question rest; morning may answer it','Name one thing today has taught you'],
+ healing:['Put down what was heavy, just until morning','Let your body be tired, without judging it'],
+ courage:['Remember one brave thing you did today','Let tomorrow’s fear wait until tomorrow']};
 // what the reader came looking for, asked once: it colours the day's message and what is offered to carry
 const SEEK={peace:['Peace','You came here seeking peace. Let today give you one quiet minute of it, and notice that it was always yours to take.',['Give yourself one quiet minute before the day begins','Do one thing slowly, on purpose']],
  love:['Love','You came here seeking love. Begin where it always begins: with how you speak to yourself today.',['Say one kind thing to yourself, aloud','Tell one person what they mean to you']],
@@ -935,9 +941,10 @@ views.home=()=>{
   <div class="pz-b">${esc(d.body)}${sk&&!d.ai&&!d.care?' '+esc(sk[1]):''}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
    if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
    return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(clip(th.text,90))}” ${th.ask}</p>`:''})()}</div>`,'hp-wfy')}
- else if(st==='carry'){const mine=(S.carry||{})[k],sk=mySeek(),up=x=>x?x[0].toUpperCase()+x.slice(1):x,
-   opts=[...new Set([up(d.step),...(sk?sk[2]:[]),rev?`Keep “${c.title}” close, and watch where it appears`:'','Do one thing slowly, on purpose','Notice one thing that is going well'].filter(Boolean))].slice(0,3);
-  stage=card('Carry It With You',`<div class="hp-in"><p class="hp-big">${mine?'Today you carry':'One thing to carry through today'}</p>${mine?`<p class="pz-q">“${esc(mine)}”</p><p class="hp-sub">Tonight I will ask you how it went.</p><button class="jp-new" data-act="hcarryx">Choose another ${IC.chev}</button>`
+ else if(st==='carry'){const eve=evening(),day=(S.carry||{})[k],ngt=eve&&!day?(S.ncarry||{})[k]:'',mine=day||ngt,sk=mySeek(),sn=NSEEK[(S.settings||{}).seek],up=x=>x?x[0].toUpperCase()+x.slice(1):x,
+   opts=[...new Set((eve?[...(sn||[]),rev?`Take “${c.title}” with you into your dreams`:'','Name one good thing today gave you','Let the night be quiet; the day can wait']
+    :[up(d.step),...(sk?sk[2]:[]),rev?`Keep “${c.title}” close, and watch where it appears`:'','Do one thing slowly, on purpose','Notice one thing that is going well']).filter(Boolean))].slice(0,3);
+  stage=card('Carry It With You',`<div class="hp-in"><p class="hp-big">${ngt?'Tonight you carry':day?(eve?'Today you carried':'Today you carry'):eve?'One thing to carry through the night':'One thing to carry through today'}</p>${mine?`<p class="pz-q">“${esc(mine)}”</p><p class="hp-sub">${ngt?'Let it go with you into sleep.':eve?'The evening has come to ask how it went.':'Tonight I will ask you how it went.'}</p>${day&&eve?'':`<button class="jp-new" data-act="hcarryx">Choose another ${IC.chev}</button>`}`
    :`<p class="hp-sub">Choose one, or write your own.</p><div class="hp-carry">${opts.map(x=>`<button class="hp-chip" data-act="hcarry" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div>
    <div class="hp-own"><input type="text" id="hpcarry" maxlength="90" placeholder="Or in your own words" aria-label="Your own intention"><button class="btn" data-act="hcarry">Carry it</button></div>`}</div>`,'hp-carryp')}
  else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row${rev?'':' dw-wait'}"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
@@ -2985,8 +2992,9 @@ document.addEventListener('click',e=>{
  if(a==='pzspeak')return speakText(myDay().body);
  if(a==='hseek'){S.settings.seek=t.dataset.k;save();syncProfile();V.hstep=null;V.hdir=1;render();return window.scrollTo(0,0)}
  if(a==='hcarry'){const v=(t.dataset.v||($('#hpcarry')||{}).value||'').trim(),k=dkey();if(!v){toast('Choose one, or write a few words');const x=$('#hpcarry');if(x)x.focus();return}
-  S.carry=S.carry||{};S.carry[k]=v.slice(0,90);Object.keys(S.carry).sort().slice(0,-40).forEach(x=>delete S.carry[x]);save();V.hstep='held';V.hdir=1;render();return window.scrollTo(0,0)}
- if(a==='hcarryx'){delete (S.carry||{})[dkey()];save();return render()}
+  // in the evening it is carried through the night, and the path moves on to whatever has not been done yet
+  const ev=evening(),f=ev?'ncarry':'carry';S[f]=S[f]||{};S[f][k]=v.slice(0,90);Object.keys(S[f]).sort().slice(0,-40).forEach(x=>delete S[f][x]);save();V.hstep=ev?null:'held';V.hdir=1;render();return window.scrollTo(0,0)}
+ if(a==='hcarryx'){const k=dkey();if((S.carry||{})[k])delete S.carry[k];else delete (S.ncarry||{})[k];save();return render()}
  if(a==='hnext')return pathMove(1);
  if(a==='hprev')return pathMove(-1);
  if(a==='hreturn'){const r=V.ret;V.ret=null;if(r)V.hstep=r.step;return go('home')}
