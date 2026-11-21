@@ -837,8 +837,8 @@ function horoPop(sign){
  <p class="cp-k">Your Stars · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${sign.name}</h2>
  <div class="hpz-top">${glyphMed(sign.id,'hpz-med')}<p class="hpz-dt">${esc(sign.dates)}</p></div>
  <div class="cp-box"><nav class="hpz-tabs" role="tablist" aria-label="Areas of life">${HPOP.map(([x,l])=>`<button role="tab" class="hpz-tab${x===cat?' on':''}" data-act="hpopcat" data-k="${x}" aria-selected="${x===cat}">${catIco(x,'hpz-ico')}<span>${l}</span></button>`).join('')}</nav>
- <h3 class="hpz-f">${esc(h.focus||CAT_INFO[cat][1])}</h3><div class="hpz-b">${paras(h.body)}</div>
- <div class="wpc-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(`What does today hold for my ${CAT_INFO[cat][0].toLowerCase()}?`)}">${IC.chat}Ask Kassandra</button></div></div>
+ <div class="hpz-scr"><h3 class="hpz-f">${esc(h.focus||CAT_INFO[cat][1])}</h3><div class="hpz-b">${paras(h.body)}</div>
+ <div class="wpc-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(`What does today hold for my ${CAT_INFO[cat][0].toLowerCase()}?`)}">${IC.chat}Ask Kassandra</button></div></div></div>
  </div></div>`}
 function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t:'whisper'}});
  const saved=S.saved.some(x=>x.date===k);
@@ -2696,7 +2696,7 @@ function settingsPage(t){
 const onboarding=()=>['welcome','join','reset'].includes(V.sec);
 // a redraw of the same screen (the Whisper revealed, a card opened, an answer arriving) keeps the reader where they
 // were: on the page, and in any pop-up or carousel on it (swapping the page in would otherwise scroll it to the top)
-const SCROLLS='.pop-box,.cpop,.en-track,.skz-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl,.hc-read';
+const SCROLLS='.pop-box,.cpop,.en-track,.skz-track,.hpz-scr,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl,.hc-read';
 const scrollsOf=r=>[...r.querySelectorAll(SCROLLS)].map(e=>[e.className,e.scrollLeft,e.scrollTop]);
 const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='tarot'?V.tarot.stage:'',h?h.textContent.trim():''].join('/')};
 // the painted scene behind the place: Today's follows the hour (dawn by day, the lake in the evening, the candle at night's end)

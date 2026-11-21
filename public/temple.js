@@ -56,7 +56,7 @@ window.Temple=(()=>{
   fitCard();
   const h=document.querySelector('#app .home.hpath .hhero')||document.querySelector('#app .skyp .sk-body');if(!h)return;
   const kids=h.classList.contains('hhero')?[h.querySelector('.hp-stage')]:[...h.children];if(!kids[0])return;
-  const acts=()=>h.querySelectorAll('.pz-acts,.hp-acts,.or-two,.btn');kids.forEach(k=>k.style.zoom='');acts().forEach(e=>e.style.zoom='');let z=1;if(h.classList.contains('hhero')){let f=21;for(;f>17;f-=.5){h.style.setProperty('--fz',f+'px');if(h.scrollHeight<=h.clientHeight+1)break}h.style.setProperty('--fz',f+'px');const y=h.querySelector('.hp-wfy .hp-you');if(y){y.style.display='';if(h.scrollHeight>h.clientHeight+1)y.style.display='none'}}while(!h.classList.contains('hhero')&&h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
+  const acts=()=>h.querySelectorAll('.pz-acts,.hp-acts,.or-two,.btn');kids.forEach(k=>k.style.zoom='');acts().forEach(e=>e.style.zoom='');let z=1;if(h.classList.contains('hhero')){const st=h.querySelector('.hp-stars .pz-b');if(st){st.style.maxHeight='';st.classList.remove('fade')}let f=21;for(;f>(st?15:17);f-=.5){h.style.setProperty('--fz',f+'px');if(h.scrollHeight<=h.clientHeight+1)break}h.style.setProperty('--fz',f+'px');const y=h.querySelector('.hp-wfy .hp-you');if(y){y.style.display='';if(h.scrollHeight>h.clientHeight+1)y.style.display='none'}if(st&&h.scrollHeight>h.clientHeight+1){st.style.maxHeight=Math.max(60,st.offsetHeight-(h.scrollHeight-h.clientHeight)-2)+'px';st.classList.add('fade')}}while(!h.classList.contains('hhero')&&h.scrollHeight>h.clientHeight+1&&z>.8){z-=.03;kids.forEach(k=>k.style.zoom=z.toFixed(2))}
   // the actions are never made smaller: they keep one size on every page
   if(z<1)h.querySelectorAll('.pz-acts,.hp-acts').forEach(e=>e.style.zoom=(1/z).toFixed(3));else if(z===1)acts().forEach(e=>e.style.zoom='')
  }
@@ -72,7 +72,8 @@ window.Temple=(()=>{
   document.body.classList.add('tp');document.body.dataset.tone=SC[name].tone||'gld';document.body.dataset.scene=name;
   if(cur!==name){cur=name;layout()}else if(!back.children[0].style.backgroundImage)layout();
   requestAnimationFrame(fit);setTimeout(fit,500);
-  arcEl.innerHTML=document.querySelector('#app .home.hpath')?arcHtml:'';
+  // Today's moon on its arc; in the Sky, the painted constellations brightened into gold
+  arcEl.innerHTML=document.querySelector('#app .home.hpath')?arcHtml:name==='sky'?'<div class="tm-arc tm-sky"><i class="tm-glow"></i></div>':'';
  }
  function off(){if(arcEl)arcEl.innerHTML='';document.body.classList.remove('tp');delete document.body.dataset.tone;delete document.body.dataset.scene}
  // Today's header, held still behind the page: one great moon on a rounded arc of fine gold, with its ornaments. The moon
