@@ -1157,8 +1157,6 @@ html body.tp.tp.tp #app .cpop.hpz:not(#x):not(#y) .hpz-b p{font-size:18px!import
 /* every swipe control in the app as Today's: pale gold dots, the one shown a glowing bar, glowing chevrons */
 .skz-d i:not(#x):not(#y),.wl-dots i:not(#x):not(#y){width:7px;height:7px;border-radius:50%;background:#F6E6B6;opacity:.6;box-shadow:0 0 4px rgba(12,16,36,.9)}
 .skz-d i.on:not(#x):not(#y),.wl-dots i.on:not(#x):not(#y){width:22px;border-radius:4px;opacity:1;background:#F6E6B6;box-shadow:0 0 8px 2px rgba(246,214,130,.85),0 0 3px rgba(12,16,36,.9)}
-/* Sky › For you: what is in the sky today as rows, like Ahead */
-html body.tp.tp.tp #app .sky-now{gap:8px}
 
 /* the Sky window: each part its own framed tile, all one size, swiped one after another (a little of the next shows); under
    them the full page, then the crystal ball (Kassandra) and the feather pen (the Journal), the objects alone */
@@ -1185,3 +1183,17 @@ html body.tp.tp.tp #app .sky-now{gap:8px}
 
 /* Oracle's place in the menu: the crystal ball on its gold base */
 #nav .in [data-nav=tarot]:not(#x){--ico:url(/art/atlas/nvm-oracle.webp)!important}
+
+/* Sky › For you: what is in the sky today, one card at a time, in the shape of the Cosmic Energy card in the app's own dark
+   glass: the painting's gold circle resting against the card's left edge, the words in cream and gold, a round arrow
+   inside the card; no dots beneath, the cards are swiped */
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x){position:relative;flex:0 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;min-height:0;padding:18px 14px 18px 4px;border-radius:0;text-align:left;background:none!important;box-shadow:none!important;border:0!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x)::before{content:'';position:absolute;z-index:0;top:4px;bottom:4px;left:47px;right:0;border-radius:20px;background:rgba(14,18,38,.66);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);box-shadow:inset 0 0 0 1px rgba(243,215,144,.45),0 8px 22px rgba(0,0,0,.35)}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-i,html body.tp.tp.tp #app .sky-t .sky-c:not(#x)>img{position:relative;z-index:1;flex:none;width:86px!important;height:86px!important;border-radius:50%;object-fit:cover;filter:none!important;box-shadow:0 0 0 1.5px #C9A253,0 4px 14px rgba(0,0,0,.5)!important;border:0!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x{position:relative;z-index:1;flex:1;min-width:0;align-items:flex-start;width:auto}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x strong{font:600 20px/1.12 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:#F6E3B0!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x em{margin-top:2px;font:italic 500 14px/1.2 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.72)!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x>span{margin-top:4px;font:500 15.5px/1.25 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-go{position:relative!important;z-index:1;right:auto!important;top:auto!important;flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(8,11,26,.7);color:#F6E6B6;box-shadow:inset 0 0 0 1px rgba(243,215,144,.6),0 0 10px rgba(246,214,130,.25)}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-go svg{width:14px;height:14px;filter:drop-shadow(0 0 3px rgba(246,214,130,.8))}
+html body.tp.tp.tp #app .sky-l .sky-dn:not(#x){display:none!important}
