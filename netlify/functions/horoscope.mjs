@@ -34,20 +34,21 @@ const CATS = {
   career: 'work and vocation: projects, colleagues, ambition, learning and direction',
   money: 'money habits and values: budgeting, spending, saving, generosity and security. Never give financial advice, tips or predictions of gains or losses'
 };
-const LENGTH = { daily: '80 to 120 words', weekly: '120 to 170 words', monthly: '170 to 230 words', yearly: '240 to 320 words in three short paragraphs' };
+// every area and every period is written to one length, so each reading sits whole on its card and fills it
+const LENGTH = '50 to 60 words, about 330 characters, never more than 360 characters';
 
 export default async req => {
   const user = await authUser(req);
   if (!user) return fail(401, 'Sign in for the full forecast');
   const q = new URL(req.url).searchParams;
   const sign = q.get('sign'), cat = q.get('cat'), period = q.get('period'), key = q.get('key');
-  if (!SIGNS.includes(sign) || !CATS[cat] || !LENGTH[period]) return fail(400, 'Unknown forecast');
+  if (!SIGNS.includes(sign) || !CATS[cat] || !['daily','weekly','monthly','yearly'].includes(period)) return fail(400, 'Unknown forecast');
   // only periods that are current somewhere on Earth, so nobody can make the server write future or past forecasts
   const span = K.periodFromKey(period, key || '');
   if (!span || !K.liveKeys(period).has(key)) return fail(400, 'That period is not open');
 
   const store = getStore('horoscopes');
-  const id = `${period}/${key}/${sign}/${cat}`;
+  const id = `v2/${period}/${key}/${sign}/${cat}`;   // v2: every reading one length, to sit whole on its card
   const kept = await store.get(id, { type: 'json' });
   if (kept) return Response.json(kept, { headers: { 'cache-control': 'private, max-age=3600' } });
 
@@ -60,7 +61,7 @@ export default async req => {
       effort: 'medium',
       schema: obj({ body: str, focus: str, reflection: str }),
       system: 'You write the horoscopes for Kosmia, a vintage, contemplative astrology app whose line is "What if the cosmos is listening?". British English, second person, warm and literate, philosophical and specific rather than generic. Ground the reading in the real sky you are given (name a transit or two and what it traditionally signifies for this sign), always positive and constructive (a challenging transit is an invitation to grow, with one small practical step), but frame astrology as symbolism for reflection: no certainties, no guarantees, no fear, no medical, legal or financial advice, no houses, axes or rising-sign claims (you only know the reader’s Sun sign), dates written in words, no emoji, no clichés such as "the stars align". Reply with JSON only: {"body": "the reading", "focus": "a two-to-four word theme", "reflection": "one reflective question"}.',
-      messages: [{ role: 'user', content: `Sign: ${name}, ${NATURE[sign]}. Let the reading speak to this nature, so a ${name} recognises themselves in it and it could not belong to another sign.\nArea of life: ${CATS[cat]}\nPeriod: ${period}, ${span.start} to ${span.end}\nLength: ${period === 'daily' && cat === 'overview' ? '55 to 75 words' : LENGTH[period]}\nThe sky (geocentric, tropical zodiac):\n${sky}` }]
+      messages: [{ role: 'user', content: `Sign: ${name}, ${NATURE[sign]}. Let the reading speak to this nature, so a ${name} recognises themselves in it and it could not belong to another sign.\nArea of life: ${CATS[cat]}\nPeriod: ${period}, ${span.start} to ${span.end}\nLength: ${LENGTH}\nThe sky (geocentric, tropical zodiac):\n${sky}` }]
     });
   } catch (e) {
     console.error(e.message);

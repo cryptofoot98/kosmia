@@ -154,8 +154,8 @@ const PWORD={daily:'day',weekly:'week',monthly:'month',yearly:'year'};
 // read the same, and each new day, week, month or year brings a new one
 function horoscope(signId,cat,period){
  const per=K.period(period,TZ()),h=Object.assign({id:`${period}/${per.key}/${signId}/${cat}`,per},KosmiaForecast.write(K,signId,cat,period,per,TZ()));
- const ai=(S.hai||{})[h.id];if(ai&&ai.body)return Object.assign(h,{body:ai.body,focus:ai.focus||h.focus,ai:true});
- askHoro(signId,cat,period,per.key,h.id);return h;
+ const ai=(S.hai||{})['v2:'+h.id];if(ai&&ai.body)return Object.assign(h,{body:ai.body,focus:ai.focus||h.focus,ai:true});
+ askHoro(signId,cat,period,per.key,'v2:'+h.id);return h;
 }
 // each forecast is written once by Claude for everyone of that sign (on the server) and kept here for the period
 const horoAsk={};
@@ -316,7 +316,7 @@ const panel=(h,cls='')=>Kit.panel(h,{cls});
 // a page's own header on parchment: the back arrow, its title (and a line under it), and an action at the right
 // the painted objects for the app's actions: the crystal ball asks Kassandra, the feather pen opens the Journal, the little
 // constellation shares, the heart keeps (dimmer until kept)
-const OBJ={kas:'ic-orb-k',pen:'ic-quill-k',share:'ic-share-k',like:'ic-like-k'};
+const OBJ={kas:'ic-orb-k',pen:'ic-quill-k',share:'ic-share-k',like:'ic-like-k',speak:'ic-speak-k'};
 const obj=(k,attrs,label,cls='')=>`<button class="obj-b obj-${k}${cls?' '+cls:''}" ${attrs} aria-label="${label}">${ui(OBJ[k],'obj-i')}</button>`;
 const IC={
  back:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -1189,7 +1189,7 @@ const skyRow=x=>`<button class="sky-c" data-act="skd" data-id="${esc(x.id)}">${x
 // the tiles as a carousel: one large tile at a time, turning by itself, swiped by hand
 const skyCar=l=>`<div class="sky-l"><div class="en-track sky-t" aria-roledescription="carousel">${l.map(skyRow).join('')}</div><nav class="hp-dots sky-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skymove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="en-dots sky-d" aria-hidden="true">${l.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skymove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>`;
 function skyPop(x){
- const tiles=[[['What is happening',x.fact]],[['What it means for you',x.you]],[['One thing to do',x.act],['An optional ritual',x.rit]].filter(t=>t[1]),[['A question to sit with',x.q]]].map(t=>t.filter(u=>u[1])).filter(t=>t.length);
+ const tiles=[[['What is happening',x.fact]],[['What it means for me',x.you]],[['One thing to do',x.act],['An optional ritual',x.rit]].filter(t=>t[1]),[['A question to sit with',x.q]]].map(t=>t.filter(u=>u[1])).filter(t=>t.length);
  return `<div class="cpop wpz skz skb" style="--skbg:url(art/sky/${x.bg||'sun'}.webp);${skyPos(x.bg||'sun')}" role="dialog" aria-modal="true" aria-label="${x.title}" data-act="skdx"><i class="skb-bg" aria-hidden="true"></i><button class="cp-x" data-act="skdx" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">${x.when}</p><h2 class="cp-t">${x.title}</h2>
  <div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map((parts,i)=>`<section class="cp-box skz-tile${i===1?' you':''}${parts[0][0]==='A question to sit with'?' q':''}${parts.length>1?' two':''}" aria-label="${parts.map(u=>u[0]).join(' and ')}, ${i+1} of ${tiles.length}">${parts.map(([h,t])=>`<div class="skz-part"><h3>${h}</h3><p>${esc(t)}</p></div>`).join('')}</section>`).join('')}</div>
@@ -1199,7 +1199,7 @@ function skyPop(x){
 const skzStep=T=>T.children.length>1?T.children[1].offsetLeft-T.children[0].offsetLeft:Math.max(1,T.clientWidth);
 function skzCar(){const t=$('.skz-track');if(!t||t._on)return;t._on=1;
  // a tile longer than the room the window has: its words are set a little smaller until they fit (never below 13px)
- const fitT=()=>t.querySelectorAll('.skz-tile').forEach(x=>{const ps=[...x.querySelectorAll('p')];if(!ps.length)return;const cs=getComputedStyle(x),room=()=>x.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),need=()=>[...x.children].reduce((a,c)=>a+c.offsetHeight+parseFloat(getComputedStyle(c).marginTop)+parseFloat(getComputedStyle(c).marginBottom),0);let f=x.classList.contains('two')?22:26;const set=()=>ps.forEach(p=>p.style.setProperty('font-size',f+'px','important'));set();while(need()>room()-2&&f>14){f-=.5;set()}});requestAnimationFrame(()=>requestAnimationFrame(fitT));const dots=[...document.querySelectorAll('.skz-d i')];
+ const fitT=()=>t.querySelectorAll('.skz-tile').forEach(x=>{const ps=[...x.querySelectorAll('p')];if(!ps.length)return;const cs=getComputedStyle(x),room=()=>x.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),need=()=>[...x.children].reduce((a,c)=>a+c.offsetHeight+parseFloat(getComputedStyle(c).marginTop)+parseFloat(getComputedStyle(c).marginBottom),0);let f=21;const set=()=>ps.forEach(p=>p.style.setProperty('font-size',f+'px','important'));set();while(need()>room()-2&&f>14){f-=.5;set()}});requestAnimationFrame(()=>requestAnimationFrame(fitT));const dots=[...document.querySelectorAll('.skz-d i')];
  t.addEventListener('scroll',()=>requestAnimationFrame(()=>{const i=Math.round(t.scrollLeft/skzStep(t));dots.forEach((d,j)=>d.classList.toggle('on',j===i))}),{passive:true})}
 function skyDetail(x){
  return `<div class="land hland hnight skyp pg pg-sky skd"><div class="skd-bar">${iconBtn('back','data-act="skdx"','Back')}</div>
@@ -1245,7 +1245,7 @@ function horoSign(){
   <button class="hc-arr hc-nx" data-act="hcat" data-k="${nx}" data-dir="1" aria-label="Next, ${CAT_INFO[nx][0]}">${IC.chev}</button></div>`;
  const PSHORT={daily:'Today',weekly:'Week',monthly:'Month',yearly:'Year'};
  const per=`<div class="sx-per" role="tablist" aria-label="Time period">${PERIODS.map(([k])=>`<button role="tab" aria-selected="${V.period===k}" data-period="${k}">${PSHORT[k]}</button>`).join('')}</div>`;
- const listen=`<button class="ibtn${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>`;
+ const listen=obj('speak','data-act="hspeak"',playing?'Stop reading aloud':'Read aloud',playing?'on':'');
  const heart=obj('like',`data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}"`,saved?'Saved to your journal':'Save to your journal',saved?'on':'');
  // the whole page on one screen: at its head the sign's painting dissolved into the night, its constellation, symbol,
  // name, dates and soul in the open sky at its left; right beneath it the time and the area's medallion between the
@@ -1254,7 +1254,7 @@ function horoSign(){
  // foot, above the menu, an invitation to write about it and another to read for someone else, a mark for each page
  // between them
  return `<div class="hsp hframe sx s-${s.id} skyp pg pg-hs"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}${obj('share',`data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}"`,'Share this reading')}${heart}</span></div>
- <header class="sx-head"><span class="sx-pic" aria-hidden="true" style="${figVars(s.id)}"><span class="sp-moon"><img src="/art/atlas/home-halo.webp" alt=""></span><img class="wf-fg" src="/art/atlas/fg-${s.id}.webp" alt=""></span><h1 class="pg-t">${s.name}</h1><p class="pg-s">${s.dates}</p>${per}</header>
+ <header class="sx-head"><span class="sx-pic" aria-hidden="true" style="${figVars(s.id)}"><span class="sp-moon"><img src="/art/atlas/home-halo.webp" alt=""></span><img class="wf-fg" src="/art/atlas/fg-${s.id}.webp" alt=""></span><h1 class="pg-t" style="--nl:${s.name.length}">${s.name}</h1><p class="pg-s">${s.dates}</p>${per}</header>
  <div class="sx-main">${ctl}
  <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div>
  <div class="sx-ft"><div class="hc-pgs" role="group" aria-label="Pages"></div></div>
@@ -2707,7 +2707,7 @@ function sceneKey(){
  const cur=navCur();
  if(cur!=='horoscope')V.skd=null;
  if(cur==='home'){const st=V.hstep,eve=evening();return st==='night'||(st==='held'&&eve)?'candle':eve?'lake':'dawn'}
- return cur==='horoscope'?'sky':cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
+ return cur==='horoscope'?(tab()==='sign'?'skyplain':'sky'):cur==='tarot'?'oracle':cur==='journal'?'journal':'you';
 }
 const FIGP={"aries":[105.0,-1.2,4.8],"taurus":[107.1,-1.6,1.7],"gemini":[111.1,-6.8,-0.0],"cancer":[102.2,-1.6,4.9],"leo":[109.6,-4.0,5.5],"virgo":[101.2,-0.8,7.1],"libra":[103.3,-3.9,4.0],"scorpio":[105.0,-1.6,5.7],"sagittarius":[119.5,-10.8,-0.6],"capricorn":[104.5,-5.0,4.5],"aquarius":[104.2,-1.2,7.2],"pisces":[98.6,-1.0,12.7]};
 const figVars=id=>{const f=FIGP[id]||[95,2,8];return `--fw:${f[0]}%;--fl:${f[1]}%;--ft:${f[2]}%`};
@@ -2786,7 +2786,7 @@ function subFix(){
  from.before(w);ks.forEach(k=>w.append(k));w.scrollTop=render.keepMs||0;
 }
 function skswipe(){
- const s=$('.skyp');if(!s)return;let x0=null,y0=0;
+ const s=$('.skyp');if(!s||s.classList.contains('hsp'))return;let x0=null,y0=0;
  s.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY},{passive:true});
  s.addEventListener('touchend',e=>{if(x0==null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
   if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5&&!e.target.closest('textarea,input,.mn-scroll')){const st=s.querySelectorAll('.pg-strip button');if(st.length){const i=[...st].findIndex(b=>b.getAttribute('aria-selected')==='true');st[i+(dx<0?1:-1)]?.click();return}const i=PERIODS.findIndex(x=>x[0]===V.period),n=PERIODS[i+(dx<0?1:-1)];if(n)$(`.skyp [data-period="${n[0]}"]`)?.click()}},{passive:true});
@@ -2833,7 +2833,7 @@ function hcar(){
   show(last?1e9:0);if(R.getBoundingClientRect().top<0)window.scrollTo(0,0);
   if(was)render()};
  // the next page, or the next area once its last page is read; back the same way
- const step=d=>{const P=pages().length;if(d>0&&c.pg<P-1)return show(c.pg+1,1);if(d<0&&c.pg>0)return show(c.pg-1,-1);take(cur()+d,d,d<0)};
+ const step=d=>take(cur()+d,d);
  // a clearly sideways swipe turns the page; anything more up-and-down is left to scrolling
  let sx=0,sy=0;
  pg.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});

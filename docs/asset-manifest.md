@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 639 |
-| In use, provisional | 595 |
+| Images | 641 |
+| In use, provisional | 597 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -80,6 +80,7 @@ their space before they load.
 | `public/art/atlas/ic-scg.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
 | `public/art/atlas/ic-share-k.webp` | 256×256 | 1:1 | yes | 13 | provisional |  |
 | `public/art/atlas/ic-someone.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
+| `public/art/atlas/ic-speak-k.webp` | 256×256 | 1:1 | yes | 22 | provisional |  |
 | `public/art/atlas/jen-mid.webp` | 850×1120 | 0.76:1 | no | 120 | provisional |  |
 | `public/art/atlas/jen-night.webp` | 850×1850 | 0.46:1 | no | 250 | provisional |  |
 | `public/art/atlas/jrn-mid.webp` | 850×1580 | 0.54:1 | no | 166 | provisional |  |
@@ -199,6 +200,7 @@ their space before they load.
 | `public/art/temple/oracle.webp` | 912×1968 | 0.46:1 | no | 172 | provisional |  |
 | `public/art/temple/reading.webp` | 912×1968 | 0.46:1 | no | 160 | provisional |  |
 | `public/art/temple/sky.webp` | 912×1968 | 0.46:1 | no | 123 | provisional |  |
+| `public/art/temple/skyplain.webp` | 912×1968 | 0.46:1 | no | 102 | provisional |  |
 | `public/art/temple/you.webp` | 912×1968 | 0.46:1 | no | 130 | provisional |  |
 
 ## The Zodiac Affinity page’s backdrop: a golden sun with a woman’s face and a crescent moon with a man’s face facing each other over the Milky Way, clouds, lilies, roses and daisies (supplied by the owner)

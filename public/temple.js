@@ -4,7 +4,7 @@
 window.Temple=(()=>{
  const A='/art/temple/';
  // t: where the head's art ends, f: where the foot's art begins (as shares of the painting's height); tone: the colour of the words
- const SC={dawn:{t:.20,f:.70,c:'221,163,93',tone:'ink'},lake:{t:.20,f:.62,c:'18,26,44'},candle:{t:.14,f:.58,c:'20,24,36'},sky:{t:.22,f:.68,c:'16,24,42'},oracle:{t:.26,f:.60,c:'23,28,44'},journal:{t:.24,f:.57,c:'30,32,40'},you:{t:.24,f:.60,c:'20,32,50'},letter:{t:.22,f:.76,c:'220,166,85',tone:'ink'},reading:{t:.30,f:.66,c:'10,16,32',dy:62,m:[.5007,.2052,.176]}};
+ const SC={dawn:{t:.20,f:.70,c:'221,163,93',tone:'ink'},lake:{t:.20,f:.62,c:'18,26,44'},candle:{t:.14,f:.58,c:'20,24,36'},sky:{t:.22,f:.68,c:'16,24,42'},skyplain:{t:.22,f:.68,c:'16,24,42'},oracle:{t:.26,f:.60,c:'23,28,44'},journal:{t:.24,f:.57,c:'30,32,40'},you:{t:.24,f:.60,c:'20,32,50'},letter:{t:.22,f:.76,c:'220,166,85',tone:'ink'},reading:{t:.30,f:.66,c:'10,16,32',dy:62,m:[.5007,.2052,.176]}};
  let back,front,cur='',arcEl,arcHtml='';
  const $=(t,c)=>{const e=document.createElement(t);e.className=c;return e};
  function build(){

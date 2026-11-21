@@ -1251,3 +1251,32 @@ html body.tp.tp.tp #app .sx .hcar:not(#x){border:6px solid transparent!important
 html body.tp.tp.tp #app .sx .sx-acts.obj-bar:not(#x){display:flex!important;flex-direction:row!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin:6px 2% 2px!important}
 html body.tp.tp.tp #app .sx .sx-acts.obj-bar .sx-other{flex:1;min-width:0;padding:0;border:0;background:none;box-shadow:none;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:4px;font:italic 500 16px 'Cormorant Garamond',serif;color:#F3D790;text-shadow:0 0 6px rgba(246,214,130,.35)}
 html body.tp.tp.tp #app .sx .sx-acts.obj-bar .sx-other svg{width:10px;height:10px}
+
+/* a sign's page: the speaker, the share and the heart as painted objects, one small size; the sign's name and dates high
+   beside a larger painting, the period at its foot; the areas of life a little lower */
+html body.tp.tp.tp #app .sx .hsp-r:not(#x){gap:10px!important;align-items:center}
+html body.tp.tp.tp #app .sx .hsp-r .obj-b:not(#x){width:38px!important;height:38px!important}
+html body.tp.tp.tp #app .sx .hsp-r .obj-b:not(#x) .obj-i{width:34px!important;height:34px!important}
+html body.tp.tp.tp #app .sx .hsp-r .obj-speak.on:not(#x) .obj-i{filter:drop-shadow(0 0 10px rgba(246,214,130,.85));animation:objPulse 1.6s ease-in-out infinite}
+@keyframes objPulse{50%{transform:scale(1.08)}}
+body.reduce .obj-speak.on .obj-i{animation:none!important}
+html body.tp.tp.tp #app .sx .sx-head:not(#x):not(#y){grid-template-columns:152px 1fr;grid-template-rows:auto auto 1fr auto;padding-top:62px!important}
+html body.tp.tp.tp #app .sx .sx-pic:not(#x):not(#y){width:152px!important;height:152px!important;grid-row:1/5}
+html body.tp.tp.tp #app .sx .sx-head .pg-t:not(#x):not(#y){grid-row:1;align-self:start;margin-top:10px!important}
+html body.tp.tp.tp #app .sx .sx-head .pg-s:not(#x):not(#y){grid-row:2;align-self:start}
+html body.tp.tp.tp #app .sx .sx-per:not(#x):not(#y){grid-row:4;align-self:end}
+html body.tp.tp.tp #app .sx .sx-main:not(#x):not(#y){padding-top:18px!important}
+html body.tp.tp.tp #app .sx .hcar:not(#x):not(#y){padding:18px 20px!important}
+/* a sign's name fills the room beside its painting, as large as its length allows, centred above the period */
+html body.tp.tp.tp #app .sx .sx-head:not(#x):not(#y){grid-template-rows:1fr auto auto 1fr auto}
+html body.tp.tp.tp #app .sx .sx-head .pg-t:not(#x):not(#y){grid-row:2;align-self:end;margin:0!important;font-size:min(34px,calc(170px / var(--nl,6) * 1.24))!important;letter-spacing:.14em!important;line-height:1.05!important;white-space:nowrap}
+html body.tp.tp.tp #app .sx .sx-head .pg-s:not(#x):not(#y){grid-row:3;align-self:start;margin-top:6px!important;font-size:17px!important}
+html body.tp.tp.tp #app .sx .sx-per:not(#x):not(#y){grid-row:5}
+@media (max-height:760px){
+ html body.tp.tp.tp #app .sx .sx-head:not(#x):not(#y){grid-template-columns:128px 1fr;padding-top:58px!important}
+ html body.tp.tp.tp #app .sx .sx-pic:not(#x):not(#y){width:128px!important;height:128px!important}
+ html body.tp.tp.tp #app .sx .sx-main:not(#x):not(#y){padding-top:10px!important;gap:6px!important}
+ html body.tp.tp.tp #app .sx .hc-m:not(#x):not(#y){width:30px!important;height:30px!important}
+ html body.tp.tp.tp #app .sx .hc-s.on .hc-m:not(#x):not(#y){width:36px!important;height:36px!important}
+ html body.tp.tp.tp #app .sx .sx-acts.obj-bar:not(#x){margin-top:2px!important}
+}
