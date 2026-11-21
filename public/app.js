@@ -836,9 +836,8 @@ function horoPop(sign){
  return `<div class="cpop wpz hpz" role="dialog" aria-modal="true" aria-label="${sign.name}, today in every area of life" data-act="hpopclose"><button class="cp-x" data-act="hpopclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Your Stars · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${sign.name}</h2>
  <div class="hpz-top">${glyphMed(sign.id,'hpz-med')}<p class="hpz-dt">${esc(sign.dates)}</p></div>
- <div class="cp-box"><nav class="hpz-tabs" role="tablist" aria-label="Areas of life">${HPOP.map(([x,l])=>`<button role="tab" class="hpz-tab${x===cat?' on':''}" data-act="hpopcat" data-k="${x}" aria-selected="${x===cat}">${catIco(x,'hpz-ico')}<span>${l}</span></button>`).join('')}</nav>
- <div class="hpz-scr"><h3 class="hpz-f">${esc(h.focus||CAT_INFO[cat][1])}</h3><div class="hpz-b">${paras(h.body)}</div>
- <div class="wpc-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(`What does today hold for my ${CAT_INFO[cat][0].toLowerCase()}?`)}">${IC.chat}Ask Kassandra</button></div></div></div>
+ <div class="cp-box"><nav class="hpz-tabs" role="tablist" aria-label="Areas of life">${HPOP.map(([x,l])=>`<button role="tab" class="hpz-tab${x===cat?' on':''}" data-act="hpopcat" data-k="${x}" aria-selected="${x===cat}"><span>${l}</span></button>`).join('')}</nav>
+ <div class="hpz-scr"><h3 class="hpz-f">${esc(h.focus||CAT_INFO[cat][1])}</h3><div class="hpz-b">${paras(h.body)}</div></div></div>
  </div></div>`}
 function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t:'whisper'}});
  const saved=S.saved.some(x=>x.date===k);
@@ -1189,15 +1188,15 @@ function skyPop(x){
  const tiles=[['What is happening',x.fact],['What it means for you',x.you],['One thing to do',x.act],['An optional ritual',x.rit],['A question to sit with',x.q]].filter(t=>t[1]);
  return `<div class="cpop wpz skz skb" style="--skbg:url(art/sky/${x.bg||'sun'}.webp);${skyPos(x.bg||'sun')}" role="dialog" aria-modal="true" aria-label="${x.title}" data-act="skdx"><i class="skb-bg" aria-hidden="true"></i><button class="cp-x" data-act="skdx" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">${x.when}</p><h2 class="cp-t">${x.title}</h2>
- <div class="cp-box"><div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map(([h,t],i)=>`<section class="skz-tile${i===1?' you':''}${h==='A question to sit with'?' q':''}" aria-label="${h}, ${i+1} of ${tiles.length}"><h3>${h}</h3><p>${esc(t)}</p></section>`).join('')}</div>
+ <div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map(([h,t],i)=>`<section class="cp-box skz-tile${i===1?' you':''}${h==='A question to sit with'?' q':''}" aria-label="${h}, ${i+1} of ${tiles.length}"><h3>${h}</h3><p>${esc(t)}</p></section>`).join('')}</div>
   <nav class="hp-dots skz-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skzmove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="skz-d" aria-hidden="true">${tiles.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skzmove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>
-  <div class="wpc-acts"><button class="btn" data-act="kasask" data-q="${esc(x.q)}">${IC.chat}Ask Kassandra</button><button class="ibtn" data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it">${IC.quill}</button></div>
- <button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button></div></div></div>`}
-// the window's tiles: the dots follow the swipe
+  <div class="skz-obj"><button data-act="kasask" data-q="${esc(x.q)}" aria-label="Ask Kassandra about it">${ui('ic-orb-k','skz-o')}</button><button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button><button data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it in your Journal">${ui('ic-quill-k','skz-o')}</button></div></div></div>`}
+// the window's tiles: the dots follow the swipe; one step is a tile and the gap after it
+const skzStep=T=>T.children.length>1?T.children[1].offsetLeft-T.children[0].offsetLeft:Math.max(1,T.clientWidth);
 function skzCar(){const t=$('.skz-track');if(!t||t._on)return;t._on=1;
  // a tile longer than the room the window has: its words are set a little smaller until they fit (never below 13px)
- t.querySelectorAll('.skz-tile').forEach(x=>{const p=x.querySelector('p');if(!p)return;let f=parseFloat(getComputedStyle(p).fontSize);while(x.scrollHeight>x.clientHeight+1&&f>13){f-=.5;p.style.setProperty('font-size',f+'px','important')}});const dots=[...document.querySelectorAll('.skz-d i')];
- t.addEventListener('scroll',()=>requestAnimationFrame(()=>{const i=Math.round(t.scrollLeft/Math.max(1,t.clientWidth));dots.forEach((d,j)=>d.classList.toggle('on',j===i))}),{passive:true})}
+ const fitT=()=>t.querySelectorAll('.skz-tile').forEach(x=>{const p=x.querySelector('p');if(!p)return;p.style.removeProperty('font-size');let f=parseFloat(getComputedStyle(p).fontSize);const cs=getComputedStyle(x),h=x.querySelector('h3'),room=()=>x.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),need=()=>(h?h.offsetHeight+8:0)+p.offsetHeight;while(need()>room()+1&&f>14){f-=.5;p.style.setProperty('font-size',f+'px','important')}});requestAnimationFrame(()=>requestAnimationFrame(fitT));const dots=[...document.querySelectorAll('.skz-d i')];
+ t.addEventListener('scroll',()=>requestAnimationFrame(()=>{const i=Math.round(t.scrollLeft/skzStep(t));dots.forEach((d,j)=>d.classList.toggle('on',j===i))}),{passive:true})}
 function skyDetail(x){
  return `<div class="land hland hnight skyp pg pg-sky skd"><div class="skd-bar">${iconBtn('back','data-act="skdx"','Back')}</div>
  <header class="skd-h">${x.img}<div><h1 class="pg-t">${x.title}</h1><p class="pg-s">${x.when}</p></div></header>
@@ -1218,7 +1217,7 @@ views.horoscope=()=>{
  const now=new Date(),mn=K.moon(now),ev=nextEvent(now),qt=V.period==='daily'?(String(myDay().body).match(/^[^.!?]*[.!?]/)||[''])[0]:first,sc=pgCur('sky');
  let pg;
  if(sc==='hor')pg=`<div class="sk-who">${glyphMed(sign.id,'sk-med')}<div><h2 class="sk-n">${sign.name}</h2><p class="sk-dt">${sign.dates}</p><p class="sk-ky">${keys(SIGN_KEYS[sign.id])}</p></div><button class="btn hm-go sk-go${read?' on':''}" data-act="tohoroscope">${read?'Read again':'Read'}</button></div>
-  <p class="sky-k">${Kit.icon('star')}<span>Your sky today</span>${Kit.icon('star')}</p>${skyCar(skyToday())}`;
+  <p class="sky-k">${Kit.icon('star')}<span>Your sky today</span>${Kit.icon('star')}</p><div class="sky-l sky-list sky-now">${skyToday().map(skyRow).join('')}</div>`;
  else if(sc==='ahead')pg=`<button class="skd-m sky-cal" data-go="discover" data-t="calendar">Open the Cosmic Calendar ${IC.chev}</button><div class="sky-l sky-list">${skyAhead().map(skyRow).join('')}</div>`;
  else pg=`<p class="pg-in">The old knowledge, open to you</p><div class="sky-l sky-list or-list jn-list yo-list"><button class="sky-c" data-act="libgo" data-tab="guides">${ui('ic-book','sky-i')}<span class="sky-x"><strong>Guides</strong><span class="jn-x">Where to begin, in plain words</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="signs">${ui('m-'+S.sign,'sky-i')}<span class="sky-x"><strong>The twelve signs</strong><span class="jn-x">Yours, and everyone you love</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="planets">${pic('cats','planets','sky-i')}<span class="sky-x"><strong>The planets</strong><span class="jn-x">What each one speaks of</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="houses">${pic('cats','houses','sky-i')}<span class="sky-x"><strong>The houses</strong><span class="jn-x">Twelve areas of a life</span></span><span class="sky-go">${IC.chev}</span></button></div>`;
  return `<div class="land hland hnight skyp pg pg-sky"><header class="hl-top stay sk-head"><h1 class="pg-t">${nm?esc(nm)+'’s sky':'Your sky'}</h1><p class="pg-s">What the stars say, now</p>${pgStrip('sky')}</header>
@@ -3070,7 +3069,7 @@ document.addEventListener('click',e=>{
  if(a==='skymove'){const T=$('.sky-t');if(!T)return;const n=T.children.length,i=Math.round(T.scrollLeft/Math.max(1,T.clientWidth));return T.scrollTo({left:((i+ +t.dataset.d+n)%n)*T.clientWidth,behavior:'smooth'})}
  if(a==='skd'){V.skd=t.dataset.id;return render()}
  if(a==='skdx'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.skd=null;return render()}
- if(a==='skzmove'){const T=$('.skz-track');if(!T)return;const n=T.children.length,i=Math.round(T.scrollLeft/Math.max(1,T.clientWidth));return T.scrollTo({left:Math.min(n-1,Math.max(0,i+ +t.dataset.d))*T.clientWidth,behavior:'smooth'})}
+ if(a==='skzmove'){const T=$('.skz-track');if(!T)return;const n=T.children.length,w=skzStep(T),i=Math.round(T.scrollLeft/w);return T.scrollTo({left:Math.min(n-1,Math.max(0,i+ +t.dataset.d))*w,behavior:'smooth'})}
  if(a==='skdwrite'){const j={id:uuid(),day:dkey(),kind:'reflection',title:t.dataset.t,body:'',at:new Date().toISOString()};S.journal.push(j);save();V.skd=null;openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='pgcat'){const g=t.dataset.g,l=PGC[g].map(x=>x[0]),f=l.indexOf(pgCur(g)),n=l.indexOf(t.dataset.k);if(n<0||n===f)return;V.pdir=n>f?1:-1;S.pgc=S.pgc||{};S.pgc[g]=t.dataset.k;save();return render()}
  if(a==='jsub'){V.jsub=t.dataset.k||null;if(!V.jsub)V.jsearch=null;return render()}

@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 634 |
-| In use, provisional | 590 |
+| Images | 637 |
+| In use, provisional | 593 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -70,9 +70,11 @@ their space before they load.
 | `public/art/atlas/ic-dream.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
 | `public/art/atlas/ic-love.webp` | 256×256 | 1:1 | yes | 32 | provisional |  |
 | `public/art/atlas/ic-one.webp` | 256×256 | 1:1 | yes | 32 | provisional |  |
+| `public/art/atlas/ic-orb-k.webp` | 256×256 | 1:1 | yes | 21 | provisional |  |
 | `public/art/atlas/ic-ppf.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
 | `public/art/atlas/ic-privacy.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
 | `public/art/atlas/ic-profile.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
+| `public/art/atlas/ic-quill-k.webp` | 256×256 | 1:1 | yes | 10 | provisional |  |
 | `public/art/atlas/ic-sanctuary.webp` | 256×256 | 1:1 | yes | 31 | provisional |  |
 | `public/art/atlas/ic-scg.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
 | `public/art/atlas/ic-someone.webp` | 256×256 | 1:1 | yes | 33 | provisional |  |
@@ -748,6 +750,7 @@ their space before they load.
 | `public/art/atlas/nvm-horoscope.webp` | 160×160 | 1:1 | yes | 15 | provisional |  |
 | `public/art/atlas/nvm-journal.webp` | 160×160 | 1:1 | yes | 12 | provisional |  |
 | `public/art/atlas/nvm-kassandra.webp` | 160×160 | 1:1 | yes | 10 | provisional |  |
+| `public/art/atlas/nvm-oracle.webp` | 160×160 | 1:1 | yes | 11 | provisional |  |
 | `public/art/atlas/nvm-tarot.webp` | 160×160 | 1:1 | yes | 6 | provisional |  |
 
 ## Snowy owl on a branch before a crescent

@@ -1116,15 +1116,12 @@ html body #app .prem-del .yo-del .sx-acts .btn{flex:1 1 0;min-width:0;height:42p
 .cpop.skz.skb:not(#x):not(#y)>.cp-in{position:absolute!important;top:0!important;left:0!important;right:0!important;bottom:calc(var(--navh,0px) + 6px)!important;height:auto!important;max-height:none!important;width:auto!important;max-width:var(--appw,480px)!important;margin:0 auto!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:0!important;padding:calc(var(--skw) * var(--sky-t)) 7% 0!important;overflow:hidden!important}
 .cpop.skz.skb:not(#x):not(#y) .cp-k{margin:0!important;flex:none;text-shadow:0 1px 8px #050816,0 0 2px #050816}
 .cpop.skz.skb:not(#x):not(#y) .cp-t{margin:2px 0 8px!important;flex:none;filter:drop-shadow(0 2px 6px #050816) drop-shadow(0 0 2px #050816)}
-.cpop.skz.skb:not(#x):not(#y) .cp-box{flex:0 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;margin:0!important;padding:12px 14px 8px!important;background:rgba(8,12,32,.5)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 .cpop.skz.skb:not(#x):not(#y) .skz-car{flex:0 1 auto;min-height:0;display:flex;flex-direction:column}
 .cpop.skz.skb:not(#x):not(#y) .skz-track{flex:0 1 auto;min-height:0}
-.cpop.skz.skb:not(#x):not(#y) .skz-tile{min-height:0!important;justify-content:flex-start!important;overflow-y:auto;scrollbar-width:none;padding:2px 4px}
 .cpop.skz.skb:not(#x):not(#y) .skz-dn{flex:none;margin:6px 0 0!important}
 .cpop.skz.skb:not(#x):not(#y) .cp-rule{display:none!important}
 .cpop.skz.skb:not(#x):not(#y) .skz-tile.q p{font-style:italic;color:#F3D790!important}
 .cpop.skz.skb:not(#x):not(#y) .wpc-acts{flex:none;margin-top:10px!important}
-.cpop.skz.skb:not(#x):not(#y) .skd-m{flex:none;margin:6px auto 0!important}
 @media (max-height:760px){
  .cpop.skz.skb:not(#x):not(#y) .cp-k{font-size:15px!important}
  .cpop.skz.skb:not(#x):not(#y)>.cp-in{padding-top:calc(var(--skw) * var(--sky-t) - 12px)!important}
@@ -1134,15 +1131,11 @@ html body #app .prem-del .yo-del .sx-acts .btn{flex:1 1 0;min-width:0;height:42p
  .cpop.skz.skb:not(#x):not(#y) .wpc-acts{margin-top:8px!important}
  .cpop.skz.skb:not(#x):not(#y) .wpc-acts .btn{min-height:40px!important;height:40px!important;padding-top:0!important;padding-bottom:0!important}
  .cpop.skz.skb:not(#x):not(#y) .wpc-acts .ibtn{width:40px!important;height:40px!important;min-height:40px!important}
- .cpop.skz.skb:not(#x):not(#y) .skd-m{font-size:14px!important;margin-top:4px!important}
- .cpop.skz.skb:not(#x):not(#y) .cp-box{padding:9px 14px 5px!important}
+ .cpop.skz.skb:not(#x):not(#y) .skd-m{font-size:14px!important}
  .cpop.skz.skb:not(#x):not(#y) .skz-dn{margin-top:3px!important}
  .cpop.skz.skb:not(#x):not(#y) .skz-tile p{line-height:1.2!important}
 }
 
-/* Your Stars: a reading too long for the screen fades out above its link */
-@@ .hp-stars .pz-b{font-size:var(--fz,17px)!important}
-@@ .hp-stars .pz-b.fade{overflow:hidden;-webkit-mask-image:linear-gradient(#000 calc(100% - 2.4em),transparent);mask-image:linear-gradient(#000 calc(100% - 2.4em),transparent)}
 /* the horoscope window: its header (date, sign, medallion, dates) and the areas' tabs stay; only the reading scrolls */
 .cpop.hpz:not(#x):not(#y){overflow:hidden!important}
 .cpop.hpz:not(#x):not(#y)>.cp-in{position:absolute!important;top:0!important;left:0!important;right:0!important;bottom:calc(var(--navh,0px) + 6px)!important;height:auto!important;max-height:none!important;width:auto!important;max-width:var(--appw,480px)!important;margin:0 auto!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;overflow:hidden!important;padding-bottom:0!important}
@@ -1152,3 +1145,42 @@ html body #app .prem-del .yo-del .sx-acts .btn{flex:1 1 0;min-width:0;height:42p
 .cpop.hpz:not(#x):not(#y) .hpz-scr{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:2px;-webkit-mask-image:linear-gradient(transparent,#000 10px,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(transparent,#000 10px,#000 calc(100% - 18px),transparent)}
 .cpop.hpz:not(#x):not(#y) .hpz-scr::-webkit-scrollbar{display:none}
 .cpop.hpz:not(#x):not(#y) .hpz-scr .wpc-acts{margin-bottom:10px}
+
+/* the horoscope window: the areas by name only, evenly spaced, a gold star under the one open; the reading set larger */
+@@ .cpop.hpz:not(#x):not(#y) .hpz-tabs{display:flex!important;justify-content:space-between!important;gap:2px!important;margin:0 -8px 10px!important;padding-bottom:8px!important}
+@@ .cpop.hpz:not(#x):not(#y) .hpz-tab{position:relative;padding:6px 0 12px;gap:0;background:none!important;box-shadow:none!important;border-radius:0;flex:1 1 0!important;min-width:0;justify-content:center;align-items:center;text-align:center;white-space:nowrap;font:600 11.5px 'Cinzel',serif!important;letter-spacing:.03em!important;color:rgba(251,240,210,.62)!important}
+@@ .cpop.hpz:not(#x):not(#y) .hpz-tab.on{color:#F3D790!important}
+@@ .cpop.hpz:not(#x):not(#y) .hpz-tab.on::after{content:'✦';position:absolute;left:50%;bottom:-3px;transform:translateX(-50%);font-size:9px;line-height:1;color:#F6E6B6;text-shadow:0 0 6px rgba(246,214,130,.9)}
+@@ .cpop.hpz:not(#x):not(#y) .hpz-f{font-size:24px!important;margin-bottom:8px!important}
+@@ .cpop.hpz:not(#x):not(#y) .hpz-b p{font-size:18px!important;line-height:1.38!important;margin-bottom:10px!important}
+/* every swipe control in the app as Today's: pale gold dots, the one shown a glowing bar, glowing chevrons */
+.skz-d i:not(#x):not(#y),.wl-dots i:not(#x):not(#y){width:7px;height:7px;border-radius:50%;background:#F6E6B6;opacity:.6;box-shadow:0 0 4px rgba(12,16,36,.9)}
+.skz-d i.on:not(#x):not(#y),.wl-dots i.on:not(#x):not(#y){width:22px;border-radius:4px;opacity:1;background:#F6E6B6;box-shadow:0 0 8px 2px rgba(246,214,130,.85),0 0 3px rgba(12,16,36,.9)}
+/* Sky › For you: what is in the sky today as rows, like Ahead */
+@@ .sky-now{gap:8px}
+
+/* the Sky window: each part its own framed tile, all one size, swiped one after another (a little of the next shows); under
+   them the full page, then the crystal ball (Kassandra) and the feather pen (the Journal), the objects alone */
+.cpop.skz.skb:not(#x):not(#y) .skz-car{flex:0 1 auto;min-height:0;display:flex;flex-direction:column;margin:0}
+.cpop.skz.skb:not(#x):not(#y) .skz-track{flex:0 1 auto;min-height:0;display:flex;gap:40px;padding:10px 0;scroll-padding:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile.cp-box{flex:0 0 100%;scroll-snap-align:center;box-sizing:border-box;margin:0!important;min-height:0!important;display:flex;flex-direction:column;justify-content:center;padding:16px 16px!important;background:rgba(8,12,32,.55)!important;overflow-y:auto;scrollbar-width:none}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile.cp-box::-webkit-scrollbar{display:none}
+.cpop.skz.skb:not(#x):not(#y) .skz-dn{margin:2px 0 0!important}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 2% 2px}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj .skd-m{flex:1;margin:0!important;width:auto!important;height:auto!important;border-radius:0!important;display:flex!important;justify-content:center!important;align-items:center;gap:4px;text-align:center!important}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj button:last-child .skz-o{transform:scale(1.18)}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj button:first-child .skz-o{transform:scale(1.3)}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj button:not(.skd-m){flex:none;padding:0;border:0;background:none;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;display:grid;place-items:center;width:58px;height:58px;border-radius:50%}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj .skz-o{width:54px!important;height:54px!important;object-fit:contain;filter:drop-shadow(0 0 8px rgba(246,214,130,.45));transition:transform .2s}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj button:active .skz-o{transform:scale(.92)}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj button:focus-visible{outline:1px solid #F3D790;outline-offset:2px}
+@media (max-height:760px){
+ .cpop.skz.skb:not(#x):not(#y) .skz-track{padding-top:8px;padding-bottom:8px}
+ .cpop.skz.skb:not(#x):not(#y) .skz-tile.cp-box{padding:12px 14px!important}
+ .cpop.skz.skb:not(#x):not(#y) .skz-obj{margin:4px 0 2px}
+ .cpop.skz.skb:not(#x):not(#y) .skz-obj button:not(.skd-m){width:50px;height:50px}
+ .cpop.skz.skb:not(#x):not(#y) .skz-obj .skz-o{width:46px!important;height:46px!important}
+}
+
+/* Oracle's place in the menu: the crystal ball on its gold base */
+#nav .in [data-nav=tarot]:not(#x){--ico:url(/art/atlas/nvm-oracle.webp)!important}
