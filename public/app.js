@@ -1243,6 +1243,15 @@ const door=(at,label,inner)=>`<button class="sk-d" ${at}>${inner}<span>${label}<
 const doorArt=(at,label,img)=>door(at,label,`<i class="sk-di">${ui(img,'')}</i>`);
 const DI={profile:'<circle cx="16" cy="12" r="5"/><path d="M6 27c1-6 5-9 10-9s9 3 10 9"/>',birth:'<path d="M16 4v6M16 22v6M4 16h6M22 16h6"/><circle cx="16" cy="16" r="4"/>',bell:'<path d="M8 23h16l-2-3v-6a6 6 0 0 0-12 0v6zM13 26a3 3 0 0 0 6 0"/>',lock:'<rect x="8" y="14" width="16" height="12" rx="2"/><path d="M11 14v-3a5 5 0 0 1 10 0v3"/>',star:'<path d="M16 5l3 8 8 .6-6.2 5.2 2 8.2L16 22.6 9.2 27l2-8.2L5 13.6 13 13z"/>',book:'<path d="M6 7h6v18H6zM13 5h6v20h-6zM21 9l5 1.4-4 15.2-5-1.4z"/>',cal:'<rect x="6" y="8" width="20" height="18" rx="2"/><path d="M6 14h20M11 5v6M21 5v6"/>',list:'<path d="M9 9h16M9 16h16M9 23h16M5 9h.1M5 16h.1M5 23h.1"/>',pen:'<path d="M8 25l1-5L22 7l4 4L13 24zM19 10l4 4"/>',two:'<circle cx="12" cy="13" r="5"/><circle cx="21" cy="13" r="5"/><path d="M6 26c1-4 4-6 6-6M26 26c-1-4-4-6-6-6"/>'};
 const PGC={sky:[['hor','For you'],['ahead','Ahead'],['lib','Library']],jn:[['tonight','Write'],['pages','Pages'],['ins','Patterns']],or:[['kas','Kassandra'],['cards','Cards'],['dreams','Dreams']],you:[['codex','Your sky'],['circle','Your circle'],['details','Account']]};
+// a place opened from the menu always opens on its first page (Sky on For you, Oracle on Kassandra, Journal on Write,
+// You on Your sky), never where the reader last left it; Today instead opens on the step not yet seen or done
+function navFresh(nav){
+ const g={horoscope:'sky',tarot:'or',journal:'jn',you:'you'}[nav];if(!g)return;
+ if(S.pgc&&S.pgc[g]){delete S.pgc[g];save()}
+ V.pdir=0;
+ if(g==='sky'){V.skd=null;V.exploreSign=null;V.hcat='overview';V.period='daily';V.spk=false}
+ if(g==='or'&&V.tarot&&V.tarot.stage!=='setup')newReading();
+}
 const pgCur=g=>{const c=(S.pgc||{})[g],l=PGC[g];return l.some(x=>x[0]===c)?c:l[0][0]};
 const pgStrip=g=>`<div class="seg pg-strip" role="tablist" aria-label="Sections">${PGC[g].map(([k,l])=>`<button role="tab" aria-selected="${k===pgCur(g)}" data-act="pgcat" data-g="${g}" data-k="${k}">${l}</button>`).join('')}</div>`;
 const pgDir=()=>{const d=V.pdir||0;V.pdir=0;return d?` sl${d>0?'r':'l'}`:''};
@@ -2978,6 +2987,7 @@ document.addEventListener('click',e=>{
  if(!t)return;
  haptic(HAP_DONE.includes(t.dataset.act)?'done':'tap');
  if(t.dataset.go)return go(t.dataset.go,t.dataset.t||null);
+ if(t.dataset.nav)navFresh(t.dataset.nav);
  if(t.dataset.nav==='journal')return go('tarot','journal');
  if(t.dataset.nav)return go(t.dataset.nav);
  if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;render();
