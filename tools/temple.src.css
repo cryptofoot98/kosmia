@@ -1279,3 +1279,21 @@ body.reduce .obj-speak.on .obj-i{animation:none!important}
  @@ .sx .hc-s.on .hc-m:not(#x):not(#y){width:36px!important;height:36px!important}
  @@ .sx .sx-acts.obj-bar:not(#x){margin-top:2px!important}
 }
+
+/* Sky: its cards more see-through, the night showing through */
+@@ .sky-t .sky-c:not(#x)::before{background:rgba(14,18,38,.4)!important}
+@@ .sky-list .sky-c:not(#x):not(#y){background:rgba(14,18,38,.4)!important}
+/* Sky > Ahead: the Cosmic Calendar beneath the list */
+@@ .sky-list+.sky-cal:not(#x){margin-top:6px!important;align-self:center}
+/* Sky > Library: the four doors two by two, each its picture over its name */
+@@ .sky-list.lib-grid:not(#x):not(#y){display:grid!important;grid-template-columns:1fr 1fr;gap:12px!important}
+@@ .lib-grid .sky-c:not(#x):not(#y){flex-direction:column!important;align-items:center!important;justify-content:center;text-align:center;gap:8px!important;padding:16px 10px 14px!important;min-height:0;height:auto}
+@@ .lib-grid .sky-c:not(#x):not(#y) .sky-i,@@ .lib-grid .sky-c:not(#x):not(#y)>img{width:64px!important;height:64px!important}
+@@ .lib-grid .sky-c:not(#x):not(#y) .sky-x{align-items:center;flex:none}
+@@ .lib-grid .sky-c:not(#x):not(#y) .sky-x strong{text-align:center}
+@@ .lib-grid .sky-c:not(#x):not(#y) .jn-x{text-align:center;font-size:14.5px!important;line-height:1.2!important}
+@@ .lib-grid .sky-c:not(#x):not(#y) .sky-go{display:none!important}
+/* Sky's pages never scroll, so the painting's foot is not laid over them: their last line keeps its full light */
+body.tp[data-scene=sky] #t-front .tf-veil{display:none!important}
+@@ .lib-grid .sky-c:not(#x):not(#y) .jn-x{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:block!important;-webkit-line-clamp:unset!important}
+@@ .lib-grid .sky-c:not(#x):not(#y) .sky-x{max-width:100%;overflow:visible!important}
