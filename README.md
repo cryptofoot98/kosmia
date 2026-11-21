@@ -45,7 +45,7 @@ netlify.toml              publish dir, SPA fallback, headers
 Anthropic, OpenAI and ElevenLabs keys stay on the server. Never put them in `config.js`.
 
 - **Writing**: every generated text (horoscopes, the daily message, dreams, tarot readings, Kassandra) is written by
-  Claude through `lib/claude.mjs` (`ANTHROPIC_API_KEY`, model `claude-opus-5-5`, override with `ANTHROPIC_TEXT_MODEL`).
+  Claude through `lib/claude.mjs` (`ANTHROPIC_API_KEY`, model `claude-sonnet-5-5`, override with `ANTHROPIC_TEXT_MODEL`).
   If Claude cannot answer, the same request goes to OpenAI's text model. OpenAI is otherwise used only for images and voice.
 
 - **Crafted art**: run `node scripts/craft-images.mjs` locally. It reads `OPENAI_API_KEY` from `.env`
