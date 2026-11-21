@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 612 |
-| In use, provisional | 568 |
+| Images | 614 |
+| In use, provisional | 570 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -300,8 +300,10 @@ their space before they load.
 
 | Asset | Size | Ratio | Alpha | KB | Status | Notes |
 |---|---|---|---|---|---|---|
+| `public/art/atlas/ev-eclipse-r.webp` | 560×560 | 1:1 | no | 88 | provisional |  |
 | `public/art/atlas/ev-eclipse.webp` | 720×480 | 3:2 | no | 120 | provisional |  |
 | `public/art/atlas/ev-full.webp` | 720×480 | 3:2 | no | 118 | provisional |  |
+| `public/art/atlas/ev-meteor-r.webp` | 560×560 | 1:1 | no | 73 | provisional |  |
 | `public/art/atlas/ev-meteor.webp` | 720×480 | 3:2 | no | 118 | provisional |  |
 | `public/art/atlas/ev-new.webp` | 720×480 | 3:2 | no | 99 | provisional |  |
 | `public/art/atlas/ev-planet.webp` | 720×480 | 3:2 | no | 124 | provisional |  |

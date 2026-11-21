@@ -435,6 +435,13 @@ const evKeys=e=>e.k==='ingress'?`${SIGN_KEYS[sIdx(e.sign).id][2]} • ${SIGN_KEY
 function evArt(e,round){
  const ph=e.type==='moon'?phaseSlug(e.name):'';
  if(round&&ph)return pic('moons',ph,'ev-r');
+ // in a circle: the planet's own painting (the same as on the Planets pages), the Sun's for the seasons and the Sun's
+ // signs, and frameless crops of the eclipse and meteor plates
+ if(round){const pn=(String(e.name).match(/Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto/)||[])[0]||(e.planet!=='Sun'&&e.planet!=='Moon'&&e.planet)||'';
+  if(/eclipse/.test(e.k))return ui('ev-eclipse-r','ev-r');
+  if(e.type==='meteor')return ui('ev-meteor-r','ev-r');
+  if(pn)return ui('pl-'+pn.toLowerCase(),'ev-r');
+  if(e.type==='season'||e.planet==='Sun')return ui('pl-sun','ev-r')}
  const id=/eclipse/.test(e.k)?'ev-eclipse':ph==='full-moon'?'ev-full':ph==='new-moon'?'ev-new':ph?'ev-quarter':e.type==='season'||(e.k==='ingress'&&e.planet==='Sun')?'ev-sun':e.type==='meteor'?'ev-meteor':'ev-planet';
  return ui(id,round?'ev-r':'ev-img');
 }
@@ -1134,31 +1141,35 @@ const REL_FEEL={same:'You feel this one first, and most directly.',mirror:'It re
 const REL_S={same:'This one is yours',mirror:'It comes through someone close',ease:'It moves with you',friction:'It asks something of you',quiet:'It works quietly for you'};
 const skyRel=si=>{const me=SIGNS.indexOf(sg(S.sign)),d=((si-me)%12+12)%12;return {rel:d===0?'same':d===6?'mirror':[2,4,8,10].includes(d)?'ease':[3,9].includes(d)?'friction':'quiet',area:HOUSE[d]}};
 const areaShort=a=>a.split(',')[0].split(' and ')[0];
+// an optional ritual for each thing in the sky, beside the Moon's own (RITUAL)
+const RX_RITE={Mercury:'Light a candle and reread something you wrote a while ago: a letter, a journal page, an old message. Notice what you would say differently now.',Venus:'Take out a photograph of someone you have loved and write them a few lines you never have to send.',Mars:'Before you act on urgency or anger, sit still for five slow breaths and let the fire settle into strength.',Jupiter:'Write down one belief you hold about luck or meaning, and ask whether it still fits the person you are becoming.',Saturn:'Clear one small corner of your home and choose one simple promise to keep for the month ahead.',Uranus:'Change one small habit for a day: a different route, a different chair, a different morning.',Neptune:'Before sleep, set a glass of water by your bed and ask your dreams one gentle question.',Pluto:'Write what you are ready to release on a slip of paper, then tear it up and let it go.'};
+const EV_RITE={lunar_eclipse:'At dusk, write one habit or fear you are ready to outgrow, fold the paper away, and open it again at the next New Moon.',solar_eclipse:'Sit in silence for a few minutes at the hour of the eclipse and write, in one line, the chapter you wish to begin.',equinox:'Light two candles, one for what you are grateful for and one for what you hope for, and let them burn side by side for a while.',solstice:'At nightfall, light a single candle and sit with it for a few minutes, honouring the turning of the light.',conjunction:'Write down two parts of your life that could meet and help each other, and one small way to bring them together.',opposition:'Draw a line down a page: what you give on one side, what you need on the other. Look for the balance between them.',meteor:'Go outside after dark, find the darkest sky you can, and make one quiet wish for each shooting star you see.'};
+const SUN_RITE={Fire:'At sunrise or sunset, light a candle and name one thing you want to bring alive this month.',Earth:'Stand barefoot on grass or soil for a few minutes, or hold a stone in your hand, and name what you want to build this month.',Air:'Open a window, breathe slowly for a minute, and write down one idea you want to follow this month.',Water:'Wash your hands slowly in warm water and let it carry away one thing you no longer need this month.'};
 function skyItems(){
  const now=new Date(),m=K.moon(now),dm=d=>ymdLong(dkey(d),{day:'numeric',month:'long'}),up=upcoming().filter(e=>e.date>now),out=[];
  {const r=skyRel(m.sign),sn=sIdx(m.sign).name;
   out.push({id:'moon',date:now,img:moonPic(m,'sky-i'),title:`Moon in ${sn}`,when:`Today · ${m.name}`,line:`${cap(REL_IN[r.rel])}. Today your feelings turn towards ${areaShort(r.area)}.`,
    fact:`Tonight the Moon is a ${m.name} in ${sn}. ${MOON_LINE[m.name]||''}`,
    you:`The Moon is ${REL_IN[r.rel]}. ${REL_FEEL[r.rel]} It lights ${r.area}, so that is where your feelings gather today.`,
-   act:RITUAL[m.name]||'Give yourself ten quiet minutes tonight.',q:'What am I feeling today that I have not yet said aloud?',more:'moon',moreL:'The Moon’s full page'})}
+   act:`Give ${areaShort(r.area)} ten quiet minutes today: notice what you feel there, without trying to fix it.`,rit:RITUAL[m.name]||'Give yourself ten quiet minutes tonight.',q:'What am I feeling today that I have not yet said aloud?',more:'moon',moreL:'The Moon’s full page'})}
  const rxs=K.retrogrades(now,new Date(+now+120*DAY)),rx=rxs.find(w=>w.start&&w.start<=now&&(!w.end||w.end>=now))||rxs.find(w=>w.start&&w.start>now);
  if(rx){const on=rx.start<=now,P=rx.planet,mine=RULER[S.sign]===P,r=skyRel(K.signIdx(K.lon(P,on?now:rx.start)));
   out.push({id:'rx',date:on?now:rx.start,soon:on,img:ui('pl-'+P.toLowerCase(),'sky-i'),title:`${P} retrograde`,when:on?`Now, until ${rx.end?dm(rx.end):'next year'}`:`From ${dm(rx.start)}${rx.end?' to '+dm(rx.end):''}`,
    line:`${mine?P+' is your ruling planet, so you feel this more than most.':'A time to review '+PM[P]+'.'} It touches ${areaShort(r.area)}.`,
    fact:`${P} appears to stop and move backwards against the stars. It is an effect of Earth’s own orbit; the planet never truly reverses.`,
    you:`${mine?`${P} is the ruling planet of ${sg(S.sign).name}, so you feel this more than most. `:''}Traditionally a time to review ${PM[P]}: to revisit and revise rather than launch. ${P} is ${REL_IN[r.rel]}, touching ${r.area}. ${REL_FEEL[r.rel]}`,
-   act:'Finish or revisit one thing you left half-done before you begin anything new.',q:'What deserves a second look?',more:'planets',moreL:'Where the planets are now'})}
+   act:'Finish or revisit one thing you left half-done before you begin anything new.',rit:RX_RITE[P],q:'What deserves a second look?',more:'planets',moreL:'Where the planets are now'})}
  up.filter(e=>['moon','eclipse','conjunction','season','meteor','planet'].includes(e.type)&&!/elongation/i.test(e.name)).slice(0,5).forEach(e=>{const i=evInfo(e),r=e.sign!=null?skyRel(e.sign):null,sn=e.sign!=null?sIdx(e.sign).name:'';
   const pn=(e.name.match(/Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto/)||[])[0];
   out.push({id:'ev:'+evRef(e),date:e.date,ev:true,sig:!!r,img:pn?ui('pl-'+pn.toLowerCase(),'sky-i'):e.type==='season'?ui('pl-sun','sky-i'):evArt(e,true).replace('ev-r','sky-i'),title:esc(e.name)+(sn&&e.type==='moon'?` in ${sn}`:''),when:dm(e.date),
    line:r?`${REL_S[r.rel]}: ${areaShort(r.area)}.`:'A night to step outside and look up.',
    fact:i.fact,you:r?`${i.sym} For you it falls ${REL_IN[r.rel]}, lighting ${r.area}. ${REL_FEEL[r.rel]}`:`${i.sym} There is no sign to read here, only something beautiful to see.`,
-   act:RITUAL[e.name]||(r?`Mark the date, and give ${areaShort(r.area)} ten quiet minutes that day.`:'Mark the date, step outside and look up.'),q:i.ref||'What would I like to notice that day?',more:'events',moreL:'All events'})});
+   act:r?`Mark the date, and give ${areaShort(r.area)} ten quiet minutes that day.`:'Mark the date, step outside and look up.',rit:RITUAL[e.name]||EV_RITE[e.k]||EV_RITE[e.type]||'Step outside that night, look up for one whole minute, and breathe.',q:i.ref||'What would I like to notice that day?',more:'events',moreL:'All events'})});
  {const si=K.signIdx(K.positions(now)[0].lon),sun=sIdx(si),r=skyRel(si);
   out.push({id:'sun',date:now,season:true,img:ui('pl-sun','sky-i'),title:`Sun in ${sun.name}`,when:`${sun.name} season`,line:`${cap(REL_IN[r.rel])}. This month’s light falls on ${areaShort(r.area)}.`,
    fact:`The Sun is moving through ${sun.name}, as it does at this time every year. Each season lasts about a month.`,
    you:`${sun.name} season colours everyone’s days: ${SIGN_KEYS[sun.id].join(', ').toLowerCase()}. The Sun is ${REL_IN[r.rel]}, so for about a month it lights ${r.area}. ${REL_FEEL[r.rel]}`,
-   act:`Choose one small thing to tend this month in ${areaShort(r.area)}.`,q:`What is asking for my attention in ${areaShort(r.area)}?`,more:'planets',moreL:'Where the planets are now'})}
+   act:`Choose one small thing to tend this month in ${areaShort(r.area)}.`,rit:SUN_RITE[sun.el],q:`What is asking for my attention in ${areaShort(r.area)}?`,more:'planets',moreL:'Where the planets are now'})}
  return out;
 }
 // For you: what matters most today, at most three; Ahead: what is coming, in order
@@ -1167,6 +1178,18 @@ const skyAhead=()=>skyItems().filter(x=>x.ev||(x.id==='rx'&&!x.soon)).sort((a,b)
 const skyRow=x=>`<button class="sky-c" data-act="skd" data-id="${esc(x.id)}">${x.img}<span class="sky-x"><strong>${x.title}</strong><em>${x.when}</em><span>${x.line}</span></span><span class="sky-go">${IC.chev}</span></button>`;
 // the tiles as a carousel: one large tile at a time, turning by itself, swiped by hand
 const skyCar=l=>`<div class="sky-l"><div class="en-track sky-t" aria-roledescription="carousel">${l.map(skyRow).join('')}</div><nav class="hp-dots sky-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skymove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="en-dots sky-d" aria-hidden="true">${l.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skymove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>`;
+function skyPop(x){
+ const tiles=[['What is happening',x.fact],['What it means for you',x.you],['One thing to do',x.act],['An optional ritual',x.rit]].filter(t=>t[1]);
+ return `<div class="cpop wpz skz" role="dialog" aria-modal="true" aria-label="${x.title}" data-act="skdx"><button class="cp-x" data-act="skdx" aria-label="Close">×</button><div class="cp-in">
+ <p class="cp-k">${x.when}</p><h2 class="cp-t">${x.title}</h2><div class="skz-art">${x.img}</div>
+ <div class="cp-box"><div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map(([h,t],i)=>`<section class="skz-tile${i===1?' you':''}" aria-label="${h}, ${i+1} of ${tiles.length}"><h3>${h}</h3><p>${esc(t)}</p></section>`).join('')}</div>
+  <nav class="hp-dots skz-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skzmove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="skz-d" aria-hidden="true">${tiles.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skzmove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>
+ <div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(x.q)}</p>
+ <div class="wpc-acts"><button class="btn" data-act="kasask" data-q="${esc(x.q)}">${IC.chat}Ask Kassandra</button><button class="ibtn" data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it">${IC.quill}</button></div>
+ <button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button></div></div></div>`}
+// the window's tiles: the dots follow the swipe
+function skzCar(){const t=$('.skz-track');if(!t||t._on)return;t._on=1;const dots=[...document.querySelectorAll('.skz-d i')];
+ t.addEventListener('scroll',()=>requestAnimationFrame(()=>{const i=Math.round(t.scrollLeft/Math.max(1,t.clientWidth));dots.forEach((d,j)=>d.classList.toggle('on',j===i))}),{passive:true})}
 function skyDetail(x){
  return `<div class="land hland hnight skyp pg pg-sky skd"><div class="skd-bar">${iconBtn('back','data-act="skdx"','Back')}</div>
  <header class="skd-h">${x.img}<div><h1 class="pg-t">${x.title}</h1><p class="pg-s">${x.when}</p></div></header>
@@ -1179,7 +1202,7 @@ function skyDetail(x){
 views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
- if(V.skd){const x=skyItems().find(i=>i.id===V.skd);if(x)return skyDetail(x);V.skd=null}
+ const skx=V.skd&&skyItems().find(i=>i.id===V.skd);if(V.skd&&!skx)V.skd=null;
  const sign=sg(S.sign),nm=firstName(),pl=PLABEL[V.period],pw=PWORD[V.period];
  const ov=horoscope(S.sign,'overview',V.period),first=(String(ov.body||'').match(/^[^.!?]*[.!?]/)||[''])[0].trim();
  const read=V.period==='daily'&&S.readDay===dkey();
@@ -1192,7 +1215,7 @@ views.horoscope=()=>{
  else pg=`<p class="pg-in">The old knowledge, open to you</p><div class="sky-l sky-list or-list jn-list yo-list"><button class="sky-c" data-act="libgo" data-tab="guides">${ui('ic-book','sky-i')}<span class="sky-x"><strong>Guides</strong><span class="jn-x">Where to begin, in plain words</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="signs">${ui('m-'+S.sign,'sky-i')}<span class="sky-x"><strong>The twelve signs</strong><span class="jn-x">Yours, and everyone you love</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="planets">${pic('cats','planets','sky-i')}<span class="sky-x"><strong>The planets</strong><span class="jn-x">What each one speaks of</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="houses">${pic('cats','houses','sky-i')}<span class="sky-x"><strong>The houses</strong><span class="jn-x">Twelve areas of a life</span></span><span class="sky-go">${IC.chev}</span></button></div>`;
  return `<div class="land hland hnight skyp pg pg-sky"><header class="hl-top stay sk-head"><h1 class="pg-t">${nm?esc(nm)+'’s sky':'Your sky'}</h1><p class="pg-s">What the stars say, now</p>${pgStrip('sky')}</header>
  <div class="sk-body"><div class="pg-page${pgDir()}">${pg}</div></div></div>
- ${V.spk?signPick(S.sign):''}`;
+ ${V.spk?signPick(S.sign):''}${skx?skyPop(skx):''}`;
 };
 function horoSign(){
  const ex=V.exploreSign||S.sign,s=sg(ex),cat=V.hcat,h=horoscope(ex,cat,V.period);markRead({k:'horo',sign:ex,cat,period:V.period,from:{sec:'horoscope',t:'sign'}});
@@ -2665,7 +2688,7 @@ function settingsPage(t){
 const onboarding=()=>['welcome','join','reset'].includes(V.sec);
 // a redraw of the same screen (the Whisper revealed, a card opened, an answer arriving) keeps the reader where they
 // were: on the page, and in any pop-up or carousel on it (swapping the page in would otherwise scroll it to the top)
-const SCROLLS='.pop-box,.cpop,.en-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl,.hc-read';
+const SCROLLS='.pop-box,.cpop,.en-track,.skz-track,.hscroll,.sg-car,.fscroll,.kp-pr,.tbl,.hc-read';
 const scrollsOf=r=>[...r.querySelectorAll(SCROLLS)].map(e=>[e.className,e.scrollLeft,e.scrollTop]);
 const screenOf=r=>{const h=r.querySelector('h1');return [V.sec,tab(),V.sec==='tarot'?V.tarot.stage:'',h?h.textContent.trim():''].join('/')};
 // the painted scene behind the place: Today's follows the hour (dawn by day, the lake in the evening, the candle at night's end)
@@ -2719,7 +2742,7 @@ function render(){
  // what scrolls under the menu disappears into the art instead of showing through
  {const pg=app.firstElementChild,nav=$('#nav');if(pg&&nav){const one=pg.matches('.land.hnight,.land.dnight,.jnight'),f=one?'url(/art/atlas/home-sun.webp) 50% 0/var(--bw) var(--bh) no-repeat':pg.matches('.home.hbay')?`url(/art/atlas/${pg.matches('.hsun')?'home-sun-today':pg.matches('.hmoon')?'home-moon':pg.matches('.hdawn')?'home-dawn':'home-bay'}.webp) 50% 0/var(--bw) var(--bh) no-repeat`:(getComputedStyle(pg).getPropertyValue('--fbg').trim());
   nav.style.setProperty('--navbg',f&&f!=='none'?(one||pg.matches('.home.hbay')?f:pg.matches('.hframe')?f+' 50% 0/100% auto no-repeat':f+' 50% 100%/100% auto no-repeat')+(one||pg.matches('.home.hbay')?',#030D1A':',#0B0F1E'):'none')}}
- jxRender();enCar();hcar();hswipe();skswipe();subFix();tileUp();stayHeads();stayFade();footFit();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
+ jxRender();enCar();skzCar();hcar();hswipe();skswipe();subFix();tileUp();stayHeads();stayFade();footFit();document.querySelectorAll('.jpage .jp-front').forEach(jlay);if(keep!=null&&scrollY!==keep)window.scrollTo(0,keep);
  if(V.jfresh){V.jfresh=false;requestAnimationFrame(()=>{const b=$('#app .jbook');if(b)window.scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-8))})}
  document.querySelectorAll('textarea.je').forEach(grow);
  $('#nav').hidden=!authed||EMB;document.body.classList.toggle('has-nav',authed&&!EMB);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
@@ -3037,8 +3060,9 @@ document.addEventListener('click',e=>{
  if(a==='wlnext'){V.wl=(V.wl||0)+1;if(V.wl>=3){S.welcomed=true;V.wl=0;save()}return render()}
  if(a==='wlskip'){S.welcomed=true;V.wl=0;save();return render()}
  if(a==='skymove'){const T=$('.sky-t');if(!T)return;const n=T.children.length,i=Math.round(T.scrollLeft/Math.max(1,T.clientWidth));return T.scrollTo({left:((i+ +t.dataset.d+n)%n)*T.clientWidth,behavior:'smooth'})}
- if(a==='skd'){V.skd=t.dataset.id;render();return window.scrollTo(0,0)}
- if(a==='skdx'){V.skd=null;return render()}
+ if(a==='skd'){V.skd=t.dataset.id;return render()}
+ if(a==='skdx'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.skd=null;return render()}
+ if(a==='skzmove'){const T=$('.skz-track');if(!T)return;const n=T.children.length,i=Math.round(T.scrollLeft/Math.max(1,T.clientWidth));return T.scrollTo({left:Math.min(n-1,Math.max(0,i+ +t.dataset.d))*T.clientWidth,behavior:'smooth'})}
  if(a==='skdwrite'){const j={id:uuid(),day:dkey(),kind:'reflection',title:t.dataset.t,body:'',at:new Date().toISOString()};S.journal.push(j);save();V.skd=null;openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='pgcat'){const g=t.dataset.g,l=PGC[g].map(x=>x[0]),f=l.indexOf(pgCur(g)),n=l.indexOf(t.dataset.k);if(n<0||n===f)return;V.pdir=n>f?1:-1;S.pgc=S.pgc||{};S.pgc[g]=t.dataset.k;save();return render()}
  if(a==='jsub'){V.jsub=t.dataset.k||null;if(!V.jsub)V.jsearch=null;return render()}
