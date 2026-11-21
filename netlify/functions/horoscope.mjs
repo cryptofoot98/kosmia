@@ -11,6 +11,21 @@ globalThis.Astronomy = createRequire(import.meta.url)('astronomy-engine');
 const K = globalThis.KosmiaSky;
 
 const SIGNS = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
+// each sign's traditional nature, so every forecast is unmistakably that sign's
+const NATURE = {
+  aries: 'cardinal fire ruled by Mars: courageous, direct, pioneering, impatient, alive in beginnings',
+  taurus: 'fixed earth ruled by Venus: steady, sensual, loyal, patient, slow to change, at home in beauty and comfort',
+  gemini: 'mutable air ruled by Mercury: curious, quick, sociable, many-sided, restless, alive in words and ideas',
+  cancer: 'cardinal water ruled by the Moon: tender, protective, intuitive, rooted in home, memory and family',
+  leo: 'fixed fire ruled by the Sun: warm, generous, proud, creative, playful, wanting to shine and to be seen',
+  virgo: 'mutable earth ruled by Mercury: careful, devoted, practical, discerning, prone to worry, healing through service and craft',
+  libra: 'cardinal air ruled by Venus: graceful, fair, diplomatic, seeking harmony and partnership, sometimes indecisive',
+  scorpio: 'fixed water ruled by Pluto and Mars: deep, intense, private, loyal, transformative, unafraid of the truth',
+  sagittarius: 'mutable fire ruled by Jupiter: free, hopeful, adventurous, honest, searching for meaning and horizons',
+  capricorn: 'cardinal earth ruled by Saturn: ambitious, patient, responsible, quietly humorous, building for the long term',
+  aquarius: 'fixed air ruled by Saturn and Uranus: original, independent, humane, visionary, at once detached and devoted to others',
+  pisces: 'mutable water ruled by Jupiter and Neptune: dreamy, compassionate, intuitive, artistic, porous to the feelings of others'
+};
 const CATS = {
   overview: 'the overall tone of the period across life as a whole',
   love: 'love and close relationships: partners, dating, intimacy, friendship and self-love',
@@ -45,7 +60,7 @@ export default async req => {
       effort: 'medium',
       schema: obj({ body: str, focus: str, reflection: str }),
       system: 'You write the horoscopes for Kosmia, a vintage, contemplative astrology app whose line is "What if the cosmos is listening?". British English, second person, warm and literate, philosophical and specific rather than generic. Ground the reading in the real sky you are given (name a transit or two and what it traditionally signifies for this sign), always positive and constructive (a challenging transit is an invitation to grow, with one small practical step), but frame astrology as symbolism for reflection: no certainties, no guarantees, no fear, no medical, legal or financial advice, no houses, axes or rising-sign claims (you only know the reader’s Sun sign), dates written in words, no emoji, no clichés such as "the stars align". Reply with JSON only: {"body": "the reading", "focus": "a two-to-four word theme", "reflection": "one reflective question"}.',
-      messages: [{ role: 'user', content: `Sign: ${name}\nArea of life: ${CATS[cat]}\nPeriod: ${period}, ${span.start} to ${span.end}\nLength: ${LENGTH[period]}\nThe sky (geocentric, tropical zodiac):\n${sky}` }]
+      messages: [{ role: 'user', content: `Sign: ${name}, ${NATURE[sign]}. Let the reading speak to this nature, so a ${name} recognises themselves in it and it could not belong to another sign.\nArea of life: ${CATS[cat]}\nPeriod: ${period}, ${span.start} to ${span.end}\nLength: ${LENGTH[period]}\nThe sky (geocentric, tropical zodiac):\n${sky}` }]
     });
   } catch (e) {
     console.error(e.message);

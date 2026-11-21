@@ -24,7 +24,7 @@ const sg=id=>SIGNS.find(s=>s.id===id)||SIGNS[0];
 const sIdx=i=>SIGNS[((i%12)+12)%12];
 
 /* the whispers (daily cards) live in whispers.js, shared with the server */
-const ORACLE=(window.KOSMIA_WHISPERS||[]).map(a=>({id:a[0],title:a[1],sym:a[2],msg:a[3],ref:a[4]}));
+const ORACLE=(window.KOSMIA_WHISPERS||[]).map(a=>({id:a[0],title:a[1],sym:a[2],msg:a[3],ref:a[4],art:a[6]||a[0]}));   // art: the painting it shares
 const oc=id=>ORACLE.find(c=>c.id===id);
 const THOUGHTS=['You cannot command the stars, but you can choose how you navigate beneath them.','Even the night sky is mostly space. Leave room in your day.','What you pay attention to becomes the shape of your life.','Be curious about your feelings before you judge them.','Small, kind choices repeated are their own kind of constellation.','The present moment is the only place a new beginning can start.','You are allowed to grow quietly.'];
 
@@ -817,7 +817,7 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
  const saved=S.saved.some(x=>x.date===k);
  return `<div class="cpop wpz" role="dialog" aria-modal="true" aria-label="${esc(c.title)}" data-act="wpopclose"><button class="cp-x" data-act="wpopclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Daily Whisper · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${esc(c.title)}</h2>
- <div class="cp-card"><div class="scene flat" role="img" aria-label="${esc(c.title)}"><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+ <div class="cp-card"><div class="scene flat" role="img" aria-label="${esc(c.title)}"><div class="face front">${Kit.tarot({art:'whispers/'+c.art,num:wNum(c),name:c.title})}</div></div></div>
  <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>
  ${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
  <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div></div>
@@ -941,17 +941,18 @@ views.home=()=>{
   <div class="pz-b">${esc(d.body)}${sk&&!d.ai&&!d.care?' '+esc(sk[1]):''}</div>${(()=>{const th=myThread(),ch=chapterAt(),w=chWish(ch);
    if(w&&ch.fullKey&&Math.abs(dayGap(ch.fullKey,k))<=1)return `<p class="cp-you hp-you"><span>At the New Moon you wished</span>“${esc(clip(w.body,150))}” The Moon is full now. What has grown?</p>`;
    return th?`<p class="cp-you hp-you"><span>${th.label}</span>“${esc(clip(th.text,90))}” ${th.ask}</p>`:''})()}</div>`,'hp-wfy')}
- else if(st==='carry'){const eve=evening(),day=(S.carry||{})[k],ngt=eve&&!day?(S.ncarry||{})[k]:'',mine=day||ngt,sk=mySeek(),sn=NSEEK[(S.settings||{}).seek],up=x=>x?x[0].toUpperCase()+x.slice(1):x,
-   opts=[...new Set((eve?[...(sn||[]),rev?`Take “${c.title}” with you into your dreams`:'','Name one good thing today gave you','Let the night be quiet; the day can wait']
-    :[up(d.step),...(sk?sk[2]:[]),rev?`Keep “${c.title}” close, and watch where it appears`:'','Do one thing slowly, on purpose','Notice one thing that is going well']).filter(Boolean))].slice(0,3);
+ else if(st==='carry'){const eve=evening(),day=(S.carry||{})[k],ngt=eve&&!day?(S.ncarry||{})[k]:'',mine=day||ngt,sk=mySeek(),sn=NSEEK[(S.settings||{}).seek],up=x=>x?x[0].toUpperCase()+x.slice(1):x,ai=(S.daily||{})[k]||{},
+   mineAi=(eve?((ai.eve&&ai.eve.ncarry&&ai.eve.ncarry.length?ai.eve.ncarry:ai.ncarry)||[]):(ai.carry||[])).map(up),   // written for them today
+   opts=[...new Set((eve?[...mineAi,...(sn||[]),rev?`Take “${c.title}” with you into your dreams`:'','Name one good thing today gave you','Let the night be quiet; the day can wait']
+    :[...mineAi,up(d.step),...(sk?sk[2]:[]),rev?`Keep “${c.title}” close, and watch where it appears`:'','Do one thing slowly, on purpose','Notice one thing that is going well']).filter(Boolean))].slice(0,3);
   stage=card('Carry It With You',`<div class="hp-in"><p class="hp-big">${ngt?'Tonight you carry':day?(eve?'Today you carried':'Today you carry'):eve?'One thing to carry through the night':'One thing to carry through today'}</p>${mine?`<p class="pz-q">“${esc(mine)}”</p><p class="hp-sub">${ngt?'Let it go with you into sleep.':eve?'The evening has come to ask how it went.':'Tonight I will ask you how it went.'}</p>${day&&eve?'':`<button class="jp-new" data-act="hcarryx">Choose another ${IC.chev}</button>`}`
    :`<p class="hp-sub">Choose one, or write your own.</p><div class="hp-carry">${opts.map(x=>`<button class="hp-chip" data-act="hcarry" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div>
    <div class="hp-own"><input type="text" id="hpcarry" maxlength="90" placeholder="Or in your own words" aria-label="Your own intention"><button class="btn" data-act="hcarry">Carry it</button></div>`}</div>`,'hp-carryp')}
- else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row${rev?'':' dw-wait'}"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title})}</div></div></div>
+ else if(st==='whisper')stage=card('Your Daily Whisper',`<div class="dw dw-row${rev?'':' dw-wait'}"><div class="scene mini-w ${rev?'flipped':''}" data-act="${rev?'wpop':'reveal'}" role="button" tabindex="0" aria-label="${rev?esc(c.title)+'. Enlarge the card':'Today’s whisper, face down. Press to reveal.'}"><div class="card3d"><div class="face back"></div><div class="face front">${Kit.tarot({art:'whispers/'+c.art,num:wNum(c),name:c.title})}</div></div></div>
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">One card already knows your day</h3><p class="dw-msg">It was drawn before you woke. Take one slow breath, then touch it.</p>'}</div></div>
    ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}`,'hp-whisper');
- else if(st==='reflect'){const eve=evening();stage=card(eve?'Reflect on Your Day':'Reflect',`<div class="hp-in"><p class="hp-sub hp-wq">${(S.carry||{})[k]?`This morning you chose to carry: “${esc((S.carry||{})[k])}”. How did it go?`:eve?'The day is almost done. How was it?':rev?`Your Whisper was “${esc(c.title)}”.`:'A question for your day.'}</p><p class="pz-q">“${esc(rev?c.ref:eve?'What stayed with you from today?':d.question)}”</p><textarea class="hp-ta" id="hpta" rows="4" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
-  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(rev?c.ref:d.question)}">${IC.chat}Ask Kassandra</button></div></div>`,'hp-reflect')}
+ else if(st==='reflect'){const eve=evening(),ai=(S.daily||{})[k]||{},rq=(ai.eve&&ai.eve.reflect)||(d.ai&&d.question)||(rev?c.ref:eve?'What stayed with you from today?':d.question);stage=card(eve?'Reflect on Your Day':'Reflect',`<div class="hp-in"><p class="hp-sub hp-wq">${(S.carry||{})[k]?`This morning you chose to carry: “${esc((S.carry||{})[k])}”. How did it go?`:eve?'The day is almost done. How was it?':rev?`Your Whisper was “${esc(c.title)}”.`:'A question for your day.'}</p><p class="pz-q">“${esc(rq)}”</p><textarea class="hp-ta" id="hpta" rows="4" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
+  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(rq)}">${IC.chat}Ask Kassandra</button></div></div>`,'hp-reflect')}
  else{const eve=hourNow()>=18||hourNow()<4,ch=chapterAt(),lt=ch&&(ch.len-ch.day<=2||ch.day<=3);
   stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in">${tmoon(eve||done===4)}<p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):done===4?'The full Moon of your day':(S.carry||{})[k]?'Today you carry':'Your morning is held'}</p>${!eve&&(S.carry||{})[k]?`<p class="pz-q">“${esc((S.carry||{})[k])}”</p>`:''}
   ${eve?`<p class="hp-bless">${esc(goodnight(k))}</p><p class="hp-sub hp-dawn">Your next card is already drawn. It will be waiting for you at dawn.</p>`:''}${eve?'':`<p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” walks with you.`:'Your card is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>`}
@@ -985,6 +986,31 @@ function myPortrait(){
  if(pzCache.k!==k)pzCache={k,p:PZ.portrait(items,dkey())};
  return pzCache.p;
 }
+// the reader's story, for the writer and Kassandra: who they are, what Kosmia has come to know of them over time, and
+// the last three weeks day by day in their own words (cards turned, what they chose to carry, reflections, journal
+// pages, questions to the cards, dreams and what they told Kassandra), newest first. Only when personal words are on.
+function myStory(){
+ if(!personalOn())return '';
+ const k=dkey(),days={},add=(d,s)=>{d=String(d||'').slice(0,10);if(!s||!/^\d{4}-\d\d-\d\d$/.test(d)||d>k||dayGap(d,k)>21)return;(days[d]=days[d]||[]).push(s)};
+ const LBL={journal:'Journal page',reflection:'Reflection',question:'Asked the cards',dream:'Dream',kassandra:'Said to Kassandra'};
+ myItems().forEach(x=>add(x.day,`${LBL[x.kind]}: “${clip(x.text,x.kind==='journal'?500:300)}”`));
+ S.readings.forEach(r=>{const sp=SPREADS[r.spread];if(r.cards&&r.cards.length)add(r.date,`Tarot reading${sp?' ('+sp.n+')':''}: ${r.cards.map(c=>`${c.pos?c.pos+': ':''}${c.name}${c.rev?' reversed':''}`).join(', ')}`)});
+ Object.entries(S.days).forEach(([d,id])=>{const c=oc(id);if(c)add(d,`Turned the Whisper card “${c.title}”`)});
+ Object.entries(S.carry||{}).forEach(([d,v])=>add(d,`Chose to carry through the day: “${clip(v,90)}”`));
+ Object.entries(S.ncarry||{}).forEach(([d,v])=>add(d,`Chose to carry through the night: “${clip(v,90)}”`));
+ const P=myPortrait(),sk=mySeek(),ch=chapterAt(),w=chWish(ch),first=Object.keys(S.days).sort()[0];
+ const head=[`Name: ${firstName()||'not given'}. Sun sign: ${sg(S.sign).name}.`,
+  sk?`What they came to Kosmia seeking: ${sk[0].toLowerCase()}.`:'',
+  w?`Their wish for this Moon’s chapter: “${clip(w.body,200)}”.`:'',
+  first?`With Kosmia since ${ymdLong(first,{day:'numeric',month:'long',year:'numeric'})}: ${[[Object.keys(S.days).length,'day','days'],[S.journal.length,'journal page','journal pages'],[Object.keys(S.notes).length,'reflection','reflections'],[S.readings.length,'saved reading','saved readings']].map(([n,a,b])=>n+' '+(n===1?a:b)).join(', ')}.`:'This is one of their first days with Kosmia.',
+  P.all&&P.all.length?`Themes in what they write (strongest first): ${P.all.slice(0,6).map(x=>PZ.THEMES[x.k].name).join('; ')}. Their mood lately: ${P.mood}.`:'',
+  P.care?'Some of what they wrote suggests real distress: be especially tender and gently encourage them to reach out to someone they trust or a local support line.':''].filter(Boolean);
+ const out=[];let n=0;
+ for(const d of Object.keys(days).sort().reverse()){const blk=`${d===k?'Today':ymdLong(d,{weekday:'long',day:'numeric',month:'long'})}:\n- ${[...new Set(days[d])].join('\n- ')}`;if(n+blk.length>6500)break;out.push(blk);n+=blk.length}
+ return [head.join('\n'),out.length?'Their recent days, newest first:\n'+out.join('\n'):'They have not written anything yet.'].join('\n\n');
+}
+// what Kosmia has come to understand of the reader over time, rewritten by the writer each day from the story
+const myMemory=()=>personalOn()&&S.memory&&S.memory.text||'';
 // the day's personal words: the AI's when it has written them today, otherwise Kosmia's own from the same portrait
 function myDay(){
  const k=dkey(),ch=myChart(),P=myPortrait();
@@ -1001,8 +1027,21 @@ function askDaily(){
  if((have&&have.v===P.count)||dailyAsk===key)return;dailyAsk=key;
  const ch=myChart(),c=todayCard(),loc=myDay();
  C.daily({day:k,name:firstName(),sign:S.sign,natal:ch?ch.pl.filter(x=>!(x.n==='Moon'&&ch.moonRange)).map(x=>`${x.n} ${sIdx(x.sign).name}${x.house?' house '+x.house:''}`).join(', '):'',
-  sky:`The Moon is ${loc.sky.phase.toLowerCase()} in ${sIdx(loc.sky.moonSign).name}, lighting ${loc.sky.area}.`,portrait:PZ.forKassandra(P),card:{id:c.id,title:c.title,msg:c.msg,words:wKeys(c)}})
-  .then(r=>{if(!r||!r.body)return;S.daily={[k]:{v:P.count,card:c.id,body:r.body,question:r.question||loc.question,focus:r.focus||loc.focus,whisper:r.whisper||''}};save();render()})
+  sky:`The Moon is ${loc.sky.phase.toLowerCase()} in ${sIdx(loc.sky.moonSign).name}, lighting ${loc.sky.area}.`,portrait:PZ.forKassandra(P),story:myStory(),memory:myMemory(),card:{id:c.id,title:c.title,msg:c.msg,ref:c.ref,words:wKeys(c)}})
+  .then(r=>{if(!r||!r.body)return;const was=(S.daily||{})[k]||{};
+   S.daily={[k]:{v:P.count,card:c.id,body:r.body,question:r.question||loc.question,focus:r.focus||loc.focus,whisper:r.whisper||'',carry:r.carry||[],ncarry:r.ncarry||[],eve:was.eve}};
+   if(r.memory)S.memory={text:r.memory,day:k};save();render()})
+  .catch(()=>{});
+}
+// in the evening, once the day is lived: a question about how it went, written from what they chose to carry
+let eveAsk='';
+function askEvening(){
+ if(!C.user||!personalOn()||!C.daily||!evening())return;
+ const k=dkey(),ai=(S.daily||{})[k],carried=(S.carry||{})[k]||'';
+ if(!ai||(ai.eve&&ai.eve.carried===carried)||eveAsk===k+carried)return;eveAsk=k+carried;
+ const c=todayCard();
+ C.daily({day:k,evening:true,carried,name:firstName(),sign:S.sign,story:myStory(),memory:myMemory(),card:{id:c.id,title:c.title,msg:c.msg,ref:c.ref,words:wKeys(c)}})
+  .then(r=>{if(!r||!r.reflect||!(S.daily||{})[k])return;S.daily[k].eve={carried,reflect:r.reflect,ncarry:r.ncarry||[]};save();render()})
   .catch(()=>{});
 }
 // the day written for this reader: its theme, the Moon, their message, a question, and where to take it next
@@ -1042,7 +1081,7 @@ function cardScene(c,flipped,id){
  return `<div class="scene ${flipped?'flipped':''}" id="${id}" role="button" tabindex="0" aria-label="${flipped?esc(c.title)+'. Open the card':'Today’s whisper, face down. Press to reveal.'}" data-act="${flipped?'wpop':'reveal'}"><div class="card3d"><div class="face back"></div><div class="face front daily kt">${whisperFace(c)}</div></div>${sp}</div>`;
 }
 // a whisper's face: its artwork (art/whispers) and the engraved plaque with title and message
-const whisperFace=c=>(ART.whispers||[]).includes(c.id)?Kit.tarot({art:'whispers/'+c.id,num:wNum(c),name:c.title}):`<div class="ph">${symbol(c.sym)}</div><div class="card-banner"><div class="cb-in"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div>`;
+const whisperFace=c=>(ART.whispers||[]).includes(c.art)?Kit.tarot({art:'whispers/'+c.art,num:wNum(c),name:c.title}):`<div class="ph">${symbol(c.sym)}</div><div class="card-banner"><div class="cb-in"><div class="cb-title">${c.title}</div><p>${c.msg}</p></div></div>`;
 
 /* ---------- AI read-aloud (ElevenLabs), signed-in only ---------- */
 const AUDIO=new Map();let player=null;
@@ -2155,7 +2194,7 @@ const grow=el=>{el.style.height='auto';el.style.height=Math.max(150,el.scrollHei
 const intents=key=>{const h=hash(key);return [0,1,2].map(i=>AFFIRM[(h+i*5)%AFFIRM.length])};
 function entryTop(p){
  const date=`<p class="et-date">${ymdLong(p.day,{day:'numeric',month:'long',year:'numeric'})}</p>`;
- if(p.t==='n')return `<div class="et"><div class="et-art" role="button" tabindex="0" data-act="wpop" data-k="${p.day}" aria-label="Open ${esc(p.o.title)}">${Kit.tarot({art:'whispers/'+p.o.id,num:wNum(p.o),name:p.o.title})}</div><div>${date}<h2>${esc(p.o.title)}</h2><p class="et-keys">${keys(wKeys(p.o))}</p><p class="et-q">“${esc(p.o.msg)}”</p></div></div>`;
+ if(p.t==='n')return `<div class="et"><div class="et-art" role="button" tabindex="0" data-act="wpop" data-k="${p.day}" aria-label="Open ${esc(p.o.title)}">${Kit.tarot({art:'whispers/'+p.o.art,num:wNum(p.o),name:p.o.title})}</div><div>${date}<h2>${esc(p.o.title)}</h2><p class="et-keys">${keys(wKeys(p.o))}</p><p class="et-q">“${esc(p.o.msg)}”</p></div></div>`;
  if(p.t==='r'){const r=p.r;return `<div class="et col">${date}<h2>${esc((SPREADS[r.spread]||{n:r.spread}).n)}</h2>${r.q?`<p class="et-q">“${esc(r.q)}”</p>`:''}<div class="et-cards">${r.cards.map(x=>`<figure>${pic('deck',x.id,'et-card'+(x.rev?' rev':''))}<figcaption><strong>${esc(x.pos||'')}</strong>${esc(x.name)}${x.rev?' (reversed)':''}</figcaption></figure>`).join('')}</div></div>`}
  if(p.t==='h'){const d=p.b.data||{};return `<div class="et">${med(d.sign,'et-med')}<div>${date}<h2>${jHeading(p)}</h2><p class="et-keys">${sg(d.sign).name} · ${d.start?rangeTxt({start:d.start,end:d.end}):''}</p>${d.focus?`<p class="et-q">${esc(d.focus)}</p>`:''}</div></div><details class="acc plain"><summary><span class="lr-t"><strong>The forecast</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b read">${paras(d.body)}</div></details>`}
  if(p.t==='e'){const d=p.b.data||{},ev=findEvent(p.b.ref,d.date),x=ev?evInfo(ev):null,ph=phaseSlug(d.name||'');return `<div class="et">${ph?pic('moons',ph,'et-med'):ui('ev-planet','et-med')}<div>${date}<h2>${esc(d.name||'')}</h2><p class="et-keys">${esc(d.when||'')}</p>${x?`<p class="et-q">${x.sym}</p>`:''}</div></div>${x?`<p class="muted small">${x.fact}</p>`:''}`}
@@ -2414,7 +2453,8 @@ function kasContext(){
  else if(S.revealed[k]){const c=todayCard();ctx.reading=`Today’s Whisper card: “${c.title}”: ${c.msg} Reflection question: ${c.ref}`}
  if(personalOn()){const pt=PZ.forKassandra(myPortrait()),th=myThread(),ch=chapterAt(),w=chWish(ch);
   const more=[th?`${th.label} (${th.day}): “${th.text}”. You may gently ask how it is now, if it fits.`:'',w?`Their wish for this Moon's chapter (begun at the New Moon in ${sIdx(ch.sign).name}): “${clip(w.body,200)}”.`:''].filter(Boolean).join('\n');
-  if(pt||more)ctx.portrait=[pt,more].filter(Boolean).join('\n')}
+  const mem=myMemory(),story=myStory();   // Kassandra reads the whole of their time in Kosmia
+  ctx.portrait=[mem?'What Kosmia has come to understand of them over time:\n'+mem:'',story,more].filter(Boolean).join('\n\n')||pt}
  if(S.settings.kPersonal){
   const ch=myChart(),p=[`Chosen sign ${sg(S.sign).name}`];
   if(S.name)p.push('Name '+S.name);
@@ -2653,7 +2693,7 @@ function render(){
  $('#nav').hidden=!authed||EMB;document.body.classList.toggle('has-nav',authed&&!EMB);document.body.classList.add('nv-d','cb-c');document.body.classList.toggle('obfit',onboarding());
  if(authed)$('#navin').innerHTML=Kit.nav(NAV,navCur());
  if(authed){const yb=$('#navin [data-nav=you]');if(yb)yb.style.setProperty('--ico',`url(/art/atlas/sgm-${S.sign||'aries'}.webp)`)}
- if(authed)askDaily();
+ if(authed){askDaily();askEvening()}
  if(sec==='home')V.ret=null;
  {let rp=$('#rtpill');if(authed&&V.ret&&sec!=='home'){if(!rp){rp=document.createElement('button');rp.id='rtpill';rp.dataset.act='hreturn';document.body.append(rp)}rp.innerHTML=`<span aria-hidden="true">‹</span> Back to your day<small>${V.ret.label}</small>`}else if(rp)rp.remove();document.body.classList.toggle('has-ret',!!(authed&&V.ret&&sec!=='home'))}
  document.body.classList.toggle('onboarding',!authed);

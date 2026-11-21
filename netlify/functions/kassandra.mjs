@@ -30,8 +30,8 @@ export default async req => {
   const ctx = [
     `The reader is on: ${clip(context.section, 40)}${context.view ? ' / ' + clip(context.view, 40) : ''}.`,
     context.reading ? `What is on their screen: ${clip(context.reading, 1500)}` : '',
-    context.portrait ? `What the reader has been writing about lately in Kosmia (their journal, reflections, tarot questions and dreams), for you to draw on gently and naturally, never quoting it back word for word or implying you watch them:
-${clip(context.portrait, 1600)}` : '',
+    context.portrait ? `Everything this reader has shared with Kosmia: what Kosmia has come to understand of them over time, and their recent days in their own words (Whisper cards turned, what they chose to carry, reflections, journal pages, questions to the cards, tarot readings, dreams and what they told you before). You know them through all of it. Draw on it naturally and specifically, like a wise friend who remembers, and connect their question to their own life; never quote it back word for word at length or imply you watch them:
+${String(context.portrait).replace(/\r/g, '').slice(0, 10000)}` : '',
     context.personal ? `Details the reader chose to share: ${clip(context.personal, 800)}` : 'The reader has not shared personal details. If a question needs their birth chart or numbers, say what you would need and that they can share it from the Kassandra panel or add it in Blueprint. Never guess them.'
   ].filter(Boolean).join('\n');
 
