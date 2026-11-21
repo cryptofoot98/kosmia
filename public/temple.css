@@ -1185,15 +1185,21 @@ html body.tp.tp.tp #app .cpop.hpz:not(#x):not(#y) .hpz-b p{font-size:18px!import
 #nav .in [data-nav=tarot]:not(#x){--ico:url(/art/atlas/nvm-oracle.webp)!important}
 
 /* Sky › For you: what is in the sky today, one card at a time, in the shape of the Cosmic Energy card in the app's own dark
-   glass: the painting's gold circle resting against the card's left edge, the words in cream and gold, a round arrow
-   inside the card; no dots beneath, the cards are swiped */
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x){position:relative;flex:0 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;min-height:0;padding:18px 14px 18px 4px;border-radius:0;text-align:left;background:none!important;box-shadow:none!important;border:0!important}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x)::before{content:'';position:absolute;z-index:0;top:4px;bottom:4px;left:47px;right:0;border-radius:20px;background:rgba(14,18,38,.66);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);box-shadow:inset 0 0 0 1px rgba(243,215,144,.45),0 8px 22px rgba(0,0,0,.35)}
+   glass, every card the same size with its words always inside (the title at most two lines, the meaning three); the dots
+   and arrows beneath. "Your sky today" and its cards sit low, leaving the sign room above */
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x){position:relative;flex:0 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;height:164px!important;min-height:164px;max-height:164px;padding:0 16px 0 4px;box-sizing:border-box;border-radius:0;text-align:left;background:none!important;box-shadow:none!important;border:0!important;overflow:visible}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x)::before{content:'';position:absolute;z-index:0;top:2px;bottom:2px;left:47px;right:0;border-radius:20px;background:rgba(14,18,38,.66);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);box-shadow:inset 0 0 0 1px rgba(243,215,144,.45),0 8px 22px rgba(0,0,0,.35)}
 html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-i,html body.tp.tp.tp #app .sky-t .sky-c:not(#x)>img{position:relative;z-index:1;flex:none;width:86px!important;height:86px!important;border-radius:50%;object-fit:cover;filter:none!important;box-shadow:0 0 0 1.5px #C9A253,0 4px 14px rgba(0,0,0,.5)!important;border:0!important}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x{position:relative;z-index:1;flex:1;min-width:0;align-items:flex-start;width:auto}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x strong{font:600 20px/1.12 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:#F6E3B0!important}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x em{margin-top:2px;font:italic 500 14px/1.2 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.72)!important}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x>span{margin-top:4px;font:500 15.5px/1.25 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-go{position:relative!important;z-index:1;right:auto!important;top:auto!important;flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(8,11,26,.7);color:#F6E6B6;box-shadow:inset 0 0 0 1px rgba(243,215,144,.6),0 0 10px rgba(246,214,130,.25)}
-html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-go svg{width:14px;height:14px;filter:drop-shadow(0 0 3px rgba(246,214,130,.8))}
-html body.tp.tp.tp #app .sky-l .sky-dn:not(#x){display:none!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x{position:relative;z-index:1;flex:1 1 0;min-width:0;align-self:center;align-items:flex-start;width:auto;max-height:140px;overflow:hidden}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:600 20px/1.12 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:#F6E3B0!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x em{margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font:italic 500 14px/1.2 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.72)!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-x>span{margin-top:4px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font:500 15.5px/1.25 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
+html body.tp.tp.tp #app .sky-t .sky-c:not(#x) .sky-go{display:none!important}
+html body.tp.tp.tp #app .sky-l .sky-t:not(#x){align-items:stretch}
+html body.tp.tp.tp #app .sky-l .sky-dn:not(#x){display:flex!important;margin:6px 0 0!important}
+/* For you never scrolls, so the painting's foot is not laid over it: the cards and their dots keep their full light */
+body.tp:has(#app .sky-t) #t-front .tf-veil{display:none!important}
+/* the sign above, then "Your sky today" and its cards low on the page */
+html body.tp.tp.tp #app .pg-sky .sk-body:has(.sky-t)>.pg-page{flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-start;min-height:0}
+html body.tp.tp.tp #app .pg-sky .sk-body:has(.sky-t) .sky-k{margin-top:auto!important;margin-bottom:10px!important;font-size:13px!important;letter-spacing:.28em!important;color:#F3D790!important}
+html body.tp.tp.tp #app .pg-sky .sk-body:has(.sky-t) .sky-k svg{width:11px;height:11px}
