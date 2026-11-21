@@ -314,6 +314,10 @@ const ui=(id,cls='',alt='',priority=false)=>Kit.img('atlas/'+atlasId(id),{cls,al
 const scenic=(content,cls='',bg)=>`<div class="kscenic ${cls}"><div class="ksc-bg" aria-hidden="true">${bg||ui('home-vines','ksc-m')+ui('home-lake','ksc-c')+ui('home-garden','ksc-d')}</div><div class="ksc-in">${content}</div></div>`;
 const panel=(h,cls='')=>Kit.panel(h,{cls});
 // a page's own header on parchment: the back arrow, its title (and a line under it), and an action at the right
+// the painted objects for the app's actions: the crystal ball asks Kassandra, the feather pen opens the Journal, the little
+// constellation shares, the heart keeps (dimmer until kept)
+const OBJ={kas:'ic-orb-k',pen:'ic-quill-k',share:'ic-share-k',like:'ic-like-k'};
+const obj=(k,attrs,label,cls='')=>`<button class="obj-b obj-${k}${cls?' '+cls:''}" ${attrs} aria-label="${label}">${ui(OBJ[k],'obj-i')}</button>`;
 const IC={
  back:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  chev:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -846,7 +850,7 @@ function whisperPop(c,k=dkey()){markRead({k:'whisper',card:c,from:{sec:'tarot',t
  <div class="cp-card"><div class="scene flat" role="img" aria-label="${esc(c.title)}"><div class="face front">${Kit.tarot({art:'whispers/'+c.art,num:wNum(c),name:c.title})}</div></div></div>
  <div class="cp-box"><p class="cp-keys">${keys(wKeys(c))}</p><p class="cp-msg">${esc(c.msg)}</p>
  ${k===dkey()?`<p class="cp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}<div class="cp-rule" aria-hidden="true"></div><p class="cp-ref">${esc(c.ref)}</p>
- <div class="wpc-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Reflect'}</button>${k===dkey()?`<button class="ibtn${saved?' on':''}" data-act="savecard" aria-pressed="${saved}" aria-label="Save to your journal">${IC.heart}</button>`:''}<button class="ibtn" data-act="sharecard" data-k="whisper" data-day="${k}" aria-label="Share this Whisper">${IC.share}</button></div></div>
+ <div class="wpc-acts obj-row">${obj('pen',`data-act="jopen" data-k="fortune:${k}"`,S.notes[k]?'Keep writing in your Journal':'Reflect in your Journal')}${k===dkey()?obj('like',`data-act="savecard" aria-pressed="${saved}"`,'Save to your journal',saved?'on':''):''}${obj('share',`data-act="sharecard" data-k="whisper" data-day="${k}"`,'Share this Whisper')}</div></div>
  </div></div>`}
 /* Home, after docs/mockups/home-top and home-bottom: the header scene (sky, halo, the sign's figure overlapping the
    forecast card, the five insights at its foot), the night band with the Daily Whisper and the Cosmic Energy landscape,
@@ -957,7 +961,7 @@ views.home=()=>{
  const card=(title,body,cls='')=>{ttl=title;return panel(body,`gilt hp-card ${cls}`)};
  let stage;
  if(st==='dream')stage=card('Good Morning',`<div class="hp-in"><p class="hp-big">Did you dream?</p><p class="hp-sub">Dreams fade within minutes of waking. Tell it while it is still close, however small or strange.</p>
-  <div class="pz-acts"><button class="btn" data-act="hdream">Write it down</button><button class="btn ghost" data-act="hnodream">Not today</button></div></div>`,'hp-dream');
+  <div class="pz-acts">${obj('pen','data-act="hdream"','Write it down in your Journal')}<button class="btn ghost" data-act="hnodream">Not today</button></div></div>`,'hp-dream');
  else if(st==='intent'){const ch=chapterAt();stage=card('A New Chapter',`<div class="hp-in">${tmoon(false)}<p class="hp-big">The New Moon in ${sIdx(ch.sign).name}</p><p class="hp-sub">A new chapter of your month begins. What would you like to grow before this Moon is full?</p><textarea class="hp-ta" id="hpwish" rows="3" placeholder="A wish, a hope, one small thing." aria-label="Your wish for this Moon"></textarea>
   <div class="pz-acts"><button class="btn" data-act="hwish">Plant it</button><button class="btn ghost" data-act="hnowish">Not this time</button></div><p class="hp-sub">It stays in your Journal, and the Moon will bring it back to you.</p></div>`,'hp-intent')}
  else if(st==='night')stage=card('Before You Sleep',`<div class="hp-in">${tmoon(true)}<p class="hp-big">What are you ready to let go of tonight?</p><p class="hp-sub">A worry, a word you wish you hadn’t said, a day that asked too much. Write it, then let it go.</p><textarea class="hp-ta" id="hprel" rows="4" placeholder="Nothing written here is kept unless you ask." aria-label="What you are letting go of"></textarea>
@@ -981,7 +985,7 @@ views.home=()=>{
    <div class="dw-side">${rev?`<h3 class="dw-t">${esc(c.title)}</h3><p class="dw-msg">${esc(c.msg)}</p>`:'<h3 class="dw-t">One card already knows your day</h3><p class="dw-msg">It was drawn before you woke. Take one slow breath, then touch it.</p>'}</div></div>
    ${rev?`<p class="cp-you hp-you"><span>For you</span>${esc(myWhisper(c))}</p>`:''}`,'hp-whisper');
  else if(st==='reflect'){const eve=evening(),ai=(S.daily||{})[k]||{},rq=(ai.eve&&ai.eve.reflect)||(d.ai&&d.question)||(rev?c.ref:eve?'What stayed with you from today?':d.question);stage=card(eve?'Reflect on Your Day':'Reflect',`<div class="hp-in"><p class="hp-sub hp-wq">${(S.carry||{})[k]?`This morning you chose to carry: “${esc((S.carry||{})[k])}”. How did it go?`:eve?'The day is almost done. How was it?':rev?`Your Whisper was “${esc(c.title)}”.`:'A question for your day.'}</p><p class="pz-q">“${esc(rq)}”</p><textarea class="hp-ta" id="hpta" rows="4" placeholder="Write anything. It doesn’t need to make sense." aria-label="Your reflection">${esc(S.notes[k]||'')}</textarea>
-  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button><button class="btn ghost" data-act="kasask" data-q="${esc(rq)}">${IC.chat}Ask Kassandra</button></div></div>`,'hp-reflect')}
+  <div class="pz-acts"><button class="btn" data-act="hkeep">${IC.quill}Keep it</button>${obj('kas',`data-act="kasask" data-q="${esc(rq)}"`,'Ask Kassandra')}</div></div>`,'hp-reflect')}
  else{const eve=hourNow()>=18||hourNow()<4,ch=chapterAt(),lt=ch&&(ch.len-ch.day<=2||ch.day<=3);
   stage=card(eve?'Goodnight':'Your Day Is Held',`<div class="hp-in">${tmoon(eve||whole)}<p class="hp-big">${eve?(nm?esc(nm)+', rest now':'Rest now'):whole?'The full Moon of your day':(S.carry||{})[k]?'Today you carry':'Your morning is held'}</p>${!eve&&(S.carry||{})[k]?`<p class="pz-q">“${esc((S.carry||{})[k])}”</p>`:''}
   ${eve?`<p class="hp-bless">${esc(goodnight(k))}</p><p class="hp-sub hp-dawn">Your next card is already drawn. It will be waiting for you at dawn.</p>`:''}${eve?'':`<p class="hp-sub">${eve&&S.released===k?'What you let go of is gone. ':''}${rev?`“${esc(c.title)}” walks with you.`:'Your card is still waiting, whenever you are.'} ${S.notes[k]?'Your reflection is kept in your Journal.':''}</p>`}
@@ -1080,7 +1084,7 @@ function pzCard(cls=''){
  <h2 class="pz-t">${esc(d.focus)}</h2>
  <p class="pz-moon">${moonPic(m,'pz-mi')}<span>${esc(m.name)} in ${sIdx(d.sky.moonSign).name}</span></p>
  <p class="pz-b">${esc(d.body)}</p>${fold?'<button class="pz-more" data-act="pzmore">Read all of it</button>':''}<p class="pz-q">“${esc(d.question)}”</p>
- <div class="pz-acts"><button class="btn" data-act="jnew" data-k="pz">${IC.quill}Reflect</button><button class="btn ghost" data-act="kasask" data-q="${esc(d.question)}">${IC.chat}Ask Kassandra</button></div>
+ <div class="pz-acts obj-row">${obj('pen','data-act="jnew" data-k="pz"','Reflect in your Journal')}${obj('kas',`data-act="kasask" data-q="${esc(d.question)}"`,'Ask Kassandra')}</div>
  ${myPortrait().count?'':'<p class="pz-n">The more you write in your Journal, the more these words become your own.</p>'}</section>`;
 }
 function forYou(){
@@ -1185,17 +1189,17 @@ const skyRow=x=>`<button class="sky-c" data-act="skd" data-id="${esc(x.id)}">${x
 // the tiles as a carousel: one large tile at a time, turning by itself, swiped by hand
 const skyCar=l=>`<div class="sky-l"><div class="en-track sky-t" aria-roledescription="carousel">${l.map(skyRow).join('')}</div><nav class="hp-dots sky-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skymove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="en-dots sky-d" aria-hidden="true">${l.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skymove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>`;
 function skyPop(x){
- const tiles=[['What is happening',x.fact],['What it means for you',x.you],['One thing to do',x.act],['An optional ritual',x.rit],['A question to sit with',x.q]].filter(t=>t[1]);
+ const tiles=[[['What is happening',x.fact]],[['What it means for you',x.you]],[['One thing to do',x.act],['An optional ritual',x.rit]].filter(t=>t[1]),[['A question to sit with',x.q]]].map(t=>t.filter(u=>u[1])).filter(t=>t.length);
  return `<div class="cpop wpz skz skb" style="--skbg:url(art/sky/${x.bg||'sun'}.webp);${skyPos(x.bg||'sun')}" role="dialog" aria-modal="true" aria-label="${x.title}" data-act="skdx"><i class="skb-bg" aria-hidden="true"></i><button class="cp-x" data-act="skdx" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">${x.when}</p><h2 class="cp-t">${x.title}</h2>
- <div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map(([h,t],i)=>`<section class="cp-box skz-tile${i===1?' you':''}${h==='A question to sit with'?' q':''}" aria-label="${h}, ${i+1} of ${tiles.length}"><h3>${h}</h3><p>${esc(t)}</p></section>`).join('')}</div>
+ <div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map((parts,i)=>`<section class="cp-box skz-tile${i===1?' you':''}${parts[0][0]==='A question to sit with'?' q':''}${parts.length>1?' two':''}" aria-label="${parts.map(u=>u[0]).join(' and ')}, ${i+1} of ${tiles.length}">${parts.map(([h,t])=>`<div class="skz-part"><h3>${h}</h3><p>${esc(t)}</p></div>`).join('')}</section>`).join('')}</div>
   <nav class="hp-dots skz-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skzmove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="skz-d" aria-hidden="true">${tiles.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skzmove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>
   <div class="skz-obj"><button data-act="kasask" data-q="${esc(x.q)}" aria-label="Ask Kassandra about it">${ui('ic-orb-k','skz-o')}</button><button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button><button data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it in your Journal">${ui('ic-quill-k','skz-o')}</button></div></div></div>`}
 // the window's tiles: the dots follow the swipe; one step is a tile and the gap after it
 const skzStep=T=>T.children.length>1?T.children[1].offsetLeft-T.children[0].offsetLeft:Math.max(1,T.clientWidth);
 function skzCar(){const t=$('.skz-track');if(!t||t._on)return;t._on=1;
  // a tile longer than the room the window has: its words are set a little smaller until they fit (never below 13px)
- const fitT=()=>t.querySelectorAll('.skz-tile').forEach(x=>{const p=x.querySelector('p');if(!p)return;p.style.removeProperty('font-size');let f=parseFloat(getComputedStyle(p).fontSize);const cs=getComputedStyle(x),h=x.querySelector('h3'),room=()=>x.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),need=()=>(h?h.offsetHeight+8:0)+p.offsetHeight;while(need()>room()+1&&f>14){f-=.5;p.style.setProperty('font-size',f+'px','important')}});requestAnimationFrame(()=>requestAnimationFrame(fitT));const dots=[...document.querySelectorAll('.skz-d i')];
+ const fitT=()=>t.querySelectorAll('.skz-tile').forEach(x=>{const ps=[...x.querySelectorAll('p')];if(!ps.length)return;const cs=getComputedStyle(x),room=()=>x.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),need=()=>[...x.children].reduce((a,c)=>a+c.offsetHeight+parseFloat(getComputedStyle(c).marginTop)+parseFloat(getComputedStyle(c).marginBottom),0);let f=x.classList.contains('two')?22:26;const set=()=>ps.forEach(p=>p.style.setProperty('font-size',f+'px','important'));set();while(need()>room()-2&&f>14){f-=.5;set()}});requestAnimationFrame(()=>requestAnimationFrame(fitT));const dots=[...document.querySelectorAll('.skz-d i')];
  t.addEventListener('scroll',()=>requestAnimationFrame(()=>{const i=Math.round(t.scrollLeft/skzStep(t));dots.forEach((d,j)=>d.classList.toggle('on',j===i))}),{passive:true})}
 function skyDetail(x){
  return `<div class="land hland hnight skyp pg pg-sky skd"><div class="skd-bar">${iconBtn('back','data-act="skdx"','Back')}</div>
@@ -1204,7 +1208,7 @@ function skyDetail(x){
  <section class="you"><h3>What it means for you</h3><p>${esc(x.you)}</p></section>
  <section><h3>One thing to do</h3><p>${esc(x.act)}</p></section>
  <p class="skd-q">“${esc(x.q)}”</p>
- <div class="sx-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(x.q)}">${IC.chat}Ask Kassandra</button><button class="btn" data-act="skdwrite" data-t="${esc(x.title)}">${IC.quill}Write about it</button></div>
+ <div class="sx-acts obj-row">${obj('kas',`data-act="kasask" data-q="${esc(x.q)}"`,'Ask Kassandra')}${obj('pen',`data-act="skdwrite" data-t="${esc(x.title)}"`,'Write about it in your Journal')}</div>
  <button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button></div></div>`}
 views.horoscope=()=>{
  if(!A||!K)return needLib();
@@ -1242,19 +1246,19 @@ function horoSign(){
  const PSHORT={daily:'Today',weekly:'Week',monthly:'Month',yearly:'Year'};
  const per=`<div class="sx-per" role="tablist" aria-label="Time period">${PERIODS.map(([k])=>`<button role="tab" aria-selected="${V.period===k}" data-period="${k}">${PSHORT[k]}</button>`).join('')}</div>`;
  const listen=`<button class="ibtn${playing?' on':''}" data-act="hspeak" aria-label="${playing?'Stop reading aloud':'Read aloud'}">${playing?IC.stop:IC.speak}</button>`;
- const heart=`<button class="ibtn${saved?' on':''}" data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}" aria-label="${saved?'Saved to your journal':'Save to your journal'}">${IC.heart}</button>`;
+ const heart=obj('like',`data-act="bookhoro" data-ref="${ref}" aria-pressed="${saved}"`,saved?'Saved to your journal':'Save to your journal',saved?'on':'');
  // the whole page on one screen: at its head the sign's painting dissolved into the night, its constellation, symbol,
  // name, dates and soul in the open sky at its left; right beneath it the time and the area's medallion between the
  // arrows, then the reading on an invisible card in the app's own reading size, laid out in pages that each sit whole
  // (a swipe turns the page, and after the last brings in the next area of life while the head stays still); at the
  // foot, above the menu, an invitation to write about it and another to read for someone else, a mark for each page
  // between them
- return `<div class="hsp hframe sx s-${s.id} skyp pg pg-hs"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}<button class="ibtn" data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}" aria-label="Share this reading">${IC.share}</button>${heart}</span></div>
+ return `<div class="hsp hframe sx s-${s.id} skyp pg pg-hs"><div class="hsp-bar">${iconBtn('back','data-act="back"','Back')}<span class="hsp-r">${listen}${obj('share',`data-act="sharecard" data-k="horo" data-s="${ex}" data-cat="${cat}"`,'Share this reading')}${heart}</span></div>
  <header class="sx-head"><span class="sx-pic" aria-hidden="true" style="${figVars(s.id)}"><span class="sp-moon"><img src="/art/atlas/home-halo.webp" alt=""></span><img class="wf-fg" src="/art/atlas/fg-${s.id}.webp" alt=""></span><h1 class="pg-t">${s.name}</h1><p class="pg-s">${s.dates}</p>${per}</header>
  <div class="sx-main">${ctl}
  <div class="hcar"><div class="hc-read" aria-live="polite">${HCATS.map(([k])=>`<div class="hc-slide${k===cat?' cur':''}" data-k="${k}" data-ref="${ex}/${k}/${V.period}/${horoscope(ex,k,V.period).per.key}"${k===cat?'':' hidden'}>${reading(k)}</div>`).join('')}</div></div>
  <div class="sx-ft"><div class="hc-pgs" role="group" aria-label="Pages"></div></div>
- <div class="sx-acts"><button class="btn ghost" data-act="spkopen">Someone else</button><button class="btn" data-act="hreflect" data-ref="${ref}">Write about it</button></div></div>
+ <div class="sx-acts obj-bar">${obj('kas',`data-act="kasask" data-q="${esc(`What does ${PSHORT[V.period]==='Today'?'today':'this '+PSHORT[V.period].toLowerCase()} hold for my ${CAT_INFO[cat][0].toLowerCase()}?`)}"`,'Ask Kassandra about it')}<button class="sx-other" data-act="spkopen">Read for someone else ${IC.chev}</button>${obj('pen',`data-act="hreflect" data-ref="${ref}"`,'Write about it in your Journal')}</div></div>
  ${V.spk?signPick(ex):''}
  </div>`;
 }
@@ -1302,7 +1306,7 @@ views.tarot=()=>{
  const nm=firstName();
  const oc=pgCur('or');let pg;
  if(oc==='kas'){const has=KS.msgs.length>0,last=has?[...KS.msgs].reverse().find(m=>m.role==='user'):null;
-  pg=`<section class="or-k"><span class="tk-m">${ui('kassandra','tk-i')}</span><div><h3>${has?'She remembers':'She is listening'}</h3><p>${has&&last?`You last asked: “${esc(clip(last.content,70))}”`:'Speak or write your question. She knows your sign, your chart and your day.'}</p><button class="btn" data-act="kasgo">${has?'Continue':'Ask Kassandra'}</button></div></section>
+  pg=`<section class="or-k"><span class="tk-m">${ui('kassandra','tk-i')}</span><div><h3>${has?'She remembers':'She is listening'}</h3><p>${has&&last?`You last asked: “${esc(clip(last.content,70))}”`:'Speak or write your question. She knows your sign, your chart and your day.'}</p>${obj('kas','data-act="kasgo"',has?'Continue with Kassandra':'Ask Kassandra','obj-big')}</div></section>
   <section>${pgl(has?'Or ask her':'Or begin with')}<div class="or-pr">${kasPrompts().slice(0,2).map(q=>`<button class="or-p" data-act="kasask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div></section>`}
  else if(oc==='cards')pg=`<div class="sky-l sky-list or-list">${Object.entries(SPREADS).map(([sk,x])=>`<button class="sky-c" data-act="tspreadgo" data-k="${sk}">${ui('ic-'+sk,'sky-i')}<span class="sky-x"><strong>${x.s}</strong><span>${SPREAD_FOR[sk]}</span></span><span class="or-n">${x.p.length} card${x.p.length>1?'s':''}</span><span class="sky-go">${IC.chev}</span></button>`).join('')}</div>`;
  else{const ld=dreams()[0];pg=`<section class="dr-in"><p class="dr-lead">Tell Kassandra what you saw, and uncover what it is asking you to notice.</p><div class="or-two"><button class="btn" data-go="discover" data-t="new-dream">Bring a dream</button><button class="btn ghost" data-go="discover" data-t="dream-journal">Dream journal</button></div></section>
@@ -1317,7 +1321,7 @@ function whisperView(){
  ${V.whelp?mbox(`<p>One card a day, drawn from ${ORACLE.length} Whispers. You will not see the same card again until you have met them all. Read it, sit with it, and write what it stirs in you: every reflection is kept in your Journal.</p>`):''}
  ${cardScene(c,rev,'fortuneCard')}
  ${rev?mbox(`<p class="kpills">${keys(wKeys(c))}</p><p class="w-msg">${esc(c.msg)}</p><p class="w-ref">${esc(c.ref)}</p>
-  <div class="acts row-acts"><button class="btn" data-act="jopen" data-k="fortune:${k}">${S.notes[k]?'Keep writing':'Write Your Reflection'}</button><button class="ibtn sq" data-act="sharecard" data-k="whisper" aria-label="Share this Whisper">${IC.share}</button><button class="ibtn sq${sv?' on':''}" data-act="savecard" aria-pressed="${sv}" aria-label="${sv?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></div>`)
+  <div class="acts row-acts obj-row">${obj('pen',`data-act="jopen" data-k="fortune:${k}"`,S.notes[k]?'Keep writing in your Journal':'Write your reflection in your Journal')}${obj('share','data-act="sharecard" data-k="whisper"','Share this Whisper')}${obj('like',`data-act="savecard" aria-pressed="${sv}"`,sv?'Saved to your journal':'Save to your journal',sv?'on':'')}</div>`)
  :`<button class="btn" data-act="reveal">Turn over my Whisper</button><p class="muted center small">One card a day, drawn from ${ORACLE.length}. Tap the card or the button to turn it over.</p>`}${V.wpop?whisperPop(c):''}</div>`;
 }
 function tarotView(){
@@ -1332,8 +1336,8 @@ function tarotView(){
  // 3. the drawn cards, each flipped by a tap; a revealed card opens its full details
  const cards=T.drawn,done=cards.every(c=>c.shown);if(done)markRead({k:'reading',cards,from:{sec:'tarot',t:'reading'}});
  return `<div class="mnp trd">${mnHead(sp.s.replace(/ · /g,' · '))}<p class="mn-sub">${sp.n}</p>${T.q?`<p class="quote center">“${esc(T.q)}”</p>`:''}<p class="muted center">${done?'Tap a card to read it in full.':'Tap each card to reveal it.'}</p><div class="rd-grid${cards.length===1?' solo':''}">${cards.map((c,i)=>`<div class="rd-cell"><div class="label">${c.pos}</div><div class="scene ${c.shown?'flipped':''} ${c.rv?'rev':''}" role="button" tabindex="0" data-act="tflip" data-k="${i}" aria-label="${c.shown?esc(c.name)+(c.rv?', reversed':'')+'. Open details':esc(c.pos)+', face down. Reveal'}"><div class="card3d"><div class="face back"></div><div class="face front tarot-face bare">${pic('deck',c.id,'tarot-art')}</div></div></div></div>`).join('')}</div>
- ${done?mbox(`<div class="int-hd"><h2>Interpretation</h2><span class="int-ic"><button class="ibtn" data-act="sharecard" data-k="reading" aria-label="Share this reading">${IC.share}</button><button class="ibtn${T.savedId?' on':''}" data-act="${T.savedId?'jopen':'saveread'}"${T.savedId?` data-k="reading:${esc(T.savedId)}"`:''} aria-pressed="${!!T.savedId}" aria-label="${T.savedId?'Saved to your journal':'Save to your journal'}">${IC.heart}</button></span></div>${T.ai?`<div class="ai-read read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<p class="kick">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</p><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><p class="kick">The reading as a whole</p>${paras(T.ai.whole)}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`<div class="read">${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}</div><p class="quote">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted small">Symbols for reflection, not predictions.</p>
- ${T.savedId?`<button class="btn" data-act="jopen" data-k="reading:${esc(T.savedId)}">Write tonight’s reflection</button>`:''}<button class="btn ghost" data-act="newread">A new reading</button>`):''}
+ ${done?mbox(`<div class="int-hd"><h2>Interpretation</h2><span class="int-ic obj-row">${obj('share','data-act="sharecard" data-k="reading"','Share this reading')}${obj('like',`data-act="${T.savedId?'jopen':'saveread'}"${T.savedId?` data-k="reading:${esc(T.savedId)}"`:''} aria-pressed="${!!T.savedId}"`,T.savedId?'Saved to your journal':'Save to your journal',T.savedId?'on':'')}</span></div>${T.ai?`<div class="ai-read read">${(T.ai.cards||[]).map((x,i)=>cards[i]?`<p class="kick">${cards[i].pos} · ${cards[i].name}${cards[i].rv?' · reversed':''}</p><p>${esc(x)}</p>`:'').join('')}${T.ai.whole?`<div class="rule"></div><p class="kick">The reading as a whole</p>${paras(T.ai.whole)}`:''}<p class="muted small">Written with AI for this spread and question.</p></div>`:T.aiState==='loading'?'<p class="muted">The cards are speaking…</p>':`<div class="read">${cards.map(c=>{const k=SPREAD_CTX[T.spread]||'growth';return `<p><strong>${c.pos}.</strong> ${c.name}${c.rv?' reversed':''}: ${c.rv?c.revm:c.upm} <em>${c[k]}</em></p>`}).join('')}</div><p class="quote">${T.q?'Held against your question, notice which of these themes you already recognise in your own life, and which you resist.':'Notice which of these themes you already recognise in your own life, and which you resist.'}</p>${C.enabled&&!C.user?'<p class="muted">Sign in for a personal AI interpretation.</p>':''}`}<p class="muted small">Symbols for reflection, not predictions.</p>
+ ${T.savedId?obj('pen',`data-act="jopen" data-k="reading:${esc(T.savedId)}"`,'Write tonight’s reflection in your Journal'):''}<button class="btn ghost" data-act="newread">A new reading</button>`):''}
  ${V.tpop!=null?tarotPop(cards[V.tpop]):''}</div>`;
 }
 // pop-up with a drawn card's full details: card, number, keywords, meanings and readings by context
@@ -1343,7 +1347,7 @@ function tarotPop(c){const k=V.tctx||'love';
  <div class="cp-card ${c.rv?'rev':''}"><div class="scene flat ${c.rv?'rev':''}" role="img" aria-label="${esc(c.name)}"><div class="face front tarot-face">${tarotFace(c)}</div></div></div>
  <div class="cp-box"><p class="cp-lab">Upright · ${c.up}</p><p class="cp-msg">${c.upm}</p><p class="cp-lab">Reversed · ${c.rev}</p><p class="cp-msg">${c.revm}</p><div class="cp-rule" aria-hidden="true"></div>
  <div class="seg" role="tablist">${Object.entries(CTX).map(([x,l])=>`<button role="tab" aria-selected="${k===x}" data-act="tctx" data-k="${x}">${l}</button>`).join('')}</div><p class="cp-ref">${c[k]}</p>
- <button class="btn" data-act="kasask" data-q="What does ${esc(c.name)}${c.rv?' reversed':''} suggest in the ${esc(c.pos)} position of my reading?">Ask Kassandra about this card</button></div></div></div>`}
+ <button class="obj-b obj-kas" data-act="kasask" data-q="What does ${esc(c.name)}${c.rv?' reversed':''} suggest in the ${esc(c.pos)} position of my reading?" aria-label="Ask Kassandra about this card">${ui(OBJ.kas,'obj-i')}</button></div></div></div>`}
 // once every card is face up, ask the server for a personal interpretation (signed-in only)
 function interpret(){const T=V.tarot;if(!C.user||T.aiState)return;T.aiState='loading';
  C.interpret(T.spread,T.q,T.drawn.map(c=>({id:c.id,reversed:c.rv}))).then(r=>{if(V.tarot===T&&(r.cards||r.whole)){T.ai=r}},e=>console.warn('interpret',e&&e.message)).then(()=>{T.aiState='done';render()})}
@@ -1847,7 +1851,7 @@ const mbox=(h,cls='')=>`<section class="mbox ${cls}">${['tl','tr','bl','br'].map
 // the title stays in place with the painting while the boxes scroll up over it; Back and the page's own buttons float
 // above everything in a bar of their own, so they can always be reached
 const SHARE_PAGES=['affinity','resonance','synastry','birth-chart','life-path','name-within','cycles','dream','moon','profile'];
-const mnHead=(t,right='',back=true)=>{if(V.sec==='discover'&&SHARE_PAGES.includes(tab()))right=`<button class="ibtn pg-share" data-act="sharecard" data-k="page" aria-label="Share this">${IC.share}</button>`+right;return mnHead0(t,right,back)};
+const mnHead=(t,right='',back=true)=>{if(V.sec==='discover'&&SHARE_PAGES.includes(tab()))right=obj('share','data-act="sharecard" data-k="page"','Share this','pg-share')+right;return mnHead0(t,right,back)};
 // the fine gold rule beneath every page's title: a line, a ring and a star at its heart
 const MN_ORN='<svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg>';
 const mnHead0=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1>${MN_ORN}${mnGreet()}</div></header>`;
@@ -2021,7 +2025,7 @@ function chartView(){
  ${other?'':`<button class="link ch-ns" data-act="nsearch" data-k="chart">Search another person’s chart</button>`}
  <div role="group" aria-label="Chart views">${seg([['chart','Chart'],['planets','Planets'],['aspects','Aspects'],['houses','Houses']],ct,'ctab')}</div>${note}${body}
  <details class="how"><summary>How this is worked out</summary><p>Tropical zodiac, geocentric positions on the true ecliptic of date from the Astronomy Engine ephemeris. Your local birth time is converted to UTC with the historical rules for ${esc(b.tz||TZ())}. Houses are whole-sign; aspect orbs are 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p></details>
- ${other?'':'<button class="btn ghost" data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest.">Ask Kassandra about my chart</button>'}
+ ${other?'':obj('kas','data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest."','Ask Kassandra about my chart')}
  ${other?nsBtn('chart')+mineBtn('chart',!!myChart()):'<button class="btn ghost" data-go="discover" data-t="profile">Edit my Cosmic Profile</button>'}</div>`;
 }
 /* Zodiac Affinity: a symbolic score from the angle between the signs, their elements and modalities */
@@ -2044,7 +2048,7 @@ function affinityView(){
   <div class="pills4"><span class="p-love">Love <b>${sc.love}%</b></span><span class="p-friend">Friendship <b>${sc.friend}%</b></span><span class="p-comm">Communication <b>${sc.comm}%</b></span><span class="p-val">Values <b>${sc.values}%</b></span></div>
   `)}
   <div class="list">${acc(pic('cats','love','acc-i'),'Love Compatibility','Romance and emotional connection',`<p>${el[1][1]}</p><p>${r.angle[1]}</p>`)}${acc(pic('cats','connections','acc-i'),'Friendship Compatibility','Shared values and support',`<p>${el[0][1]}</p><p>${el[4][1]}</p>`)}${acc(pic('cats','career','acc-i'),'Work Compatibility','How you collaborate',`<p>${el[3][1]}</p>`)}${acc(pic('cats','moon','acc-i'),'Detailed Analysis','Strengths, challenges and advice',matchBody(a,b))}</div>
-  <div class="acts"><button class="btn" data-act="saveconn" data-kind="zodiac">${saved?'Saved to your journal':'Save connection'}</button><button class="btn ghost" data-act="kasask" data-q="What do ${A1.name} and ${B1.name} traditionally bring out in each other?">Ask Kassandra</button><button class="btn ghost" data-go="discover" data-t="synastry">Compare birth charts</button></div></div>`}
+  <div class="acts"><button class="btn" data-act="saveconn" data-kind="zodiac">${saved?'Saved to your journal':'Save connection'}</button>${obj('kas',`data-act="kasask" data-q="What do ${A1.name} and ${B1.name} traditionally bring out in each other?"`,'Ask Kassandra')}<button class="btn ghost" data-go="discover" data-t="synastry">Compare birth charts</button></div></div>`}
  return `<div class="mnp af">${mnHead('Zodiac Affinity')}<p class="mn-sub">Love • Friendship • Connection</p>${mbox(`<p class="lead">Explore the natural flow between two signs and discover your strengths, challenges and unique connection.</p>
  <div class="two">${signSelect('za','Your sign',a)}${signSelect('zb','Their sign',b)}</div>`)}<button class="btn" data-act="domatch" ${b?'':'disabled'}>See how you meet →</button>${res||`<div class="list dim">${[['love','love','Love Compatibility','Romance and emotional connection'],['connections','friend','Friendship Compatibility','Shared values and support'],['career','work','Work Compatibility','How you collaborate'],['moon','more','Detailed Analysis','Strengths, challenges and advice']].map(([i,,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div><p class="muted small center">Choose their sign to see your compatibility.</p>`}</div>`;
 }
@@ -2156,7 +2160,7 @@ const evDay=e=>e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date);
 function evRow(e){
  const ref=evRef(e),open=V.evOpen===ref,i=evInfo(e),sv=isSaved('event',ref),d=e.dateOnly?e.date.toISOString().slice(0,10):dkey(e.date);
  return `<div class="evr${open?' open':''}${d===dkey()?' today':''}" id="ev-${esc(ref).replace(/[^\w-]/g,'')}"><button class="lrow" data-act="evtoggle" data-ref="${ref}" aria-expanded="${open}"><span class="lr-i">${evArt(e,true)}</span><span class="lr-t"><span class="evr-d">${d===dkey()?'<b class="evr-now">Today</b> ':''}${ymdLong(d,{day:'numeric',month:'short'})}</span><strong>${esc(e.name)}${e.sign!=null&&e.k!=='ingress'?` in ${sIdx(e.sign).name}`:''}</strong><span>${esc(evKeys(e))}</span></span><span class="lr-c">${IC.chev}</span></button>
- ${open?`<div class="acc-b"><p class="muted small">${evWhen(e)}</p><p class="kick">Astronomy</p><p>${i.fact}</p><p class="kick">Astrological symbolism</p><p>${i.sym}</p><p class="quote">“${i.ref}”</p><div class="acts"><button class="btn sm" data-act="bookev" data-ref="${ref}">${sv?'Saved to your journal':'Save to my journal'}</button>${sv?`<button class="btn ghost sm" data-act="jopen" data-k="bk:event:${esc(ref)}">Write a reflection</button>`:''}</div></div>`:''}</div>`;
+ ${open?`<div class="acc-b"><p class="muted small">${evWhen(e)}</p><p class="kick">Astronomy</p><p>${i.fact}</p><p class="kick">Astrological symbolism</p><p>${i.sym}</p><p class="quote">“${i.ref}”</p><div class="acts"><button class="btn sm" data-act="bookev" data-ref="${ref}">${sv?'Saved to your journal':'Save to my journal'}</button>${sv?obj('pen',`data-act="jopen" data-k="bk:event:${esc(ref)}"`,'Write a reflection in your Journal'):''}</div></div>`:''}</div>`;
 }
 /* ----- Journal: a personal celestial diary. A dark, illustrated library for browsing what was kept (Whispers, readings,
    horoscopes, events, connections, dreams and free writing), and a clean parchment page for writing. Each reflection is
@@ -2461,10 +2465,10 @@ function dreamView(){
  <div class="dm-art">${dreamArt(d,'dm-img')}</div>${mbox(`<h2 class="center dm-t">${esc(I.title||'Your Dream')}</h2><p class="keys">${keys((I.keywords||[]).slice(0,3))}</p>
  <div class="read">${paras(I.meaning)}</div>
  ${(I.symbols||[]).length?`${orn('Other Symbols in Your Dream')}<div class="symrow">${I.symbols.map(s=>{const x=dsym(s.id);return `<button data-act="libgo" data-tab="dreams" data-q="${esc(s.name)}">${x?artOf(x.art,'sym-i sq'):ui('d-dream','sym-i sq')}<strong>${esc(s.name)}</strong><span>${esc(s.meaning||'')}</span></button>`}).join('')}</div>`:''}`)}
- ${panel(`<p class="kick">A question to sit with</p><p class="quote">“${esc(I.reflection||PROMPTS.d[2])}”</p><button class="btn" data-act="jopen" data-k="bk:dream:${esc(d.id)}">${d.note?'Keep writing':'Write a Reflection'}</button>`,'ornate')}
+ ${panel(`<p class="kick">A question to sit with</p><p class="quote">“${esc(I.reflection||PROMPTS.d[2])}”</p>${obj('pen',`data-act="jopen" data-k="bk:dream:${esc(d.id)}"`,d.note?'Keep writing in your Journal':'Write a reflection in your Journal')}`,'ornate')}
  <details class="acc plain"><summary><span class="lr-t"><strong>Your dream, as you wrote it</strong></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><p class="pre">${esc(d.text)}</p></div></details>
  <p class="muted small center">${I.ai?'Read by Kassandra with AI. ':'Read with Kosmia’s dream dictionary. '}Dream meanings are symbolic and subjective, offered for reflection rather than as scientifically established predictions.</p>
- <div class="acts"><button class="btn ghost" data-act="kasask" data-q="I dreamt: ${esc((d.text||'').slice(0,300))} What might it mean?">Ask Kassandra about it</button><button class="btn ghost" data-go="discover" data-t="new-dream">Bring another dream</button></div></div>`;
+ <div class="acts">${obj('kas',`data-act="kasask" data-q="I dreamt: ${esc((d.text||'').slice(0,300))} What might it mean?"`,'Ask Kassandra about it')}<button class="btn ghost" data-go="discover" data-t="new-dream">Bring another dream</button></div></div>`;
 }
 function dreamJournalView(){
  const list=dreams();
@@ -2874,7 +2878,7 @@ function sxLay(sl){
    if(e.classList.contains('read'))[...e.children].forEach(q=>(q.textContent.match(/[^.!?…]+(?:[.!?…]+[’”"')\]]*\s*|$)/g)||[]).filter(x=>x.trim()).forEach((x,i)=>us.push({s:x,np:!i})));
    else us.push({h:e.outerHTML})});
   // the reading is set as large as it can be while still sitting whole on the card; only when it cannot at the smallest size does it turn pages
-  let z=21;for(const f of [21,20,19,18.5,18,17.5,17,16.5,16,15.5,15]){z=f;M.style.setProperty('--rf',f+'px');if(fits(us,H))break}sl.style.setProperty('--rf',z+'px');
+  let z=26;for(const f of [26,25,24,23,22,21,20,19,18.5,18,17.5,17,16.5,16,15.5,15]){z=f;M.style.setProperty('--rf',f+'px');if(fits(us,H))break}sl.style.setProperty('--rf',z+'px');
   sl.innerHTML=(fits(us,H)?[us]:even(us)).map(html).join('')}
  M.remove()}
 // the area in view laid out again (the others when they are next turned to), its page kept

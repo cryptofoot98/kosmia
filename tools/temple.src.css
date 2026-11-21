@@ -1186,10 +1186,10 @@ html body #app .prem-del .yo-del .sx-acts .btn{flex:1 1 0;min-width:0;height:42p
 /* Sky › For you: what is in the sky today, one card at a time, in the shape of the Cosmic Energy card in the app's own dark
    glass, every card the same size with its words always inside (the title at most two lines, the meaning three); the dots
    and arrows beneath. "Your sky today" and its cards sit low, leaving the sign room above */
-@@ .sky-t .sky-c:not(#x){position:relative;flex:0 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;height:164px!important;min-height:164px;max-height:164px;padding:0 16px 0 4px;box-sizing:border-box;border-radius:0;text-align:left;background:none!important;box-shadow:none!important;border:0!important;overflow:visible}
+@@ .sky-t .sky-c:not(#x){position:relative;flex:0 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;height:172px!important;min-height:172px;max-height:172px;padding:0 20px 0 4px;box-sizing:border-box;border-radius:0;text-align:left;background:none!important;box-shadow:none!important;border:0!important;overflow:visible}
 @@ .sky-t .sky-c:not(#x)::before{content:'';position:absolute;z-index:0;top:2px;bottom:2px;left:47px;right:0;border-radius:20px;background:rgba(14,18,38,.66);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);box-shadow:inset 0 0 0 1px rgba(243,215,144,.45),0 8px 22px rgba(0,0,0,.35)}
 @@ .sky-t .sky-c:not(#x) .sky-i,@@ .sky-t .sky-c:not(#x)>img{position:relative;z-index:1;flex:none;width:86px!important;height:86px!important;border-radius:50%;object-fit:cover;filter:none!important;box-shadow:0 0 0 1.5px #C9A253,0 4px 14px rgba(0,0,0,.5)!important;border:0!important}
-@@ .sky-t .sky-c:not(#x) .sky-x{position:relative;z-index:1;flex:1 1 0;min-width:0;align-self:center;align-items:flex-start;width:auto;max-height:140px;overflow:hidden}
+@@ .sky-t .sky-c:not(#x) .sky-x{position:relative;z-index:1;flex:1 1 0;min-width:0;align-self:center;align-items:flex-start;width:auto;max-height:156px;overflow:hidden}
 @@ .sky-t .sky-c:not(#x) .sky-x strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:600 20px/1.12 'Cormorant Garamond',serif!important;letter-spacing:0!important;text-transform:none!important;color:#F6E3B0!important}
 @@ .sky-t .sky-c:not(#x) .sky-x em{margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font:italic 500 14px/1.2 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.72)!important}
 @@ .sky-t .sky-c:not(#x) .sky-x>span{margin-top:4px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font:500 15.5px/1.25 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
@@ -1202,3 +1202,51 @@ body.tp:has(#app .sky-t) #t-front .tf-veil{display:none!important}
 @@ .pg-sky .sk-body:has(.sky-t)>.pg-page{flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-start;min-height:0}
 @@ .pg-sky .sk-body:has(.sky-t) .sky-k{margin-top:auto!important;margin-bottom:10px!important;font-size:13px!important;letter-spacing:.28em!important;color:#F3D790!important}
 @@ .pg-sky .sk-body:has(.sky-t) .sky-k svg{width:11px;height:11px}
+
+/* Sky › For you: the card's words fill it evenly, and "More" tells there is more to read */
+@@ .sky-t .sky-c:not(#x) .sky-i,@@ .sky-t .sky-c:not(#x)>img{width:94px!important;height:94px!important}
+@@ .sky-t .sky-c:not(#x){gap:16px}
+@@ .sky-t .sky-c:not(#x) .sky-x>span{font-size:16px!important;line-height:1.24!important}
+@@ .sky-t .sky-c:not(#x) .sky-x::after{content:'More ›';display:block;margin-top:6px;font:italic 500 15px/1 'Cormorant Garamond',serif;letter-spacing:.02em;color:#F3D790;text-shadow:0 0 6px rgba(246,214,130,.4)}
+
+/* the painted objects that stand for the app's actions: the crystal ball, the feather pen, the constellation, the heart */
+.obj-b:not(#x){display:inline-grid;place-items:center;flex:none;width:54px;height:54px;min-width:0;min-height:0;padding:0!important;margin:0;border:0!important;border-radius:50%;background:none!important;box-shadow:none!important;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.obj-b:not(#x) .obj-i{width:48px!important;height:48px!important;max-width:none;object-fit:contain;border-radius:0!important;box-shadow:none!important;border:0!important;filter:drop-shadow(0 0 7px rgba(246,214,130,.45));transition:transform .2s,opacity .25s}
+.obj-b:not(#x):active .obj-i{transform:scale(.9)}
+.obj-b:not(#x):focus-visible{outline:1px solid #F3D790;outline-offset:2px}
+.obj-like:not(.on):not(#x) .obj-i{opacity:.6;filter:saturate(.55) drop-shadow(0 0 4px rgba(246,214,130,.25))}
+.obj-like.on:not(#x) .obj-i{filter:drop-shadow(0 0 10px rgba(246,214,130,.75))}
+.obj-big:not(#x){width:76px;height:76px}.obj-big:not(#x) .obj-i{width:70px!important;height:70px!important}
+.obj-row:not(#x){display:flex!important;flex-direction:row!important;justify-content:center!important;align-items:center!important;gap:30px!important;flex-wrap:nowrap}
+.obj-row:not(#x)>.obj-b{flex:none!important;width:54px!important}
+
+/* every window's close button inside the gold frame, in glass */
+html body .cpop .cp-x:not(#x):not(#y),html body .cpop>.cp-x:not(#x):not(#y){top:calc(env(safe-area-inset-top,0px) + 30px)!important;right:max(30px,calc(50% - var(--appw,480px) / 2 + 30px))!important;width:40px!important;height:40px!important;border-radius:50%!important;border:0!important;background:rgba(14,18,38,.42)!important;-webkit-backdrop-filter:blur(8px) saturate(1.2);backdrop-filter:blur(8px) saturate(1.2);box-shadow:inset 0 0 0 1px rgba(243,215,144,.6),inset 0 1px 0 rgba(255,255,255,.12),0 4px 14px rgba(0,0,0,.35)!important;color:#F6E6B6!important;font-size:22px!important;line-height:1!important}
+
+/* the Sky window: the title just under the painting, the tile filling the room down to the objects, which sit just above
+   the menu, the same place in every window: the crystal ball, the full page in the middle, the feather pen */
+.cpop.skz.skb:not(#x):not(#y) .skz-car{flex:1 1 auto!important;min-height:0}
+.cpop.skz.skb:not(#x):not(#y) .skz-track{flex:1 1 auto!important;min-height:0;align-items:stretch}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile.cp-box{justify-content:center}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile h3{font-size:12px!important;margin-bottom:10px!important}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile p{font-size:19px!important;line-height:1.36!important}
+.cpop.skz.skb:not(#x):not(#y) .skz-obj{margin:6px 2% 8px!important}
+@media (max-height:760px){
+ .cpop.skz.skb:not(#x):not(#y) .skz-tile p{font-size:17.5px!important;line-height:1.3!important}
+ .cpop.skz.skb:not(#x):not(#y) .skz-obj{margin:4px 2% 4px!important}
+}
+
+/* the Sky window's tiles: a tile may hold two parts (one thing to do and the ritual), each with its heading; the words are
+   set as large as the tile allows */
+.cpop.skz.skb:not(#x):not(#y) .skz-tile .skz-part{display:flex;flex-direction:column}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile.two .skz-part+.skz-part{margin-top:8px;padding-top:8px;border-top:1px solid rgba(243,215,144,.28)}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile.two h3{margin-bottom:5px!important}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile.cp-box.two{padding-top:10px!important;padding-bottom:10px!important}
+.cpop.skz.skb:not(#x):not(#y) .skz-tile p{line-height:1.3!important}
+
+/* a sign's reading: its box in the same gold frame as the Sky windows' tiles, the reading larger; at the foot, just above
+   the menu, the crystal ball (Kassandra), "Read for someone else" in the middle, the feather pen */
+@@ .sx .hcar:not(#x){border:6px solid transparent!important;border-image:var(--atl)!important;border-radius:0!important;background:rgba(8,12,32,.55)!important;box-shadow:none!important;padding:14px 16px!important}
+@@ .sx .sx-acts.obj-bar:not(#x){display:flex!important;flex-direction:row!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin:6px 2% 2px!important}
+@@ .sx .sx-acts.obj-bar .sx-other{flex:1;min-width:0;padding:0;border:0;background:none;box-shadow:none;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:4px;font:italic 500 16px 'Cormorant Garamond',serif;color:#F3D790;text-shadow:0 0 6px rgba(246,214,130,.35)}
+@@ .sx .sx-acts.obj-bar .sx-other svg{width:10px;height:10px}
