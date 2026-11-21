@@ -252,7 +252,18 @@ html body.tp.tp.tp #app .home.hpath .hp-stage :is(p,h2,h3,.hp-big,.pz-t,.pz-b,.p
 html body.tp.tp.tp #app .home.hpath .hh-head .orn h2{color:#F3D790!important}
 html body.tp.tp.tp #app .home.hpath .hp-ta{color:#FFF6DC!important;background:rgba(12,16,36,.4)!important}
 html body.tp.tp.tp #app .home.hpath .hp-ta::placeholder{color:#F3E4BC;opacity:.75}
+/* Your Stars, the first page of the day: the sign's medallion beside its name, the day's theme and forecast */
+html body.tp.tp.tp #app .hp-stars .hp-sth{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:2px}
+html body.tp.tp.tp #app .hp-stars .hp-med{display:block;width:54px;height:54px;flex:none}
+html body.tp.tp.tp #app .hp-stars .hp-med img,html body.tp.tp.tp #app .hp-stars .hp-med .gmed-i{width:100%!important;height:100%!important;display:block}
+html body.tp.tp.tp #app .hp-stars .hp-sn{margin:0!important;text-align:left;font:600 17px/1.1 Cinzel,serif!important;letter-spacing:.08em}
+html body.tp.tp.tp #app .hp-stars .hp-sn span{display:block;font:italic 500 15px/1.2 'Cormorant Garamond',serif;letter-spacing:0;opacity:.85;margin-top:3px}
+html body.tp.tp.tp #app .hp-stars .pz-t{margin-top:10px!important}
+html body.tp.tp.tp #app .hp-stars .pz-b{margin-top:6px!important}
 @media (max-height:760px){
+ html body.tp.tp.tp #app .hp-stars .hp-med{width:44px;height:44px}
+ html body.tp.tp.tp #app .hp-stars .pz-t{font-size:23px!important;margin-top:6px!important}
+ html body.tp.tp.tp #app .hp-stars .pz-b{font-size:16px!important;line-height:1.27!important}
  html body.tp.tp.tp #app .hp-wfy .pz-moon{display:none!important}
  html body.tp.tp.tp #app .hp-wfy .pz-t{font-size:23px!important;margin-top:0!important}
  html body.tp.tp.tp #app .hp-wfy .pz-b{font-size:16px!important;line-height:1.27!important;margin-top:6px!important}
@@ -907,6 +918,27 @@ html body.tp.tp.tp #app .hp-whisper:not(#x) .dw-wait .scene.mini-w{flex:none!imp
 html body.tp.tp.tp #app .hp-whisper:not(#x) .dw-wait .dw-side{flex:none;align-items:center;text-align:center;gap:2px}
 html body.tp.tp.tp #app .home.hpath .hp-whisper:not(#x) .dw-wait .dw-t{margin:0!important;font-size:23px!important;text-align:center}
 html body.tp.tp.tp #app .home.hpath .hp-whisper:not(#x) .dw-wait .dw-msg{margin:0!important;font-size:16.5px!important;line-height:1.25!important;text-align:center;font-style:italic}
+/* the day's horoscope for every area of life, in the enlarged Whisper's window */
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-top{display:flex;flex-direction:column;align-items:center;gap:4px;margin:6px 0 10px}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-med{display:block;width:92px;height:92px;filter:drop-shadow(0 0 14px rgba(255,214,140,.4))}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-med img,html body.tp.tp.tp #app .hpz:not(#x) .hpz-med .gmed-i{width:100%!important;height:100%!important;display:block}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-dt{margin:0!important;font:italic 500 15px 'Cormorant Garamond',serif!important;color:rgba(251,240,210,.8)!important}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-tabs{display:flex;justify-content:space-between;gap:4px;margin:0 -4px 12px;padding-bottom:10px;border-bottom:1px solid rgba(243,215,144,.3)}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-tab{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;background:none;border:0;border-radius:12px;color:rgba(251,240,210,.7);font:600 9.5px 'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-tab.on{color:#F3D790;background:rgba(243,215,144,.12);box-shadow:inset 0 0 0 1px rgba(243,215,144,.45)}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-ico{width:30px!important;height:30px!important;opacity:.7}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-tab.on .hpz-ico{opacity:1}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-f{margin:0 0 6px!important;font:italic 600 22px/1.15 'Cormorant Garamond',serif!important;color:#FBF0D2!important;text-align:center}
+html body.tp.tp.tp #app .hpz:not(#x) .hpz-b p{margin:0 0 8px!important;font:500 17px/1.32 'Cormorant Garamond',serif!important;color:#FBF0D2!important;text-align:left}
+html body.tp.tp.tp #app .hpz:not(#x) .wpc-acts .btn svg{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
+@media (max-height:760px){
+ html body.tp.tp.tp #app .hpz:not(#x) .cp-t{font-size:30px!important}
+ html body.tp.tp.tp #app .hpz:not(#x) .hpz-top{margin:0 0 8px}
+ html body.tp.tp.tp #app .hpz:not(#x) .hpz-med{width:58px;height:58px}
+ html body.tp.tp.tp #app .hpz:not(#x) .hpz-tabs{margin-bottom:8px;padding-bottom:6px}
+ html body.tp.tp.tp #app .hpz:not(#x) .hpz-ico{width:26px!important;height:26px!important}
+ html body.tp.tp.tp #app .hpz:not(#x) .hpz-b p{font-size:16px!important;line-height:1.27!important}
+}
 /* the Whisper's card enlarged, the same way a card of a reading is */
 html body.tp.tp.tp #app .wpz:not(#x) .cp-card .face.front{padding:0!important;background:none!important;border:0!important;box-shadow:none!important}
 html body.tp.tp.tp #app .wpz:not(#x) .cp-card .face.front .k-tarot{position:absolute;inset:0;width:100%;height:100%}
@@ -987,8 +1019,8 @@ html body.tp.tp.tp #app .hp-own input::placeholder{color:#F3E4BC;opacity:.75}
 html body.tp.tp.tp #app .home.hpath .hp-own .btn:not(#x){flex:none!important;width:auto!important;max-width:none!important;height:42px;margin:0!important;padding:0 18px!important;white-space:nowrap}
 html body.tp.tp.tp #app .home.hpath .hp-stage .hp-dawn:not(#x){margin:10px 0 0!important;font-size:15.5px!important;font-style:italic;opacity:.9}
 html body.tp.tp.tp #app .home.hpath .hp-carryp .pz-q:not(#x),html body.tp.tp.tp #app .home.hpath .hp-held .pz-q:not(#x){margin:6px 0!important}
-html body.tp.tp.tp #app .hp-seekp .jp-new,html body.tp.tp.tp #app .hp-carryp .jp-new{margin-top:10px;background:none;border:0;color:#F8E6B4;font:italic 500 15px 'Cormorant Garamond',serif}
-html body.tp.tp.tp #app .hp-seekp .jp-new svg,html body.tp.tp.tp #app .hp-carryp .jp-new svg{width:10px;height:10px;vertical-align:middle}
+html body.tp.tp.tp #app .hp-seekp .jp-new,html body.tp.tp.tp #app .hp-carryp .jp-new,html body.tp.tp.tp #app .hp-stars .jp-new{margin-top:10px;background:none;border:0;color:#F8E6B4;font:italic 500 15px 'Cormorant Garamond',serif}
+html body.tp.tp.tp #app .hp-seekp .jp-new svg,html body.tp.tp.tp #app .hp-carryp .jp-new svg,html body.tp.tp.tp #app .hp-stars .jp-new svg{width:10px;height:10px;vertical-align:middle}
 html body.tp.tp.tp #app .kz-in{margin:0 0 10px!important;text-align:center;font:italic 500 17px/1.3 'Cormorant Garamond',serif!important;color:#FBF0D2!important}
 /* the six areas of a sign's reading: their names large enough to read */
 html body.tp.tp.tp #app .sx .hc-sl:not(#x):not(#y){font-size:.6rem!important;letter-spacing:.04em!important}

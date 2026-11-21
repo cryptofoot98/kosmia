@@ -95,10 +95,10 @@ window.Temple=(()=>{
  }
  // the moon as it waxes with the day: new, crescent, half, gibbous, full as the four steps are done (lit on the right)
  function arc(steps,whole){
-  const n=whole?4:steps.filter(x=>x.on).length,u=v=>(v/3.9).toFixed(3)+'cqw';
+  const n=whole?4:Math.min(3,Math.round(steps.filter(x=>x.on).length*4/steps.length)),u=v=>(v/3.9).toFixed(3)+'cqw';
   const st=`left:${u(CX-MD/2)};top:${u(MY-MD/2)};width:${u(MD)};height:${u(MD)}`;
   const rx=[0,.56,0,.56][n%4]*48,sw=n===3?1:0,lit=n>=4?'<circle cx="50" cy="50" r="49" fill="#fff"/>':n?`<path d="M50 2A48 48 0 0 1 50 98A${rx} 48 0 0 ${sw} 50 2Z" fill="#fff"/>`:'';
-  arcHtml=`<div class="tm-arc">${orn()}<span class="tm-mo${n>=4?' on':''}" style="${st}" role="img" aria-label="The day's moon, ${n} of 4 steps lit"><svg viewBox="0 0 100 100"><defs><filter id="tmb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.1"/></filter><mask id="tmm"><g filter="url(#tmb)">${lit}</g></mask></defs><image href="${A}moon-base.webp" width="100" height="100"/><image href="${A}moon-full.webp" width="100" height="100" mask="url(#tmm)" class="lit"/></svg></span></div>`;
+  arcHtml=`<div class="tm-arc">${orn()}<span class="tm-mo${n>=4?' on':''}" style="${st}" role="img" aria-label="The day's moon, ${steps.filter(x=>x.on).length} of ${steps.length} steps done"><svg viewBox="0 0 100 100"><defs><filter id="tmb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.1"/></filter><mask id="tmm"><g filter="url(#tmb)">${lit}</g></mask></defs><image href="${A}moon-base.webp" width="100" height="100"/><image href="${A}moon-full.webp" width="100" height="100" mask="url(#tmm)" class="lit"/></svg></span></div>`;
   return '';
  }
  return {set,off,layout,fit,arc,SC};
