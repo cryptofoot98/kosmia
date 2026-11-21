@@ -7,8 +7,8 @@ their space before they load.
 
 | | Count |
 |---|---|
-| Images | 614 |
-| In use, provisional | 570 |
+| Images | 634 |
+| In use, provisional | 590 |
 | Unused | 44 |
 | Missing (listed below) | 10 groups |
 
@@ -161,6 +161,26 @@ their space before they load.
 | `public/art/share/t5.webp` | 1080×1671 | 0.65:1 | no | 300 | provisional |  |
 | `public/art/share/tarot.webp` | 1080×1521 | 0.71:1 | no | 409 | provisional |  |
 | `public/art/share/whisper.webp` | 1080×1517 | 0.71:1 | no | 365 | provisional |  |
+| `public/art/sky/ev-lunar-eclipse.webp` | 780×1683 | 0.46:1 | no | 153 | provisional |  |
+| `public/art/sky/ev-meteor.webp` | 780×1683 | 0.46:1 | no | 139 | provisional |  |
+| `public/art/sky/ev-solar-eclipse.webp` | 780×1683 | 0.46:1 | no | 153 | provisional |  |
+| `public/art/sky/moon-first-quarter.webp` | 780×1683 | 0.46:1 | no | 128 | provisional |  |
+| `public/art/sky/moon-full-moon.webp` | 780×1683 | 0.46:1 | no | 145 | provisional |  |
+| `public/art/sky/moon-last-quarter.webp` | 780×1683 | 0.46:1 | no | 142 | provisional |  |
+| `public/art/sky/moon-new-moon.webp` | 780×1683 | 0.46:1 | no | 120 | provisional |  |
+| `public/art/sky/moon-waning-crescent.webp` | 780×1683 | 0.46:1 | no | 133 | provisional |  |
+| `public/art/sky/moon-waning-gibbous.webp` | 780×1683 | 0.46:1 | no | 143 | provisional |  |
+| `public/art/sky/moon-waxing-crescent.webp` | 780×1683 | 0.46:1 | no | 135 | provisional |  |
+| `public/art/sky/moon-waxing-gibbous.webp` | 780×1683 | 0.46:1 | no | 143 | provisional |  |
+| `public/art/sky/pl-jupiter.webp` | 780×1683 | 0.46:1 | no | 183 | provisional |  |
+| `public/art/sky/pl-mars.webp` | 780×1683 | 0.46:1 | no | 176 | provisional |  |
+| `public/art/sky/pl-mercury.webp` | 780×1683 | 0.46:1 | no | 155 | provisional |  |
+| `public/art/sky/pl-neptune.webp` | 780×1683 | 0.46:1 | no | 166 | provisional |  |
+| `public/art/sky/pl-pluto.webp` | 780×1683 | 0.46:1 | no | 163 | provisional |  |
+| `public/art/sky/pl-saturn.webp` | 780×1683 | 0.46:1 | no | 175 | provisional |  |
+| `public/art/sky/pl-uranus.webp` | 780×1683 | 0.46:1 | no | 162 | provisional |  |
+| `public/art/sky/pl-venus.webp` | 780×1683 | 0.46:1 | no | 155 | provisional |  |
+| `public/art/sky/sun.webp` | 780×1683 | 0.46:1 | no | 163 | provisional |  |
 | `public/art/temple/candle.webp` | 912×1968 | 0.46:1 | no | 183 | provisional |  |
 | `public/art/temple/dawn.webp` | 912×1968 | 0.46:1 | no | 309 | provisional |  |
 | `public/art/temple/frame.webp` | 912×1968 | 0.46:1 | yes | 40 | provisional |  |
