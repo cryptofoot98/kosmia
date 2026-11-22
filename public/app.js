@@ -837,7 +837,8 @@ const HPOP=HCATS.filter(([x])=>x!=='overview');
 function horoPop(sign){
  const k=dkey(),cat=HPOP.some(([x])=>x===V.hpop)?V.hpop:HPOP[0][0],h=horoscope(sign.id,cat,'daily');
  HPOP.forEach(([x])=>horoscope(sign.id,x,'daily'));   // the other areas are asked for now, so each tab opens written
- return `<div class="cpop wpz hpz" role="dialog" aria-modal="true" aria-label="${sign.name}, today in every area of life" data-act="hpopclose"><button class="cp-x" data-act="hpopclose" aria-label="Close">×</button><div class="cp-in">
+ const still=!!document.querySelector('.cpop.hpz');
+ return `<div class="cpop wpz hpz${still?' still':''}" data-s="${sign.id}" role="dialog" aria-modal="true" aria-label="${sign.name}, today in every area of life" data-act="hpopclose"><button class="cp-x" data-act="hpopclose" aria-label="Close">×</button><div class="cp-in">
  <p class="cp-k">Your Stars · ${ymdLong(k,{day:'numeric',month:'long'})}</p><h2 class="cp-t">${sign.name}</h2>
  <div class="hpz-top">${glyphMed(sign.id,'hpz-med')}<p class="hpz-dt">${esc(sign.dates)}</p></div>
  <div class="cp-box"><nav class="hpz-tabs" role="tablist" aria-label="Areas of life">${HPOP.map(([x,l])=>`<button role="tab" class="hpz-tab${x===cat?' on':''}" data-act="hpopcat" data-k="${x}" aria-selected="${x===cat}"><span>${l}</span></button>`).join('')}</nav>
@@ -3212,7 +3213,11 @@ document.addEventListener('click',e=>{
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
  if(a==='wpop'){V.wpop=t.dataset.k||true;return render()}
- if(a==='hpop'||a==='hpopcat'){V.hpop=t.dataset.k||'love';return render()}
+ if(a==='hpopcat'){const w=$('.cpop.hpz');V.hpop=t.dataset.k||'love';if(!w)return render();
+  const o=w.querySelector('.hpz-scr'),d=document.createElement('div');d.innerHTML=horoPop(SIGNS.find(x=>x.id===w.dataset.s));const n=d.querySelector('.hpz-scr');
+  w.querySelectorAll('.hpz-tab').forEach(b=>{const on=b.dataset.k===V.hpop;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+  if(!o||!n)return;clearTimeout(o._sw);o.classList.add('out');o._sw=setTimeout(()=>{o.innerHTML=n.innerHTML;o.scrollTop=0;o.classList.remove('out')},220);return}
+ if(a==='hpop'){V.hpop=t.dataset.k||'love';return render()}
  if(a==='hpopclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.hpop=false;return render()}
  if(a==='wpopclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.wpop=false;return render()}
  if(a==='cpedit'){V.cpEdit=true;V.birthDraft=null;return render()}

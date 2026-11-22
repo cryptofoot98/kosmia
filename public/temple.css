@@ -1298,3 +1298,9 @@ html body.tp.tp.tp #app .lib-grid .sky-c:not(#x):not(#y) .sky-go{display:none!im
 body.tp[data-scene=sky] #t-front .tf-veil{display:none!important}
 html body.tp.tp.tp #app .lib-grid .sky-c:not(#x):not(#y) .jn-x{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:block!important;-webkit-line-clamp:unset!important}
 html body.tp.tp.tp #app .lib-grid .sky-c:not(#x):not(#y) .sky-x{max-width:100%;overflow:visible!important}
+
+/* Love, work and more: a tab changes only the reading, which fades out and the next fades in, inside the window; the window
+   itself never fades again while it is open */
+.cpop.hpz.still:not(#x):not(#y),.cpop.hpz.still:not(#x):not(#y) .cp-in{animation:none!important}
+.cpop.hpz:not(#x):not(#y) .hpz-scr{transition:opacity .22s ease,transform .22s ease}
+.cpop.hpz:not(#x):not(#y) .hpz-scr.out{opacity:0;transform:translateY(4px)}
