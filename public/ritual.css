@@ -188,3 +188,7 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .pl-d,#app .pl-r{line-height:1.2}
 #app .sp-b.c{text-align:center}
 #app .pl-c{display:flex;flex-direction:column;justify-content:center}
+#app .plx>*{position:absolute}
+#app .plc{position:absolute;transform-origin:50% 0;background:0 0/100% 100% no-repeat}
+#app .plc .spx{position:absolute}
+#app .plp{pointer-events:none;filter:drop-shadow(0 0 22px rgba(255,190,110,.28))}

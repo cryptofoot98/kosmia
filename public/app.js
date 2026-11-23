@@ -3293,7 +3293,7 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2219,0,2219]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2224,0,0]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
 const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
@@ -3397,6 +3397,7 @@ function fit(){
    const top=952,bot=ch-228-26,hh=104,A=bot-top,gap=Math.min(90,Math.max(14,(A-3*hh)/4)),y0=top+(A-3*hh-2*gap)/2;
    t.querySelectorAll('.rchip').forEach((c,i)=>{c.style.left=(i%2?522:92)+'px';c.style.top=(y0+Math.floor(i/2)*(hh+gap))+'px'})}
   if(id==='rmoon'||id==='rsun')({ch,th,sy}=spLay(t,id.slice(1),sc,hr,H));
+  if(id==='rpl')({ch,th,sy}=plLay(t,sc,hr,H));
   st.setProperty('--s',sc);st.setProperty('--sy',sy);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
   // the Whisper's card fills the room between the title and the foot, turned or not
   if(id==='rtw'){const bot=hr-112,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
@@ -3625,6 +3626,23 @@ function plStay(P,now){
   let a=t,b=t+dir*st;for(let i=0;i<30;i++){const m=(a+b)/2;if(K.signIdx(K.lon(P,new Date(m)))===si)a=m;else b=m}return new Date(a)};
  return [edge(-1),edge(1)];
 }
+// the planet pages fit the screen: the painting nearest its shape, the planet and the cards laid out in the room between
+// the title and the Earth's horizon, the cards scaled down together only if a short screen needs it
+const PLH=[1744,1984,2224],PLT=[[40,902,943,205],[36,1115,953,235],[36,1360,953,233],[34,1602,955,234]],PLR_={saturn:2.08};
+function plLay(t,sc,hr,H){
+ const ch=PLH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
+ t.style.setProperty('--img',`url(${SKY}pl-bg-${ch}.webp)`);
+ t.querySelectorAll('.rtop [data-y]').forEach(e=>e.style.top=(+e.dataset.y*k/ (sy/sc))+'px');
+ const top=432*k,end=hr*.885,tot=PLT.reduce((a,c)=>a+c[3],0);
+ const f=Math.min(1,(end-top-300-5*8)/tot),cs=tot*f,free=end-top-cs,gap=Math.max(6,Math.min(24,(free-300)/8)),Z=free-5*gap;
+ const cy=top+Z/2,ph=Math.min(Z*.9,470);
+ let y=top+Z+gap;
+ t.querySelectorAll('.plc').forEach(c=>{const [x,,w,h]=PLT[+c.dataset.k];c.style.left=(512-w/2)+'px';c.style.top=y+'px';c.style.transform=`scale(${f})`;y+=h*f+gap});
+ const p=t.querySelector('.plp');if(p){const r=+p.dataset.r,h=r>1?Math.min(ph*.62,540/r):ph,w=h*r;p.style.cssText=`left:${518-w/2}px;top:${cy-h/2}px;width:${w}px;height:${h}px`}
+ const g=t.querySelector('.plg');if(g){const s=ph*.27;g.style.cssText=`left:${518-s/2}px;top:${cy-s/2}px;width:${s}px;height:${s}px`}
+ t.querySelectorAll('.plx [data-cy]').forEach(e=>e.style.top=(cy+ +e.dataset.cy)+'px');
+ return {ch,th:ch,sy};
+}
 function planetPop(P){
  if(!PLK[P])P='Jupiter';
  const now=new Date(),k=P.toLowerCase(),sI=K.signIdx(K.lon(P,now)),si=sIdx(sI),r=skyRel(sI),me=sg(S.sign);
@@ -3634,19 +3652,24 @@ function planetPop(P){
  const happen=`${P} is in ${si.name}, ${PLV[P]} ${SFL[si.id]}.${rx?` It is retrograde now, turning inward: a time to review rather than push.`:''}`;
  const mean=`For ${me.name}, ${P} is ${REL_IN[r.rel]}, touching ${areaShort(r.area)}. ${PLM[P]}${RULER[S.sign]===P?` As your ruling planet, you feel it more than most.`:''}`;
  const todo=rx?[PRX[P],...PLD[P].slice(1)]:PLD[P];
+ const cy=0,ry=y=>`data-cy="${y}"`,pc=(cls,x,y,w,h,html,f)=>tx(cls,x,0,w,h,html,f).replace('class="spx','data-cy="'+y+'" class="spx');
+ const card=(k,inner)=>`<div class="plc" data-k="${k}" style="width:${PLT[k][2]}px;height:${PLT[k][3]}px;background-image:url(${SKY}pl-t${k}.webp)">${inner}</div>`;
+ const lay=`<div class="spl plx">
+  <img class="plp" src="${SKY}pl-p-${k}.webp" alt="" data-r="${PLR_[k]||1}">
+  <img class="sp-g plg" src="${SKY}pl-g-${k}.webp" alt="">
+  ${pc('sp-big pl-s',40,-132,188,40,'Current Sign',31)}
+  <img class="sp-g" ${ry(-88)} src="${SKY}sk-g-${si.id}.webp" alt="" style="left:92px;width:84px;height:84px">
+  ${pc('sp-big pl-n',40,-4,188,50,si.name,44)}${pc('sp-sm c pl-d',40,50,188,72,dates,27)}
+  <img class="sp-g" ${ry(-120)} src="${SKY}pl-rx.webp" alt="" style="left:800px;width:190px;height:142px">
+  ${pc('sp-sm c pl-r',796,24,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
+  ${card(0,tx('sp-b pl-c',236,74,682,108,happen,32))}
+  ${card(1,tx('sp-b pl-c',236,69,682,134,mean,32))}
+  ${card(2,tx('sp-b sp-l pl-c',236,68,682,158,dots(todo),31))}
+  ${card(3,tx('sp-rn c',192,124,306,44,PLR[P][0],32)+tx('sp-rd',548,30,376,170,PLR[P][1],27))}
+ </div>`;
  return pane('rpl',`${P} in ${si.name}.`,'',`
-  ${tx('pl-t',300,252,424,112,P,100)}${tx('pl-k',90,378,844,40,PLK[P].join(' <i>•</i> '),31)}
-  <img class="sp-g" src="${SKY}pl-g-${k}.webp" alt="" style="left:${518-62}px;top:${626-62}px;width:124px;height:124px">
-  ${tx('sp-big pl-s',40,508,188,40,'Current Sign',31)}
-  <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:${134-42}px;top:552px;width:84px;height:84px">
-  ${tx('sp-big pl-n',40,636,188,50,si.name,44)}${tx('sp-sm c pl-d',40,690,188,72,dates,27)}
-  ${tx('sp-sm c pl-r',796,664,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
-  ${tx('sp-b pl-c',276,976,682,108,happen,32)}
-  ${tx('sp-b pl-c',276,1184,682,134,mean,32)}
-  ${tx('sp-b sp-l pl-c',276,1428,682,158,dots(todo),31)}
-  ${tx('sp-rn c',226,1726,306,44,PLR[P][0],32)}${tx('sp-rd',582,1632,376,170,PLR[P][1],27)}
-  <button class="rit-hot" data-skx aria-label="Back to the Sky" style="left:60px;top:157px;width:76px;height:76px"></button><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:887px;top:157px;width:76px;height:76px"></button>`,'')
-  .replace('id="rpl"',`id="rpl" style="--img:url(${SKY}pl-${k}.webp)"`);
+  ${tx('pl-t',300,252,424,112,P,100).replace('class="spx','data-y="252" class="spx')}${tx('pl-k',90,378,844,40,PLK[P].join(' <i>•</i> '),31).replace('class="spx','data-y="378" class="spx')}
+  <button class="rit-hot" data-skx aria-label="Back to the Sky" style="left:60px;top:157px;width:76px;height:76px"></button><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:887px;top:157px;width:76px;height:76px"></button>`,'',lay);
 }
 // each line of words is fitted to its place in the painting
 function spFit(){document.querySelectorAll('.spx').forEach(e=>{let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}})}
