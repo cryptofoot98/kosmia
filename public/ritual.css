@@ -179,7 +179,7 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .spc{position:absolute;box-sizing:border-box;border-style:solid}
 #app .spc .spi{position:absolute;pointer-events:none}
 #app .spc .spx{position:absolute}
-#app .spc.spr{border:0;background:0 0/100% 100% no-repeat}
+#app .spc.spr{border-style:solid}
 #app .spc .sp-b{line-height:1.15;display:flex;flex-direction:column;justify-content:center}
 #app .pl-t{text-align:center;font-style:italic;font-weight:600;line-height:1;color:#F4DFB2;text-shadow:0 0 18px rgba(240,190,90,.45),0 0 4px rgba(4,7,22,.9);display:flex;align-items:center;justify-content:center}
 #app .pl-k{text-align:center;font-family:'Cinzel',Georgia,serif;font-style:normal;font-weight:500;letter-spacing:.2em;color:#EBD7A8;white-space:nowrap;display:flex;align-items:center;justify-content:center}
@@ -220,3 +220,19 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app #rsg .sg-row i{align-self:stretch;background:linear-gradient(transparent,rgba(120,74,30,.55) 20%,rgba(120,74,30,.55) 80%,transparent)}
 #app #rsg .sg-l{font:600 29px/1.2 'Cinzel',Georgia,serif;letter-spacing:.28em;color:#241508;margin-bottom:8px}
 #app #rsg .sg-x{font:italic 500 39px/1.3 'Cormorant Garamond',serif}
+/* the cards: one size, an arrow to open each; opened cards scroll over the painting */
+#app .spw{position:absolute;inset:0;z-index:3;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;pointer-events:none;-webkit-overflow-scrolling:touch}
+#app .spw::-webkit-scrollbar{display:none}
+#app .spw .spl{pointer-events:none}
+#app .spw .spc{pointer-events:auto}
+#app .spc .sp-b{display:block!important;overflow:hidden;font-size:36px!important;line-height:1.2}
+#app .spc .sp-b.sp-l{font-size:35px!important}
+#app .spc.more:not(.open) .sp-b,#app .spc.more:not(.open) .sp-rd{-webkit-mask:linear-gradient(#000 55%,transparent);mask:linear-gradient(#000 55%,transparent)}
+#app .spc.spr .sp-rd{left:528px;top:-86px;width:322px;font-size:32px;line-height:1.2;overflow:hidden;display:block;color:#21150a;font-style:italic;font-weight:600}
+#app .spa{position:absolute;right:28px;top:calc(50% - 24px);width:48px;height:48px;display:none;place-items:center;border:0;background:none;padding:0;cursor:pointer}
+#app .spc.spr .spa{top:-58px}
+#app .spc.more .spa,#app .spc.open .spa{display:grid}
+#app .spa svg{width:40px;height:40px;fill:none;stroke:#E9C987;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s;filter:drop-shadow(0 0 4px rgba(240,190,90,.6))}
+#app .spc.spr .spa svg{stroke:#5a3612;filter:none}
+#app .spc.open .spa svg{transform:rotate(180deg)}
+#app .spc{cursor:pointer}

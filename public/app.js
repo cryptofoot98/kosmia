@@ -3553,42 +3553,54 @@ const SPH=[1744,1984,2240],SKT=[[49,924,70],[49,924,64],[49,924,66]],SKL=185,SKX
 // each page's icons for the cards [file prefix, [w,h] each], set in the middle of the card's round end
 const SKI={moon:['moon',[[139,108],[123,121],[126,94]]],sun:['sun',[[166,96],[156,154],[136,96]]],pl:['pl',[[130,95],[128,122],[126,105]]]};
 const skHead=(title,sub)=>`${tx('sk-t',182,138,660,98,title,82)}${tx('sk-k',112,252,800,34,sub,25)}`;
+// the four cards: one size (the ritual card's), each with an arrow on its right that opens it to read the rest
+const SKA='<button class="spa" aria-label="Read more"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M13 16l7 8 7-8"/></svg></button>';
 function spCards(n,bodies,rit){
- const [f,ics]=SKI[n];
+ const [f,ics]=SKI[n],o=V.spo||{};
  return `${[0,1,2].map(k=>{const [x,w,T]=SKT[k],[iw,ih]=ics[k];
-  return `<div class="spc" data-k="${k}" style="left:${x}px;top:0;width:${w}px;height:${SKHB}px;border-width:${T}px 90px 30px ${SKL}px;border-image:url(${SKY}sp-moon-t${k}.webp) ${T} 90 30 ${SKL} fill stretch">
-   <img class="spi" src="${SKY}sp-${f}-i${k}.webp" alt="" style="left:${110-iw/2-SKL}px;width:${iw}px;height:${ih}px">
-   <div class="spx sp-b${k===2?' sp-l':''}" style="left:${SKX-SKL}px;top:-2px;width:${w-SKX-58}px">${bodies[k]}</div></div>`}).join('')}
-  <div class="spc spr" style="left:49px;top:0;width:924px;height:${SKRH}px;background-image:url(${SKY}sp-moon-t3.webp)">${rit}</div>`;
+  return `<div class="spc${o[k]?' open':''}" data-k="${k}" style="left:${x}px;top:0;width:${w}px;height:${SKRH}px;border-width:${T}px 0 30px 0;border-image:url(${SKY}sp-moon-t${k}.webp) ${T} 0 30 0 fill stretch;background:url(${SKY}sp-moon-m${k}.webp) 0 ${T}px/100% calc(100% - ${T+30}px) no-repeat;background-origin:border-box;background-clip:border-box">
+   <img class="spi" src="${SKY}sp-${f}-i${k}.webp" alt="" style="left:${110-iw/2}px;width:${iw}px;height:${ih}px">
+   <div class="spx sp-b${k===2?' sp-l':''}" style="left:${SKX}px;top:-2px;width:${w-SKX-70}px">${bodies[k]}</div>${SKA}</div>`}).join('')}
+  <div class="spc spr${o[3]?' open':''}" data-k="3" style="left:49px;top:0;width:924px;height:${SKRH}px;border-width:100px 0 30px 0;border-image:url(${SKY}sp-rit-card.webp) 100 0 30 0 fill stretch;background:url(${SKY}sp-rit-mid.webp) 0 90px/100% calc(100% - 115px) no-repeat;background-origin:border-box;background-clip:border-box">
+   <img class="spi" src="${SKY}sp-rit-bowl.webp" alt="" style="left:48px;width:124px;height:149px">${rit}${SKA}</div>`;
 }
-const skRit=(name,desc)=>`${tx('sp-rn',186,86,316,52,name,32)}${tx('sp-rd',528,14,356,156,desc,30)}`;
-// lay a page out for this screen: the painting nearest its shape; the cards sized to their words; on the Moon and Sun the
-// cards start beneath the painted Moon or Sun, on a planet they rest above the Earth's horizon and the planet fills the room above
+const skRit=(name,desc)=>`${tx('sp-rn',186,-14,316,52,name,32)}<div class="spx sp-rd">${desc}</div>`;
+// lay a page out for this screen: the painting nearest its shape; the cards one size, an opened card as tall as its words;
+// on the Moon and Sun the cards start beneath the painted Moon or Sun, on a planet they rest above the Earth's horizon and the
+// planet fills the room above; if opened cards need more room than the screen, the cards scroll over the painting
 function skLay(t,n,sc,hr,H){
  const ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
  t.style.setProperty('--img',`url(${SKY}${n==='pl'?'pl-bg':'sp-'+n}-${ch}.webp)`);
- const cards=[...t.querySelectorAll('.spc')],hh=cards.map((c,i)=>{if(i>2)return SKRH;const b=c.querySelector('.sp-b');b.style.height='auto';
-  return Math.max(SKHB,SKT[i][2]+b.scrollHeight+30)});
- let gap=16,cs=hh.reduce((a,b)=>a+b,0)+3*gap;
- const top0=n==='pl'?310*k:642*k,bottom=hr*(n==='pl'?.87:.965),room=bottom-top0;
- const fs=Math.min(1,(n==='pl'?room-200:room)/cs);
- let y=n==='pl'?bottom-cs*fs:top0+Math.max(8,Math.min(30,(room-cs)*.12));
- cards.forEach((c,i)=>{c.style.top=y+'px';c.style.transform=fs<1?`scale(${fs})`:'';c.style.height=hh[i]+'px';const T=i<3?SKT[i][2]:0;
-  const im=c.querySelector('.spi');if(im)im.style.top=(hh[i]/2-parseFloat(im.style.height)/2-T)+'px';
-  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-T-30)+'px';y+=(hh[i]+gap)*fs});
- if(n==='pl'){const Z=bottom-cs*fs-gap-top0,cy=top0+Z/2,ph=Math.min(Z*.9,600),cf=Math.min(1,Z/280);
-  const p=t.querySelector('.plp');if(p){const r=+p.dataset.r,h=r>1?Math.min(ph*.62,560/r):ph,w=h*r;p.style.cssText=`left:${512-w/2}px;top:${cy-h/2}px;width:${w}px;height:${h}px`}
-  const g=t.querySelector('.plg');if(g){const s=Math.min(ph*.26,130);g.style.cssText=`left:${512-s/2}px;top:${cy-s/2}px;width:${s}px;height:${s}px`}
+ const cards=[...t.querySelectorAll('.spc')],gap=14;
+ const hh=cards.map((c,i)=>{const T=i<3?SKT[i][2]:100,b=c.querySelector(i<3?'.sp-b':'.sp-rd');if(!b)return SKRH;
+  b.style.height='';const full=b.scrollHeight,room=SKRH-T-30;c.classList.toggle('more',full>room+2);
+  const h=c.classList.contains('open')?Math.max(SKRH,T+full+30+(i<3?0:-56)):SKRH;b.style.height=(i<3?h-T-30:h-100+56)+'px';return h});
+ const cs0=4*SKRH+3*gap,top0=n==='pl'?300*k:642*k,bottom=hr*(n==='pl'?.9:.965),room=bottom-top0;
+ const fs=Math.min(1,(n==='pl'?room-360:room)/cs0);
+ let y=n==='pl'?bottom-cs0*fs:top0+Math.max(8,Math.min(30,(room-cs0)*.12));
+ cards.forEach((c,i)=>{c.style.top=y+'px';c.style.height=hh[i]+'px';c.style.transform=fs<1?`scale(${fs})`:'';
+  const im=c.querySelector('.spi'),T=i<3?SKT[i][2]:100;if(im)im.style.top=(SKRH/2-parseFloat(im.style.height)/2-T)+'px';
+  y+=(hh[i]+gap)*fs});
+ const lay=t.querySelector('.spl');if(lay)lay.style.height=Math.max(hr,y+40)+'px';
+ if(n==='pl'){const Z=bottom-cs0*fs-gap-top0,cy=top0+Z/2,ph=Math.min(Z*1.02,590),cf=Math.min(1,Z/300);
+  const p=t.querySelector('.plp');if(p){const r=+p.dataset.r,h=r>1?Math.min(ph*.7,700/r):ph,w=h*r;p.style.cssText=`left:${512-w/2}px;top:${cy-h/2}px;width:${w}px;height:${h}px`}
+  const g=t.querySelector('.plg');if(g){const s=Math.min(ph*.24,130);g.style.cssText=`left:${512-s/2}px;top:${cy-s/2}px;width:${s}px;height:${s}px`}
   t.querySelectorAll('.plx [data-cy]').forEach(e=>{e.style.top=(cy+ +e.dataset.cy*cf)+'px';e.style.transformOrigin='50% 0';e.style.transform=cf<1?`scale(${cf})`:''})}
  return {ch,th:ch,sy};
 }
+document.addEventListener('click',e=>{
+ if(V.sec!=='horoscope'||!V.skp)return;
+ const c=e.target.closest('#rov .spc');if(!c||!c.classList.contains('more')&&!c.classList.contains('open'))return;
+ const k=+c.dataset.k;V.spo=Object.assign({},V.spo);V.spo[k]=!V.spo[k];c.classList.toggle('open',!!V.spo[k]);
+ const b=c.querySelector('.spa');if(b)b.setAttribute('aria-label',V.spo[k]?'Show less':'Read more');fit();
+});
 function moonPop(){
  const now=new Date(),m=K.moon(now),si=sIdx(m.sign),r=skyRel(m.sign),ph=MPH[m.name],[l1,l2]=m.name.split(' ');
  const nx=(K.lunarPhases(now,new Date(+now+40*DAY))||[]).find(e=>e.date>now&&!(m.name.startsWith(e.name.replace(' Moon','').split(' ')[0])&&m.name.includes(e.name.split(' ')[0])&&+e.date-now<4*DAY)),nn=nx?nx.name.replace(' Moon','').replace('New','New Moon').replace('Full','Full Moon'):'';
  const nd=nx?nx.date.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:TZ()}):'';
  const k=m.ill,cx=510,cy=440,R=141,rx=Math.abs(1-2*k)*R,flip=(!m.waxing)!==SOUTH();
  const shade=k>.97?'':`<svg class="sp-ph" viewBox="0 0 1024 1000" style="left:0;top:0;width:1024px;height:1000px" aria-hidden="true"><defs><filter id="spb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs><path filter="url(#spb)" transform="${flip?`translate(${2*cx} 0) scale(-1 1)`:''}" d="M${cx} ${cy-R}A${R} ${R} 0 0 0 ${cx} ${cy+R}A${rx} ${R} 0 0 ${k<.5?0:1} ${cx} ${cy-R}Z" fill="rgba(8,10,28,.85)"/></svg>`;
- const cards=`<div class="spl">${spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],skRit(ph[2],ph[3]))}</div>`;
+ const cards=`<div class="spw"><div class="spl">${spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],skRit(ph[2],ph[3]))}</div></div>`;
  return pane('rmoon',`The Moon. ${m.name} in ${si.name}.`,'',`${shade}
   ${tx('sp-big',110,372,214,110,`${l1}<br>${l2||''}`,47)}${tx('sp-sm c',110,478,214,32,`${Math.round(k*100)}% Illuminated`,25)}
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:741px;top:326px;width:48px;height:48px">
@@ -3599,7 +3611,7 @@ function moonPop(){
 function sunPop(){
  const now=new Date(),si=sIdx(K.signIdx(K.positions(now)[0].lon)),r=skyRel(SIGNS.indexOf(si)),me=sg(S.sign),x=SSG[si.id],rt=SRIT[si.el];
  const seas=SEAS[(SIGNS.indexOf(si)+(SOUTH()?6:0))%12].replace(' into ','<br>into ');
- const cards=`<div class="spl">${spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],skRit(rt[0],rt[1]))}</div>`;
+ const cards=`<div class="spw"><div class="spl">${spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],skRit(rt[0],rt[1]))}</div></div>`;
  return pane('rsun',`The Sun in ${si.name}.`,'',`
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:144px;top:362px;width:68px;height:68px">
   ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
@@ -3649,7 +3661,7 @@ function planetPop(P){
  const mean=`For ${me.name}, ${P} is ${REL_IN[r.rel]}, touching ${areaShort(r.area)}. ${PLM[P]}${RULER[S.sign]===P?` As your ruling planet, you feel it more than most.`:''}`;
  const todo=rx?[PRX[P],...PLD[P].slice(1)]:PLD[P];
  const cy=0,ry=y=>`data-cy="${y}"`,pc=(cls,x,y,w,h,html,f)=>tx(cls,x,0,w,h,html,f).replace('class="spx','data-cy="'+y+'" class="spx');
- const lay=`<div class="spl plx">
+ const lay=`<div class="spw"><div class="spl plx">
   <img class="plp" src="${SKY}pl-p-${k}.webp" alt="" data-r="${PLR_[k]||1}">
   <img class="sp-g plg" src="${SKY}pl-g-${k}.webp" alt="">
   ${pc('sp-big pl-s',40,-132,188,40,'Current Sign',31)}
@@ -3658,7 +3670,7 @@ function planetPop(P){
   <img class="sp-g" ${ry(-120)} src="${SKY}pl-rx.webp" alt="" style="left:800px;width:190px;height:142px">
   ${pc('sp-sm c pl-r',796,24,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
   ${spCards('pl',[happen,mean,dots(todo)],skRit(PLR[P][0],PLR[P][1]))}
- </div>`;
+ </div></div>`;
  return pane('rpl',`${P} in ${si.name}.`,'',`
   ${skHead(P,PLK[P].join(' <i>•</i> '))}${spBar()}`,'',lay);
 }
@@ -3704,7 +3716,7 @@ document.addEventListener('click',e=>{
 function spFit(){document.querySelectorAll('.spx[data-f]').forEach(e=>{const d=e.style.display;e.style.display='block';let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}e.style.display=d})}
 document.addEventListener('click',e=>{
  if(V.sec!=='horoscope')return;
- const o=e.target.closest('[data-skp]');if(o){V.skp=o.dataset.skp;V.skpIn=false;return render()}
+ const o=e.target.closest('[data-skp]');if(o){V.skp=o.dataset.skp;V.skpIn=false;V.spo={};return render()}
  if(e.target.closest('[data-skx]')){V.exploreSign=null;const t=document.querySelector('#rov .rt');if(t)t.classList.remove('in');const ov=document.getElementById('rov');if(ov)ov.classList.remove('on');setTimeout(()=>{V.skp=null;render()},500)}
 });
 document.addEventListener('keydown',e=>{if(V.sec==='horoscope'&&V.skp&&e.key==='Escape'){V.skp=null;render()}});
