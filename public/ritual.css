@@ -181,3 +181,10 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .spc .spx{position:absolute}
 #app .spc.spr{border:0;background:0 0/100% 100% no-repeat}
 #app .spc .sp-b{line-height:1.15;display:flex;flex-direction:column;justify-content:center}
+#app .pl-t{text-align:center;font-style:italic;font-weight:600;line-height:1;color:#F4DFB2;text-shadow:0 0 18px rgba(240,190,90,.45),0 0 4px rgba(4,7,22,.9);display:flex;align-items:center;justify-content:center}
+#app .pl-k{text-align:center;font-family:'Cinzel',Georgia,serif;font-style:normal;font-weight:500;letter-spacing:.2em;color:#EBD7A8;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+#app .pl-k i{font-style:normal;margin:0 .25em}
+#app .pl-s{font-weight:500}
+#app .pl-d,#app .pl-r{line-height:1.2}
+#app .sp-b.c{text-align:center}
+#app .pl-c{display:flex;flex-direction:column;justify-content:center}

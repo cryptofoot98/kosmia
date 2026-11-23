@@ -3293,7 +3293,7 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2219,0,2219]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
 const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
@@ -3488,13 +3488,14 @@ views.home=view;
 // Sky: the painting of the heavens held between two hands, the reader's own sign at its heart. The Sun opens today's
 // Sun, the Moon the Moon of the day, each planet where the planets are now, and the sign the full horoscope
 const SKY='/art/sky/';
-const SKYPL=[[163,789,74],[292,810,30],[284,917,46],[216,1084,131,56],[893,862,46],[770,950,50],[741,1137,66],[863,1175,30],[870,995,48]];
+const SKYPL=[[163,789,74,0,'Jupiter'],[292,810,30,0,'Mercury'],[284,917,46,0,'Venus'],[216,1084,131,56,'Saturn'],[893,862,46,0,'Neptune'],[770,950,50,0,'Mars'],[741,1137,66,0,''],[863,1175,30,0,'Pluto'],[870,995,48,0,'Uranus']];
 // each body's name, delicate, beneath it
 const SKYLB=[['Sun',510,1190],['Moon',764,828],['Mercury',292,756],['Venus',284,965],['Earth',735,1207],['Mars',762,1003],['Jupiter',163,866],['Saturn',216,1144],['Uranus',870,1054],['Neptune',893,910],['Pluto',866,1207]];
 function skyHome(){
  const s=sg(S.sign),sk=V.skd&&skyItems().find(i=>i.id===V.skd);if(V.skd&&!sk)V.skd=null;
  const circ=(x,y,r,a,attr)=>`<button class="rit-hot" ${attr} aria-label="${a}" style="left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px"></button>`;
- const pl=SKYPL.map(([x,y,rx,ry])=>ry?`<button class="rit-hot" data-go="discover" data-t="planets" aria-label="Where the planets are now" style="left:${x-rx}px;top:${y-ry}px;width:${2*rx}px;height:${2*ry}px"></button>`:circ(x,y,rx,'Where the planets are now','data-go="discover" data-t="planets"')).join('');
+ const pl=SKYPL.map(([x,y,rx,ry,n])=>{const at=n?`data-skp="pl:${n}"`:'data-go="discover" data-t="planets"',lb=n?`${n} today`:'Where the planets are now';
+  return ry?`<button class="rit-hot" ${at} aria-label="${lb}" style="left:${x-rx}px;top:${y-ry}px;width:${2*rx}px;height:${2*ry}px"></button>`:circ(x,y,rx,lb,at)}).join('');
  return `<div class="rit sky0" role="main" aria-label="The Sky"><div class="rit-in">
   <div class="rit-sc">
    <img class="sk0-fig" src="${SKY}sk-fig-${s.id}.webp" alt="" style="left:330px;top:495px;width:370px;height:325px">
@@ -3509,7 +3510,7 @@ function skyHome(){
   </div>
   <div class="sk0-tip">Tap on the Sun, Moon, planets or your sign<br>to explore their meaning for you.</div>
   <nav class="rit-nav sk0-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky" aria-current="page"></button><button data-nav="tarot" aria-label="Oracle"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
- </div>${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():sunPop()}</div>`:''}</div>${sk?skyPop(sk):''}`;
+ </div>${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():V.skp==='sun'?sunPop():planetPop(V.skp.slice(3))}</div>`:''}</div>${sk?skyPop(sk):''}`;
 }
 // ---- the Moon and the Sun, each a full-screen page painted from the user's pictures; the words are today's sky ----
 // the hemisphere follows where the phone is: its time zone (set by the phone from its location) and the latitude the
@@ -3593,6 +3594,59 @@ function sunPop(){
   ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
   ${tx('sp-big s',774,362,192,72,seas,30)}${tx('sp-sm',826,452,152,104,x[0],20)}
   ${spBar()}`,'',cards);
+}
+// ---- each planet: the same page (the user's Jupiter picture), only the planet, its symbol and its words changing ----
+const PLK={Mercury:['COMMUNICATION','THINKING','LEARNING'],Venus:['LOVE','BEAUTY','VALUES'],Mars:['ENERGY','COURAGE','ACTION'],Jupiter:['GROWTH','OPPORTUNITY','EXPANSION'],Saturn:['DISCIPLINE','PATIENCE','LESSONS'],Uranus:['CHANGE','FREEDOM','AWAKENING'],Neptune:['DREAMS','INTUITION','SPIRIT'],Pluto:['TRANSFORMATION','DEPTH','REBIRTH']};
+const PLV={Mercury:'turning your thoughts and words towards',Venus:'drawing love and pleasure towards',Mars:'firing your energy and courage towards',Jupiter:'expanding',Saturn:'asking for patience and commitment around',Uranus:'bringing change and fresh air to',Neptune:'softening and enchanting',Pluto:'slowly and deeply transforming'};
+const SFL={aries:'courage, initiative and the drive to begin',taurus:'stability, comfort, values and what you build slowly',gemini:'curiosity, learning, conversation and connection',cancer:'home, family, feelings and the need to belong',leo:'creativity, joy, romance and self-expression',virgo:'health, routines, skill and useful service',libra:'relationships, harmony, beauty and fairness',scorpio:'depth, intimacy, trust and transformation',sagittarius:'travel, learning, faith and the search for meaning',capricorn:'ambition, structure, responsibility and lasting goals',aquarius:'friendship, community, ideas and freedom',pisces:'dreams, compassion, intuition and spirituality'};
+const PLM={Mercury:'Conversations, plans and fresh ideas gather there: a good time to speak, write and learn.',Venus:'Affection, pleasure and harmony gather there: a time to enjoy, connect and soften.',Mars:'Your drive and desire gather there: a time to act boldly, with care for others.',Jupiter:'Doors open there through learning, generosity and saying yes to growth.',Saturn:'It asks for steady effort there: what you build patiently now will last.',Uranus:'Expect the unexpected there: freedom and new ways arrive, often suddenly.',Neptune:'Intuition and imagination grow there; keep your feet gently on the ground.',Pluto:'Something there is slowly being reborn: let go of what has run its course.'};
+const PLD={Mercury:['Write down your ideas before they slip away.','Have the conversation you have been postponing.','Read, learn or listen to something new.'],
+ Venus:['Spend time with someone who makes you feel at ease.','Bring a little beauty into your day.','Notice what you truly value, and honour it.'],
+ Mars:['Move your body and spend your energy well.','Start one thing you have been hesitating over.','Pause before reacting when you feel heated.'],
+ Jupiter:['Say yes to learning, courses or skills that excite you.','Expand your network and have meaningful conversations.','Stay curious and open to new opportunities, even unexpected ones.'],
+ Saturn:['Choose one commitment and keep it faithfully.','Break a big goal into small, steady steps.','Rest as seriously as you work.'],
+ Uranus:['Try a new way of doing something familiar.','Make room for a little freedom in your week.','Welcome a surprise instead of resisting it.'],
+ Neptune:['Make time for music, art or quiet dreaming.','Write down your dreams and intuitions.','Keep healthy boundaries while you open your heart.'],
+ Pluto:['Let go of one habit that no longer serves you.','Be honest with yourself about what you need.','Trust that endings make room for beginnings.']};
+const PLR={Mercury:['The Clear Mind Ritual','Sit quietly with a notebook, write freely for five minutes, then circle the one idea that feels most alive.'],
+ Venus:['The Self-Love Ritual','Light a candle, look kindly at yourself in a mirror, and name three things you love about who you are.'],
+ Mars:['The Courage Ritual','Stand tall, breathe deeply three times, and name one brave action you will take today. Then take it.'],
+ Jupiter:['The Expansion Ritual','Write down one area of your life you’d like to grow (e.g. career, travel, knowledge or abundance), then list 3 inspired actions to support it.'],
+ Saturn:['The Foundation Ritual','Write one long-term goal, then the smallest step towards it you can take this week. Keep the paper where you will see it.'],
+ Uranus:['The Awakening Ritual','Open a window, breathe in the fresh air, and write one way you would like to feel freer this month.'],
+ Neptune:['The Dream Ritual','Before sleep, place a glass of water by your bed and ask a gentle question. In the morning, write what you remember.'],
+ Pluto:['The Release Ritual','Write what you are ready to let go of, fold the paper away, and thank it for what it taught you.']};
+const PRX={Mercury:'Re-read before you send, and revisit old plans.',Venus:'Revisit old loves and values with fresh eyes.',Mars:'Slow down, and let your energy rest before you act.',Jupiter:'Look back at how far you’ve grown before reaching further.',Saturn:'Review your commitments and keep only those that matter.',Uranus:'Let changes ripen inside before you act on them.',Neptune:'Clear away illusions gently, and trust what remains.',Pluto:'Look honestly at what still needs to be released.'};
+const fdate=(d,yr)=>d.toLocaleDateString('en-GB',Object.assign({day:'numeric',month:'short',timeZone:TZ()},yr?{year:'numeric'}:{}));
+// how long the planet stays in its sign this time: back to when it entered, forward to when it leaves
+function plStay(P,now){
+ const si=K.signIdx(K.lon(P,now)),st={Mercury:1,Venus:1,Mars:2,Jupiter:5,Saturn:10,Uranus:20,Neptune:30,Pluto:30}[P]*DAY,lim=40*365*DAY;
+ const edge=dir=>{let t=+now,k=0;while(K.signIdx(K.lon(P,new Date(t+dir*st)))===si&&k<lim/st){t+=dir*st;k++}
+  let a=t,b=t+dir*st;for(let i=0;i<30;i++){const m=(a+b)/2;if(K.signIdx(K.lon(P,new Date(m)))===si)a=m;else b=m}return new Date(a)};
+ return [edge(-1),edge(1)];
+}
+function planetPop(P){
+ if(!PLK[P])P='Jupiter';
+ const now=new Date(),k=P.toLowerCase(),sI=K.signIdx(K.lon(P,now)),si=sIdx(sI),r=skyRel(sI),me=sg(S.sign);
+ const rx=(K.retrogrades(now,new Date(+now+400*DAY))||[]).find(w=>w.planet===P&&(!w.start||w.start<=now)&&(!w.end||w.end>=now));
+ const [a,b]=plStay(P,now),sameY=a.getFullYear()===b.getFullYear();
+ const dates=`${fdate(a,!sameY)} –<br>${fdate(b,true)}`;
+ const happen=`${P} is in ${si.name}, ${PLV[P]} ${SFL[si.id]}.${rx?` It is retrograde now, turning inward: a time to review rather than push.`:''}`;
+ const mean=`For ${me.name}, ${P} is ${REL_IN[r.rel]}, touching ${areaShort(r.area)}. ${PLM[P]}${RULER[S.sign]===P?` As your ruling planet, you feel it more than most.`:''}`;
+ const todo=rx?[PRX[P],...PLD[P].slice(1)]:PLD[P];
+ return pane('rpl',`${P} in ${si.name}.`,'',`
+  ${tx('pl-t',300,252,424,112,P,100)}${tx('pl-k',90,378,844,40,PLK[P].join(' <i>•</i> '),31)}
+  <img class="sp-g" src="${SKY}pl-g-${k}.webp" alt="" style="left:${518-62}px;top:${626-62}px;width:124px;height:124px">
+  ${tx('sp-big pl-s',40,508,188,40,'Current Sign',31)}
+  <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:${134-42}px;top:552px;width:84px;height:84px">
+  ${tx('sp-big pl-n',40,636,188,50,si.name,44)}${tx('sp-sm c pl-d',40,690,188,72,dates,27)}
+  ${tx('sp-sm c pl-r',796,664,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
+  ${tx('sp-b pl-c',276,976,682,108,happen,32)}
+  ${tx('sp-b pl-c',276,1184,682,134,mean,32)}
+  ${tx('sp-b sp-l pl-c',276,1428,682,158,dots(todo),31)}
+  ${tx('sp-rn c',226,1726,306,44,PLR[P][0],32)}${tx('sp-rd',582,1632,376,170,PLR[P][1],27)}
+  <button class="rit-hot" data-skx aria-label="Back to the Sky" style="left:60px;top:157px;width:76px;height:76px"></button><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:887px;top:157px;width:76px;height:76px"></button>`,'')
+  .replace('id="rpl"',`id="rpl" style="--img:url(${SKY}pl-${k}.webp)"`);
 }
 // each line of words is fitted to its place in the painting
 function spFit(){document.querySelectorAll('.spx').forEach(e=>{let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}})}
