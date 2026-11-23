@@ -3467,6 +3467,7 @@ html:has(:is(.hsp,.jnight,.mnp,.land.hnight,.land.tnight,.land.dnight,.land.drm)
 .sky-more svg{width:14px;height:14px}
 /* the Journal in the menu */
 #nav .in [data-nav=journal]{--ico:url(/art/atlas/nvm-journal.webp)}
+#nav .in [data-nav=calendar]{--ico:url(/art/atlas/nvm-calendar.webp)}
 
 /* Kosmia Premium */
 .prem{display:flex;flex-direction:column;gap:14px}

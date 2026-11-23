@@ -202,13 +202,15 @@ const SECTIONS={
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
- you:{label:'You',tabs:[['home','You']]},
+ you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the five places: Today (the day's path), Sky (look up), Oracle (ask: Kassandra, the cards, a dream), Journal
 // (remember) and You (your Codex, your Circle and your settings)
-const NAV=[{key:'home',label:'Today'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'journal',label:'Journal'},{key:'you',label:'You'}];
+// the blueprint's five places (Ritual, Sky, Oracle, Calendar, Journal); My Cosmos opens from the round symbol at the top
+const NAV=[{key:'home',label:'Ritual'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'calendar',label:'Calendar'},{key:'journal',label:'Journal'}];
+const CPAGES=['calendar','moon','planets','events'];
 const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
 // the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
 // numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
@@ -216,7 +218,7 @@ function navCur(){const t=tab();
  if(V.sec==='tarot')return JPAGES.includes(t)?'journal':'tarot';
  if(V.sec==='kassandra')return 'tarot';
  if(V.sec==='settings'||V.sec==='you')return 'you';
- if(V.sec==='discover')return DPAGES.includes(t)?'tarot':t==='dream-journal'?'journal':YPAGES.includes(t)?'you':'horoscope';
+ if(V.sec==='discover')return DPAGES.includes(t)?'tarot':t==='dream-journal'?'journal':YPAGES.includes(t)?'you':CPAGES.includes(t)?'calendar':'horoscope';
  return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
@@ -630,7 +632,7 @@ const greet=()=>{const h=Number(fmt({hour:'numeric',hour12:false},new Date()));r
 const firstName=()=>(S.name||S.fullName||'').trim().split(/\s+/)[0]||'';
 // the reader's own medallion, at the top right of Home: their profile, birth details, notifications and plan
 const myFace=(cls='av-i')=>S.photo?`<img class="${cls}" src="${S.photo}" alt="">`:med(S.sign||'aries',cls);
-const avatar=()=>`<button class="avatar" data-go="settings" data-t="account" aria-label="Your profile and settings">${myFace()}</button>`;
+const avatar=()=>`<button class="avatar" data-go="you" aria-label="My Cosmos">${myFace()}</button>`;
 // a picture chosen from the device, cut to a square at its centre and kept small (320 px) on this device and in the account
 function setPhoto(file){
  if(!file||!/^image\//.test(file.type))return toast('Please choose a picture.');
@@ -1223,7 +1225,7 @@ views.horoscope=()=>{
  let pg;
  if(sc==='hor')pg=`<div class="sk-who">${glyphMed(sign.id,'sk-med')}<div><h2 class="sk-n">${sign.name}</h2><p class="sk-dt">${sign.dates}</p><p class="sk-ky">${keys(SIGN_KEYS[sign.id])}</p></div><button class="btn hm-go sk-go${read?' on':''}" data-act="tohoroscope">${read?'Read again':'Read'}</button></div>
   <p class="sky-k">${Kit.icon('star')}<span>Your sky today</span>${Kit.icon('star')}</p>${skyCar(skyToday())}`;
- else if(sc==='ahead')pg=`<div class="sky-l sky-list">${skyAhead().map(skyRow).join('')}</div><button class="skd-m sky-cal" data-go="discover" data-t="calendar">Open the Cosmic Calendar ${IC.chev}</button>`;
+ else if(sc==='ahead')pg=`<div class="sky-l sky-list">${skyAhead().map(skyRow).join('')}</div>`;
  else pg=`<p class="pg-in">The old knowledge, open to you</p><div class="sky-l sky-list or-list jn-list yo-list lib-grid"><button class="sky-c" data-act="libgo" data-tab="guides">${ui('ic-book','sky-i')}<span class="sky-x"><strong>Guides</strong><span class="jn-x">Where to begin, in plain words</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="signs">${ui('m-'+S.sign,'sky-i')}<span class="sky-x"><strong>The twelve signs</strong><span class="jn-x">Yours, and everyone you love</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="planets">${pic('cats','planets','sky-i')}<span class="sky-x"><strong>The planets</strong><span class="jn-x">What each one speaks of</span></span><span class="sky-go">${IC.chev}</span></button><button class="sky-c" data-act="libgo" data-tab="houses">${pic('cats','houses','sky-i')}<span class="sky-x"><strong>The houses</strong><span class="jn-x">Twelve areas of a life</span></span><span class="sky-go">${IC.chev}</span></button></div>`;
  return `<div class="land hland hnight skyp pg pg-sky"><header class="hl-top stay sk-head"><h1 class="pg-t">${nm?esc(nm)+'’s sky':'Your sky'}</h1><p class="pg-s">What the stars say, now</p>${pgStrip('sky')}</header>
  <div class="sk-body"><div class="pg-page${pgDir()}">${pg}</div></div></div>
@@ -2152,7 +2154,7 @@ function calendarView(){
   ahead.forEach(e=>(days[evDay(e)]=days[evDay(e)]||[]).push(e));
   body=`<div class="cal-list">${[today,...Object.keys(days).filter(k=>k!==today).sort()].map(k=>`<div class="cal-day${k===today?' today':''}"><h3>${k===today?'<b>Today</b> · ':''}${ymdLong(k,{weekday:'long',day:'numeric',month:'long'})}</h3><div class="list">${(days[k]||[]).map(e=>evRow(e)).join('')||'<p class="muted center small">A quiet sky today. Nothing is asked of you.</p>'}</div></div>`).join('')}</div>`;
  }
- return `<div class="sub">${hdr('Cosmic Calendar',{right:iconBtn('refresh','data-act="calmonth" data-k=""','Back to this month')})}
+ return `<div class="sub">${hdr('Cosmic Calendar',{back:false,right:iconBtn('refresh','data-act="calmonth" data-k=""','Back to this month')})}
  ${seg([['list','List'],['month','Month']],V.cal.view,'calview')}
  ${V.cal.view==='month'?`<div class="mnav">${mk>cur?`<button class="ibtn" data-act="calmonth" data-k="${prev}" aria-label="Previous month">${IC.back}</button>`:'<span></span>'}<h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2>${next<=ahead3().toISOString().slice(0,7)?`<button class="ibtn flip" data-act="calmonth" data-k="${next}" aria-label="Next month">${IC.back}</button>`:'<span></span>'}</div>`:'<p class="mn-note">From today, the next three months</p>'}${body}${weather}</div>`;
 }
@@ -2738,7 +2740,9 @@ function welcomeView(){
   <div class="wl-foot"><div class="wl-dots">${[0,1,2].map(x=>`<i class="${x===i?'on':''}"></i>`).join('')}</div>
   <div class="wl-acts">${i<2?'<button class="btn ghost" data-act="wlskip">Skip</button>':''}<button class="btn" data-act="wlnext">${i<2?'Next':'Begin'}</button></div></div></div></div>`;
 }
+let ritAfter=()=>{};
 function render(){
+ const ritY=(document.getElementById('rth')||{}).scrollTop||0;
  const app=$('#app'),sec=V.sec,authed=!!S.sign&&!onboarding();
  // a night page's subtitle belongs with its title, so it stays in place with it
  const html=(views[sec]||views.home)().replace(/<\/header>(\s*)(<p class="mn-sub">[\s\S]*?<\/p>)/g,'$2</header>$1');
@@ -2769,7 +2773,7 @@ function render(){
  document.documentElement.classList.toggle('nos',authed&&!!document.querySelector('#app .home.hpath,#app .skyp,#app .mnp,#app .kz'));
  if(authed&&sec==='home'&&!V.arrived&&!S.settings.reduce&&!matchMedia('(prefers-reduced-motion: reduce)').matches){V.arrived=true;document.body.classList.add('arrive');haptic();setTimeout(()=>document.body.classList.remove('arrive'),2800)}else if(authed&&sec==='home')V.arrived=true;
  document.body.classList.toggle('reduce',!!S.settings.reduce);document.body.classList.toggle('large',!!S.settings.large);
- navH();tarotFit();
+ navH();tarotFit();ritAfter(ritY);
  document.title=authed&&SECTIONS[sec]?(sec==='home'?'Kosmia':`${tabLabel(sec,tab())} · Kosmia`):'Kosmia';
  if(onboarding()){bindJoin();obShape()}
  if(authed&&SECTIONS[sec])syncUrl();
@@ -3024,6 +3028,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.go)return go(t.dataset.go,t.dataset.t||null);
  if(t.dataset.nav)navFresh(t.dataset.nav);
  if(t.dataset.nav==='journal')return go('tarot','journal');
+ if(t.dataset.nav==='calendar')return go('discover','calendar');
  if(t.dataset.nav)return go(t.dataset.nav);
  if(t.dataset.period&&!t.dataset.act){V.period=t.dataset.period;render();
   // on a sign's page the new reading opens at its start
@@ -3271,6 +3276,201 @@ document.addEventListener('change',e=>{
   p_birth:()=>{S.birthConsent=i.checked}};
  if(map[id]){map[id]();save();syncProfile();toast('Saved');if(/^d_/.test(id))render()}
 });
+/* ---------- The Ritual: the landing place. Morning is a half wheel of three (Horoscope, Whisper, Intention) held by the
+   woman at dawn; evening is the full wheel of five around the Moon on the lake (adding Unwind and Reflection). Touch a
+   part of the wheel and it opens as an immersive pop-up over the dimmed Ritual; a finished part glows along its gold
+   frame and takes its tick. The paintings are placed in their own pixels; ritual.js sets their scales. ---------- */
+{
+const R='/art/ritual/';
+// where each lit part sits on its painting [left, top, width, height], and the shape a touch must land in
+const POS={m:[[294,398,439,353],[161,461,307,441],[561,461,407,441]],e:[[142,387,322,332],[362,357,302,300],[567,387,314,332],[124,602,257,347],[645,604,272,365]]};
+const POLY={m:[[[322,482],[400,442],[513,426],[626,442],[704,482],[588,722],[513,700],[438,722]],[[304,490],[250,545],[220,610],[200,700],[190,828],[215,872],[325,872],[346,792],[392,746],[438,724]],[[720,490],[792,530],[852,592],[902,672],[930,760],[938,828],[905,872],[705,872],[688,792],[640,746],[590,724]]],
+ e:[[[390,415],[300,450],[228,515],[183,595],[170,630],[350,690],[385,650],[435,620]],[[390,415],[513,385],[635,415],[595,620],[513,628],[435,620]],[[635,415],[725,450],[797,515],[842,595],[852,632],[675,690],[640,650],[595,620]],[[170,630],[152,750],[175,850],[240,905],[335,920],[352,870],[337,800],[350,690]],[[852,632],[888,750],[872,860],[830,940],[690,935],[673,870],[689,800],[675,690]]]};
+const NAMES=['Horoscope','Whisper','Intention','Unwind','Reflection'],KEYS=['h','w','i','u','r'],TILES=['rth','rtw','rti','rtu','rtq'];
+const CHIPS=[['Clarity',178,964,208],['Self-Love',408,964,210],['Balance',638,964,208],['Productivity',170,1046,232],['Peace',414,1046,198],['Confidence',630,1046,226]];
+const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,668,218],['What would you like to release?',30,749,225],['What are you grateful for?',266,749,218]];
+const VS='︎';
+
+const day=()=>{const k=dkey();S.rit=S.rit||{};return S.rit[k]||{}};
+function mark(i){const k=dkey();S.rit=S.rit||{};S.rit[k]=Object.assign({},S.rit[k],{[KEYS[i]]:1});Object.keys(S.rit).sort().slice(0,-60).forEach(x=>delete S.rit[x]);save()}
+// a part is done when it was completed here today (or, for the older path, when its record already exists)
+function done(i){const k=dkey(),d=day();
+ return !!(d[KEYS[i]]||[S.readDay===k,false,!!(S.carry||{})[k],false,!!S.notes[k]][i])}
+const isEve=()=>V.ritEve!=null?V.ritEve:evening();
+const count=()=>isEve()?5:3;
+const nextUndone=()=>[...Array(count()).keys()].find(i=>!done(i));
+
+// the intention spoken back in the evening: one or two words read as a quality ("patience"), longer ones as a whole
+function intentWords(){const v=((S.carry||{})[dkey()]||'').trim();if(!v)return null;
+ const short=v.split(/\s+/).length<=2&&v.length<=22;return {v,short,q:short?v.toLowerCase().replace(/[.!]$/,''):''}}
+
+function horoPop(){
+ const sign=sg(S.sign),h=horoscope(sign.id,'overview','daily'),fold=(c,img,t)=>{const x=horoscope(sign.id,c,'daily');
+  return `<button class="fold" data-ract="fold"><div class="sec"><img src="${R}${img}.webp" alt=""><h3>${t}</h3></div><div class="more"><div class="rp">${esc(x.body)}</div></div></button>`};
+ const ch=myChart&&myChart(),pl=[];
+ if(ch){const p=n=>ch.pl.find(x=>x.n===n);const sun=p('Sun'),mo=p('Moon');
+  if(sun)pl.push(['Sun',sIdx(sun.sign)]);if(mo&&!ch.moonRange)pl.push(['Moon',sIdx(mo.sign)]);
+  if(ch.ang&&S.birth&&!S.birth.unk)pl.push(['Rising',sIdx(Math.floor(ch.ang.asc/30))])}
+ const plh=pl.length>1?pl.map(([n,s])=>`<span>${n} <b aria-label="${s.name}">${s.g}${VS}</b></span>`).join(''):`<span>${esc(sign.dates||'')}</span>`;
+ return `<section class="rt" id="rth" aria-label="Horoscope, your reading for today. ${sign.name}.">
+  <div class="hd"><img class="sl" src="${R}h-top.webp" alt=""><span class="hglyph" aria-hidden="true">${sign.g}${VS}</span><div class="hname">${sign.name}</div><div class="hpl">${plh}</div>
+   <button data-ract="back" aria-label="Back to Ritual" style="left:11.5%"></button><button data-act="sharecard" data-k="horo" data-s="${sign.id}" data-cat="overview" aria-label="Share" style="left:88.5%"></button></div>
+  <div class="roll"><div class="parch"><div>
+   <div class="sec"><img src="${R}h-sun.webp" alt=""><div><h3>${esc(h.focus||'Today’s Guidance')}</h3><div class="rp">${esc(h.body)}</div></div></div>
+   <div class="line star"><span>✦</span></div>
+   ${fold('love','h-heart','Love &amp; Relationships')}<div class="line"></div>
+   ${fold('career','h-leaf','Career &amp; Purpose')}<div class="line"></div>
+   ${fold('health','h-lotus','Wellbeing')}
+  </div></div>
+  <div class="ft"><img class="sl" src="${R}h-bot.webp" alt=""><button class="rpill" data-ract="done" data-i="0"><span>Carry This Wisdom</span></button></div></div>
+ </section>`;
+}
+function whisperPop(){
+ const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
+ return `<section class="rt${rev?' rev':''}" id="rtw" aria-label="Whisper"><div class="rcv">
+  <span id="rwlow"></span>
+  <div class="rwline">A whisper, just for you.</div>
+  <button id="rcard" data-ract="flip" aria-label="${rev?'Your Whisper: '+esc(c.title):'Tap the card to reveal your message'}"><span class="rflip"><span class="rface rbk"></span><span class="rface rfr"><span id="rwmsg">${esc(myWhisper(c))}</span></span></span></button>
+  <div id="rwhint"><img src="${R}w-hand.webp" alt=""><div class="rp">Tap the card to reveal your message.</div></div>
+  <div id="rwact"><button class="ric${sv?' on':''}" data-act="savecard" aria-label="${sv?'Saved to your Journal':'Save to your Journal'}" style="background-image:url(${R}ic-save.webp)"></button><button class="rpill" data-ract="done" data-i="1"><span>Carry This With Me</span></button><button class="ric" data-act="sharecard" data-k="whisper" aria-label="Share" style="background-image:url(${R}ic-share.webp)"></button></div>
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:24px;top:77px;width:72px;height:72px"></button>
+ </div></section>`;
+}
+function intentPop(){
+ const cur=(S.carry||{})[dkey()]||'';
+ return `<section class="rt" id="rti" aria-label="Intention. Set your intention for the day."><div class="rcv">
+  <textarea id="riin" maxlength="60" rows="2" placeholder="Write your intention..." aria-label="Write your intention">${esc(cur)}</textarea>
+  ${CHIPS.map(([v,x,y,w])=>`<button class="rchip${v===cur?' on':''}" data-ract="chip" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:62px"></button>`).join('')}
+  <button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" style="left:258px;top:1308px;width:512px;height:116px;border-radius:58px"></button>
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:30px;top:72px;width:86px;height:86px"></button>
+ </div></section>`;
+}
+function unwindPop(){
+ const w=intentWords(),pill=!w?'This morning was yours, however it went.':w.short?`This morning you invited ${esc(w.q)}.`:'This morning you set an intention.',
+  q=!w?'Did today treat you gently?':w.short?`Did ${esc(w.q)} find you today?`:'Did your intention find you today?',a=(S.unwind||{})[dkey()];
+ return `<section class="rt" id="rtu" aria-label="A moment to unwind. You have done enough for today."><div class="rcv">
+  <div class="rupill">${pill}</div><div class="ruq">${q}</div>
+  ${[['Yes',62],['Partly',208],['Not yet',355]].map(([v,x])=>`<button class="rpick${a===v?' on':''}" data-ract="pick" data-v="${v}" aria-label="${v}" style="left:${x}px;top:640px;width:100px;height:100px"></button>`).join('')}
+  <span class="rlow"></span>
+  <div class="rbot"><button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" style="left:45px;top:1265px;width:425px;height:92px;border-radius:46px"></button></div>
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>
+ </div></section>`;
+}
+function reflectPop(){
+ const cur=S.notes[dkey()]||'';
+ return `<section class="rt" id="rtq" aria-label="Your daily reflection. How did today make you feel?"><div class="rcv">
+  <textarea id="rqin" maxlength="600" placeholder="Write your thoughts here..." aria-label="How did today make you feel?">${esc(cur)}</textarea>
+  ${QS.map(([v,x,y,w])=>`<button class="rchip" data-ract="q" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:64px"></button>`).join('')}
+  <span class="rlow"></span>
+  <div class="rbot"><button class="rit-hot" data-ract="done" data-i="4" aria-label="Save Reflection" style="left:52px;top:1265px;width:412px;height:92px;border-radius:46px"></button>
+   <button class="rit-hot" data-ract="skip" aria-label="Not tonight" style="left:180px;top:1370px;width:152px;height:48px;border-radius:24px"></button></div>
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>
+ </div></section>`;
+}
+const POPS=[horoPop,whisperPop,intentPop,unwindPop,reflectPop];
+
+function view(){
+ if(!A||!K)return needLib();
+ const eve=isEve(),m=eve?'e':'m',n=count(),nx=nextUndone(),op=V.rp!=null&&V.rp<n?V.rp:null;
+ const lits=POS[m].map((b,i)=>`<img id="rl${i}" class="${done(i)?'done':i===nx?'now':''}" src="${R}${m}l${i}.webp" alt="" style="left:${b[0]}px;top:${b[1]}px;width:${b[2]}px;height:${b[3]}px">`).join('');
+ const pans=POLY[m].map((p,i)=>`<polygon class="rit-pan" data-p="${i}" role="button" tabindex="0" aria-label="${i+1}. ${NAMES[i]}${done(i)?', done':''}" points="${p.map(q=>q.join(',')).join(' ')}"/>`).join('');
+ return `<div class="rit${eve?' eve':''}" role="main" aria-label="${eve?'Your evening ritual':'Your daily ritual'}"><div class="rit-in">
+  <div class="rit-sc"><div class="rit-lit">${lits}</div><svg class="rit-ws" viewBox="0 0 1024 2032" aria-label="The parts of your ritual">${pans}</svg>
+   <button class="rit-hot" data-ract="time" aria-label="${eve?'Show the morning ritual':'Show the evening ritual'}" style="left:330px;top:40px;width:364px;height:120px;border-radius:40%"></button>
+   <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:900px;top:80px;width:88px;height:88px"></button></div>
+  <nav class="rit-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual" aria-current="page"></button><button data-nav="horoscope" aria-label="Sky"></button><button data-nav="tarot" aria-label="Oracle"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
+ </div>
+ <div class="rit-ov${op!=null?' on now':''}" id="rov">${op!=null?POPS[op]().replace('class="rt','class="rt on in'+(op===1&&S.revealed[dkey()]?' now':'')):''}</div></div>`;
+}
+
+// the scales: the painting fills the phone's width (and its height, above the menu); each pop-up fits the screen
+function fit(){
+ const r=document.documentElement.style,W=Math.min(innerWidth,520),H=innerHeight,nh=W*217/1024;
+ const s=Math.max(W/1024,(H-nh+24)/2032);
+ r.setProperty('--rw',W+'px');r.setProperty('--rs',s);r.setProperty('--rx',(W-1024*s)/2+'px');r.setProperty('--rnh',nh+'px');
+ const VW=innerWidth;
+ let ws=Math.min((VW-16)/592,(H-16)/1150),wh=Math.min(1312*ws,H-16);
+ r.setProperty('--ws',ws);r.setProperty('--wh',wh+'px');r.setProperty('--wlt',(wh/ws-560)+'px');r.setProperty('--wld',wh<1312*ws-1?'block':'none');
+ r.setProperty('--is',Math.min((VW-16)/1024,(H-16)/1536));
+ [['u',1422,1030],['q',1478,1140]].forEach(([x,P,Rr])=>{const s=Math.min((VW-16)/512,(H-16)/Rr),hr=Math.min(P,(H-16)/s);
+  r.setProperty(`--${x}s`,s);r.setProperty(`--${x}hr`,hr+'px');r.setProperty(`--${x}ld`,hr<P-1?'block':'none');r.setProperty(`--${x}bt`,(hr-P)+'px')});
+ const msg=document.getElementById('rwmsg');if(msg){
+  // measured against the card as it is once turned (504 by 775), so the words keep one size through the turn
+  const m=document.createElement('div');m.style.cssText="position:absolute;visibility:hidden;left:-9999px;width:"+(504*.58)+"px;font:italic 600 32px/1.24 'Cormorant Garamond',serif;text-align:center";m.textContent=msg.textContent;document.body.append(m);
+  let f=32;while(m.offsetHeight>775*.25&&f>15){f-=1;m.style.fontSize=f+'px'}m.remove();msg.style.fontSize=f+'px'}
+}
+
+function wheel(){const n=count(),nx=nextUndone();
+ for(let i=0;i<n;i++){const l=document.getElementById('rl'+i),p=document.querySelector(`.rit-pan[data-p="${i}"]`);if(!l)continue;
+  l.classList.toggle('done',done(i));l.classList.toggle('now',!done(i)&&i===nx);if(p)p.setAttribute('aria-label',`${i+1}. ${NAMES[i]}${done(i)?', done':''}`)}}
+function open(i){
+ const ov=document.getElementById('rov');if(!ov)return;V.rp=i;
+ if(i===0&&S.readDay!==dkey()){}   // read is counted only when the reader carries it
+ ov.classList.remove('now');ov.innerHTML=POPS[i]();const t=document.getElementById(TILES[i]);
+ if(i===1&&S.revealed[dkey()])t.classList.add('now');
+ t.classList.add('on');ov.classList.add('on');fit();
+ requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('in')));
+ const f=t.querySelector('[data-ract=back]');if(f)setTimeout(()=>{try{f.focus({preventScroll:true})}catch(e){}},400);
+}
+function close(){
+ const ov=document.getElementById('rov');V.rp=null;if(!ov)return;
+ const t=ov.querySelector('.rt');if(t)t.classList.remove('in');ov.classList.remove('on');setTimeout(()=>{if(V.rp==null)ov.innerHTML=''},600);
+}
+function complete(i,msg){
+ mark(i);close();
+ setTimeout(()=>{wheel();const n=count(),all=[...Array(n).keys()].every(done);
+  toast(all?(isEve()?goodnight(dkey()):'Your morning ritual is complete. Your day is held.'):msg)},500);
+}
+function flip(){
+ const k=dkey();if(S.revealed[k])return;
+ S.days[k]=todayCard().id;S.revealed[k]=true;save();syncFortune(k);
+ const t=document.getElementById('rtw'),c=document.getElementById('rcard');t.classList.remove('now');t.classList.add('rev');
+ c.classList.add('shim');setTimeout(()=>c.classList.remove('shim'),1300);
+ c.setAttribute('aria-label','Your Whisper: '+todayCard().title);
+}
+function act(t,e){
+ const a=t.dataset.ract,k=dkey();
+ if(typeof haptic==='function')haptic('tap');
+ if(a==='back')return close();
+ if(a==='time'){V.ritEve=!isEve();V.rp=null;return render()}
+ if(a==='flip')return flip();
+ if(a==='fold')return t.classList.toggle('open');
+ if(a==='chip'){document.querySelectorAll('#rti .rchip').forEach(x=>x.classList.toggle('on',x===t));document.getElementById('riin').value=t.dataset.v;return}
+ if(a==='pick'){const on=!t.classList.contains('on');document.querySelectorAll('#rtu .rpick').forEach(x=>x.classList.toggle('on',x===t&&on));S.unwind=S.unwind||{};if(on)S.unwind[k]=t.dataset.v;else delete S.unwind[k];save();return}
+ if(a==='q'){document.querySelectorAll('#rtq .rchip').forEach(x=>x.classList.toggle('on',x===t));const q=document.getElementById('rqin');q.placeholder=t.dataset.v;V.ritQ=t.dataset.v;q.focus();return}
+ if(a==='skip'){close();return setTimeout(()=>toast('Rest well. Tonight needs no words.'),500)}
+ if(a==='done'){const i=+t.dataset.i;
+  if(i===0){S.readDay=k;save();return complete(0,'Your Horoscope is kept for today')}
+  if(i===1)return complete(1,'Your Whisper walks with you today');
+  if(i===2){const v=(document.getElementById('riin').value||'').trim();if(!v){toast('Write an intention, or choose one');document.getElementById('riin').focus();return}
+   S.carry=S.carry||{};S.carry[k]=v.slice(0,60);Object.keys(S.carry).sort().slice(0,-40).forEach(x=>delete S.carry[x]);save();return complete(2,'Your intention is set for today')}
+  if(i===3){mark(3);wheel();return open(4)}
+  if(i===4){const x=document.getElementById('rqin'),v=(x.value||'').trim();if(!v){toast('Write a few words, or choose Not tonight');x.focus();return}
+   S.notes[k]=V.ritQ&&!S.notes[k]?`${V.ritQ} ${v}`:v;
+   // a gratitude kept here is also kept among the reader's gratitude in the Journal
+   if(V.ritQ==='What are you grateful for?'){const j={id:uuid(),day:k,kind:'reflection',title:'My Gratitude',body:v,at:new Date().toISOString()};S.journal.push(j);C.saveJournal&&C.saveJournal(j)}
+   V.ritQ=null;save();syncFortune(k);return complete(4,'Your reflection is kept in your Journal')}
+ }
+}
+document.addEventListener('click',e=>{
+ if(V.sec!=='home')return;
+ const p=e.target.closest('.rit-pan');if(p)return open(+p.dataset.p);
+ const t=e.target.closest('[data-ract]');if(t)return act(t,e);
+ if(e.target.id==='rov')close();
+});
+document.addEventListener('keydown',e=>{
+ if(V.sec!=='home')return;
+ if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('rit-pan')){e.preventDefault();open(+e.target.dataset.p)}
+ if(e.key==='Escape'&&V.rp!=null)close();
+});
+addEventListener('resize',fit);
+// after every render the scales and the Whisper's words are fitted again; a re-render while a pop-up is open keeps it
+// still and keeps the manuscript where the reader was
+ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else V.rp=null};
+views.home=view;
+SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
+fit();
+}
 // With accounts enabled, only a saved session opens straight onto a page; everyone else starts at onboarding.
 if(S.sign&&(!C.enabled||C.hasStoredSession())){applyLocation();if(!EMB&&V.sec!=='home'&&!onboarding()){V.sec='home';V.tab.home='today';history.replaceState(history.state,'','/')}}   // opening the app always lands on Todayelse V.sec='welcome';
 render();

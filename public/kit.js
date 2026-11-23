@@ -94,7 +94,7 @@ window.Kit=(()=>{
  const feature=(o={})=>`<button class="k-feat${o.dark?' dark':''}${o.cls?' '+o.cls:''}"${o.attrs?' '+o.attrs:''}><span class="kft-art"${o.ar?` style="--ar:${o.ar}"`:''}>${o.art?img(o.art):''}</span><strong>${o.title}</strong>${o.sub?`<span>${o.sub}</span>`:''}</button>`;
 
  // KosmiaBottomNavigation: the five destinations with their engraved icons; the current one is marked for assistive tech
- const NAVI={home:'sun',horoscope:'moon',tarot:'tarot',discover:'compass',kassandra:'kassandra'};
+ const NAVI={home:'sun',horoscope:'moon',tarot:'tarot',discover:'compass',kassandra:'kassandra',calendar:'moon'};
  const nav=(items,current)=>items.map(it=>`<button data-nav="${it.key}"${it.key===current?' aria-current="page"':''}>${icon(NAVI[it.key]||'star',{cls:'nav-ico'})}<span>${esc(it.label)}</span></button>`).join('');
 
  // KosmiaPage: a landing (a scene with a parchment sheet risen over it) or a plain page with its own header
