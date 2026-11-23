@@ -3293,9 +3293,13 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2224,0,0],rsg:[1024,2176,0,0]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,992,0,0],rtq:[512,992,0,0],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2224,0,0],rsg:[1024,2176,0,0]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
+// Unwind and Reflection: each painted at three heights to fit one screen; every piece placed from the user's full-length
+// painting (in its own 512-wide units) and mapped into the fitted one
+const UQL={"u":{"top":140,"cEnd":1665,"bS":2505,"v":{"872":[0.6944,1478],"992":[0.8087,1691],"1120":[0.86,1934]}},"q":{"top":140,"cEnd":1785,"bS":2505,"v":{"872":[0.6487,1416],"992":[0.7545,1619],"1120":[0.86,1838]}}};
+const uq=(x,y,w,h,f)=>`data-u="${x},${y},${w},${h},${f||0}"`;
 const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
 // every pop-up: the arrow back at the top left and the share button at the top right, the same size and place on each
 const ICB='<svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="22.5"/><path d="M34 25H16M23.5 17.5 16 25l7.5 7.5"/></svg>';
@@ -3354,18 +3358,18 @@ function intentPop(){
 function unwindPop(){
  const w=intentWords(),pill=!w?'This morning was yours, however it went.':w.short?`This morning you invited ${esc(w.q)}.`:'This morning you set an intention.',
   q=!w?'Did today treat you gently?':w.short?`Did ${esc(w.q)} find you today?`:'Did your intention find you today?',a=(S.unwind||{})[dkey()];
- return pane('rtu','A moment to unwind. You have done enough for today.','',`<div class="rupill">${pill}</div><div class="ruq">${q}</div>
-  ${[['Yes',62],['Partly',208],['Not yet',355]].map(([v,x])=>`<button class="rpick${a===v?' on':''}" data-ract="pick" data-v="${v}" aria-label="${v}" style="left:${x}px;top:640px;width:100px;height:100px"></button>`).join('')}
-`,
-  `<button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" style="left:45px;top:1265px;width:425px;height:92px;border-radius:46px"></button>`,rbar('data-ract="share" data-k="unwind"'));
+ return pane('rtu','A moment to unwind. You have done enough for today.','',`<div class="rupill" ${uq(112,488,340,42,23)}>${pill}</div><div class="ruq" ${uq(20,572,472,60,32)}>${q}</div>
+  ${[['Yes',62],['Partly',208],['Not yet',355]].map(([v,x])=>`<button class="rpick${a===v?' on':''}" data-ract="pick" data-v="${v}" aria-label="${v}" ${uq(x,640,100,100)}></button>`).join('')}
+
+  <button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" ${uq(45,1265,425,92)} style="border-radius:46px"></button>`,'',rbar('data-ract="share" data-k="unwind"'));
 }
 function reflectPop(){
  const cur=S.notes[dkey()]||'';
- return pane('rtq','Your daily reflection. How did today make you feel?','',`<textarea id="rqin" maxlength="600" placeholder="Write your thoughts here..." aria-label="How did today make you feel?">${esc(cur)}</textarea>
-  ${QS.map(([v,x,y,w])=>`<button class="rchip" data-ract="q" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:64px"></button>`).join('')}
-`,
-  `<button class="rit-hot" data-ract="done" data-i="4" aria-label="Save Reflection" style="left:52px;top:1265px;width:412px;height:92px;border-radius:46px"></button>
-   <button class="rit-hot" data-ract="skip" aria-label="Not tonight" style="left:180px;top:1370px;width:152px;height:48px;border-radius:24px"></button>`,rbar('data-ract="share" data-k="reflect"'));
+ return pane('rtq','Your daily reflection. How did today make you feel?','',`<textarea id="rqin" maxlength="600" placeholder="Write your thoughts here..." aria-label="How did today make you feel?" ${uq(58,450,398,176,28)}>${esc(cur)}</textarea>
+  ${QS.map(([v,x,y,w])=>`<button class="rchip" data-ract="q" data-v="${v}" aria-label="${v}" ${uq(x,y,w,64)}></button>`).join('')}
+
+  <button class="rit-hot" data-ract="done" data-i="4" aria-label="Save Reflection" ${uq(52,1265,412,92)} style="border-radius:46px"></button>
+  <button class="rit-hot" data-ract="skip" aria-label="Not tonight" ${uq(180,1370,152,48)} style="border-radius:24px"></button>`,'',rbar('data-ract="share" data-k="reflect"'));
 }
 const POPS=[horoPop,whisperPop,intentPop,unwindPop,reflectPop];
 
@@ -3392,6 +3396,10 @@ function fit(){
  r.setProperty('--pw',W+'px');
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
   let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
+  if(id==='rtu'||id==='rtq'){const n=id==='rtu'?'u':'q',L=UQL[n],hs=Object.keys(L.v).map(Number);ch=hs.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
+   st.setProperty('--img',`url(${R}${n}-bg-${ch*2}.webp)`);const [k,b1]=L.v[ch];
+   const my=y=>{const ys=2*y;return (ys>=L.bS?b1+(ys-L.bS)*k:L.top+(ys-L.top)*k)/2};
+   t.querySelectorAll('[data-u]').forEach(e=>{const [x,y,w,h,f]=e.dataset.u.split(',').map(Number);e.style.left=(256+(x-256)*k)+'px';e.style.top=my(y)+'px';e.style.width=w*k+'px';e.style.height=h*k+'px';if(f)e.style.fontSize=f*k+'px'})}
   if(id==='rti'){ch=IH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
    st.setProperty('--img',`url(${R}i-bg-${ch}.webp)`);const b=document.getElementById('riset');if(b)b.style.top=(ch-228)+'px';
    const top=952,bot=ch-228-26,hh=104,A=bot-top,gap=Math.min(90,Math.max(14,(A-3*hh)/4)),y0=top+(A-3*hh-2*gap)/2;

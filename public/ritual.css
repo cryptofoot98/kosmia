@@ -54,8 +54,6 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app .rbtn{position:absolute;z-index:5;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:calc(var(--pw,100vw)*.557);height:calc(var(--pw,100vw)*.557*150/570);padding:0 0 .06em;background:url(/art/ritual/btn.webp) 0 0/100% 100% no-repeat;font:italic 600 calc(var(--pw,100vw)*.043)/1 'Cormorant Garamond',serif;color:#18110a!important;-webkit-text-stroke:.45px currentColor;white-space:nowrap;filter:drop-shadow(0 5px 9px rgba(0,0,0,.45))}
 #app .rbtn:focus-visible{outline:2px solid #F3D9A0;outline-offset:3px}
 #app #rtw{--img:url(/art/ritual/w-bg.webp)}
-#app #rtu{--img:url(/art/ritual/u-bg.webp)}
-#app #rtq{--img:url(/art/ritual/q-bg.webp)}
 
 /* the painted button, one piece (no stretched seams), its words set on it */
 #app .rpill{--h:74px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);width:calc(var(--h)*515/118);padding:0 0 calc(var(--h)*.04);background:url(/art/ritual/pill.webp) 0 0/100% 100% no-repeat;font-style:italic;font-weight:600;color:#1f1206!important;white-space:nowrap;filter:drop-shadow(0 1px 3px rgba(70,36,6,.3))}
@@ -226,3 +224,5 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .spc .sp-b{display:flex!important;flex-direction:column;justify-content:center;line-height:1.2}
 #app .spc .sp-rd{color:#21150a;font-style:italic;font-weight:600;line-height:1.18;display:flex;align-items:center;text-shadow:none}
 #app .spc .sp-rn{color:#1c1108;font-weight:500;display:flex;align-items:center;justify-content:center;text-align:center;text-shadow:none;line-height:1.1}
+#app .rupill{white-space:nowrap}
+#app .ruq{line-height:1.15}
