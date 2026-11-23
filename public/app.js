@@ -3283,7 +3283,8 @@ document.addEventListener('change',e=>{
 {
 const R='/art/ritual/';
 // where each lit part sits on its painting [left, top, width, height], and the shape a touch must land in
-const POS={m:[[264,368,499,413],[131,431,367,501],[531,431,467,501]],e:[[112,357,382,392],[332,327,362,360],[537,357,374,392],[94,572,317,407],[615,574,332,425]]};
+// each part's light (laid over the painting as light, so neighbours never cover one another) and its tick: [left, top, width, height]
+const POS={"m":[[[217,292,591,534],[483,652,60,60]],[[118,360,414,493],[238,818,64,64]],[[505,355,519,498],[733,818,64,64]]],"e":[[[108,310,427,462],[293,596,64,64]],[[289,287,450,428],[481,543,64,64]],[[498,312,462,461],[680,600,64,64]],[[102,557,350,359],[218,823,64,64]],[[573,537,408,379],[748,821,64,64]]]};
 const POLY={m:[[[322,482],[400,442],[513,426],[626,442],[704,482],[588,722],[513,700],[438,722]],[[304,490],[250,545],[220,610],[200,700],[190,828],[215,872],[325,872],[346,792],[392,746],[438,724]],[[720,490],[792,530],[852,592],[902,672],[930,760],[938,828],[905,872],[705,872],[688,792],[640,746],[590,724]]],
  e:[[[390,415],[300,450],[228,515],[183,595],[170,630],[350,690],[385,650],[435,620]],[[390,415],[513,385],[635,415],[595,620],[513,628],[435,620]],[[635,415],[725,450],[797,515],[842,595],[852,632],[675,690],[640,650],[595,620]],[[170,630],[152,750],[175,850],[240,905],[335,920],[352,870],[337,800],[350,690]],[[852,632],[888,750],[872,860],[830,940],[690,935],[673,870],[689,800],[675,690]]]};
 const NAMES=['Horoscope','Whisper','Intention','Unwind','Reflection'],KEYS=['h','w','i','u','r'],TILES=['rth','rtw','rti','rtu','rtq'];
@@ -3292,7 +3293,9 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,2304,424,1130],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
+// Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
+const IH=[1664,1888,2112];
 const pane=(id,label,cls,top,foot)=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div></section>`;
 
 const day=()=>{const k=dkey();S.rit=S.rit||{};return S.rit[k]||{}};
@@ -3341,8 +3344,8 @@ function intentPop(){
  const cur=(S.carry||{})[dkey()]||'';
  return pane('rti','Intention. Set your intention for the day.','',`<textarea id="riin" maxlength="60" rows="2" placeholder="Write your intention..." aria-label="Write your intention">${esc(cur)}</textarea>
   ${CHIPS.map(([v,x,y,w])=>`<button class="rchip${v===cur?' on':''}" data-ract="chip" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:62px"></button>`).join('')}
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:30px;top:72px;width:86px;height:86px"></button>`,
-  `<button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" style="left:258px;top:2076px;width:512px;height:116px;border-radius:58px"></button>`);
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:30px;top:72px;width:86px;height:86px"></button>
+  <button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" id="riset" style="left:258px;width:512px;height:116px;border-radius:58px"></button>`,'');
 }
 function unwindPop(){
  const w=intentWords(),pill=!w?'This morning was yours, however it went.':w.short?`This morning you invited ${esc(w.q)}.`:'This morning you set an intention.',
@@ -3365,7 +3368,8 @@ const POPS=[horoPop,whisperPop,intentPop,unwindPop,reflectPop];
 function view(){
  if(!A||!K)return needLib();
  const eve=isEve(),m=eve?'e':'m',n=count(),nx=nextUndone(),op=V.rp!=null&&V.rp<n?V.rp:null;
- const lits=POS[m].map((b,i)=>`<img id="rl${i}" class="${done(i)?'done':i===nx?'now':''}" src="${R}${m}l${i}.webp" alt="" style="left:${b[0]}px;top:${b[1]}px;width:${b[2]}px;height:${b[3]}px">`).join('');
+ const box=b=>`left:${b[0]}px;top:${b[1]}px;width:${b[2]}px;height:${b[3]}px`;
+ const lits=POS[m].map(([l,t],i)=>`<img id="rl${i}" class="rl ${done(i)?'done':i===nx?'now':''}" src="${R}${m}l${i}.webp" alt="" style="${box(l)}"><img id="rk${i}" class="rk${done(i)?' done':''}" src="${R}${m}t${i}.webp" alt="" style="${box(t)}">`).join('');
  const pans=POLY[m].map((p,i)=>`<polygon class="rit-pan" data-p="${i}" role="button" tabindex="0" aria-label="${i+1}. ${NAMES[i]}${done(i)?', done':''}" points="${p.map(q=>q.join(',')).join(' ')}"/>`).join('');
  return `<div class="rit${eve?' eve':''}" role="main" aria-label="${eve?'Your evening ritual':'Your daily ritual'}"><div class="rit-in">
   <div class="rit-sc"><div class="rit-lit">${lits}</div><svg class="rit-ws" viewBox="0 0 1024 2032" aria-label="The parts of your ritual">${pans}</svg>
@@ -3383,8 +3387,10 @@ function fit(){
  r.setProperty('--rw',W+'px');r.setProperty('--rs',s);r.setProperty('--rx',(W-1024*s)/2+'px');r.setProperty('--rnh',nh+'px');
  r.setProperty('--pw',W+'px');
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
-  const [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style;
-  st.setProperty('--s',sc);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
+  let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
+  if(id==='rti'){ch=IH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
+   st.setProperty('--img',`url(${R}i-bg-${ch}.webp)`);const b=document.getElementById('riset');if(b)b.style.top=(ch-228)+'px'}
+  st.setProperty('--s',sc);st.setProperty('--sy',sy);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
   // the Whisper's card fills the room between the title and the foot, turned or not
   if(id==='rtw'){const bot=hr-fh-14,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
    st.setProperty('--ht',hb+'px');
@@ -3400,7 +3406,7 @@ function fit(){
 
 function wheel(){const n=count(),nx=nextUndone();
  for(let i=0;i<n;i++){const l=document.getElementById('rl'+i),p=document.querySelector(`.rit-pan[data-p="${i}"]`);if(!l)continue;
-  l.classList.toggle('done',done(i));l.classList.toggle('now',!done(i)&&i===nx);if(p)p.setAttribute('aria-label',`${i+1}. ${NAMES[i]}${done(i)?', done':''}`)}}
+  l.classList.toggle('done',done(i));l.classList.toggle('now',!done(i)&&i===nx);const k=document.getElementById('rk'+i);if(k)k.classList.toggle('done',done(i));if(p)p.setAttribute('aria-label',`${i+1}. ${NAMES[i]}${done(i)?', done':''}`)}}
 function open(i){
  const ov=document.getElementById('rov');if(!ov)return;V.rp=i;
  ov.classList.remove('now');ov.innerHTML=POPS[i]();const t=document.getElementById(TILES[i]);

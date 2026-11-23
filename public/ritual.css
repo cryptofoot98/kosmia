@@ -11,6 +11,7 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app .rit.eve .rit-sc{background-image:url(/art/ritual/e-body.webp)}
 #app .rit-sc>*{position:absolute}
 #app .rit-lit img{position:absolute;opacity:0;transition:opacity 1.8s;pointer-events:none}
+#app .rit-lit img.rl{mix-blend-mode:screen}
 #app .rit-lit img.done{opacity:1}
 #app .rit-lit img.now{animation:ritBreathe 3.4s ease-in-out infinite}
 @keyframes ritBreathe{0%,100%{opacity:0}50%{opacity:.5}}
@@ -34,17 +35,16 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app .rt.in{transform:none;opacity:1}
 #app .rsc{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 #app .rsc::-webkit-scrollbar{display:none}
-#app .rsz{position:relative;height:calc(var(--th)*var(--s)*1px)}
+#app .rsz{position:relative;height:calc(var(--th)*var(--sy,var(--s))*1px)}
 #app .rcv{position:absolute;left:0;top:0;width:calc(var(--cw)*1px);transform-origin:0 0}
 #app .rcv>*{position:absolute}
-#app .rtop{height:calc(var(--th)*1px);transform:scale(var(--s));background:var(--img) 0 0/calc(var(--cw)*1px) calc(var(--ch)*1px) no-repeat}
+#app .rtop{height:calc(var(--th)*1px);transform:scale(var(--s),var(--sy,var(--s)));background:var(--img) 0 0/calc(var(--cw)*1px) calc(var(--ch)*1px) no-repeat}
 #app .rft{position:absolute;left:0;right:0;bottom:0;height:calc(var(--fh)*var(--s)*1px);overflow:hidden;pointer-events:none}
 #app .rcvf{height:calc(var(--ch)*1px);transform:scale(var(--s)) translateY(calc(var(--fh)*1px - var(--ch)*1px))}
 #app .rcvf::before{content:'';position:absolute;inset:0;background:var(--img) 0 0/100% 100% no-repeat;
  -webkit-mask:linear-gradient(transparent calc(var(--ch)*1px - var(--fh)*1px),#000 calc(var(--ch)*1px - var(--fh)*1px + 56px));mask:linear-gradient(transparent calc(var(--ch)*1px - var(--fh)*1px),#000 calc(var(--ch)*1px - var(--fh)*1px + 56px))}
 #app .rcvf>*{pointer-events:auto}
 #app #rtw{--img:url(/art/ritual/w-bg.webp)}
-#app #rti{--img:url(/art/ritual/i-bg.webp)}
 #app #rtu{--img:url(/art/ritual/u-bg.webp)}
 #app #rtq{--img:url(/art/ritual/q-bg.webp)}
 
