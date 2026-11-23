@@ -220,19 +220,9 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app #rsg .sg-row i{align-self:stretch;background:linear-gradient(transparent,rgba(120,74,30,.55) 20%,rgba(120,74,30,.55) 80%,transparent)}
 #app #rsg .sg-l{font:600 29px/1.2 'Cinzel',Georgia,serif;letter-spacing:.28em;color:#241508;margin-bottom:8px}
 #app #rsg .sg-x{font:italic 500 39px/1.3 'Cormorant Garamond',serif}
-/* the cards: one size, an arrow to open each; opened cards scroll over the painting */
-#app .spw{position:absolute;inset:0;z-index:3;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;pointer-events:none;-webkit-overflow-scrolling:touch}
-#app .spw::-webkit-scrollbar{display:none}
-#app .spw .spl{pointer-events:none}
-#app .spw .spc{pointer-events:auto}
-#app .spc .sp-b{display:block!important;overflow:hidden;font-size:36px!important;line-height:1.2}
-#app .spc .sp-b.sp-l{font-size:35px!important}
-#app .spc.more:not(.open) .sp-b,#app .spc.more:not(.open) .sp-rd{-webkit-mask:linear-gradient(#000 55%,transparent);mask:linear-gradient(#000 55%,transparent)}
-#app .spc.spr .sp-rd{left:528px;top:-86px;width:322px;font-size:32px;line-height:1.2;overflow:hidden;display:block;color:#21150a;font-style:italic;font-weight:600}
-#app .spa{position:absolute;right:28px;top:calc(50% - 24px);width:48px;height:48px;display:none;place-items:center;border:0;background:none;padding:0;cursor:pointer}
-#app .spc.spr .spa{top:-58px}
-#app .spc.more .spa,#app .spc.open .spa{display:grid}
-#app .spa svg{width:40px;height:40px;fill:none;stroke:#E9C987;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s;filter:drop-shadow(0 0 4px rgba(240,190,90,.6))}
-#app .spc.spr .spa svg{stroke:#5a3612;filter:none}
-#app .spc.open .spa svg{transform:rotate(180deg)}
-#app .spc{cursor:pointer}
+/* the cards: fixed, one size, evenly spread */
+#app .spw{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none}
+#app .spw .spc{pointer-events:auto;background-size:100% 100%;background-repeat:no-repeat;border:0!important;transform-origin:50% 0}
+#app .spc .sp-b{display:flex!important;flex-direction:column;justify-content:center;line-height:1.2}
+#app .spc .sp-rd{color:#21150a;font-style:italic;font-weight:600;line-height:1.18;display:flex;align-items:center;text-shadow:none}
+#app .spc .sp-rn{color:#1c1108;font-weight:500;display:flex;align-items:center;justify-content:center;text-align:center;text-shadow:none;line-height:1.1}
