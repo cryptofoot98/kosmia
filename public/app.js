@@ -3279,17 +3279,21 @@ document.addEventListener('change',e=>{
 /* ---------- The Ritual: the landing place. Morning is a half wheel of three (Horoscope, Whisper, Intention) held by the
    woman at dawn; evening is the full wheel of five around the Moon on the lake (adding Unwind and Reflection). Touch a
    part of the wheel and it opens as an immersive pop-up over the dimmed Ritual; a finished part glows along its gold
-   frame and takes its tick. The paintings are placed in their own pixels; ritual.js sets their scales. ---------- */
+   frame and takes its tick. The paintings are placed in their own pixels; fit() sets their scales. ---------- */
 {
 const R='/art/ritual/';
 // where each lit part sits on its painting [left, top, width, height], and the shape a touch must land in
-const POS={m:[[294,398,439,353],[161,461,307,441],[561,461,407,441]],e:[[142,387,322,332],[362,357,302,300],[567,387,314,332],[124,602,257,347],[645,604,272,365]]};
+const POS={m:[[264,368,499,413],[131,431,367,501],[531,431,467,501]],e:[[142,387,322,332],[362,357,302,300],[567,387,314,332],[94,572,317,407],[615,574,332,425]]};
 const POLY={m:[[[322,482],[400,442],[513,426],[626,442],[704,482],[588,722],[513,700],[438,722]],[[304,490],[250,545],[220,610],[200,700],[190,828],[215,872],[325,872],[346,792],[392,746],[438,724]],[[720,490],[792,530],[852,592],[902,672],[930,760],[938,828],[905,872],[705,872],[688,792],[640,746],[590,724]]],
  e:[[[390,415],[300,450],[228,515],[183,595],[170,630],[350,690],[385,650],[435,620]],[[390,415],[513,385],[635,415],[595,620],[513,628],[435,620]],[[635,415],[725,450],[797,515],[842,595],[852,632],[675,690],[640,650],[595,620]],[[170,630],[152,750],[175,850],[240,905],[335,920],[352,870],[337,800],[350,690]],[[852,632],[888,750],[872,860],[830,940],[690,935],[673,870],[689,800],[675,690]]]};
 const NAMES=['Horoscope','Whisper','Intention','Unwind','Reflection'],KEYS=['h','w','i','u','r'],TILES=['rth','rtw','rti','rtu','rtq'];
 const CHIPS=[['Clarity',178,964,208],['Self-Love',408,964,210],['Balance',638,964,208],['Productivity',170,1046,232],['Peace',414,1046,198],['Confidence',630,1046,226]];
 const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,668,218],['What would you like to release?',30,749,225],['What are you grateful for?',266,749,218]];
 const VS='︎';
+// each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
+// bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
+const PANE={rtw:[592,1312,162,0],rti:[1024,2304,314,1130],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
+const pane=(id,label,cls,top,foot)=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div></section>`;
 
 const day=()=>{const k=dkey();S.rit=S.rit||{};return S.rit[k]||{}};
 function mark(i){const k=dkey();S.rit=S.rit||{};S.rit[k]=Object.assign({},S.rit[k],{[KEYS[i]]:1});Object.keys(S.rit).sort().slice(0,-60).forEach(x=>delete S.rit[x]);save()}
@@ -3327,45 +3331,34 @@ function horoPop(){
 }
 function whisperPop(){
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
- return `<section class="rt${rev?' rev':''}" id="rtw" aria-label="Whisper"><div class="rcv">
-  <span id="rwlow"></span>
-  <div class="rwline">A whisper, just for you.</div>
-  <button id="rcard" data-ract="flip" aria-label="${rev?'Your Whisper: '+esc(c.title):'Tap the card to reveal your message'}"><span class="rflip"><span class="rface rbk"></span><span class="rface rfr"><span id="rwmsg">${esc(myWhisper(c))}</span></span></span></button>
+ return pane('rtw','Whisper',rev?' rev':'',`<div class="rwline">A whisper, just for you.</div>
+  <div id="rcard" role="button" tabindex="0" data-ract="flip" aria-label="${rev?'Your Whisper: '+esc(c.title):'Tap the card to reveal your message'}"><div class="rflip"><div class="rface rbk"></div><div class="rface rfr"><span id="rwmsg">${esc(myWhisper(c))}</span></div></div></div>
   <div id="rwhint"><img src="${R}w-hand.webp" alt=""><div class="rp">Tap the card to reveal your message.</div></div>
-  <div id="rwact"><button class="ric${sv?' on':''}" data-act="savecard" aria-label="${sv?'Saved to your Journal':'Save to your Journal'}" style="background-image:url(${R}ic-save.webp)"></button><button class="rpill" data-ract="done" data-i="1"><span>Carry This With Me</span></button><button class="ric" data-act="sharecard" data-k="whisper" aria-label="Share" style="background-image:url(${R}ic-share.webp)"></button></div>
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:24px;top:77px;width:72px;height:72px"></button>
- </div></section>`;
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:24px;top:77px;width:72px;height:72px"></button>`,
+  `<div id="rwact"><button class="ric${sv?' on':''}" data-act="savecard" aria-label="${sv?'Saved to your Journal':'Save to your Journal'}" style="background-image:url(${R}ic-save.webp)"></button><button class="rpill" data-ract="done" data-i="1"><span>Carry This With Me</span></button><button class="ric" data-act="sharecard" data-k="whisper" aria-label="Share" style="background-image:url(${R}ic-share.webp)"></button></div>`);
 }
 function intentPop(){
  const cur=(S.carry||{})[dkey()]||'';
- return `<section class="rt" id="rti" aria-label="Intention. Set your intention for the day."><div class="rcv">
-  <textarea id="riin" maxlength="60" rows="2" placeholder="Write your intention..." aria-label="Write your intention">${esc(cur)}</textarea>
+ return pane('rti','Intention. Set your intention for the day.','',`<textarea id="riin" maxlength="60" rows="2" placeholder="Write your intention..." aria-label="Write your intention">${esc(cur)}</textarea>
   ${CHIPS.map(([v,x,y,w])=>`<button class="rchip${v===cur?' on':''}" data-ract="chip" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:62px"></button>`).join('')}
-  <button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" style="left:258px;top:1308px;width:512px;height:116px;border-radius:58px"></button>
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:30px;top:72px;width:86px;height:86px"></button>
- </div></section>`;
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:30px;top:72px;width:86px;height:86px"></button>`,
+  `<button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" style="left:258px;top:2076px;width:512px;height:116px;border-radius:58px"></button>`);
 }
 function unwindPop(){
  const w=intentWords(),pill=!w?'This morning was yours, however it went.':w.short?`This morning you invited ${esc(w.q)}.`:'This morning you set an intention.',
   q=!w?'Did today treat you gently?':w.short?`Did ${esc(w.q)} find you today?`:'Did your intention find you today?',a=(S.unwind||{})[dkey()];
- return `<section class="rt" id="rtu" aria-label="A moment to unwind. You have done enough for today."><div class="rcv">
-  <div class="rupill">${pill}</div><div class="ruq">${q}</div>
+ return pane('rtu','A moment to unwind. You have done enough for today.','',`<div class="rupill">${pill}</div><div class="ruq">${q}</div>
   ${[['Yes',62],['Partly',208],['Not yet',355]].map(([v,x])=>`<button class="rpick${a===v?' on':''}" data-ract="pick" data-v="${v}" aria-label="${v}" style="left:${x}px;top:640px;width:100px;height:100px"></button>`).join('')}
-  <span class="rlow"></span>
-  <div class="rbot"><button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" style="left:45px;top:1265px;width:425px;height:92px;border-radius:46px"></button></div>
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>
- </div></section>`;
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>`,
+  `<button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" style="left:45px;top:1265px;width:425px;height:92px;border-radius:46px"></button>`);
 }
 function reflectPop(){
  const cur=S.notes[dkey()]||'';
- return `<section class="rt" id="rtq" aria-label="Your daily reflection. How did today make you feel?"><div class="rcv">
-  <textarea id="rqin" maxlength="600" placeholder="Write your thoughts here..." aria-label="How did today make you feel?">${esc(cur)}</textarea>
+ return pane('rtq','Your daily reflection. How did today make you feel?','',`<textarea id="rqin" maxlength="600" placeholder="Write your thoughts here..." aria-label="How did today make you feel?">${esc(cur)}</textarea>
   ${QS.map(([v,x,y,w])=>`<button class="rchip" data-ract="q" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:64px"></button>`).join('')}
-  <span class="rlow"></span>
-  <div class="rbot"><button class="rit-hot" data-ract="done" data-i="4" aria-label="Save Reflection" style="left:52px;top:1265px;width:412px;height:92px;border-radius:46px"></button>
-   <button class="rit-hot" data-ract="skip" aria-label="Not tonight" style="left:180px;top:1370px;width:152px;height:48px;border-radius:24px"></button></div>
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>
- </div></section>`;
+  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>`,
+  `<button class="rit-hot" data-ract="done" data-i="4" aria-label="Save Reflection" style="left:52px;top:1265px;width:412px;height:92px;border-radius:46px"></button>
+   <button class="rit-hot" data-ract="skip" aria-label="Not tonight" style="left:180px;top:1370px;width:152px;height:48px;border-radius:24px"></button>`);
 }
 const POPS=[horoPop,whisperPop,intentPop,unwindPop,reflectPop];
 
@@ -3383,21 +3376,26 @@ function view(){
  <div class="rit-ov${op!=null?' on now':''}" id="rov">${op!=null?POPS[op]().replace('class="rt','class="rt on in'+(op===1&&S.revealed[dkey()]?' now':'')):''}</div></div>`;
 }
 
-// the scales: the painting fills the phone's width (and its height, above the menu); each pop-up fits the screen
+// the scales: the painting fills the phone's width (and its height, above the menu); each pop-up fills the screen
 function fit(){
  const r=document.documentElement.style,W=Math.min(innerWidth,520),H=innerHeight,nh=W*217/1024;
  const s=Math.max(W/1024,(H-nh+24)/2032);
  r.setProperty('--rw',W+'px');r.setProperty('--rs',s);r.setProperty('--rx',(W-1024*s)/2+'px');r.setProperty('--rnh',nh+'px');
- const VW=innerWidth;
- let ws=Math.min((VW-16)/592,(H-16)/1150),wh=Math.min(1312*ws,H-16);
- r.setProperty('--ws',ws);r.setProperty('--wh',wh+'px');r.setProperty('--wlt',(wh/ws-560)+'px');r.setProperty('--wld',wh<1312*ws-1?'block':'none');
- r.setProperty('--is',Math.min((VW-16)/1024,(H-16)/1536));
- [['u',1422,1030],['q',1478,1140]].forEach(([x,P,Rr])=>{const s=Math.min((VW-16)/512,(H-16)/Rr),hr=Math.min(P,(H-16)/s);
-  r.setProperty(`--${x}s`,s);r.setProperty(`--${x}hr`,hr+'px');r.setProperty(`--${x}ld`,hr<P-1?'block':'none');r.setProperty(`--${x}bt`,(hr-P)+'px')});
+ r.setProperty('--pw',W+'px');
+ for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
+  const [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style;
+  st.setProperty('--s',sc);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
+  // the Whisper's card fills the room between the title and the foot, turned or not
+  if(id==='rtw'){const bot=hr-fh-14,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
+   st.setProperty('--ht',hb+'px');
+   st.setProperty('--cl',(592-w)/2+'px');st.setProperty('--ct',250+Math.max(0,(ah-h)/2)+'px');st.setProperty('--cwd',w+'px');st.setProperty('--chd',h+'px');
+   st.setProperty('--bl',(592-bw)/2+'px');st.setProperty('--bt',350+Math.max(0,(bb-350-bh)/2)+'px');st.setProperty('--bw',bw+'px');st.setProperty('--bh',bh+'px');
+   t.dataset.cw=w;t.dataset.ch=h}}
  const msg=document.getElementById('rwmsg');if(msg){
-  // measured against the card as it is once turned (504 by 775), so the words keep one size through the turn
-  const m=document.createElement('div');m.style.cssText="position:absolute;visibility:hidden;left:-9999px;width:"+(504*.58)+"px;font:italic 600 32px/1.24 'Cormorant Garamond',serif;text-align:center";m.textContent=msg.textContent;document.body.append(m);
-  let f=32;while(m.offsetHeight>775*.25&&f>15){f-=1;m.style.fontSize=f+'px'}m.remove();msg.style.fontSize=f+'px'}
+  // measured against the card as it is once turned, so the words keep one size through the turn
+  const tw=document.getElementById('rtw'),cw=+tw.dataset.cw||504,ch=+tw.dataset.ch||775,k=cw/504;
+  const m=document.createElement('div');m.style.cssText="position:absolute;visibility:hidden;left:-9999px;width:"+(cw*.58)+"px;font:italic 600 "+Math.round(32*k)+"px/1.24 'Cormorant Garamond',serif;text-align:center";m.textContent=msg.textContent;document.body.append(m);
+  let f=Math.round(32*k);while(m.offsetHeight>ch*.25&&f>12){f-=1;m.style.fontSize=f+'px'}m.remove();msg.style.fontSize=f+'px'}
 }
 
 function wheel(){const n=count(),nx=nextUndone();
@@ -3405,7 +3403,6 @@ function wheel(){const n=count(),nx=nextUndone();
   l.classList.toggle('done',done(i));l.classList.toggle('now',!done(i)&&i===nx);if(p)p.setAttribute('aria-label',`${i+1}. ${NAMES[i]}${done(i)?', done':''}`)}}
 function open(i){
  const ov=document.getElementById('rov');if(!ov)return;V.rp=i;
- if(i===0&&S.readDay!==dkey()){}   // read is counted only when the reader carries it
  ov.classList.remove('now');ov.innerHTML=POPS[i]();const t=document.getElementById(TILES[i]);
  if(i===1&&S.revealed[dkey()])t.classList.add('now');
  t.classList.add('on');ov.classList.add('on');fit();
@@ -3461,6 +3458,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
  if(V.sec!=='home')return;
  if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('rit-pan')){e.preventDefault();open(+e.target.dataset.p)}
+ if((e.key==='Enter'||e.key===' ')&&e.target.id==='rcard'){e.preventDefault();flip()}
  if(e.key==='Escape'&&V.rp!=null)close();
 });
 addEventListener('resize',fit);
