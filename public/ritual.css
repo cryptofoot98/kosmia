@@ -157,6 +157,6 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .sk0-n::after{transform:scaleX(-1)}
 #app .sk0-tip{position:absolute;left:0;right:0;bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,0px) + 8px);margin:0;padding:0 16px;text-align:center;font:italic 500 calc(var(--rw,100vw)*.04)/1.3 'Cormorant Garamond',serif;color:#EDCF96;text-shadow:0 0 10px rgba(4,7,22,.95),0 0 3px rgba(4,7,22,.9);pointer-events:none}
 #app .sk0-tip::after{content:'';display:block;width:42%;height:9px;margin:5px auto 0;background:radial-gradient(circle,#FFE6B0 0 2px,rgba(255,220,150,.5) 3px,transparent 5px) center/9px 9px no-repeat,linear-gradient(90deg,transparent,#D9B06A 30%,transparent 46%,transparent 54%,#D9B06A 70%,transparent) center/100% 1px no-repeat}
-#app .sk0-nav{background-image:url(/art/sky/sk-nav.webp)}
+#app .sk0-nav{background-image:url(/art/sky/sk-nav.webp);bottom:calc(env(safe-area-inset-bottom,0px) - var(--rnh,80px)*12/217)}
 @media (max-height:700px){#app .sk0-tip::after{display:none}#app .sk0-tip{font-size:calc(var(--rw,100vw)*.035);line-height:1.22;bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,0px) + 3px)}}
 #app .sky0~.cpop{z-index:40!important}
