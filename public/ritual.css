@@ -49,7 +49,7 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app #rtq{--img:url(/art/ritual/q-bg.webp)}
 
 /* the painted button, one piece (no stretched seams), its words set on it */
-#app .rpill{--h:74px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);width:calc(var(--h)*536/122);padding:0 0 calc(var(--h)*.04);background:url(/art/ritual/pill.webp) 0 0/100% 100% no-repeat;font-style:italic;font-weight:600;color:#1f1206!important;white-space:nowrap;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+#app .rpill{--h:74px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);width:calc(var(--h)*515/118);padding:0 0 calc(var(--h)*.04);background:url(/art/ritual/pill.webp) 0 0/100% 100% no-repeat;font-style:italic;font-weight:600;color:#1f1206!important;white-space:nowrap;filter:drop-shadow(0 1px 3px rgba(70,36,6,.3))}
 
 /* Whisper: the card takes the room between the title and the foot */
 #app .rwline{left:0;width:592px;top:292px;margin:0;text-align:center;font:italic 500 32px/1.2 'Cormorant Garamond',serif;color:#F6E7C6;text-shadow:0 0 14px rgba(4,7,22,.9);transition:opacity .6s}
@@ -104,7 +104,7 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app #rth .sec .rp{margin:0;font:500 17px/1.42 'Cormorant Garamond',serif;color:#2a1a10}
 #app #rth .line{height:1px;background:linear-gradient(90deg,rgba(122,74,30,0),rgba(122,74,30,.55) 15%,rgba(122,74,30,.55) 85%,rgba(122,74,30,0));margin:4px 0 2px}
 #app #rth .line.star{position:relative;margin:10px 0 8px}
-#app #rth .line.star span{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);font:normal 13px/1 serif;color:#7a4a1e;background:#f1ddb5;padding:0 6px;border-radius:50%}
+#app #rth .line.star span{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);font:normal 13px/1 serif;color:#7a4a1e;background:#f1c992;padding:0 6px;border-radius:50%}
 #app #rth .fold{display:block;width:100%;text-align:left}
 #app #rth .fold .sec{align-items:center}
 #app #rth .fold h3{display:flex;justify-content:space-between;align-items:center;margin:0}
