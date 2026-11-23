@@ -43,6 +43,17 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app .rcvf::before{content:'';position:absolute;inset:0;background:var(--img) 0 0/100% 100% no-repeat;
  -webkit-mask:linear-gradient(transparent calc(var(--ch)*1px - var(--fh)*1px),#000 calc(var(--ch)*1px - var(--fh)*1px + 56px));mask:linear-gradient(transparent calc(var(--ch)*1px - var(--fh)*1px),#000 calc(var(--ch)*1px - var(--fh)*1px + 56px))}
 #app .rcvf>*{pointer-events:auto}
+/* the arrow back and the share button: one size and one place on every pop-up */
+#app .rbar{position:absolute;z-index:6;top:calc(var(--pw,100vw)*.173);width:46px;height:46px;margin:-23px 0 0 -23px;display:grid;place-items:center;border-radius:50%}
+#app .rbk{left:calc(var(--pw,100vw)*.115)}
+#app .rsh{left:calc(var(--pw,100vw)*.885)}
+#app .rbar svg{width:calc(var(--pw,100vw)*.085);height:calc(var(--pw,100vw)*.085);fill:none;stroke:#E2BC76;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px rgba(240,190,100,.5))}
+#app .rbar svg path{stroke-width:2.8}
+#app .rbar:focus-visible{outline:2px solid #F3D9A0;outline-offset:2px}
+/* the painted button (as on Intention), its words set on it; on Horoscope and Whisper it rests at the foot of the screen */
+#app .rbtn{position:absolute;z-index:5;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:.55em;width:calc(var(--pw,100vw)*.557);height:calc(var(--pw,100vw)*.557*150/570);padding:0 0 .06em;background:url(/art/ritual/btn.webp) 0 0/100% 100% no-repeat;font:italic 600 calc(var(--pw,100vw)*.043)/1 'Cormorant Garamond',serif;color:#18110a!important;-webkit-text-stroke:.45px currentColor;white-space:nowrap;filter:drop-shadow(0 5px 9px rgba(0,0,0,.45))}
+#app .rbtn .rarw{width:1.1em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#app .rbtn:focus-visible{outline:2px solid #F3D9A0;outline-offset:3px}
 #app #rtw{--img:url(/art/ritual/w-bg.webp)}
 #app #rtu{--img:url(/art/ritual/u-bg.webp)}
 #app #rtq{--img:url(/art/ritual/q-bg.webp)}
@@ -69,33 +80,34 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app #rtw.rev.now #rcard,#app #rtw.rev.now #rcard .rflip{transition:none}
 #app #rcard.shim::after{content:'';position:absolute;inset:-12%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,236,180,.85),rgba(255,214,140,.3) 55%,rgba(255,214,140,0));animation:ritShim 1.2s ease-out forwards;pointer-events:none}
 @keyframes ritShim{0%{opacity:0;transform:scale(.6)}40%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
-#app #rwmsg{position:absolute;left:21%;right:21%;top:53%;height:25%;display:flex;align-items:center;justify-content:center;text-align:center;margin:0;font:italic 600 26px/1.24 'Cormorant Garamond',serif;color:#2a1a10;overflow:hidden}
+#app #rwmsg{position:absolute;left:16%;right:16%;top:52%;height:28%;display:flex;align-items:center;justify-content:center;text-align:center;margin:0;font:italic 600 26px/1.24 'Cormorant Garamond',serif;color:#2a1a10;overflow:hidden}
 #app #rwhint{left:0;width:592px;top:var(--ht);display:grid;justify-items:center;gap:4px;text-align:center;transition:opacity .5s;pointer-events:none}
 #app #rwhint img{width:42px;height:48px}
 #app #rwhint .rp{margin:0;font:italic 500 26px/1.2 'Cormorant Garamond',serif;color:#F6E7C6;text-shadow:0 0 12px rgba(4,7,22,.9)}
 #app #rtw.rev #rwhint,#app #rtw.rev .rwline{opacity:0}
-#app #rwact{left:0;width:592px;top:1166px;display:flex;justify-content:center;align-items:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .8s .9s}
-#app #rtw.rev #rwact{opacity:1;pointer-events:auto}
-#app #rtw.rev.now #rwact{transition:none}
-#app #rwact .ric{width:66px;height:66px;background-size:100% 100%}
-#app #rwact .ric.on{filter:drop-shadow(0 0 10px rgba(255,214,140,.9))}
-#app #rwact .rpill{--h:84px;font-size:30px}
+#app #rtw .rbtn{bottom:calc(var(--pw,100vw)*.042);opacity:0;pointer-events:none;transition:opacity .8s .9s}
+#app #rtw.rev .rbtn{opacity:1;pointer-events:auto}
+#app #rtw.rev.now .rbtn{transition:none}
 
 /* Horoscope: the manuscript unrolls and scrolls, the full width of the screen */
-#app #rth{--hw:var(--pw,100vw);overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
-#app #rth::-webkit-scrollbar{display:none}
-#app #rth img.sl{display:block;width:100%;height:auto}
-#app #rth .hd{position:relative;z-index:0}
-#app #rth .hd button{position:absolute;top:19.5%;width:11%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%)}
+#app #rth{--hw:var(--pw,100vw);--fh:calc(var(--hw)*432/608)}
+#app #rth .hbg{position:absolute;inset:0;display:flex;flex-direction:column;pointer-events:none}
+#app #rth .hbg img{display:block;width:100%;height:auto;flex:none}
+#app #rth .hbm{flex:1;background:url(/art/ritual/h-mid.webp) 0 0/100% 100%}
+#app #rth .hd{position:absolute;left:0;right:0;top:0;height:calc(var(--hw)*540/608);pointer-events:none}
 #app #rth .hglyph{position:absolute;left:51%;top:44.4%;transform:translate(-50%,-50%);width:15%;aspect-ratio:1;display:grid;place-items:center;font:500 calc(var(--hw)*.1)/1 'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',serif;color:#EBCB86;text-shadow:0 0 12px rgba(240,190,90,.6)}
 #app #rth .hname{position:absolute;left:0;right:0;top:63.8%;transform:translateY(-50%);margin:0;text-align:center;font:italic 600 calc(var(--hw)*.075)/1 'Cormorant Garamond',serif;color:#F3E2BC;text-shadow:0 0 10px rgba(4,7,22,.9)}
 #app #rth .hpl{position:absolute;left:24%;right:24%;top:72.6%;transform:translateY(-50%);margin:0;display:flex;justify-content:center;gap:5%;white-space:nowrap;font:italic 500 calc(var(--hw)*.042)/1 'Cormorant Garamond',serif;color:#EAD9B4}
 #app #rth .hpl b{font:500 1em 'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',serif;color:#EBCB86}
-#app #rth .roll{position:relative;z-index:1;margin-top:calc(var(--hw)*-.15);clip-path:inset(0 0 100% 0);transition:clip-path 1.5s cubic-bezier(.3,0,.2,1) .15s}
+/* only the parchment scrolls: from the header's paper edge down to the sunrise, its words fading softly at both ends */
+#app #rth .roll{position:absolute;z-index:2;left:0;right:0;top:calc(var(--hw)*.705);bottom:calc(var(--fh)*.77);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+ -webkit-mask:linear-gradient(transparent,#000 16px,#000 calc(100% - 26px),transparent);mask:linear-gradient(transparent,#000 16px,#000 calc(100% - 26px),transparent);
+ clip-path:inset(0 0 100% 0);transition:clip-path 1.5s cubic-bezier(.3,0,.2,1) .15s}
+#app #rth .roll::-webkit-scrollbar{display:none}
 #app #rth.in .roll{clip-path:inset(0)}
 #app .rit-ov.now #rth .roll{transition:none}
-#app #rth .parch{position:relative}
-#app #rth .parch::before{content:'';position:absolute;left:0;right:0;top:calc(var(--hw)*.15);bottom:0;background:url(/art/ritual/h-mid.webp) 0 0/100% 100%}
+#app #rth .parch{position:relative;padding:10px 0 22px}
+#app #rth .rbtn{bottom:calc(var(--fh)*.3)}
 #app #rth .parch>div{position:relative;padding:0 11.5% 4px 11%}
 #app #rth .sec{display:grid;grid-template-columns:40px 1fr;column-gap:10px;padding:6px 0 4px;text-align:left}
 #app #rth .sec img{width:40px;height:auto;margin-top:1px}
@@ -113,14 +125,15 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app #rth .fold.open .more{grid-template-rows:1fr}
 #app #rth .fold .more .rp{overflow:hidden;padding-left:50px;margin:0;font:500 17px/1.42 'Cormorant Garamond',serif;color:#2a1a10}
 #app #rth .fold.open .more .rp{padding-bottom:6px}
-#app #rth .ft{position:relative}
-#app #rth .ft .rpill{--h:58px;position:absolute;left:50%;top:5%;transform:translateX(-50%);font-size:20px}
 
 /* Intention */
 #app #riin{left:186px;top:786px;width:660px;height:120px;border:0;outline:0;background:none;resize:none;font:italic 500 44px/1.2 'Cormorant Garamond',serif;color:#2a1a10;padding:0}
 #app #riin::placeholder{color:#3a2716;opacity:1}
 #app .rit .rchip{border-radius:999px;transition:box-shadow .4s,background .4s}
 #app .rit .rchip.on{background:rgba(255,214,140,.2);box-shadow:0 0 0 3px #F6DFA4,0 0 26px rgba(255,214,140,.75)}
+#app #rti .rchip{width:410px;height:104px;display:flex;align-items:center;justify-content:center;gap:18px;padding:0 20px;border:3px solid #C9A25E;background:rgba(9,13,36,.8);box-shadow:inset 0 0 0 1px rgba(255,226,160,.16),0 6px 18px rgba(0,0,0,.4);font:italic 600 47px/1 'Cormorant Garamond',serif;color:#F2DEB2;white-space:nowrap}
+#app #rti .rchip img{height:54px;width:auto;flex:none}
+#app #rti .rchip.on{background:rgba(70,48,18,.82);border-color:#F6DFA4;box-shadow:0 0 0 2px #F6DFA4,0 0 30px rgba(255,214,140,.7)}
 
 /* Unwind and Reflection */
 #app .rupill{left:112px;top:488px;width:340px;height:42px;margin:0;display:flex;align-items:center;font:italic 500 21px/1.1 'Cormorant Garamond',serif;color:#F3E3BF;white-space:nowrap;overflow:hidden}

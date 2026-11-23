@@ -3296,7 +3296,14 @@ const VS='︎';
 const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
-const pane=(id,label,cls,top,foot)=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div></section>`;
+const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
+// every pop-up: the arrow back at the top left and the share button at the top right, the same size and place on each
+const ICB='<svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="22.5"/><path d="M34 25H16M23.5 17.5 16 25l7.5 7.5"/></svg>';
+const ICS='<svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="22.5"/><path d="M25 29V13.5M19.5 19 25 13.5l5.5 5.5M20 23h-3v12h16V23h-3"/></svg>';
+const rbar=share=>`<button class="rbar rbk" data-ract="back" aria-label="Back to Ritual">${ICB}</button><button class="rbar rsh" ${share} aria-label="Share">${ICS}</button>`;
+// the painted button of the Intention screen (its rim and side ornaments), its words set on it
+const ARW='<svg class="rarw" viewBox="0 0 40 20" aria-hidden="true"><path d="M3 10h33M28.5 3 36 10l-7.5 7"/></svg>';
+const rbtn=(label,i)=>`<button class="rbtn" data-ract="done" data-i="${i}"><span>${label}</span>${ARW}</button>`;
 
 const day=()=>{const k=dkey();S.rit=S.rit||{};return S.rit[k]||{}};
 function mark(i){const k=dkey();S.rit=S.rit||{};S.rit[k]=Object.assign({},S.rit[k],{[KEYS[i]]:1});Object.keys(S.rit).sort().slice(0,-60).forEach(x=>delete S.rit[x]);save()}
@@ -3320,48 +3327,47 @@ function horoPop(){
   if(ch.ang&&S.birth&&!S.birth.unk)pl.push(['Rising',sIdx(Math.floor(ch.ang.asc/30))])}
  const plh=pl.length>1?pl.map(([n,s])=>`<span>${n} <b aria-label="${s.name}">${s.g}${VS}</b></span>`).join(''):`<span>${esc(sign.dates||'')}</span>`;
  return `<section class="rt" id="rth" aria-label="Horoscope, your reading for today. ${sign.name}.">
-  <div class="hd"><img class="sl" src="${R}h-top.webp" alt=""><span class="hglyph" aria-hidden="true">${sign.g}${VS}</span><div class="hname">${sign.name}</div><div class="hpl">${plh}</div>
-   <button data-ract="back" aria-label="Back to Ritual" style="left:11.5%"></button><button data-act="sharecard" data-k="horo" data-s="${sign.id}" data-cat="overview" aria-label="Share" style="left:88.5%"></button></div>
+  <div class="hbg"><img src="${R}h-top.webp" alt=""><div class="hbm"></div><img src="${R}h-bot.webp" alt=""></div>
+  <div class="hd"><span class="hglyph" aria-hidden="true">${sign.g}${VS}</span><div class="hname">${sign.name}</div><div class="hpl">${plh}</div></div>
   <div class="roll"><div class="parch"><div>
    <div class="sec"><img src="${R}h-sun.webp" alt=""><div><h3>${esc(h.focus||'Today’s Guidance')}</h3><div class="rp">${esc(h.body)}</div></div></div>
    <div class="line star"><span>✦</span></div>
    ${fold('love','h-heart','Love &amp; Relationships')}<div class="line"></div>
    ${fold('career','h-leaf','Career &amp; Purpose')}<div class="line"></div>
    ${fold('health','h-lotus','Wellbeing')}
-  </div></div>
-  <div class="ft"><img class="sl" src="${R}h-bot.webp" alt=""><button class="rpill" data-ract="done" data-i="0"><span>Carry This Wisdom</span></button></div></div>
+  </div></div></div>
+  ${rbtn('Carry This Wisdom',0)}
+  ${rbar(`data-act="sharecard" data-k="horo" data-s="${sign.id}" data-cat="overview"`)}
  </section>`;
 }
 function whisperPop(){
  const k=dkey(),c=todayCard(),rev=!!S.revealed[k],sv=S.saved.some(x=>x.date===k);
  return pane('rtw','Whisper',rev?' rev':'',`<div class="rwline">A whisper, just for you.</div>
   <div id="rcard" role="button" tabindex="0" data-ract="flip" aria-label="${rev?'Your Whisper: '+esc(c.title):'Tap the card to reveal your message'}"><div class="rflip"><div class="rface rbk"></div><div class="rface rfr"><span id="rwmsg">${esc(myWhisper(c))}</span></div></div></div>
-  <div id="rwhint"><img src="${R}w-hand.webp" alt=""><div class="rp">Tap the card to reveal your message.</div></div>
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:24px;top:77px;width:72px;height:72px"></button>`,
-  `<div id="rwact"><button class="ric${sv?' on':''}" data-act="savecard" aria-label="${sv?'Saved to your Journal':'Save to your Journal'}" style="background-image:url(${R}ic-save.webp)"></button><button class="rpill" data-ract="done" data-i="1"><span>Carry This With Me</span></button><button class="ric" data-act="sharecard" data-k="whisper" aria-label="Share" style="background-image:url(${R}ic-share.webp)"></button></div>`);
+  <div id="rwhint"><img src="${R}w-hand.webp" alt=""><div class="rp">Tap the card to reveal your message.</div></div>`,
+  '',rbar('data-act="sharecard" data-k="whisper"')).replace('</section>',`${rbtn('Carry This With Me',1)}</section>`);
 }
 function intentPop(){
  const cur=(S.carry||{})[dkey()]||'';
  return pane('rti','Intention. Set your intention for the day.','',`<textarea id="riin" maxlength="60" rows="2" placeholder="Write your intention..." aria-label="Write your intention">${esc(cur)}</textarea>
-  ${CHIPS.map(([v,x,y,w])=>`<button class="rchip${v===cur?' on':''}" data-ract="chip" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:62px"></button>`).join('')}
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:30px;top:72px;width:86px;height:86px"></button>
-  <button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" id="riset" style="left:258px;width:512px;height:116px;border-radius:58px"></button>`,'');
+  ${CHIPS.map(([v])=>`<button class="rchip${v===cur?' on':''}" data-ract="chip" data-v="${v}"><img src="${R}ci-${v.toLowerCase()}.webp" alt=""><span>${v}</span></button>`).join('')}
+  <button class="rit-hot" data-ract="done" data-i="2" aria-label="Set my intention" id="riset" style="left:258px;width:512px;height:116px;border-radius:58px"></button>`,'',rbar('data-ract="share" data-k="intent"'));
 }
 function unwindPop(){
  const w=intentWords(),pill=!w?'This morning was yours, however it went.':w.short?`This morning you invited ${esc(w.q)}.`:'This morning you set an intention.',
   q=!w?'Did today treat you gently?':w.short?`Did ${esc(w.q)} find you today?`:'Did your intention find you today?',a=(S.unwind||{})[dkey()];
  return pane('rtu','A moment to unwind. You have done enough for today.','',`<div class="rupill">${pill}</div><div class="ruq">${q}</div>
   ${[['Yes',62],['Partly',208],['Not yet',355]].map(([v,x])=>`<button class="rpick${a===v?' on':''}" data-ract="pick" data-v="${v}" aria-label="${v}" style="left:${x}px;top:640px;width:100px;height:100px"></button>`).join('')}
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>`,
-  `<button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" style="left:45px;top:1265px;width:425px;height:92px;border-radius:46px"></button>`);
+`,
+  `<button class="rit-hot" data-ract="done" data-i="3" aria-label="Continue to Reflection" style="left:45px;top:1265px;width:425px;height:92px;border-radius:46px"></button>`,rbar('data-ract="share" data-k="unwind"'));
 }
 function reflectPop(){
  const cur=S.notes[dkey()]||'';
  return pane('rtq','Your daily reflection. How did today make you feel?','',`<textarea id="rqin" maxlength="600" placeholder="Write your thoughts here..." aria-label="How did today make you feel?">${esc(cur)}</textarea>
   ${QS.map(([v,x,y,w])=>`<button class="rchip" data-ract="q" data-v="${v}" aria-label="${v}" style="left:${x}px;top:${y}px;width:${w}px;height:64px"></button>`).join('')}
-  <button class="rit-hot" data-ract="back" aria-label="Back to Ritual" style="left:16px;top:77px;width:72px;height:72px"></button>`,
+`,
   `<button class="rit-hot" data-ract="done" data-i="4" aria-label="Save Reflection" style="left:52px;top:1265px;width:412px;height:92px;border-radius:46px"></button>
-   <button class="rit-hot" data-ract="skip" aria-label="Not tonight" style="left:180px;top:1370px;width:152px;height:48px;border-radius:24px"></button>`);
+   <button class="rit-hot" data-ract="skip" aria-label="Not tonight" style="left:180px;top:1370px;width:152px;height:48px;border-radius:24px"></button>`,rbar('data-ract="share" data-k="reflect"'));
 }
 const POPS=[horoPop,whisperPop,intentPop,unwindPop,reflectPop];
 
@@ -3389,10 +3395,12 @@ function fit(){
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
   let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
   if(id==='rti'){ch=IH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
-   st.setProperty('--img',`url(${R}i-bg-${ch}.webp)`);const b=document.getElementById('riset');if(b)b.style.top=(ch-228)+'px'}
+   st.setProperty('--img',`url(${R}i-bg-${ch}.webp)`);const b=document.getElementById('riset');if(b)b.style.top=(ch-228)+'px';
+   const top=952,bot=ch-228-26,hh=104,A=bot-top,gap=Math.min(90,Math.max(14,(A-3*hh)/4)),y0=top+(A-3*hh-2*gap)/2;
+   t.querySelectorAll('.rchip').forEach((c,i)=>{c.style.left=(i%2?522:92)+'px';c.style.top=(y0+Math.floor(i/2)*(hh+gap))+'px'})}
   st.setProperty('--s',sc);st.setProperty('--sy',sy);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
   // the Whisper's card fills the room between the title and the foot, turned or not
-  if(id==='rtw'){const bot=hr-fh-14,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
+  if(id==='rtw'){const bot=hr-112,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
    st.setProperty('--ht',hb+'px');
    st.setProperty('--cl',(592-w)/2+'px');st.setProperty('--ct',250+Math.max(0,(ah-h)/2)+'px');st.setProperty('--cwd',w+'px');st.setProperty('--chd',h+'px');
    st.setProperty('--bl',(592-bw)/2+'px');st.setProperty('--bt',350+Math.max(0,(bb-350-bh)/2)+'px');st.setProperty('--bw',bw+'px');st.setProperty('--bh',bh+'px');
@@ -3400,8 +3408,8 @@ function fit(){
  const msg=document.getElementById('rwmsg');if(msg){
   // measured against the card as it is once turned, so the words keep one size through the turn
   const tw=document.getElementById('rtw'),cw=+tw.dataset.cw||504,ch=+tw.dataset.ch||775,k=cw/504;
-  const m=document.createElement('div');m.style.cssText="position:absolute;visibility:hidden;left:-9999px;width:"+(cw*.58)+"px;font:italic 600 "+Math.round(32*k)+"px/1.24 'Cormorant Garamond',serif;text-align:center";m.textContent=msg.textContent;document.body.append(m);
-  let f=Math.round(32*k);while(m.offsetHeight>ch*.25&&f>12){f-=1;m.style.fontSize=f+'px'}m.remove();msg.style.fontSize=f+'px'}
+  const m=document.createElement('div');m.style.cssText="position:absolute;visibility:hidden;left:-9999px;width:"+(cw*.68)+"px;font:italic 600 "+Math.round(40*k)+"px/1.2 'Cormorant Garamond',serif;text-align:center";m.textContent=msg.textContent;document.body.append(m);
+  let f=Math.round(40*k);while(m.offsetHeight>ch*.28&&f>12){f-=.5;m.style.fontSize=f+'px'}m.remove();msg.style.fontSize=f+'px'}
 }
 
 function wheel(){const n=count(),nx=nextUndone();
@@ -3441,10 +3449,16 @@ function act(t,e){
  if(a==='chip'){document.querySelectorAll('#rti .rchip').forEach(x=>x.classList.toggle('on',x===t));document.getElementById('riin').value=t.dataset.v;return}
  if(a==='pick'){const on=!t.classList.contains('on');document.querySelectorAll('#rtu .rpick').forEach(x=>x.classList.toggle('on',x===t&&on));S.unwind=S.unwind||{};if(on)S.unwind[k]=t.dataset.v;else delete S.unwind[k];save();return}
  if(a==='q'){document.querySelectorAll('#rtq .rchip').forEach(x=>x.classList.toggle('on',x===t));const q=document.getElementById('rqin');q.placeholder=t.dataset.v;V.ritQ=t.dataset.v;q.focus();return}
+ if(a==='share'){const w=t.dataset.k,val=id=>((document.getElementById(id)||{}).value||'').trim();let txt='';
+  if(w==='intent'){const v=val('riin');txt=v?`My intention for today: “${v}”. Set in my daily ritual with Kosmia ✦`:'Setting my intention for the day with Kosmia ✦'}
+  if(w==='unwind')txt='You have done enough for today. A moment to unwind with Kosmia ✦';
+  if(w==='reflect'){const v=val('rqin');txt=v?`${v} (my reflection tonight, with Kosmia ✦)`:'Ending my day with a quiet reflection, with Kosmia ✦'}
+  if(navigator.share)return navigator.share({title:'Kosmia',text:txt,url:location.origin}).catch(()=>{});
+  return (navigator.clipboard?navigator.clipboard.writeText(txt+' '+location.origin):Promise.reject()).then(()=>toast('Copied to share'),()=>toast('Sharing is not available here'))}
  if(a==='skip'){close();return setTimeout(()=>toast('Rest well. Tonight needs no words.'),500)}
  if(a==='done'){const i=+t.dataset.i;
   if(i===0){S.readDay=k;save();return complete(0,'Your Horoscope is kept for today')}
-  if(i===1)return complete(1,'Your Whisper walks with you today');
+  if(i===1){if(!S.saved.some(x=>x.date===k)){S.saved.push({id:todayCard().id,date:k});save();syncFortune(k)}return complete(1,'Your Whisper walks with you today, kept in your Journal')}
   if(i===2){const v=(document.getElementById('riin').value||'').trim();if(!v){toast('Write an intention, or choose one');document.getElementById('riin').focus();return}
    S.carry=S.carry||{};S.carry[k]=v.slice(0,60);Object.keys(S.carry).sort().slice(0,-40).forEach(x=>delete S.carry[x]);save();return complete(2,'Your intention is set for today')}
   if(i===3){mark(3);wheel();return open(4)}
