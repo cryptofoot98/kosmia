@@ -3545,14 +3545,14 @@ const dots=a=>a.map(x=>`<div class="spb">${x}</div>`).join('');
 // the cards, lifted from the painting: [left, top, width, height] in the painting, the slices that keep their rims and titles
 // whole as they grow (top, right, bottom, left), where their words start, and their icons [x, y, w, h]
 const SPH=[1744,1984,2240];
-const SPM={moon:{lily:{1744:1440,1984:1601,2240:1940},tiles:[[49,639,924,179],[49,812,924,169],[49,974,924,176],[49,1146,924,183]],T:[70,64,66],L:185,tx:194,icons:[[40,37,139,108],[48,25,123,121],[48,36,126,94]]},
- sun:{lily:{1744:1337,1984:1532,2240:1934},tiles:[[45,638,932,169],[45,798,932,205],[45,986,932,181],[45,1156,932,187]],T:[66,78,56],L:205,tx:221,icons:[[32,44,166,96],[37,22,156,154],[47,36,136,96]]}};
+const SPM={moon:{lily:{1744:1440,1984:1601,2240:1940},tiles:[[49,639,924,179],[49,812,924,169],[49,974,924,176],[49,1146,924,183]],T:[70,64,66],pb:26,L:185,tx:194,icons:[[40,37,139,108],[48,25,123,121],[48,36,126,94]]},
+ sun:{lily:{1744:1337,1984:1532,2240:1934},tiles:[[45,649,932,147],[45,804,932,175],[45,995,932,165],[45,1166,932,176]],T:[55,72,47],pb:12,L:205,tx:221,icons:[[32,33,166,96],[37,16,156,154],[47,27,136,96]]}};
 function spCards(n,bodies,rit){
  const M=SPM[n];
  return `<div class="spl">${[0,1,2].map(k=>{const [x,y,w,h]=M.tiles[k],T=M.T[k],ic=M.icons[k];
   return `<div class="spc" data-k="${k}" data-h="${h}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-width:${T}px 90px 30px ${M.L}px;border-image:url(${SKY}sp-${n}-t${k}.webp) ${T} 90 30 ${M.L} fill stretch">
    <img class="spi" src="${SKY}sp-${n}-i${k}.webp" alt="" data-dy="${ic[1]+ic[3]/2-h/2}" style="left:${ic[0]-M.L}px;width:${ic[2]}px;height:${ic[3]}px">
-   ${tx('sp-b'+(k===2?' sp-l':''),M.tx-M.L,-2,w-M.tx-58,h-T-26,bodies[k],k===2?36:38)}</div>`}).join('')}
+   ${tx('sp-b'+(k===2?' sp-l':''),M.tx-M.L,-2,w-M.tx-58,h-T-M.pb,bodies[k],k===2?36:38)}</div>`}).join('')}
   <div class="spc spr" style="left:${M.tiles[3][0]}px;top:${M.tiles[3][1]}px;width:${M.tiles[3][2]}px;height:${M.tiles[3][3]}px;background-image:url(${SKY}sp-${n}-t3.webp)">${rit}</div></div>`;
 }
 // lay the cards out for this screen: the painting nearest its shape, the cards spread evenly from the header to the lilies
@@ -3564,7 +3564,7 @@ function spLay(t,n,sc,hr,H){
  let y=top+gap;
  t.querySelectorAll('.spc').forEach((c,i)=>{c.style.top=y+'px';c.style.height=hh[i]+'px';
   const im=c.querySelector('.spi');if(im){const T=M.T[i];im.style.top=(hh[i]/2+(+im.dataset.dy)-parseFloat(im.style.height)/2-T)+'px'}
-  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-M.T[i]-26)+'px';
+  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-M.T[i]-M.pb)+'px';
   y+=hh[i]+gap});
  return {ch,th:ch,sy};
 }
@@ -3587,7 +3587,7 @@ function sunPop(){
  const now=new Date(),si=sIdx(K.signIdx(K.positions(now)[0].lon)),r=skyRel(SIGNS.indexOf(si)),me=sg(S.sign),x=SSG[si.id],rt=SRIT[si.el];
  const seas=SEAS[(SIGNS.indexOf(si)+(SOUTH()?6:0))%12].replace(' into ','<br>into ');
  const cards=spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],
-  `${tx('sp-rn c',207,90,248,54,rt[0],31)}${tx('sp-rd',521,20,378,148,rt[1],28)}`);
+  `${tx('sp-rn c',207,80,248,54,rt[0],31)}${tx('sp-rd',521,10,378,148,rt[1],28)}`);
  return pane('rsun',`The Sun in ${si.name}.`,'',`
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:144px;top:362px;width:68px;height:68px">
   ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
