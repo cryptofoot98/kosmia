@@ -142,3 +142,21 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 /* the five places in the menu: "Calendar" is the longest name, so the labels close up a little to keep their gaps */
 html body.nv-d #nav .in button{letter-spacing:0!important}
 html body.nv-d #nav .in [data-nav=calendar] span{font-size:.92em}
+
+/* ---------- Sky: the painting of the heavens between two hands; the reader's sign at its heart ---------- */
+body:has(.sky0) #nav{display:none!important}
+body:has(.sky0){overflow:hidden}
+body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,0px) + 14px)}
+#app .sky0 .rit-sc{background-image:url(/art/sky/sk-body.webp)}
+#app .sky0 .rit-sc>*{position:absolute}
+#app .sk0-fig{display:block;pointer-events:none}
+#app .sk0-g{display:block;pointer-events:none}
+#app .sk0-n{left:0;width:1024px;top:818px;height:44px;display:flex;justify-content:center;align-items:center;gap:20px;pointer-events:none}
+#app .sk0-n span{font:600 37px/1 'Cinzel',Georgia,serif;letter-spacing:.14em;margin-right:-.14em;color:#F1DCA6;text-shadow:0 0 12px rgba(240,190,90,.55),0 0 2px rgba(255,226,170,.5)}
+#app .sk0-n::before,#app .sk0-n::after{content:'';width:62px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(236,196,120,0),#ECC478 70%,#FFE6B0);box-shadow:0 0 6px rgba(240,190,90,.6)}
+#app .sk0-n::after{transform:scaleX(-1)}
+#app .sk0-tip{position:absolute;left:0;right:0;bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,0px) + 8px);margin:0;padding:0 16px;text-align:center;font:italic 500 calc(var(--rw,100vw)*.04)/1.3 'Cormorant Garamond',serif;color:#EDCF96;text-shadow:0 0 10px rgba(4,7,22,.95),0 0 3px rgba(4,7,22,.9);pointer-events:none}
+#app .sk0-tip::after{content:'';display:block;width:42%;height:9px;margin:5px auto 0;background:radial-gradient(circle,#FFE6B0 0 2px,rgba(255,220,150,.5) 3px,transparent 5px) center/9px 9px no-repeat,linear-gradient(90deg,transparent,#D9B06A 30%,transparent 46%,transparent 54%,#D9B06A 70%,transparent) center/100% 1px no-repeat}
+#app .sk0-nav{background-image:url(/art/sky/sk-nav.webp)}
+@media (max-height:700px){#app .sk0-tip::after{display:none}#app .sk0-tip{font-size:calc(var(--rw,100vw)*.035);line-height:1.22;bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,0px) + 3px)}}
+#app .sky0~.cpop{z-index:40!important}

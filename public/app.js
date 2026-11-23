@@ -3482,8 +3482,32 @@ document.addEventListener('keydown',e=>{
 addEventListener('resize',fit);
 // after every render the scales and the Whisper's words are fitted again; a re-render while a pop-up is open keeps it
 // still and keeps the manuscript where the reader was
-ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else V.rp=null};
+ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0'))fit()}};
 views.home=view;
+// Sky: the painting of the heavens held between two hands, the reader's own sign at its heart. The Sun opens today's
+// Sun, the Moon the Moon of the day, each planet where the planets are now, and the sign the full horoscope
+const SKY='/art/sky/';
+const SKYPL=[[163,789,74],[292,810,30],[284,917,46],[216,1084,131,56],[893,862,46],[770,950,50],[741,1137,66],[863,1175,30]];
+function skyHome(){
+ const s=sg(S.sign),sk=V.skd&&skyItems().find(i=>i.id===V.skd);if(V.skd&&!sk)V.skd=null;
+ const circ=(x,y,r,a,attr)=>`<button class="rit-hot" ${attr} aria-label="${a}" style="left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px"></button>`;
+ const pl=SKYPL.map(([x,y,rx,ry])=>ry?`<button class="rit-hot" data-go="discover" data-t="planets" aria-label="Where the planets are now" style="left:${x-rx}px;top:${y-ry}px;width:${2*rx}px;height:${2*ry}px"></button>`:circ(x,y,rx,'Where the planets are now','data-go="discover" data-t="planets"')).join('');
+ return `<div class="rit sky0" role="main" aria-label="The Sky"><div class="rit-in">
+  <div class="rit-sc">
+   <img class="sk0-fig" src="${SKY}sk-fig-${s.id}.webp" alt="" style="left:330px;top:495px;width:370px;height:325px">
+   <img class="sk0-g" src="${SKY}sk-g-${s.id}.webp" alt="" style="left:458px;top:732px;width:112px;height:112px">
+   <div class="sk0-n"><span>${s.name.toUpperCase()}</span></div>
+   ${circ(510,1043,150,'The Sun today','data-act="skd" data-id="sun"')}
+   ${circ(764,757,66,'The Moon today','data-go="discover" data-t="moon"')}
+   ${pl}
+   <button class="rit-hot" data-go="horoscope" data-t="sign" aria-label="Your horoscope, ${s.name}" style="left:340px;top:500px;width:350px;height:370px;border-radius:30%"></button>
+   <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:904px;top:84px;width:88px;height:88px"></button>
+  </div>
+  <div class="sk0-tip">Tap on the Sun, Moon, planets or your sign<br>to explore their meaning for you.</div>
+  <nav class="rit-nav sk0-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky" aria-current="page"></button><button data-nav="tarot" aria-label="Oracle"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
+ </div></div>${sk?skyPop(sk):''}`;
+}
+{const vh=views.horoscope;views.horoscope=()=>(!A||!K||tab()==='sign')?vh():skyHome()}
 SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
 fit();
 }
