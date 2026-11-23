@@ -3396,8 +3396,7 @@ function fit(){
    st.setProperty('--img',`url(${R}i-bg-${ch}.webp)`);const b=document.getElementById('riset');if(b)b.style.top=(ch-228)+'px';
    const top=952,bot=ch-228-26,hh=104,A=bot-top,gap=Math.min(90,Math.max(14,(A-3*hh)/4)),y0=top+(A-3*hh-2*gap)/2;
    t.querySelectorAll('.rchip').forEach((c,i)=>{c.style.left=(i%2?522:92)+'px';c.style.top=(y0+Math.floor(i/2)*(hh+gap))+'px'})}
-  if(id==='rmoon'||id==='rsun')({ch,th,sy}=spLay(t,id.slice(1),sc,hr,H));
-  if(id==='rpl')({ch,th,sy}=plLay(t,sc,hr,H));
+  if(id==='rmoon'||id==='rsun'||id==='rpl')({ch,th,sy}=skLay(t,id.slice(1),sc,hr,H));
   st.setProperty('--s',sc);st.setProperty('--sy',sy);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
   // the Whisper's card fills the room between the title and the foot, turned or not
   if(id==='rtw'){const bot=hr-112,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
@@ -3484,7 +3483,7 @@ document.addEventListener('keydown',e=>{
 addEventListener('resize',fit);
 // after every render the scales and the Whisper's words are fitted again; a re-render while a pop-up is open keeps it
 // still and keeps the manuscript where the reader was
-ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0')){fit();const t=document.querySelector('#rov .rt');if(t){t.classList.add('on');spFit();(document.fonts?document.fonts.ready:Promise.resolve()).then(spFit);if(V.skpIn)t.classList.add('in');else requestAnimationFrame(()=>requestAnimationFrame(()=>{t.classList.add('in');V.skpIn=true}))}}else V.skp=null}};
+ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0')){fit();const t=document.querySelector('#rov .rt');if(t){t.classList.add('on');spFit();(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{fit();spFit()});if(V.skpIn)t.classList.add('in');else requestAnimationFrame(()=>requestAnimationFrame(()=>{t.classList.add('in');V.skpIn=true}))}}else V.skp=null}};
 views.home=view;
 // Sky: the painting of the heavens held between two hands, the reader's own sign at its heart. The Sun opens today's
 // Sun, the Moon the Moon of the day, each planet where the planets are now, and the sign the full horoscope
@@ -3546,29 +3545,40 @@ const spBar=()=>`<button class="rit-hot" data-skx aria-label="Back to the Sky" s
 const dots=a=>a.map(x=>`<div class="spb">${x}</div>`).join('');
 // the cards, lifted from the painting: [left, top, width, height] in the painting, the slices that keep their rims and titles
 // whole as they grow (top, right, bottom, left), where their words start, and their icons [x, y, w, h]
-const SPH=[1744,1984,2240];
-const SPM={moon:{lily:{1744:1440,1984:1601,2240:1940},tiles:[[49,639,924,179],[49,812,924,169],[49,974,924,176],[49,1146,924,183]],T:[70,64,66],pb:26,L:185,tx:194,icons:[[40,37,139,108],[48,25,123,121],[48,36,126,94]]},
- sun:{lily:{1744:1337,1984:1532,2240:1934},tiles:[[45,649,932,147],[45,804,932,175],[45,995,932,165],[45,1166,932,176]],T:[55,72,47],pb:12,L:205,tx:221,icons:[[32,33,166,96],[37,16,156,154],[47,27,136,96]]}};
-SPM.pl=Object.assign({},SPM.moon,{icons:[[44,43,130,95],[45,24,128,122],[48,30,126,105]]});
+// ---- the Sky's pages (Moon, Sun, each planet): one frame, one header, one set of cards ----
+// every page shares the Moon page's painted frame, arc and buttons; the title and subtitle are set the same on each, and
+// the four cards are the Moon page's own: all one size, growing only when their words need more room
+const SPH=[1744,1984,2240],SKT=[[49,924,70],[49,924,64],[49,924,66]],SKL=185,SKX=194,SKHB=180,SKRH=183;
+// each page's icons for the cards [file prefix, [w,h] each], set in the middle of the card's round end
+const SKI={moon:['moon',[[139,108],[123,121],[126,94]]],sun:['sun',[[166,96],[156,154],[136,96]]],pl:['pl',[[130,95],[128,122],[126,105]]]};
+const skHead=(title,sub)=>`${tx('sk-t',182,138,660,98,title,82)}${tx('sk-k',112,252,800,34,sub,25)}`;
 function spCards(n,bodies,rit){
- const M=SPM[n];
- return `<div class="spl">${[0,1,2].map(k=>{const [x,y,w,h]=M.tiles[k],T=M.T[k],ic=M.icons[k];
-  return `<div class="spc" data-k="${k}" data-h="${h}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-width:${T}px 90px 30px ${M.L}px;border-image:url(${SKY}sp-${n}-t${k}.webp) ${T} 90 30 ${M.L} fill stretch">
-   <img class="spi" src="${SKY}sp-${n}-i${k}.webp" alt="" data-dy="${ic[1]+ic[3]/2-h/2}" style="left:${ic[0]-M.L}px;width:${ic[2]}px;height:${ic[3]}px">
-   ${tx('sp-b'+(k===2?' sp-l':''),M.tx-M.L,-2,w-M.tx-58,h-T-M.pb,bodies[k],k===2?36:38)}</div>`}).join('')}
-  <div class="spc spr" style="left:${M.tiles[3][0]}px;top:${M.tiles[3][1]}px;width:${M.tiles[3][2]}px;height:${M.tiles[3][3]}px;background-image:url(${SKY}sp-${n}-t3.webp)">${rit}</div></div>`;
+ const [f,ics]=SKI[n];
+ return `${[0,1,2].map(k=>{const [x,w,T]=SKT[k],[iw,ih]=ics[k];
+  return `<div class="spc" data-k="${k}" style="left:${x}px;top:0;width:${w}px;height:${SKHB}px;border-width:${T}px 90px 30px ${SKL}px;border-image:url(${SKY}sp-moon-t${k}.webp) ${T} 90 30 ${SKL} fill stretch">
+   <img class="spi" src="${SKY}sp-${f}-i${k}.webp" alt="" style="left:${110-iw/2-SKL}px;width:${iw}px;height:${ih}px">
+   <div class="spx sp-b${k===2?' sp-l':''}" style="left:${SKX-SKL}px;top:-2px;width:${w-SKX-58}px">${bodies[k]}</div></div>`}).join('')}
+  <div class="spc spr" style="left:49px;top:0;width:924px;height:${SKRH}px;background-image:url(${SKY}sp-moon-t3.webp)">${rit}</div>`;
 }
-// lay the cards out for this screen: the painting nearest its shape, the cards spread evenly from the header to the lilies
-function spLay(t,n,sc,hr,H){
- const M=SPM[n],ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
- t.style.setProperty('--img',`url(${SKY}sp-${n}-${ch}.webp)`);
- const top=642*k,end=Math.max(top+20,(M.lily[ch]+24)*k),hs=M.tiles.map(x=>x[3]),A=end-top,base=hs.reduce((a,b)=>a+b,0);
- const grow=Math.max(0,Math.min((A-base-5*16)*.62/3,125)),hh=hs.map((h,i)=>i<3?h+grow:h),gap=Math.max(6,(A-hh.reduce((a,b)=>a+b,0))/5);
- let y=top+gap;
- t.querySelectorAll('.spc').forEach((c,i)=>{c.style.top=y+'px';c.style.height=hh[i]+'px';
-  const im=c.querySelector('.spi');if(im){const T=M.T[i];im.style.top=(hh[i]/2+(+im.dataset.dy)-parseFloat(im.style.height)/2-T)+'px'}
-  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-M.T[i]-M.pb)+'px';
-  y+=hh[i]+gap});
+const skRit=(name,desc)=>`${tx('sp-rn',186,86,316,52,name,32)}${tx('sp-rd',528,14,356,156,desc,30)}`;
+// lay a page out for this screen: the painting nearest its shape; the cards sized to their words; on the Moon and Sun the
+// cards start beneath the painted Moon or Sun, on a planet they rest above the Earth's horizon and the planet fills the room above
+function skLay(t,n,sc,hr,H){
+ const ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
+ t.style.setProperty('--img',`url(${SKY}${n==='pl'?'pl-bg':'sp-'+n}-${ch}.webp)`);
+ const cards=[...t.querySelectorAll('.spc')],hh=cards.map((c,i)=>{if(i>2)return SKRH;const b=c.querySelector('.sp-b');b.style.height='auto';
+  return Math.max(SKHB,SKT[i][2]+b.scrollHeight+30)});
+ let gap=16,cs=hh.reduce((a,b)=>a+b,0)+3*gap;
+ const top0=n==='pl'?310*k:642*k,bottom=hr*(n==='pl'?.87:.965),room=bottom-top0;
+ const fs=Math.min(1,(n==='pl'?room-200:room)/cs);
+ let y=n==='pl'?bottom-cs*fs:top0+Math.max(8,Math.min(30,(room-cs)*.12));
+ cards.forEach((c,i)=>{c.style.top=y+'px';c.style.transform=fs<1?`scale(${fs})`:'';c.style.height=hh[i]+'px';const T=i<3?SKT[i][2]:0;
+  const im=c.querySelector('.spi');if(im)im.style.top=(hh[i]/2-parseFloat(im.style.height)/2-T)+'px';
+  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-T-30)+'px';y+=(hh[i]+gap)*fs});
+ if(n==='pl'){const Z=bottom-cs*fs-gap-top0,cy=top0+Z/2,ph=Math.min(Z*.9,600),cf=Math.min(1,Z/280);
+  const p=t.querySelector('.plp');if(p){const r=+p.dataset.r,h=r>1?Math.min(ph*.62,560/r):ph,w=h*r;p.style.cssText=`left:${512-w/2}px;top:${cy-h/2}px;width:${w}px;height:${h}px`}
+  const g=t.querySelector('.plg');if(g){const s=Math.min(ph*.26,130);g.style.cssText=`left:${512-s/2}px;top:${cy-s/2}px;width:${s}px;height:${s}px`}
+  t.querySelectorAll('.plx [data-cy]').forEach(e=>{e.style.top=(cy+ +e.dataset.cy*cf)+'px';e.style.transformOrigin='50% 0';e.style.transform=cf<1?`scale(${cf})`:''})}
  return {ch,th:ch,sy};
 }
 function moonPop(){
@@ -3577,25 +3587,23 @@ function moonPop(){
  const nd=nx?nx.date.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:TZ()}):'';
  const k=m.ill,cx=510,cy=440,R=141,rx=Math.abs(1-2*k)*R,flip=(!m.waxing)!==SOUTH();
  const shade=k>.97?'':`<svg class="sp-ph" viewBox="0 0 1024 1000" style="left:0;top:0;width:1024px;height:1000px" aria-hidden="true"><defs><filter id="spb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs><path filter="url(#spb)" transform="${flip?`translate(${2*cx} 0) scale(-1 1)`:''}" d="M${cx} ${cy-R}A${R} ${R} 0 0 0 ${cx} ${cy+R}A${rx} ${R} 0 0 ${k<.5?0:1} ${cx} ${cy-R}Z" fill="rgba(8,10,28,.85)"/></svg>`;
- const cards=spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],
-  `${tx('sp-rn',191,84,300,50,ph[2],30)}${tx('sp-rd',531,22,360,138,ph[3],28)}`);
+ const cards=`<div class="spl">${spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],skRit(ph[2],ph[3]))}</div>`;
  return pane('rmoon',`The Moon. ${m.name} in ${si.name}.`,'',`${shade}
   ${tx('sp-big',110,372,214,110,`${l1}<br>${l2||''}`,47)}${tx('sp-sm c',110,478,214,32,`${Math.round(k*100)}% Illuminated`,25)}
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:741px;top:326px;width:48px;height:48px">
   ${tx('sp-h',818,318,150,40,`In ${si.name}`,33)}${tx('sp-sm',820,358,128,74,MSG[si.id][0],20)}
   ${tx('sp-h2',812,482,150,30,nn,27)}${tx('sp-sm',814,512,140,28,nd,21)}
-  ${spBar()}`,'',cards);
+  ${skHead('The Moon','EMOTIONS <i>•</i> NEEDS <i>•</i> RHYTHMS')}${spBar()}`,'',cards);
 }
 function sunPop(){
  const now=new Date(),si=sIdx(K.signIdx(K.positions(now)[0].lon)),r=skyRel(SIGNS.indexOf(si)),me=sg(S.sign),x=SSG[si.id],rt=SRIT[si.el];
  const seas=SEAS[(SIGNS.indexOf(si)+(SOUTH()?6:0))%12].replace(' into ','<br>into ');
- const cards=spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],
-  `${tx('sp-rn c',207,80,248,54,rt[0],31)}${tx('sp-rd',521,10,378,148,rt[1],28)}`);
+ const cards=`<div class="spl">${spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],skRit(rt[0],rt[1]))}</div>`;
  return pane('rsun',`The Sun in ${si.name}.`,'',`
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:144px;top:362px;width:68px;height:68px">
   ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
   ${tx('sp-big s',774,362,192,72,seas,30)}${tx('sp-sm',826,452,152,104,x[0],20)}
-  ${spBar()}`,'',cards);
+  ${skHead('The Sun','IDENTITY <i>•</i> VITALITY <i>•</i> THE SEASON')}${spBar()}`,'',cards);
 }
 // ---- each planet: the same page (the user's Jupiter picture), only the planet, its symbol and its words changing ----
 const PLK={Mercury:['COMMUNICATION','THINKING','LEARNING'],Venus:['LOVE','BEAUTY','VALUES'],Mars:['ENERGY','COURAGE','ACTION'],Jupiter:['GROWTH','OPPORTUNITY','EXPANSION'],Saturn:['DISCIPLINE','PATIENCE','LESSONS'],Uranus:['CHANGE','FREEDOM','AWAKENING'],Neptune:['DREAMS','INTUITION','SPIRIT'],Pluto:['TRANSFORMATION','DEPTH','REBIRTH']};
@@ -3629,23 +3637,7 @@ function plStay(P,now){
 }
 // the planet pages fit the screen: the painting nearest its shape, the planet and the cards laid out in the room between
 // the title and the Earth's horizon, the cards scaled down together only if a short screen needs it
-const PLH=[1744,1984,2224],PLT=[[40,902,943,205],[36,1115,953,235],[36,1360,953,233],[34,1602,955,234]],PLR_={saturn:2.08};
-function plLay(t,sc,hr,H){
- const ch=PLH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
- t.style.setProperty('--img',`url(${SKY}pl-bg-${ch}.webp)`);
- t.querySelectorAll('.rtop [data-y]').forEach(e=>e.style.top=(+e.dataset.y*k/ (sy/sc))+'px');
- const M=SPM.pl,hs=M.tiles.map(x=>x[3]),base=hs.reduce((a,b)=>a+b,0),top=432*k,end=hr*.93,A=end-top;
- const grow=Math.max(0,Math.min((A-base-220-60)/3,(A-base-300-60)*.5/3>60?(A-base-300-60)*.5/3:60,120)),hh=hs.map((h,i)=>i<3?h+grow:h),cs=hh.reduce((a,b)=>a+b,0);
- const free=A-cs,gap=Math.max(8,Math.min(26,(free-300)/8)),Z=free-5*gap,cy=top+Z/2,ph=Math.min(Z*.9,470),cf=Math.min(1,Z/270);
- let y=top+Z+gap;
- t.querySelectorAll('.spc').forEach((c,i)=>{c.style.top=y+'px';c.style.height=hh[i]+'px';
-  const im=c.querySelector('.spi');if(im)im.style.top=(hh[i]/2+(+im.dataset.dy)-parseFloat(im.style.height)/2-M.T[i])+'px';
-  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-M.T[i]-M.pb)+'px';y+=hh[i]+gap});
- const p=t.querySelector('.plp');if(p){const r=+p.dataset.r,h=r>1?Math.min(ph*.62,540/r):ph,w=h*r;p.style.cssText=`left:${518-w/2}px;top:${cy-h/2}px;width:${w}px;height:${h}px`}
- const g=t.querySelector('.plg');if(g){const s=ph*.27;g.style.cssText=`left:${518-s/2}px;top:${cy-s/2}px;width:${s}px;height:${s}px`}
- t.querySelectorAll('.plx [data-cy]').forEach(e=>e.style.top=(cy+ +e.dataset.cy*cf)+'px');
- return {ch,th:ch,sy};
-}
+const PLR_={saturn:2.08};
 function planetPop(P){
  if(!PLK[P])P='Jupiter';
  const now=new Date(),k=P.toLowerCase(),sI=K.signIdx(K.lon(P,now)),si=sIdx(sI),r=skyRel(sI),me=sg(S.sign);
@@ -3656,7 +3648,6 @@ function planetPop(P){
  const mean=`For ${me.name}, ${P} is ${REL_IN[r.rel]}, touching ${areaShort(r.area)}. ${PLM[P]}${RULER[S.sign]===P?` As your ruling planet, you feel it more than most.`:''}`;
  const todo=rx?[PRX[P],...PLD[P].slice(1)]:PLD[P];
  const cy=0,ry=y=>`data-cy="${y}"`,pc=(cls,x,y,w,h,html,f)=>tx(cls,x,0,w,h,html,f).replace('class="spx','data-cy="'+y+'" class="spx');
- const card=(k,inner)=>`<div class="plc" data-k="${k}" style="width:${PLT[k][2]}px;height:${PLT[k][3]}px;background-image:url(${SKY}pl-t${k}.webp)">${inner}</div>`;
  const lay=`<div class="spl plx">
   <img class="plp" src="${SKY}pl-p-${k}.webp" alt="" data-r="${PLR_[k]||1}">
   <img class="sp-g plg" src="${SKY}pl-g-${k}.webp" alt="">
@@ -3665,14 +3656,13 @@ function planetPop(P){
   ${pc('sp-big pl-n',40,-4,188,50,si.name,44)}${pc('sp-sm c pl-d',40,50,188,72,dates,27)}
   <img class="sp-g" ${ry(-120)} src="${SKY}pl-rx.webp" alt="" style="left:800px;width:190px;height:142px">
   ${pc('sp-sm c pl-r',796,24,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
-  ${spCards('pl',[happen,mean,dots(todo)],`${tx('sp-rn',191,84,300,50,PLR[P][0],30)}${tx('sp-rd',531,22,360,138,PLR[P][1],28)}`).replace(/^<div class="spl">/,'').replace(/<\/div>$/,'')}
+  ${spCards('pl',[happen,mean,dots(todo)],skRit(PLR[P][0],PLR[P][1]))}
  </div>`;
  return pane('rpl',`${P} in ${si.name}.`,'',`
-  ${tx('pl-t',300,252,424,112,P,100).replace('class="spx','data-y="252" class="spx')}${tx('pl-k',90,378,844,40,PLK[P].join(' <i>•</i> '),31).replace('class="spx','data-y="378" class="spx')}
-  <button class="rit-hot" data-skx aria-label="Back to the Sky" style="left:60px;top:157px;width:76px;height:76px"></button><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:887px;top:157px;width:76px;height:76px"></button>`,'',lay);
+  ${skHead(P,PLK[P].join(' <i>•</i> '))}${spBar()}`,'',lay);
 }
 // each line of words is fitted to its place in the painting
-function spFit(){document.querySelectorAll('.spx').forEach(e=>{let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}})}
+function spFit(){document.querySelectorAll('.spx[data-f]').forEach(e=>{const d=e.style.display;e.style.display='block';let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}e.style.display=d})}
 document.addEventListener('click',e=>{
  if(V.sec!=='horoscope')return;
  const o=e.target.closest('[data-skp]');if(o){V.skp=o.dataset.skp;V.skpIn=false;return render()}

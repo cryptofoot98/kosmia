@@ -192,3 +192,12 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .plc{position:absolute;transform-origin:50% 0;background:0 0/100% 100% no-repeat}
 #app .plc .spx{position:absolute}
 #app .plp{pointer-events:none;filter:drop-shadow(0 0 22px rgba(255,190,110,.28))}
+/* the shared header and cards of the Sky's pages */
+#app .sk-t{text-align:center;font-style:italic;font-weight:600;line-height:1;color:#F4DFB2;text-shadow:0 0 18px rgba(240,190,90,.45),0 0 4px rgba(4,7,22,.9);display:flex;align-items:center;justify-content:center;white-space:nowrap}
+#app .sk-k{text-align:center;font-family:'Cinzel',Georgia,serif;font-style:normal;font-weight:500;letter-spacing:.16em;color:#EBD7A8;white-space:nowrap;line-height:34px;text-shadow:0 0 6px rgba(4,7,22,.9)}
+#app .sk-k i{font-style:normal;margin:0 .3em}
+#app .spl .spc{transform-origin:50% 0}
+#app .spc .sp-b{font-size:36px;line-height:1.2}
+#app .spc .sp-b.sp-l{font-size:35px}
+#app .spc .sp-rn{line-height:1.1;display:flex;align-items:center;justify-content:center;text-align:center}
+#app .spc .sp-rd{line-height:1.18}
