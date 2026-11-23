@@ -3293,7 +3293,7 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,260,1322],rsun:[1024,2240,260,1322]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
 const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
@@ -3396,6 +3396,7 @@ function fit(){
    st.setProperty('--img',`url(${R}i-bg-${ch}.webp)`);const b=document.getElementById('riset');if(b)b.style.top=(ch-228)+'px';
    const top=952,bot=ch-228-26,hh=104,A=bot-top,gap=Math.min(90,Math.max(14,(A-3*hh)/4)),y0=top+(A-3*hh-2*gap)/2;
    t.querySelectorAll('.rchip').forEach((c,i)=>{c.style.left=(i%2?522:92)+'px';c.style.top=(y0+Math.floor(i/2)*(hh+gap))+'px'})}
+  if(id==='rmoon'||id==='rsun')({ch,th,sy}=spLay(t,id.slice(1),sc,hr,H));
   st.setProperty('--s',sc);st.setProperty('--sy',sy);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
   // the Whisper's card fills the room between the title and the foot, turned or not
   if(id==='rtw'){const bot=hr-112,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
@@ -3538,36 +3539,57 @@ const SEAS=['Early Spring','Spring in Bloom','Late Spring into Summer','Early Su
 const tx=(cls,x,y,w,h,html,f)=>`<div class="spx ${cls}" data-f="${f}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;font-size:${f}px">${html}</div>`;
 const spBar=()=>`<button class="rit-hot" data-skx aria-label="Back to the Sky" style="left:44px;top:89px;width:72px;height:72px"></button><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:907px;top:89px;width:72px;height:72px"></button>`;
 const dots=a=>a.map(x=>`<div class="spb">${x}</div>`).join('');
+// the cards, lifted from the painting: [left, top, width, height] in the painting, the slices that keep their rims and titles
+// whole as they grow (top, right, bottom, left), where their words start, and their icons [x, y, w, h]
+const SPH=[1744,1984,2240];
+const SPM={moon:{lily:{1744:1440,1984:1601,2240:1940},tiles:[[49,639,924,179],[49,812,924,169],[49,974,924,176],[49,1146,924,183]],T:[70,64,66],L:185,tx:194,icons:[[40,37,139,108],[48,25,123,121],[48,36,126,94]]},
+ sun:{lily:{1744:1337,1984:1532,2240:1934},tiles:[[45,638,932,169],[45,798,932,205],[45,986,932,181],[45,1156,932,187]],T:[66,78,56],L:205,tx:221,icons:[[32,44,166,96],[37,22,156,154],[47,36,136,96]]}};
+function spCards(n,bodies,rit){
+ const M=SPM[n];
+ return `<div class="spl">${[0,1,2].map(k=>{const [x,y,w,h]=M.tiles[k],T=M.T[k],ic=M.icons[k];
+  return `<div class="spc" data-k="${k}" data-h="${h}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-width:${T}px 90px 30px ${M.L}px;border-image:url(${SKY}sp-${n}-t${k}.webp) ${T} 90 30 ${M.L} fill stretch">
+   <img class="spi" src="${SKY}sp-${n}-i${k}.webp" alt="" data-dy="${ic[1]+ic[3]/2-h/2}" style="left:${ic[0]-M.L}px;width:${ic[2]}px;height:${ic[3]}px">
+   ${tx('sp-b'+(k===2?' sp-l':''),M.tx-M.L,-2,w-M.tx-58,h-T-26,bodies[k],k===2?36:38)}</div>`}).join('')}
+  <div class="spc spr" style="left:${M.tiles[3][0]}px;top:${M.tiles[3][1]}px;width:${M.tiles[3][2]}px;height:${M.tiles[3][3]}px;background-image:url(${SKY}sp-${n}-t3.webp)">${rit}</div></div>`;
+}
+// lay the cards out for this screen: the painting nearest its shape, the cards spread evenly from the header to the lilies
+function spLay(t,n,sc,hr,H){
+ const M=SPM[n],ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
+ t.style.setProperty('--img',`url(${SKY}sp-${n}-${ch}.webp)`);
+ const top=642*k,end=Math.max(top+20,(M.lily[ch]+24)*k),hs=M.tiles.map(x=>x[3]),A=end-top,base=hs.reduce((a,b)=>a+b,0);
+ const grow=Math.max(0,Math.min((A-base-5*16)*.62/3,125)),hh=hs.map((h,i)=>i<3?h+grow:h),gap=Math.max(6,(A-hh.reduce((a,b)=>a+b,0))/5);
+ let y=top+gap;
+ t.querySelectorAll('.spc').forEach((c,i)=>{c.style.top=y+'px';c.style.height=hh[i]+'px';
+  const im=c.querySelector('.spi');if(im){const T=M.T[i];im.style.top=(hh[i]/2+(+im.dataset.dy)-parseFloat(im.style.height)/2-T)+'px'}
+  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-M.T[i]-26)+'px';
+  y+=hh[i]+gap});
+ return {ch,th:ch,sy};
+}
 function moonPop(){
  const now=new Date(),m=K.moon(now),si=sIdx(m.sign),r=skyRel(m.sign),ph=MPH[m.name],[l1,l2]=m.name.split(' ');
  const nx=(K.lunarPhases(now,new Date(+now+40*DAY))||[]).find(e=>e.date>now&&!(m.name.startsWith(e.name.replace(' Moon','').split(' ')[0])&&m.name.includes(e.name.split(' ')[0])&&+e.date-now<4*DAY)),nn=nx?nx.name.replace(' Moon','').replace('New','New Moon').replace('Full','Full Moon'):'';
  const nd=nx?nx.date.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:TZ()}):'';
- // the painted Moon shaded to tonight's phase (lit on the right while waxing, mirrored south of the equator)
  const k=m.ill,cx=510,cy=440,R=141,rx=Math.abs(1-2*k)*R,flip=(!m.waxing)!==SOUTH();
  const shade=k>.97?'':`<svg class="sp-ph" viewBox="0 0 1024 1000" style="left:0;top:0;width:1024px;height:1000px" aria-hidden="true"><defs><filter id="spb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs><path filter="url(#spb)" transform="${flip?`translate(${2*cx} 0) scale(-1 1)`:''}" d="M${cx} ${cy-R}A${R} ${R} 0 0 0 ${cx} ${cy+R}A${rx} ${R} 0 0 ${k<.5?0:1} ${cx} ${cy-R}Z" fill="rgba(8,10,28,.85)"/></svg>`;
+ const cards=spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],
+  `${tx('sp-rn',191,84,300,50,ph[2],30)}${tx('sp-rd',531,22,360,138,ph[3],28)}`);
  return pane('rmoon',`The Moon. ${m.name} in ${si.name}.`,'',`${shade}
   ${tx('sp-big',110,372,214,110,`${l1}<br>${l2||''}`,47)}${tx('sp-sm c',110,478,214,32,`${Math.round(k*100)}% Illuminated`,25)}
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:741px;top:326px;width:48px;height:48px">
   ${tx('sp-h',818,318,150,40,`In ${si.name}`,33)}${tx('sp-sm',820,358,128,74,MSG[si.id][0],20)}
   ${tx('sp-h2',812,482,150,30,nn,27)}${tx('sp-sm',814,512,140,28,nd,21)}
-  ${tx('sp-b',243,709,650,82,ph[0],26)}
-  ${tx('sp-b',245,876,646,80,`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,26)}
-  ${tx('sp-b sp-l',246,1039,650,86,dots(ph[1]),25)}
-  ${tx('sp-rn',240,1232,296,42,ph[2],25)}${tx('sp-rd',580,1180,348,104,ph[3],22)}
-  ${spBar()}`,'');
+  ${spBar()}`,'',cards);
 }
 function sunPop(){
  const now=new Date(),si=sIdx(K.signIdx(K.positions(now)[0].lon)),r=skyRel(SIGNS.indexOf(si)),me=sg(S.sign),x=SSG[si.id],rt=SRIT[si.el];
  const seas=SEAS[(SIGNS.indexOf(si)+(SOUTH()?6:0))%12].replace(' into ','<br>into ');
+ const cards=spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],
+  `${tx('sp-rn c',207,90,248,54,rt[0],31)}${tx('sp-rd',521,20,378,148,rt[1],28)}`);
  return pane('rsun',`The Sun in ${si.name}.`,'',`
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:144px;top:362px;width:68px;height:68px">
   ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
   ${tx('sp-big s',774,362,192,72,seas,30)}${tx('sp-sm',826,452,152,104,x[0],20)}
-  ${tx('sp-b',266,697,632,80,x[1],26)}
-  ${tx('sp-b',266,853,662,106,`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,26)}
-  ${tx('sp-b sp-l',266,1046,686,82,dots(x[3]),25)}
-  ${tx('sp-rn c',252,1250,244,44,rt[0],27)}${tx('sp-rd',566,1186,364,112,rt[1],22)}
-  ${spBar()}`,'');
+  ${spBar()}`,'',cards);
 }
 // each line of words is fitted to its place in the painting
 function spFit(){document.querySelectorAll('.spx').forEach(e=>{let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}})}

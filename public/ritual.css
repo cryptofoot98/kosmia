@@ -163,8 +163,6 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .sk0-l{transform:translateX(-50%);white-space:nowrap;font:500 23px/1 'Cinzel',Georgia,serif;letter-spacing:.14em;margin-right:-.14em;text-transform:uppercase;color:#E2C68E;text-shadow:0 0 6px rgba(4,7,22,.95),0 0 2px rgba(4,7,22,.9),0 0 10px rgba(240,190,90,.35);pointer-events:none}
 
 /* the Moon and the Sun: full-screen pages over the Sky, the day's words written into the painting */
-#app #rmoon{--img:url(/art/sky/sp-moon.webp)}
-#app #rsun{--img:url(/art/sky/sp-sun.webp)}
 #app .spx{position:absolute;overflow:hidden;margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;line-height:1.16;color:#EEE2C4;text-shadow:0 0 6px rgba(4,7,22,.8)}
 #app .spx.c{text-align:center}
 #app .sp-big{text-align:center;font-weight:600;line-height:1.02;color:#F1D9A2;text-shadow:0 0 10px rgba(240,190,90,.35),0 0 4px rgba(4,7,22,.9)}
@@ -177,3 +175,9 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .sp-rn.c{justify-content:center;text-align:center}
 #app .sp-rd{color:#21150a;text-shadow:none;font-weight:600;line-height:1.18;display:flex;align-items:center}
 #app .sp-g,#app .sp-ph{position:absolute;pointer-events:none}
+#app .spl{position:absolute;left:0;top:0;width:1024px;height:0;transform:scale(var(--s));transform-origin:0 0;z-index:3}
+#app .spc{position:absolute;box-sizing:border-box;border-style:solid}
+#app .spc .spi{position:absolute;pointer-events:none}
+#app .spc .spx{position:absolute}
+#app .spc.spr{border:0;background:0 0/100% 100% no-repeat}
+#app .spc .sp-b{line-height:1.15;display:flex;flex-direction:column;justify-content:center}
