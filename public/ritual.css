@@ -11,7 +11,6 @@ body[data-sec=home] .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bot
 #app .rit.eve .rit-sc{background-image:url(/art/ritual/e-body.webp)}
 #app .rit-sc>*{position:absolute}
 #app .rit-lit img{position:absolute;opacity:0;transition:opacity 1.8s;pointer-events:none}
-#app .rit-lit img.rl{mix-blend-mode:screen}
 #app .rit-lit img.done{opacity:1}
 #app .rit-lit img.now{animation:ritBreathe 3.4s ease-in-out infinite}
 @keyframes ritBreathe{0%,100%{opacity:0}50%{opacity:.5}}
