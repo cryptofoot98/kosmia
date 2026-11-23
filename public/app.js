@@ -3302,8 +3302,7 @@ const ICB='<svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r
 const ICS='<svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="22.5"/><path d="M25 29V13.5M19.5 19 25 13.5l5.5 5.5M20 23h-3v12h16V23h-3"/></svg>';
 const rbar=share=>`<button class="rbar rbk" data-ract="back" aria-label="Back to Ritual">${ICB}</button><button class="rbar rsh" ${share} aria-label="Share">${ICS}</button>`;
 // the painted button of the Intention screen (its rim and side ornaments), its words set on it
-const ARW='<svg class="rarw" viewBox="0 0 40 20" aria-hidden="true"><path d="M3 10h33M28.5 3 36 10l-7.5 7"/></svg>';
-const rbtn=(label,i)=>`<button class="rbtn" data-ract="done" data-i="${i}"><span>${label}</span>${ARW}</button>`;
+const rbtn=(label,i)=>`<button class="rbtn" data-ract="done" data-i="${i}"><span>${label}</span></button>`;
 
 const day=()=>{const k=dkey();S.rit=S.rit||{};return S.rit[k]||{}};
 function mark(i){const k=dkey();S.rit=S.rit||{};S.rit[k]=Object.assign({},S.rit[k],{[KEYS[i]]:1});Object.keys(S.rit).sort().slice(0,-60).forEach(x=>delete S.rit[x]);save()}
@@ -3327,16 +3326,15 @@ function horoPop(){
   if(ch.ang&&S.birth&&!S.birth.unk)pl.push(['Rising',sIdx(Math.floor(ch.ang.asc/30))])}
  const plh=pl.length>1?pl.map(([n,s])=>`<span>${n} <b aria-label="${s.name}">${s.g}${VS}</b></span>`).join(''):`<span>${esc(sign.dates||'')}</span>`;
  return `<section class="rt" id="rth" aria-label="Horoscope, your reading for today. ${sign.name}.">
-  <div class="hbg"><img src="${R}h-top.webp" alt=""><div class="hbm"></div><img src="${R}h-bot.webp" alt=""></div>
-  <div class="hd"><span class="hglyph" aria-hidden="true">${sign.g}${VS}</span><div class="hname">${sign.name}</div><div class="hpl">${plh}</div></div>
+  <div class="hd"><img class="sl" src="${R}h-top.webp" alt=""><span class="hglyph" aria-hidden="true">${sign.g}${VS}</span><div class="hname">${sign.name}</div><div class="hpl">${plh}</div></div>
   <div class="roll"><div class="parch"><div>
    <div class="sec"><img src="${R}h-sun.webp" alt=""><div><h3>${esc(h.focus||'Today’s Guidance')}</h3><div class="rp">${esc(h.body)}</div></div></div>
    <div class="line star"><span>✦</span></div>
    ${fold('love','h-heart','Love &amp; Relationships')}<div class="line"></div>
    ${fold('career','h-leaf','Career &amp; Purpose')}<div class="line"></div>
    ${fold('health','h-lotus','Wellbeing')}
-  </div></div></div>
-  ${rbtn('Carry This Wisdom',0)}
+  </div></div>
+  <div class="ft"><img class="sl" src="${R}h-bot.webp" alt="">${rbtn('Carry This Wisdom',0)}</div></div>
   ${rbar(`data-act="sharecard" data-k="horo" data-s="${sign.id}" data-cat="overview"`)}
  </section>`;
 }
