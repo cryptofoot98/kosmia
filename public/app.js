@@ -3292,7 +3292,7 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,2304,314,1130],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,2304,424,1130],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
 const pane=(id,label,cls,top,foot)=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div></section>`;
 
 const day=()=>{const k=dkey();S.rit=S.rit||{};return S.rit[k]||{}};
