@@ -3487,7 +3487,9 @@ views.home=view;
 // Sky: the painting of the heavens held between two hands, the reader's own sign at its heart. The Sun opens today's
 // Sun, the Moon the Moon of the day, each planet where the planets are now, and the sign the full horoscope
 const SKY='/art/sky/';
-const SKYPL=[[163,789,74],[292,810,30],[284,917,46],[216,1084,131,56],[893,862,46],[770,950,50],[741,1137,66],[863,1175,30]];
+const SKYPL=[[163,789,74],[292,810,30],[284,917,46],[216,1084,131,56],[893,862,46],[770,950,50],[741,1137,66],[863,1175,30],[870,995,48]];
+// each body's name, delicate, beneath it
+const SKYLB=[['Sun',510,1190],['Moon',764,828],['Mercury',292,756],['Venus',284,965],['Earth',735,1207],['Mars',762,1003],['Jupiter',163,866],['Saturn',216,1144],['Uranus',870,1054],['Neptune',893,910],['Pluto',866,1207]];
 function skyHome(){
  const s=sg(S.sign),sk=V.skd&&skyItems().find(i=>i.id===V.skd);if(V.skd&&!sk)V.skd=null;
  const circ=(x,y,r,a,attr)=>`<button class="rit-hot" ${attr} aria-label="${a}" style="left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px"></button>`;
@@ -3500,6 +3502,7 @@ function skyHome(){
    ${circ(510,1043,150,'The Sun today','data-act="skd" data-id="sun"')}
    ${circ(764,757,66,'The Moon today','data-go="discover" data-t="moon"')}
    ${pl}
+   ${SKYLB.map(([n,x,y])=>`<span class="sk0-l" style="left:${x}px;top:${y}px">${n}</span>`).join('')}
    <button class="rit-hot" data-go="horoscope" data-t="sign" aria-label="Your horoscope, ${s.name}" style="left:340px;top:500px;width:350px;height:370px;border-radius:30%"></button>
    <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:904px;top:84px;width:88px;height:88px"></button>
   </div>

@@ -160,3 +160,4 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .sk0-nav{background-image:url(/art/sky/sk-nav.webp);bottom:calc(env(safe-area-inset-bottom,0px) - var(--rnh,80px)*12/217)}
 @media (max-height:700px){#app .sk0-tip::after{display:none}#app .sk0-tip{font-size:calc(var(--rw,100vw)*.035);line-height:1.22;bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,0px) + 3px)}}
 #app .sky0~.cpop{z-index:40!important}
+#app .sk0-l{transform:translateX(-50%);white-space:nowrap;font:500 23px/1 'Cinzel',Georgia,serif;letter-spacing:.14em;margin-right:-.14em;text-transform:uppercase;color:#E2C68E;text-shadow:0 0 6px rgba(4,7,22,.95),0 0 2px rgba(4,7,22,.9),0 0 10px rgba(240,190,90,.35);pointer-events:none}
