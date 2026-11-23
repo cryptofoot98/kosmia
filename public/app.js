@@ -3293,7 +3293,7 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2224,0,0]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,0,0],rsun:[1024,2240,0,0],rpl:[1024,2224,0,0],rsg:[1024,2176,0,0]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
 const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
@@ -3397,6 +3397,7 @@ function fit(){
    const top=952,bot=ch-228-26,hh=104,A=bot-top,gap=Math.min(90,Math.max(14,(A-3*hh)/4)),y0=top+(A-3*hh-2*gap)/2;
    t.querySelectorAll('.rchip').forEach((c,i)=>{c.style.left=(i%2?522:92)+'px';c.style.top=(y0+Math.floor(i/2)*(hh+gap))+'px'})}
   if(id==='rmoon'||id==='rsun'||id==='rpl')({ch,th,sy}=skLay(t,id.slice(1),sc,hr,H));
+  if(id==='rsg')({ch,th}=sgLay(t,hr));
   st.setProperty('--s',sc);st.setProperty('--sy',sy);st.setProperty('--cw',cw);st.setProperty('--ch',ch);st.setProperty('--fh',fh);st.setProperty('--th',th);
   // the Whisper's card fills the room between the title and the foot, turned or not
   if(id==='rtw'){const bot=hr-112,ah=Math.max(260,bot-250),h=Math.min(775,ah),w=h*504/775,hb=hr-fh-92,bb=hb-14,bh=Math.min(582,Math.max(240,bb-350)),bw=bh*416/582;
@@ -3505,12 +3506,12 @@ function skyHome(){
    ${circ(764,757,66,'The Moon today','data-skp="moon"')}
    ${pl}
    ${SKYLB.map(([n,x,y])=>`<span class="sk0-l" style="left:${x}px;top:${y}px">${n}</span>`).join('')}
-   <button class="rit-hot" data-go="horoscope" data-t="sign" aria-label="Your horoscope, ${s.name}" style="left:340px;top:500px;width:350px;height:370px;border-radius:30%"></button>
+   <button class="rit-hot" data-skp="sign" aria-label="Your horoscope, ${s.name}" style="left:340px;top:500px;width:350px;height:370px;border-radius:30%"></button>
    <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:904px;top:84px;width:88px;height:88px"></button>
   </div>
   <div class="sk0-tip">Tap on the Sun, Moon, planets or your sign<br>to explore their meaning for you.</div>
   <nav class="rit-nav sk0-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky" aria-current="page"></button><button data-nav="tarot" aria-label="Oracle"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
- </div>${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():V.skp==='sun'?sunPop():planetPop(V.skp.slice(3))}</div>`:''}</div>${sk?skyPop(sk):''}`;
+ </div>${V.spk&&V.skp==='sign'?signPick(V.exploreSign||S.sign):''}${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():V.skp==='sun'?sunPop():V.skp==='sign'?signPop():planetPop(V.skp.slice(3))}</div>`:''}</div>${sk?skyPop(sk):''}`;
 }
 // ---- the Moon and the Sun, each a full-screen page painted from the user's pictures; the words are today's sky ----
 // the hemisphere follows where the phone is: its time zone (set by the phone from its location) and the latitude the
@@ -3661,12 +3662,50 @@ function planetPop(P){
  return pane('rpl',`${P} in ${si.name}.`,'',`
   ${skHead(P,PLK[P].join(' <i>•</i> '))}${spBar()}`,'',lay);
 }
+// ---- a sign's page (the user's Horoscope picture): its figure and constellation, Today, Weekly, Monthly or Annual, the
+// reading and three areas of life on one parchment that grows with the words ----
+const SGP=[['daily','Today','Today’s Horoscope'],['weekly','Weekly','This Week’s Horoscope'],['monthly','Monthly','This Month’s Horoscope'],['yearly','Annual','This Year’s Horoscope']];
+const SGA=[['love','lily','Love &amp; Relationships'],['career','books','Career &amp; Purpose'],['health','stones','Wellbeing']];
+const firstS=(t,n)=>{const m=String(t||'').replace(/\s+/g,' ').match(/[^.!?]+[.!?]+/g)||[String(t||'')];return m.slice(0,n).join(' ').trim()};
+function signPop(){
+ const id=V.exploreSign||S.sign,sn=sg(id),per=SGP.find(x=>x[0]===V.period)||SGP[0],pi=SGP.indexOf(per),cx=[170,402,634,866];
+ const ov=horoscope(id,'overview',per[0]);
+ const k5=x=>x.toLowerCase().replace(/[^a-z ]/g,'').split(' ').slice(0,5).join(' '),seen=new Set((String(ov.body||'').match(/[^.!?]+[.!?]+/g)||[]).map(x=>k5(x.trim())));
+ const rows=SGA.map(([c,ic,l])=>{const all=(String(horoscope(id,c,per[0]).body||'').replace(/\s+/g,' ').match(/[^.!?]+[.!?]+/g)||[]).map(x=>x.trim());
+  let pick=all.filter(x=>!seen.has(k5(x))).slice(0,2);if(!pick.length)pick=all.slice(0,2);pick.forEach(x=>seen.add(k5(x)));
+  return `<div class="sg-row"><img src="${SKY}sg-ic-${ic}.webp" alt=""><i></i><div><div class="sg-l">${l}</div><div class="sg-x">${esc(pick.join(' '))}</div></div></div>`}).join('');
+ return pane('rsg',`${sn.name}, ${per[2]}.`,'',`
+  <img class="sg-t" src="${SKY}sg-top-${id}.webp" alt="">
+  <div class="sg-m"></div><img class="sg-b" src="${SKY}sg-bot.webp" alt="">
+  ${skHead('Horoscope','')}
+  <img class="sp-g" src="${SKY}sk-g-${id}.webp" alt="" style="left:462px;top:296px;width:100px;height:100px">
+  ${tx('sp-big sg-n',362,402,300,74,sn.name,66)}${tx('sp-sm c sg-d',372,480,280,46,sn.dates,34)}
+  <button class="rit-hot" data-sga="pick" aria-label="Read another sign" style="left:676px;top:436px;width:296px;height:102px;border-radius:51px"></button>
+  <img class="sg-pill" src="${SKY}sg-pill.webp" alt="" style="left:${cx[pi]-122}px">
+  ${SGP.map(([k,l],i)=>`<button class="sg-tab${i===pi?' on':''}" data-sgp="${k}" aria-pressed="${i===pi}" style="left:${cx[i]-115}px">${l}</button>`).join('')}
+  <div class="sg-pt">${per[2]}</div>
+  <div class="sg-f"><div class="sg-body">${esc(ov.body)}</div>${rows}</div>
+  ${spBar()}`,'');
+}
+function sgLay(t,hr){
+ const f=t.querySelector('.sg-f'),h=f?f.scrollHeight:800,th=Math.max(2176,Math.ceil(hr),932+h+40+386);
+ const m=t.querySelector('.sg-m');if(m){m.style.top='1246px';m.style.height=(th-870+60-1246)+'px';m.style.backgroundPosition=`0 60px`}
+ const b=t.querySelector('.sg-b');if(b)b.style.top=(th-870)+'px';
+ t.style.setProperty('--img','none');
+ return {ch:th,th};
+}
+document.addEventListener('click',e=>{
+ if(V.sec!=='horoscope'||V.skp!=='sign')return;
+ const z=e.target.closest('.spk [data-act=tohoroscope]');if(z){e.stopImmediatePropagation();e.preventDefault();V.exploreSign=z.dataset.sign===S.sign?null:z.dataset.sign;V.spk=false;V.skpIn=true;return render()}
+ const p=e.target.closest('[data-sgp]');if(p){e.stopImmediatePropagation();V.period=p.dataset.sgp;V.skpIn=true;const y=(document.querySelector('#rsg .rsc')||{}).scrollTop;render();const r=document.querySelector('#rsg .rsc');if(r&&y)r.scrollTop=y;return}
+ if(e.target.closest('[data-sga=pick]')){e.stopImmediatePropagation();V.spk=true;return render()}
+},true);
 // each line of words is fitted to its place in the painting
 function spFit(){document.querySelectorAll('.spx[data-f]').forEach(e=>{const d=e.style.display;e.style.display='block';let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}e.style.display=d})}
 document.addEventListener('click',e=>{
  if(V.sec!=='horoscope')return;
  const o=e.target.closest('[data-skp]');if(o){V.skp=o.dataset.skp;V.skpIn=false;return render()}
- if(e.target.closest('[data-skx]')){const t=document.querySelector('#rov .rt');if(t)t.classList.remove('in');const ov=document.getElementById('rov');if(ov)ov.classList.remove('on');setTimeout(()=>{V.skp=null;render()},500)}
+ if(e.target.closest('[data-skx]')){V.exploreSign=null;const t=document.querySelector('#rov .rt');if(t)t.classList.remove('in');const ov=document.getElementById('rov');if(ov)ov.classList.remove('on');setTimeout(()=>{V.skp=null;render()},500)}
 });
 document.addEventListener('keydown',e=>{if(V.sec==='horoscope'&&V.skp&&e.key==='Escape'){V.skp=null;render()}});
 {const vh=views.horoscope;views.horoscope=()=>(!A||!K||tab()==='sign')?vh():skyHome()}

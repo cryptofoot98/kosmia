@@ -201,3 +201,22 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .spc .sp-b.sp-l{font-size:35px}
 #app .spc .sp-rn{line-height:1.1;display:flex;align-items:center;justify-content:center;text-align:center}
 #app .spc .sp-rd{line-height:1.18}
+/* a sign's page */
+#app #rsg .rtop>*{position:absolute}
+#app #rsg .sg-t{left:0;top:0;width:1024px;height:1306px;-webkit-mask:linear-gradient(#000 calc(100% - 60px),transparent);mask:linear-gradient(#000 calc(100% - 60px),transparent);z-index:1}
+#app #rsg .sg-m{left:0;width:1024px;background:url(/art/sky/sg-mid.webp) 0 60px/1024px 712px repeat-y}
+#app #rsg .sg-b{left:0;width:1024px;height:870px;-webkit-mask:linear-gradient(transparent,#000 60px);mask:linear-gradient(transparent,#000 60px);z-index:1}
+#app #rsg .rtop>.spx,#app #rsg .rtop>.sp-g,#app #rsg .rtop>button,#app #rsg .sg-pill,#app #rsg .sg-pt,#app #rsg .sg-f{z-index:2}
+#app #rsg .sg-n{font-size:66px}
+#app #rsg .sg-pill{top:582px;width:244px;height:116px;filter:drop-shadow(0 0 10px rgba(255,190,100,.6))}
+#app #rsg .sg-pill::after{content:''}
+#app #rsg .sg-tab{top:600px;width:230px;height:82px;font:italic 500 48px/82px 'Cormorant Garamond',serif;color:#2a1a0e;text-align:center}
+#app #rsg .sg-tab.on{color:#F6E2B6;text-shadow:0 0 8px rgba(255,200,120,.6)}
+#app #rsg .sg-pt{left:150px;top:760px;width:724px;height:92px;font:italic 600 68px/92px 'Cormorant Garamond',serif;color:#2a1608;text-align:center;white-space:nowrap}
+#app #rsg .sg-f{left:112px;top:934px;width:800px;color:#2a1a10;font-family:'Cormorant Garamond',Georgia,serif}
+#app #rsg .sg-body{font:italic 500 42px/1.34 'Cormorant Garamond',serif;padding-bottom:34px}
+#app #rsg .sg-row{display:grid;grid-template-columns:190px 2px 1fr;column-gap:30px;align-items:center;padding:30px 0;border-top:2px solid transparent;border-image:linear-gradient(90deg,transparent,rgba(120,74,30,.45) 15%,rgba(120,74,30,.45) 85%,transparent) 1}
+#app #rsg .sg-row img{width:190px;height:auto;margin-left:-40px}
+#app #rsg .sg-row i{align-self:stretch;background:linear-gradient(transparent,rgba(120,74,30,.55) 20%,rgba(120,74,30,.55) 80%,transparent)}
+#app #rsg .sg-l{font:600 29px/1.2 'Cinzel',Georgia,serif;letter-spacing:.28em;color:#241508;margin-bottom:8px}
+#app #rsg .sg-x{font:italic 500 39px/1.3 'Cormorant Garamond',serif}
