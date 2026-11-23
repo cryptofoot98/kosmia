@@ -3549,6 +3549,7 @@ const dots=a=>a.map(x=>`<div class="spb">${x}</div>`).join('');
 const SPH=[1744,1984,2240];
 const SPM={moon:{lily:{1744:1440,1984:1601,2240:1940},tiles:[[49,639,924,179],[49,812,924,169],[49,974,924,176],[49,1146,924,183]],T:[70,64,66],pb:26,L:185,tx:194,icons:[[40,37,139,108],[48,25,123,121],[48,36,126,94]]},
  sun:{lily:{1744:1337,1984:1532,2240:1934},tiles:[[45,649,932,147],[45,804,932,175],[45,995,932,165],[45,1166,932,176]],T:[55,72,47],pb:12,L:205,tx:221,icons:[[32,33,166,96],[37,16,156,154],[47,27,136,96]]}};
+SPM.pl=Object.assign({},SPM.moon,{icons:[[44,43,130,95],[45,24,128,122],[48,30,126,105]]});
 function spCards(n,bodies,rit){
  const M=SPM[n];
  return `<div class="spl">${[0,1,2].map(k=>{const [x,y,w,h]=M.tiles[k],T=M.T[k],ic=M.icons[k];
@@ -3633,14 +3634,16 @@ function plLay(t,sc,hr,H){
  const ch=PLH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
  t.style.setProperty('--img',`url(${SKY}pl-bg-${ch}.webp)`);
  t.querySelectorAll('.rtop [data-y]').forEach(e=>e.style.top=(+e.dataset.y*k/ (sy/sc))+'px');
- const top=432*k,end=hr*.885,tot=PLT.reduce((a,c)=>a+c[3],0);
- const f=Math.min(1,(end-top-300-5*8)/tot),cs=tot*f,free=end-top-cs,gap=Math.max(6,Math.min(24,(free-300)/8)),Z=free-5*gap;
- const cy=top+Z/2,ph=Math.min(Z*.9,470);
+ const M=SPM.pl,hs=M.tiles.map(x=>x[3]),base=hs.reduce((a,b)=>a+b,0),top=432*k,end=hr*.93,A=end-top;
+ const grow=Math.max(0,Math.min((A-base-220-60)/3,(A-base-300-60)*.5/3>60?(A-base-300-60)*.5/3:60,120)),hh=hs.map((h,i)=>i<3?h+grow:h),cs=hh.reduce((a,b)=>a+b,0);
+ const free=A-cs,gap=Math.max(8,Math.min(26,(free-300)/8)),Z=free-5*gap,cy=top+Z/2,ph=Math.min(Z*.9,470),cf=Math.min(1,Z/270);
  let y=top+Z+gap;
- t.querySelectorAll('.plc').forEach(c=>{const [x,,w,h]=PLT[+c.dataset.k];c.style.left=(512-w/2)+'px';c.style.top=y+'px';c.style.transform=`scale(${f})`;y+=h*f+gap});
+ t.querySelectorAll('.spc').forEach((c,i)=>{c.style.top=y+'px';c.style.height=hh[i]+'px';
+  const im=c.querySelector('.spi');if(im)im.style.top=(hh[i]/2+(+im.dataset.dy)-parseFloat(im.style.height)/2-M.T[i])+'px';
+  const b=c.querySelector('.sp-b');if(b)b.style.height=(hh[i]-M.T[i]-M.pb)+'px';y+=hh[i]+gap});
  const p=t.querySelector('.plp');if(p){const r=+p.dataset.r,h=r>1?Math.min(ph*.62,540/r):ph,w=h*r;p.style.cssText=`left:${518-w/2}px;top:${cy-h/2}px;width:${w}px;height:${h}px`}
  const g=t.querySelector('.plg');if(g){const s=ph*.27;g.style.cssText=`left:${518-s/2}px;top:${cy-s/2}px;width:${s}px;height:${s}px`}
- t.querySelectorAll('.plx [data-cy]').forEach(e=>e.style.top=(cy+ +e.dataset.cy)+'px');
+ t.querySelectorAll('.plx [data-cy]').forEach(e=>e.style.top=(cy+ +e.dataset.cy*cf)+'px');
  return {ch,th:ch,sy};
 }
 function planetPop(P){
@@ -3662,10 +3665,7 @@ function planetPop(P){
   ${pc('sp-big pl-n',40,-4,188,50,si.name,44)}${pc('sp-sm c pl-d',40,50,188,72,dates,27)}
   <img class="sp-g" ${ry(-120)} src="${SKY}pl-rx.webp" alt="" style="left:800px;width:190px;height:142px">
   ${pc('sp-sm c pl-r',796,24,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
-  ${card(0,tx('sp-b pl-c',236,74,682,108,happen,32))}
-  ${card(1,tx('sp-b pl-c',236,69,682,134,mean,32))}
-  ${card(2,tx('sp-b sp-l pl-c',236,68,682,158,dots(todo),31))}
-  ${card(3,tx('sp-rn c',192,124,306,44,PLR[P][0],32)+tx('sp-rd',548,30,376,170,PLR[P][1],27))}
+  ${spCards('pl',[happen,mean,dots(todo)],`${tx('sp-rn',191,84,300,50,PLR[P][0],30)}${tx('sp-rd',531,22,360,138,PLR[P][1],28)}`).replace(/^<div class="spl">/,'').replace(/<\/div>$/,'')}
  </div>`;
  return pane('rpl',`${P} in ${si.name}.`,'',`
   ${tx('pl-t',300,252,424,112,P,100).replace('class="spx','data-y="252" class="spx')}${tx('pl-k',90,378,844,40,PLK[P].join(' <i>•</i> '),31).replace('class="spx','data-y="378" class="spx')}
