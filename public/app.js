@@ -3293,7 +3293,7 @@ const QS=[['What made you happy today?',30,668,225],['What did you learn?',266,6
 const VS='︎';
 // each full-screen painting: its width and height in its own pixels, the height of its foot (kept at the screen's
 // bottom, with the button), and how far down its words reach (the top scrolls if the screen cannot hold both)
-const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884]};
+const PANE={rtw:[592,1312,162,0],rti:[1024,1888,0,0],rtu:[512,1422,182,826],rtq:[512,1478,238,884],rmoon:[1024,2240,260,1322],rsun:[1024,2240,260,1322]};
 // Intention is painted whole at three heights; the one nearest the screen's shape fills it exactly
 const IH=[1664,1888,2112];
 const pane=(id,label,cls,top,foot,bar='')=>`<section class="rt${cls}" id="${id}" aria-label="${label}"><div class="rsc"><div class="rsz"><div class="rcv rtop">${top}</div></div></div><div class="rft"><div class="rcv rcvf">${foot}</div></div>${bar}</section>`;
@@ -3482,7 +3482,7 @@ document.addEventListener('keydown',e=>{
 addEventListener('resize',fit);
 // after every render the scales and the Whisper's words are fitted again; a re-render while a pop-up is open keeps it
 // still and keeps the manuscript where the reader was
-ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0'))fit()}};
+ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0')){fit();const t=document.querySelector('#rov .rt');if(t){t.classList.add('on');spFit();(document.fonts?document.fonts.ready:Promise.resolve()).then(spFit);if(V.skpIn)t.classList.add('in');else requestAnimationFrame(()=>requestAnimationFrame(()=>{t.classList.add('in');V.skpIn=true}))}}else V.skp=null}};
 views.home=view;
 // Sky: the painting of the heavens held between two hands, the reader's own sign at its heart. The Sun opens today's
 // Sun, the Moon the Moon of the day, each planet where the planets are now, and the sign the full horoscope
@@ -3499,8 +3499,8 @@ function skyHome(){
    <img class="sk0-fig" src="${SKY}sk-fig-${s.id}.webp" alt="" style="left:330px;top:495px;width:370px;height:325px">
    <img class="sk0-g" src="${SKY}sk-g-${s.id}.webp" alt="" style="left:458px;top:732px;width:112px;height:112px">
    <div class="sk0-n"><span>${s.name.toUpperCase()}</span></div>
-   ${circ(510,1043,150,'The Sun today','data-act="skd" data-id="sun"')}
-   ${circ(764,757,66,'The Moon today','data-go="discover" data-t="moon"')}
+   ${circ(510,1043,150,'The Sun today','data-skp="sun"')}
+   ${circ(764,757,66,'The Moon today','data-skp="moon"')}
    ${pl}
    ${SKYLB.map(([n,x,y])=>`<span class="sk0-l" style="left:${x}px;top:${y}px">${n}</span>`).join('')}
    <button class="rit-hot" data-go="horoscope" data-t="sign" aria-label="Your horoscope, ${s.name}" style="left:340px;top:500px;width:350px;height:370px;border-radius:30%"></button>
@@ -3508,8 +3508,75 @@ function skyHome(){
   </div>
   <div class="sk0-tip">Tap on the Sun, Moon, planets or your sign<br>to explore their meaning for you.</div>
   <nav class="rit-nav sk0-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky" aria-current="page"></button><button data-nav="tarot" aria-label="Oracle"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
- </div></div>${sk?skyPop(sk):''}`;
+ </div>${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():sunPop()}</div>`:''}</div>${sk?skyPop(sk):''}`;
 }
+// ---- the Moon and the Sun, each a full-screen page painted from the user's pictures; the words are today's sky ----
+const SOUTH=()=>/^(Australia|Antarctica)\/|^Pacific\/(Auckland|Chatham|Fiji|Tongatapu|Apia|Noumea|Efate)|^America\/(Sao_Paulo|Argentina|Santiago|Montevideo|Asuncion|La_Paz|Lima|Bahia|Recife|Fortaleza|Belem|Maceio|Cuiaba|Campo_Grande|Porto_Velho|Manaus)|^Africa\/(Johannesburg|Maputo|Harare|Windhoek|Gaborone|Lusaka|Maseru|Mbabane|Luanda|Lubumbashi|Blantyre)|^Indian\/(Mauritius|Reunion|Antananarivo)/.test(TZ()||'');
+const MPH={'New Moon':['The Moon is new, dark and resting between cycles. The sky is quiet: the perfect soil for a fresh beginning and a wish whispered softly.',['Name one thing you want to begin.','Rest more than usual and listen inward.','Clear a small space, on your desk or in your day.'],'The Seed Intention','Write one wish on a slip of paper, fold it twice and keep it close. Read it again when the Moon is full.'],
+ 'Waxing Crescent':['A first thin light returns. The Moon is waxing, and what you planted begins to stir: small, fragile and full of promise.',['Take the smallest first step towards your wish.','Protect new ideas from too many opinions.','Notice one sign of progress, however small.'],'The First Light Ritual','Light a candle at dusk, say your intention aloud once, then name one small step you will take tomorrow.'],
+ 'First Quarter':['The Moon is half lit and growing. This is a point of decision: energy rises, and so do the first obstacles asking how much you want it.',['Make one decision you have been postponing.','Meet a challenge with patience, not force.','Adjust your plan rather than abandon it.'],'The Courage Ritual','Stand by a window, breathe slowly three times, and write the one choice that would move you forward today.'],
+ 'Waxing Gibbous':['The Moon is waxing, building towards fullness. Its light is growing, bringing momentum, clarity and a desire to complete what you’ve been working on.',['Finish or move forward with something important.','Refine the details before the Full Moon.','Support your wellbeing with nourishing, simple choices.'],'The Release & Refine Ritual','Write down what you’re ready to release (a habit, worry or pattern), then rewrite it as a positive intention, such as “I choose clarity and balance”.'],
+ 'Full Moon':['The Moon is full, its whole face lit by the Sun. Feelings run high and what was hidden comes to light: a moment of culmination and gratitude.',['Celebrate one thing that has grown.','Let strong feelings pass before you act on them.','Share your light: call someone you love.'],'The Moonlight Gratitude Ritual','Sit in the moonlight or by a window, write three things you are grateful for, and read them aloud softly.'],
+ 'Waning Gibbous':['The Moon has passed its fullness and begins to wane. Its light turns gentle, inviting you to share what you’ve learned and to give thanks.',['Share something you’ve learned with someone.','Thank someone who helped you.','Slow down and digest what this cycle brought.'],'The Sharing Ritual','Write a short note of thanks to someone, or to yourself, for what this cycle taught you, then keep it or send it.'],
+ 'Last Quarter':['The Moon is half lit and waning. It is a time of turning: releasing what no longer fits, and making room before the next beginning.',['Let go of one task, habit or worry.','Forgive a small mistake, yours or someone else’s.','Tidy one corner of your home or mind.'],'The Letting Go Ritual','Write what you are ready to release, tear the paper gently, and let it go with one long, slow breath.'],
+ 'Waning Crescent':['Only a thin light remains as the Moon wanes towards new. The cycle is closing: a time for rest, surrender and quiet dreaming.',['Rest without guilt.','Keep your plans light and gentle.','Notice your dreams and write one down.'],'The Rest Ritual','Before sleep, dim the lights, place a hand on your heart, and thank this cycle for everything it carried.']};
+const MSG={aries:['A time for courage, action and fresh starts.','the Moon stirs courage and a wish to act on instinct'],taurus:['A time for comfort, calm and simple pleasures.','the Moon seeks steadiness, rest, beauty and security'],gemini:['A time for curiosity, words and connection.','the Moon quickens the mind, with a need to talk, learn and connect'],cancer:['A time for home, care and tenderness.','the Moon is at home, bringing sensitivity and a need for closeness'],leo:['A time for warmth, play and self-expression.','the Moon wants to shine, create and be appreciated'],virgo:['A time for clarity, order and self-care.','the Moon highlights organisation, wellbeing and the details of daily life'],libra:['A time for harmony, beauty and partnership.','the Moon seeks balance, beauty and gentle connection'],scorpio:['A time for depth, truth and transformation.','the Moon goes deep, asking for trust, honesty and real connection'],sagittarius:['A time for hope, freedom and adventure.','the Moon lifts the spirit, longing for space, meaning and something new'],capricorn:['A time for focus, structure and patience.','the Moon turns steady, with a need to plan and build what lasts'],aquarius:['A time for ideas, friendship and freedom.','the Moon looks ahead, seeking independence and like-minded friends'],pisces:['A time for dreams, intuition and compassion.','the Moon softens everything, and intuition and dreams grow strong']};
+const SSG={aries:['A time to begin, act boldly and ignite new paths.','The Sun is in Aries, the first sign of the zodiac, bringing fresh fire, courage and the energy to start again.','this season favours bold beginnings, independence and acting on what excites you.',['Start the thing you keep postponing.','Move your body and spend your energy well.','Choose courage over perfection once today.']],
+ taurus:['A time to slow down, savour and build steadily.','The Sun is in Taurus, grounding its light in the body and the senses. It brings patience, steadiness and a love of simple beauty.','this season favours patience, comfort, money matters and building something solid.',['Enjoy one simple pleasure slowly.','Tend your finances or a practical goal.','Spend time in nature or work with your hands.']],
+ gemini:['A time to learn, connect and follow your curiosity.','The Sun is in Gemini, lighting the mind with curiosity and conversation. Ideas move quickly, and connections multiply.','this season favours learning, writing, short journeys and new conversations.',['Learn one new thing today.','Reach out to someone you haven’t spoken to in a while.','Write down an idea before it flies away.']],
+ cancer:['A time to nurture home, family and the heart.','The Sun is in Cancer, turning its light towards home and the heart. It brings tenderness, memory and a wish to protect.','this season favours home, family, emotional care and gentle beginnings.',['Make your home feel a little softer.','Call someone who feels like family.','Care for yourself as you would a loved one.']],
+ leo:['A time to shine, create and open the heart.','The Sun is in Leo, its own sign, shining warm and generous. It brings confidence, creativity and joy in being seen.','this season favours creativity, romance, play and expressing who you are.',['Create something just for joy.','Give a compliment generously.','Let yourself be seen in something you love.']],
+ virgo:['A time to refine, organise and prepare for a new cycle.','The Sun is in Virgo, shining its light on clarity, practical action and meaningful progress. It brings a focused, grounded energy.','the Sun in Virgo supports practicality, healthier routines and turning good intentions into real results.',['Focus on what truly matters and simplify the rest.','Bring structure to a key area of your life (work, health, home or habits).','Take practical steps towards a goal you’ve been planning.']],
+ libra:['A time to find balance, beauty and harmony.','The Sun is in Libra, seeking balance between self and others. It brings grace, fairness and a love of beauty.','this season favours partnership, diplomacy, art and restoring balance where life has tilted.',['Restore balance in one area of your life.','Make peace, or make amends, with someone.','Bring a little beauty into your space.']],
+ scorpio:['A time to go deeper, release and transform.','The Sun is in Scorpio, drawing its light inward and down. It brings intensity, honesty and the courage to transform.','this season favours depth, truth, intimacy and letting go of what has run its course.',['Be honest about one thing you feel.','Let go of something that drains you.','Spend some time in quiet reflection.']],
+ sagittarius:['A time to explore, believe and widen your horizons.','The Sun is in Sagittarius, lighting the road ahead with optimism. It brings adventure, faith and a hunger for meaning.','this season favours learning, travel, big-picture thinking and following what inspires you.',['Plan something to look forward to.','Read or learn something that widens your view.','Say yes to one small adventure.']],
+ capricorn:['A time to plan, commit and build what lasts.','The Sun is in Capricorn, steady and determined. It brings structure, ambition and the patience to climb step by step.','this season favours goals, responsibility, career and laying strong foundations.',['Set one clear goal for the months ahead.','Finish a task you have been carrying.','Honour your limits as well as your ambitions.']],
+ aquarius:['A time to dream ahead, connect and be yourself.','The Sun is in Aquarius, bright with ideas and new possibilities. It brings independence, friendship and vision.','this season favours friendship, community, original ideas and the freedom to be yourself.',['Try a new way of doing something familiar.','Connect with a friend or a group you love.','Write down one hope for the future.']],
+ pisces:['A time to dream, soften and trust your intuition.','The Sun is in Pisces, the last sign of the zodiac, dissolving edges and softening the heart. It brings intuition and compassion.','this season favours rest, imagination, spirituality and closing a cycle gently.',['Make time for music, art or quiet.','Trust a gentle intuition today.','Rest before the next cycle begins.']]};
+const SRIT={Fire:['The Flame Ritual','At sunrise or sunset, light a candle, name one thing you want to bring alive this season, and take one step towards it today.'],Earth:['The Clarity Ritual','In the sunlight (or by a window), set a clear intention for this season. Write it down, then note one practical step you can take today to begin.'],Air:['The Breath Ritual','Open a window, breathe slowly for a minute, and write down one idea you want to follow this season. Read it aloud once.'],Water:['The Water Ritual','Wash your hands slowly in warm water, name one feeling you want to honour this season, and let the rest flow away.']};
+const SEAS=['Early Spring','Spring in Bloom','Late Spring into Summer','Early Summer','High Summer','Late Summer into Autumn','Early Autumn','Deep Autumn','Late Autumn into Winter','Early Winter','Deep Winter','Late Winter into Spring'];
+const tx=(cls,x,y,w,h,html,f)=>`<div class="spx ${cls}" data-f="${f}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;font-size:${f}px">${html}</div>`;
+const spBar=()=>`<button class="rit-hot" data-skx aria-label="Back to the Sky" style="left:44px;top:89px;width:72px;height:72px"></button><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:907px;top:89px;width:72px;height:72px"></button>`;
+const dots=a=>a.map(x=>`<div class="spb">${x}</div>`).join('');
+function moonPop(){
+ const now=new Date(),m=K.moon(now),si=sIdx(m.sign),r=skyRel(m.sign),ph=MPH[m.name],[l1,l2]=m.name.split(' ');
+ const nx=(K.lunarPhases(now,new Date(+now+40*DAY))||[]).find(e=>e.date>now&&!(m.name.startsWith(e.name.replace(' Moon','').split(' ')[0])&&m.name.includes(e.name.split(' ')[0])&&+e.date-now<4*DAY)),nn=nx?nx.name.replace(' Moon','').replace('New','New Moon').replace('Full','Full Moon'):'';
+ const nd=nx?nx.date.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:TZ()}):'';
+ // the painted Moon shaded to tonight's phase (lit on the right while waxing, mirrored south of the equator)
+ const k=m.ill,cx=510,cy=440,R=141,rx=Math.abs(1-2*k)*R,flip=(!m.waxing)!==SOUTH();
+ const shade=k>.97?'':`<svg class="sp-ph" viewBox="0 0 1024 1000" style="left:0;top:0;width:1024px;height:1000px" aria-hidden="true"><defs><filter id="spb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs><path filter="url(#spb)" transform="${flip?`translate(${2*cx} 0) scale(-1 1)`:''}" d="M${cx} ${cy-R}A${R} ${R} 0 0 0 ${cx} ${cy+R}A${rx} ${R} 0 0 ${k<.5?0:1} ${cx} ${cy-R}Z" fill="rgba(8,10,28,.85)"/></svg>`;
+ return pane('rmoon',`The Moon. ${m.name} in ${si.name}.`,'',`${shade}
+  ${tx('sp-big',110,372,214,110,`${l1}<br>${l2||''}`,47)}${tx('sp-sm c',110,478,214,32,`${Math.round(k*100)}% Illuminated`,25)}
+  <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:741px;top:326px;width:48px;height:48px">
+  ${tx('sp-h',818,318,150,40,`In ${si.name}`,33)}${tx('sp-sm',820,358,128,74,MSG[si.id][0],20)}
+  ${tx('sp-h2',812,482,150,30,nn,27)}${tx('sp-sm',814,512,140,28,nd,21)}
+  ${tx('sp-b',243,709,650,82,ph[0],26)}
+  ${tx('sp-b',245,876,646,80,`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,26)}
+  ${tx('sp-b sp-l',246,1039,650,86,dots(ph[1]),25)}
+  ${tx('sp-rn',240,1232,296,42,ph[2],25)}${tx('sp-rd',580,1180,348,104,ph[3],22)}
+  ${spBar()}`,'');
+}
+function sunPop(){
+ const now=new Date(),si=sIdx(K.signIdx(K.positions(now)[0].lon)),r=skyRel(SIGNS.indexOf(si)),me=sg(S.sign),x=SSG[si.id],rt=SRIT[si.el];
+ const seas=SEAS[(SIGNS.indexOf(si)+(SOUTH()?6:0))%12].replace(' into ','<br>into ');
+ return pane('rsun',`The Sun in ${si.name}.`,'',`
+  <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:144px;top:362px;width:68px;height:68px">
+  ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
+  ${tx('sp-big s',774,362,192,72,seas,30)}${tx('sp-sm',826,452,152,104,x[0],20)}
+  ${tx('sp-b',266,697,632,80,x[1],26)}
+  ${tx('sp-b',266,853,662,106,`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,26)}
+  ${tx('sp-b sp-l',266,1046,686,82,dots(x[3]),25)}
+  ${tx('sp-rn c',252,1250,244,44,rt[0],27)}${tx('sp-rd',566,1186,364,112,rt[1],22)}
+  ${spBar()}`,'');
+}
+// each line of words is fitted to its place in the painting
+function spFit(){document.querySelectorAll('.spx').forEach(e=>{let f=+e.dataset.f;e.style.fontSize=f+'px';while((e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)&&f>11){f-=.5;e.style.fontSize=f+'px'}})}
+document.addEventListener('click',e=>{
+ if(V.sec!=='horoscope')return;
+ const o=e.target.closest('[data-skp]');if(o){V.skp=o.dataset.skp;V.skpIn=false;return render()}
+ if(e.target.closest('[data-skx]')){const t=document.querySelector('#rov .rt');if(t)t.classList.remove('in');const ov=document.getElementById('rov');if(ov)ov.classList.remove('on');setTimeout(()=>{V.skp=null;render()},500)}
+});
+document.addEventListener('keydown',e=>{if(V.sec==='horoscope'&&V.skp&&e.key==='Escape'){V.skp=null;render()}});
 {const vh=views.horoscope;views.horoscope=()=>(!A||!K||tab()==='sign')?vh():skyHome()}
 SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
 fit();
