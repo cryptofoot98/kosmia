@@ -3528,15 +3528,15 @@ function skyHome(){
 // it a little and squeezes it very slightly, its edges melting into the frame's shadow, so all of it stays above the bar
 // two paintings of the one scene, each 1170 wide: A for shorter screens, B for full-height ones; shown at the screen's
 // width, never stretched. Each thing's place [x, y, w, h] in its own painting
-const ORV={a:{h:1992,l:[212,508],hot:{omens:[60,220,300,350],dreams:[880,230,200,290],conn:[840,570,270,290],read:[50,1430,320,300],tarot:[730,1500,390,230],kas:[440,1530,270,350],back:[62,96,96,96],me:[1012,96,96,96]}},
- b:{h:2532,l:[212,630],hot:{omens:[60,300,310,400],dreams:[870,350,210,300],conn:[840,710,280,320],read:[50,1800,330,340],tarot:[690,1870,430,250],kas:[420,1940,290,440],back:[56,128,96,96],me:[1016,128,96,96]}}};
-const ORT={omens:['data-go="discover" data-t="life-path"','Signs and Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="affinity"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],back:['data-nav="home"','Back to the Ritual'],me:['data-go="you"','My Cosmos']};
+const ORV={a:{h:1992,l:[212,508],hot:{omens:[60,220,300,350],dreams:[880,230,200,290],conn:[840,570,270,290],read:[50,1430,320,300],tarot:[730,1500,390,230],kas:[440,1345,270,395],me:[1012,96,96,96]}},
+ b:{h:2532,l:[212,630],hot:{omens:[60,300,310,400],dreams:[870,350,210,300],conn:[840,710,280,320],read:[50,1800,330,340],tarot:[690,1870,430,250],kas:[420,1830,290,445],me:[1016,128,96,96]}}};
+const ORT={omens:['data-go="discover" data-t="life-path"','Signs and Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="affinity"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
 function oracleHome(){
  const v=innerHeight/Math.min(innerWidth,520)>1.93?'b':'a',P=ORV[v];
  return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
   <div class="or-sc" style="height:${P.h}px"><img class="or-bg" src="${SKY}or-${v}.webp" alt="" style="height:${P.h}px">
    <span class="or-l or-l2" style="left:${P.l[0]}px;top:${P.l[1]}px">Signs &amp;<br>Synchronicity</span>
-   ${Object.entries(P.hot).map(([k,[x,y,w,h]])=>`<button class="rit-hot" ${ORT[k][0]} aria-label="${ORT[k][1]}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${k==='back'||k==='me'?'50%':'48px'}"></button>`).join('')}
+   ${Object.entries(P.hot).map(([k,[x,y,w,h]])=>`<button class="rit-hot" ${ORT[k][0]} aria-label="${ORT[k][1]}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${k==='me'?'50%':'48px'}"></button>`).join('')}
   </div>
   <nav class="rit-nav sk0-nav or-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky"></button><button data-nav="tarot" aria-label="Oracle" aria-current="page"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
  </div>${sheetView()}</div>`;
