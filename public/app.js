@@ -200,7 +200,7 @@ const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
- discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
+ discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
@@ -211,18 +211,18 @@ const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the blueprint's five places (Ritual, Sky, Oracle, Calendar, Journal); My Cosmos opens from the round symbol at the top
 const NAV=[{key:'home',label:'Ritual'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'calendar',label:'Calendar'},{key:'journal',label:'Journal'}];
 const CPAGES=['calendar','moon','planets','events'];
-const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
+const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','dream-journal','dream-patterns','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
 // the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
 // numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
 function navCur(){const t=tab();
  if(V.sec==='tarot')return JPAGES.includes(t)?'journal':'tarot';
  if(V.sec==='kassandra')return 'tarot';
  if(V.sec==='settings'||V.sec==='you')return 'you';
- if(V.sec==='discover')return DPAGES.includes(t)?'tarot':t==='dream-journal'?'journal':YPAGES.includes(t)?'you':CPAGES.includes(t)?'calendar':'horoscope';
+ if(V.sec==='discover')return DPAGES.includes(t)?'tarot':YPAGES.includes(t)?'you':CPAGES.includes(t)?'calendar':'horoscope';
  return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
- 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'tarot/journal','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
+ 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
@@ -1862,7 +1862,7 @@ const MN_ORN='<svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path 
 const mnHead0=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1>${MN_ORN}${mnGreet()}</div></header>`;
 // a line for the reader beneath the title of each inner page, in the voice of the page
 const MN_GREET={whisper:'the card that found you today',affinity:'you and another, beneath the same sky',resonance:'the music two names make together',synastry:'two skies, read side by side',calendar:'the sky above you, night by night',moon:'the Moon above you tonight',planets:'the wanderers that move through your sky',events:'what the heavens are preparing',
- 'birth-chart':'the sky you were born beneath','life-path':'the road your soul chose','name-within':'the music in your name',cycles:'the season you are walking through',library:'the old knowledge, open to you',dreams:'what the night left with you','dream-journal':'every dream you have kept',profile:'the sky that is yours alone',notifications:'what the stars will whisper to you',settings:'your Kosmia, as you wish it'};
+ 'birth-chart':'the sky you were born beneath','life-path':'the road your soul chose','name-within':'the music in your name',cycles:'the season you are walking through',library:'the old knowledge, open to you',profile:'the sky that is yours alone',notifications:'what the stars will whisper to you',settings:'your Kosmia, as you wish it'};
 const mnGreet=()=>{const g=MN_GREET[tab()],n=firstName();return g&&n?`<p class="mn-greet">${esc(n)}, ${g}</p>`:''};
 // a page built as a stack of parchment panels, set as a night page instead: its painting behind (cls picks it), the
 // gold title in the sky, and each panel a gilded see-through box with a star at each corner
@@ -2635,7 +2635,7 @@ async function voiceRec(target){
  rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());if(KS.cancel){KS.cancel=false;KS.state='idle';render();return}
   const blob=new Blob(KS.chunks,{type:(rec.mimeType||type||'audio/webm').split(';')[0]});KS.state='processing';render();
   C.transcribe(blob).then(r=>{KS.state='idle';if(!r.text){toast('That was not caught. Try again or type.');return render()}
-   if(target==='dream'){const t=$('#dt');V.dream.text=((t?t.value:V.dream.text)+' '+r.text).trim().slice(0,1000);render()}else if(target==='sync'){const t=$('#sst'),F=SSX.form();F.text=((t?t.value:F.text)+' '+r.text).trim().slice(0,1200);render()}else kasSend(r.text)},e=>{KS.state='idle';toast(e.message||'Could not hear that. Try typing.');render()})};
+   if(target==='dream'){const t=$('#dt');V.dream.text=((t?t.value:V.dream.text)+' '+r.text).trim().slice(0,1000);(S.dreamDraft||(S.dreamDraft={text:'',mood:''})).text=V.dream.text;save();render()}else if(target==='sync'){const t=$('#sst'),F=SSX.form();F.text=((t?t.value:F.text)+' '+r.text).trim().slice(0,1200);render()}else kasSend(r.text)},e=>{KS.state='idle';toast(e.message||'Could not hear that. Try typing.');render()})};
  rec.start();render();
  clearTimeout(KS.timer);KS.timer=setTimeout(()=>kasStopRec(false),target==='kas'?45000:90000);
 }
@@ -3669,7 +3669,7 @@ function ssEvidence(){
  const ev=[],add=(day,text,src,title,open,extra=[])=>{if(!day)return;const t=new Set([...extra.filter(Boolean),...ssFind(text)]);if(t.size)ev.push({day:String(day).slice(0,10),src,title,open,themes:[...t]})};
  S.journal.filter(j=>j.kind!=='synchronicity').forEach(j=>add(j.day,[j.title,j.body].filter(Boolean).join('. '),SS_RIT.test(j.title||'')?'reflection':'journal',j.title||'A Journal page',`data-act="jopen" data-k="j:${esc(j.id)}"`));
  Object.entries(S.notes||{}).forEach(([d,n])=>n&&add(d,n,'reflection','Your note on the Whisper',`data-act="jopen" data-k="fortune:${d}"`));
- dreams().forEach(d=>{const I=d.interp||{};add(d.day,[d.text,I.title].filter(Boolean).join('. '),'dream',I.title||'A Dream',`data-act="dreamopen" data-id="${esc(d.id)}"`,[I.art,...(I.symbols||[]).map(s=>s.id)].map(x=>SS_DT[x]))});
+ dreams().filter(d=>!d.noPat).forEach(d=>{const I=d.interp||{};add(d.day,[d.text,I.title].filter(Boolean).join('. '),'dream',I.title||'A Dream',`data-act="dreamopen" data-id="${esc(d.id)}"`,[I.art,...(I.symbols||[]).map(s=>s.id)].map(x=>SS_DT[x]))});
  S.readings.forEach(r=>add(r.date,[r.q,r.note,...(r.cards||[]).map(c=>{const x=dk(c.id);return x?[x.name,c.rev?x.rev:x.up].join(' '):c.name||''})].filter(Boolean).join('. '),'tarot',`${(SPREADS[r.spread]||{s:'Tarot'}).s} reading`,`data-act="jopen" data-k="reading:${esc(r.id)}"`));
  ssList().forEach(d=>add(d.day,d.type==='number'?d.context:d.text,d.type,d.type==='number'?`Sacred Number ${d.number}`:(d.r||{}).title||'A Synchronicity',`data-ss="open" data-id="${esc(d.id)}"`,d.themes||[]));
  return ev;
@@ -3783,6 +3783,170 @@ function ssNumerologyView(){
 {const SSV={signs:ssHome,numbers:ssNumbersView,number:ssNumberReading,sync:ssSyncView,'sync-reading':ssSyncReading,patterns:ssPatternsView,pattern:ssPatternView,numerology:ssNumerologyView};
  const vd=views.discover;views.discover=()=>SSV[tab()]?SSV[tab()]():vd()}
 Object.assign(SSX,{list:ssList,glyph:ssGlyph,form:ssS});
+// ---- Dreams (Oracle): three screens. Dreams is the entrance, the writing and the reading on one page: write or speak the
+// dream (kept as a draft until it is read or saved), an optional feeling on waking, then Explore My Dream unfolds the
+// reading beneath it, the dream folding into "Your Dream". Dream Patterns gathers the symbols that return across saved
+// dreams (two distinct dreams make a pattern) with the feelings around them; Dream Archive is every dream by month, with
+// search. A saved dream opens in the same reading layout, where it can be added to, read again, kept out of patterns or
+// deleted. Meanings are possible emotional associations, never predictions.
+const DR_MOODS=[['peaceful','Peaceful'],['curious','Curious'],['anxious','Anxious'],['happy','Happy'],['confused','Confused'],['sad','Sad']];
+const DR_MOODL=Object.fromEntries([...MOODS,...DR_MOODS]);
+const DR_FEELM={happy:'The happiness you woke with suggests these themes may be welcome in your life right now.',...MOOD_LINE};
+// recurring symbols are named as they return (Doorways, Birds); the ocean and water are read as one
+const DR_PL={snake:'Snakes',house:'Houses',owl:'Owls',forest:'Forests',door:'Doorways',key:'Keys',baby:'Babies',wedding:'Weddings',exam:'Exams',bridge:'Bridges',mountain:'Mountains',mirror:'Mirrors',horse:'Horses',spider:'Spiders',bird:'Birds',cat:'Cats',dog:'Dogs',storm:'Storms',journey:'Journeys',garden:'Gardens',chase:'Being Chased',lost:'Being Lost',moon:'The Moon',sun:'The Sun'};
+const DR_ALIAS={ocean:'water'};
+const drBare=n=>String(n||'').replace(/^(The|A|An) /,'');
+const drName=k=>k.startsWith('x:')?cap(k.slice(2)):DR_PL[k]||drBare((dsym(k)||{name:k}).name);
+// the symbols a dream holds, as pattern keys: the reading's own, and any the dictionary recognises in the words
+function drKeys(d){
+ const I=d.interp||{},ks=new Set(),add=k=>{if(k)ks.add(DR_ALIAS[k]||k)};
+ add(I.art);(I.symbols||[]).forEach(s=>add(s.id||(s.name?'x:'+drBare(s.name).toLowerCase():'')));
+ const low=String(d.text||'').toLowerCase();DREAMS.forEach(s=>{if(s.re.test(low))add(s.id)});
+ return [...ks];
+}
+const drDraft=()=>S.dreamDraft||(S.dreamDraft={text:'',mood:''});
+const drPending=()=>S.dreamPending||null;
+const drTime=n=>n===1?'once':n===2?'twice':n+' times';
+// the dictionary's reading, in the same shape as Kassandra's
+function drLocal(text,mood){
+ const low=text.toLowerCase(),at=s=>{const m=low.match(s.re);return m?m.index:1e9},found=DREAMS.filter(s=>s.re.test(low)).sort((a,b)=>at(a)-at(b)).slice(0,4),main=found[0];
+ const beneath=[found.length>1?`Together, ${found.slice(0,3).map(s=>drBare(s.name).toLowerCase()).join(', ').replace(/, ([^,]*)$/,' and $1')} may point to ${found.slice(0,3).map(s=>s.keys[0].toLowerCase()).join(', ').replace(/, ([^,]*)$/,' and $1')} moving through your inner life right now.`:main?main.m:'Your dream speaks in images that are personal to you. Notice which moment, person or place stays with you most: that is often where its meaning lives.',
+  mood?DR_FEELM[mood]:''].filter(Boolean).join(' ');
+ return {title:main?main.name:'Your Dream',keywords:main?main.keys:['Mystery','Reflection','Intuition'],symbols:found.map(s=>({id:s.id,name:s.name,keys:s.keys.slice(0,2),meaning:s.m})),beneath,meaning:beneath,reflection:main?main.q:PROMPTS.d[2],art:main?main.id:'',ai:false};
+}
+async function drRead(text,mood){
+ let I=null;
+ if(C.user&&C.dream){try{const r=await C.dream({text,mood:DR_MOODL[mood]||'',symbols:[],dictionary:DREAMS.map(s=>s.id)});if(r&&(r.beneath||r.meaning))I=Object.assign({ai:true},r)}catch(e){toast(e.message||'Kassandra could not read this dream, so the dictionary did.')}}
+ return I||drLocal(text,mood);
+}
+async function drExplore(){
+ const D=drDraft(),t=$('#dt');if(t)D.text=t.value;const text=D.text.trim();
+ if(text.length<8){toast('Tell a few more words of your dream first.');if(t)t.focus();return}
+ V.drBusy=true;render();const I=await drRead(text,D.mood);V.drBusy=false;
+ S.dreamPending={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:I,note:''};S.dreamDraft={text:'',mood:''};save();render();window.scrollTo(0,0);
+}
+function drStore(d){
+ const b={id:d.id,kind:'dream',ref:d.id,data:d,at:d.at};S.bookmarks.push(b);save();C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{});
+}
+function drSavePending(){const d=drPending();if(!d)return null;S.dreamPending=null;drStore(d);toast('Saved to My Dreams');return d}
+const drBm=id=>S.bookmarks.find(b=>b.kind==='dream'&&b.ref===id);
+function drUpdate(d){const b=drBm(d.id);if(b){b.data=d;save();C.saveBookmark&&C.saveBookmark(b)}}
+// Dream Patterns: every saved dream that is not kept out, within the chosen time
+const DR_RANGES=[['7','7 days'],['30','30 days'],['90','90 days'],['all','All time']];
+const drRange=()=>V.drRange||'30';
+function drPatterns(range,except){
+ const from=range==='all'?'':dkey(new Date(Date.now()-(+range-1)*DAY)),list=dreams().filter(d=>!d.noPat&&d.id!==except&&(d.day||'')>=from),by={};
+ list.forEach(d=>drKeys(d).forEach(k=>(by[k]=by[k]||[]).push(d)));
+ const rec=Object.entries(by).filter(([,l])=>l.length>1).map(([k,l])=>({k,name:drName(k),list:l.sort((a,b)=>a.day<b.day?1:-1),n:l.length})).sort((a,b)=>b.n-a.n);
+ return {list,rec};
+}
+// ---- the reading, on the Dreams page and for any saved dream
+function drSymbols(I){
+ const S2=(I.symbols||[]).slice(0,4);
+ if(!S2.length)return '';
+ return `${ssHead('Symbols Within Your Dream')}<div class="dr-syms">${S2.map(s=>{const x=dsym(s.id)||DREAMS.find(y=>drBare(y.name).toLowerCase()===drBare(s.name).toLowerCase()),keys=(s.keys&&s.keys.length?s.keys:x?x.keys.slice(0,2):[s.meaning]).filter(Boolean),m=s.keys&&s.keys.length?s.meaning:(x?x.m:'');
+  return `<div class="dr-sym">${x?artOf(x.art,'dr-art'):`<span class="dr-art dr-none">✦</span>`}<div><strong>${esc(s.name)}</strong><span class="dr-keys">${keys.map(esc).join(' · ')}</span>${m?`<p>${esc(m)}</p>`:''}</div></div>`}).join('<i class="dr-div" aria-hidden="true">✦</i>')}</div>`;
+}
+function drReading(d,saved){
+ const I=d.interp||{},since=dkey(new Date(Date.now()-29*DAY)),ks=drKeys(d);
+ let fam='';if(!d.noPat){const P=drPatterns('30',d.id);for(const k of ks){const l=dreams().filter(x=>!x.noPat&&x.id!==d.id&&(x.day||'')>=since&&drKeys(x).includes(k));if(l.length){fam=`${drName(k)} has appeared in ${l.length+1} of your dreams this month.`;V.drFamK=k;break}}}
+ const kept=saved&&d.note;
+ return `<div class="dr-hero"><h2>${esc(I.title||'Your Dream')}</h2><p class="dr-sub">Your dream interpretation${d.day?' · '+ymdLong(d.day,{day:'numeric',month:'long'}):''}</p>${(I.keywords||[]).length?`<p class="dr-kw">${I.keywords.slice(0,3).map(esc).join(' · ')}</p>`:''}</div>
+ <details class="acc dr-yours"><summary><span class="lr-t"><strong>Your Dream</strong><span>${d.mood?'You woke feeling '+esc((DR_MOODL[d.mood]||d.mood).toLowerCase()):'As you remembered it'}</span></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><p class="pre">${esc(d.text||'')}</p></div></details>
+ ${drSymbols(I)}
+ ${ssHead('Beneath the Surface')}<div class="dr-text">${paras(I.beneath||I.meaning)}</div>
+ ${fam?`${ssHead('A Familiar Symbol')}<div class="dr-text"><p>${esc(fam)}</p><button class="dr-link" data-dr="fam" data-k="${esc(V.drFamK)}">Explore this pattern ${IC.chev}</button></div>`:''}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(I.reflection||PROMPTS.d[2])}”</p>`,'dr-q')}
+ <div class="ss-acts">${saved?`<button class="btn ghost" disabled>✓ In My Dreams</button>`:`<button class="btn" data-dr="save">Save to My Dreams</button>`}<button class="btn ghost" data-dr="journal" data-id="${esc(d.id)}">${kept?'Keep writing in My Journal':'Reflect in My Journal'}</button></div>
+ <p class="muted small center">${I.ai?'Read by Kassandra with AI. ':I.ai===false?'Read with Kosmia’s dream dictionary. ':''}Dream meanings are possible emotional associations, offered for reflection rather than prediction.</p>`;
+}
+const drDoors=()=>`<div class="ss-pair dr-doors">${ssTile('⁂','Dream Patterns','Symbols that return to you','data-go="discover" data-t="dream-patterns"')}${ssTile('❦','Dream Archive','Revisit your dreams','data-go="discover" data-t="dream-journal"')}</div>`;
+function drHome(){
+ if(V.drBusy)return `<div class="sub">${hdr('Dreams')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Your dream is unfolding…</p></div></div>`;
+ const P=drPending(),H=hdr('Dreams',{sub:'Explore the world that unfolds while you sleep.'});
+ if(P)return nightSub(`<div class="sub">${H}${drReading(P,false)}<button class="dr-link dr-new" data-dr="new">Record another dream ${IC.chev}</button>${drDoors()}</div>`,'dj ss dr');
+ const D=drDraft(),rec=KS.state!=='idle'&&KS.target==='dream';
+ return nightSub(`<div class="sub">${H}
+ <p class="ss-lead dr-ask">What do you remember from your dreams?</p>
+ <div class="field dr-parch"><label for="dt" class="sr-only">Tell me your dream</label><textarea id="dt" maxlength="1000" rows="${D.text?7:4}" placeholder="Tell me your dream… Describe the places, people, feelings or moments you remember. Even the smallest detail is welcome.">${esc(D.text)}</textarea>
+  <button class="dr-mic${rec?' on':''}" data-dr="mic" aria-label="${rec?'Finish speaking':'Speak your dream'}">${IC.mic}<span>${rec?(KS.state==='listening'?'Listening… tap to finish':'Writing it down…'):'Speak'}</span></button></div>
+ ${ssHead('How did you feel when you woke up? · Optional')}<div class="fchips ss-chips">${DR_MOODS.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${D.mood===k}" data-dr="mood" data-v="${k}">${l}</button>`).join('')}</div>
+ <button class="btn" data-dr="go">Explore My Dream</button>
+ <button class="dr-link dr-later" data-dr="later">Save without interpreting</button>
+ ${drDoors()}</div>`,'dj ss dr');
+}
+// a saved dream, read again in the same layout: add forgotten details, read it again, keep it out of patterns, or delete it
+function drOpen(){
+ const d=dreams().find(x=>x.id===V.dreamId);
+ if(!d)return `<div class="sub">${hdr('Your Dream')}${empty('This dream is no longer here','It may have been removed on another device.',linkBtn('Dream Archive','discover','dream-journal','btn'))}</div>`;
+ const E=V.drEdit===d.id,I=d.interp;
+ if(V.drBusy)return `<div class="sub">${hdr('Dreams')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Your dream is unfolding…</p></div></div>`;
+ const edit=E?`<div class="field dr-parch"><label for="dte" class="sr-only">Your dream</label><textarea id="dte" maxlength="1000" rows="8">${esc(d.text||'')}</textarea></div><div class="ss-acts"><button class="btn" data-dr="reread" data-id="${esc(d.id)}">Update the Interpretation</button><button class="btn ghost" data-dr="keepedit" data-id="${esc(d.id)}">Save the details only</button></div>`:'';
+ const body=I&&!E?drReading(d,true):E?edit:`<div class="dr-hero"><h2>A Dream Not Yet Read</h2><p class="dr-sub">${ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'})}</p></div><div class="dr-text"><p class="pre">${esc(d.text||'')}</p></div><button class="btn" data-dr="reread" data-id="${esc(d.id)}">Explore My Dream</button>`;
+ const del=V.drDel===d.id?`<div class="dr-confirm"><p>Delete this dream and its interpretation? This cannot be undone.</p><div class="ss-acts"><button class="btn ghost" data-dr="delno">Keep it</button><button class="btn" data-dr="delyes" data-id="${esc(d.id)}">Delete</button></div></div>`:'';
+ return nightSub(`<div class="sub">${hdr('Your Dream',{sub:ymdLong(d.day,{weekday:'long',day:'numeric',month:'long'})})}${body}
+ ${E?'':`<div class="dr-tools"><button class="dr-link" data-dr="edit" data-id="${esc(d.id)}">Add forgotten details</button>${I?`<button class="dr-link" data-dr="reread" data-id="${esc(d.id)}">Read it again</button>`:''}<button class="dr-link" role="switch" aria-checked="${!d.noPat}" data-dr="pat" data-id="${esc(d.id)}">${d.noPat?'Kept out of patterns · include it':'Included in patterns · keep it out'}</button><button class="dr-link" data-dr="del" data-id="${esc(d.id)}">Delete this dream</button></div>${del}`}</div>`,'dj ss dr');
+}
+function drPatternsView(){
+ const R=drRange(),{list,rec}=drPatterns(R),all=dreams();
+ const rows=rec.map(p=>{const x=dsym(p.k),moods={};p.list.forEach(d=>{if(d.mood)moods[d.mood]=(moods[d.mood]||0)+1});
+  const others={};p.list.forEach(d=>drKeys(d).forEach(k=>{if(k!==p.k&&rec.some(r=>r.k===k))others[k]=(others[k]||0)+1}));
+  const mood=Object.entries(moods).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${(DR_MOODL[k]||k).toLowerCase()} ${drTime(n)}`);
+  const con=Object.entries(others).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>drName(k));
+  return `<details class="acc dr-pat"${V.drOpenK===p.k?' open':''} data-k="${esc(p.k)}"><summary><span class="lr-i">${x?artOf(x.art,'dr-art sm'):'<span class="dr-art dr-none sm">✦</span>'}</span><span class="lr-t"><strong>${esc(p.name)}</strong><span>${x?x.keys.join(', '):'A symbol of your own'}</span></span><span class="lr-m">${p.n} dreams</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b">
+   <p>${esc(p.name)} has appeared in ${p.n} distinct dreams.${x?' '+esc(x.m):''}</p>
+   ${mood.length?`<p><strong>The feeling around it:</strong> you woke ${mood.join(', ').replace(/, ([^,]*)$/,' and $1')}. Consider whether it felt peaceful, overwhelming or inviting, and how that relates to your waking life.</p>`:`<p>Consider how it felt each time it appeared, and how that relates to your waking life.</p>`}
+   <p class="dr-where">Where it appeared</p>${p.list.map(d=>`<button class="dr-ent" data-act="dreamopen" data-id="${esc(d.id)}"><span>${ymdLong(d.day,{day:'numeric',month:'long'})}</span>${esc((d.interp||{}).title||'A Dream')}</button>`).join('')}
+   ${con.length?`<p><strong>It often appears with:</strong> ${con.map(esc).join(', ')}.</p>`:''}
+   <p class="quote">“${esc(x?x.q:'What is this symbol asking me to notice?')}”</p></div></details>`}).join('');
+ const top=rec.slice(0,3),story=top.length>1?`${top.map(p=>p.name).join(', ').replace(/, ([^,]*)$/,' and $1')} have returned to you in your dreams. Together, they may offer a meaningful starting point for exploring your feelings about ${[...new Set(top.map(p=>((dsym(p.k)||{keys:['the unknown']}).keys[0]||'').toLowerCase()))].join(', ').replace(/, ([^,]*)$/,' and $1')}.`:'';
+ return nightSub(`<div class="sub">${hdr('Dream Patterns',{sub:'Discover the symbols that return to you in your sleep.'})}
+ <div class="dr-stats"><div><b>${all.length}</b><span>Dreams recorded</span></div><div><b>${rec.length}</b><span>Recurring symbols</span></div></div>
+ <div class="fchips ss-chips ss-range" role="radiogroup" aria-label="Time">${DR_RANGES.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${R===k}" data-dr="range" data-v="${k}">${l}</button>`).join('')}</div>
+ ${rec.length?`${ssHead('Your Recurring Symbols')}<div class="list">${rows}</div>${story?mbox(`<h3>The Story Your Dreams May Be Telling</h3><p>${esc(story)}</p>`):''}`
+ :mbox(`<h3>Your dream world is beginning to unfold</h3><p>As you record more dreams, familiar symbols may begin to emerge. A symbol becomes a pattern once it appears in two different dreams.</p><button class="btn ghost" data-go="discover" data-t="dreams">Record a dream</button>`)}
+ <p class="muted small center">Only your saved dreams are read here, and none you have kept out of patterns.</p></div>`,'dj ss dr');
+}
+function drArchiveList(q){
+ q=(q||'').trim().toLowerCase();
+ const hit=d=>{if(!q)return true;const I=d.interp||{};return [I.title,d.text,(I.keywords||[]).join(' '),drKeys(d).map(drName).join(' '),(I.symbols||[]).map(s=>s.name).join(' '),DR_MOODL[d.mood]||'',ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'})].join(' ').toLowerCase().includes(q)};
+ const l=dreams().filter(hit),by={};l.forEach(d=>(by[(d.day||'').slice(0,7)]=by[(d.day||'').slice(0,7)]||[]).push(d));
+ if(!l.length)return `<p class="muted center">${q?'No dream holds those words yet.':'Your dreams will be kept here, month by month.'}</p>`;
+ return Object.keys(by).sort().reverse().map(m=>`<p class="dr-month">${ymdLong(m+'-01',{month:'long',year:'numeric'})}</p>${by[m].map(d=>{const I=d.interp||{},syms=drKeys(d).slice(0,3).map(drName);
+  return `<button class="dr-entry" data-act="dreamopen" data-id="${esc(d.id)}"><span class="dr-d">${ymdLong(d.day,{day:'numeric',month:'long'})}</span><strong>${esc(I.title||'A Dream Not Yet Read')}</strong><span class="dr-x">${esc((d.text||'').slice(0,80))}${(d.text||'').length>80?'…':''}</span>${syms.length?`<span class="dr-s">${syms.map(esc).join(' · ')}</span>`:''}${d.mood?`<span class="dr-f">Feeling: ${esc(DR_MOODL[d.mood]||d.mood)}</span>`:''}</button>`}).join('')}`).join('');
+}
+function drArchive(){
+ return nightSub(`<div class="sub">${hdr('Dream Archive',{sub:'The worlds you have visited while you slept.'})}
+ <div class="field"><label for="drq" class="sr-only">Search dreams or symbols</label><input type="search" id="drq" placeholder="Search dreams or symbols…" value="${esc(V.drQ||'')}" autocomplete="off"></div>
+ <div class="dr-book" id="drlist">${drArchiveList(V.drQ)}</div></div>`,'dj ss dr');
+}
+{const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
+ const vd=views.discover;views.discover=()=>DRV[tab()]?DRV[tab()]():vd()}
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='dt'&&V.sec==='discover'){drDraft().text=t.value;clearTimeout(drDraft.t);drDraft.t=setTimeout(save,600);if(t.rows<8&&t.scrollHeight>t.clientHeight)t.rows=Math.min(12,t.rows+2)}
+ else if(t.id==='drq'){V.drQ=t.value;const l=$('#drlist');if(l)l.innerHTML=drArchiveList(t.value)}});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-dr]');if(!t)return;const a=t.dataset.dr,keepText=()=>{const x=$('#dt');if(x){drDraft().text=x.value;save()}};
+ if(a==='mood'){keepText();const D=drDraft();D.mood=D.mood===t.dataset.v?'':t.dataset.v;save();return render()}
+ if(a==='mic'){if(!C.user)return toast('Sign in to speak your dream');keepText();V.dream.text=drDraft().text;return voiceRec('dream')}
+ if(a==='go')return drExplore();
+ if(a==='later'){keepText();const D=drDraft(),text=D.text.trim();if(text.length<3)return toast('Write a few words of your dream first.');
+  const d={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:null,note:''};drStore(d);S.dreamDraft={text:'',mood:''};save();toast('Saved in your Dream Archive, to explore later');return render()}
+ if(a==='save'){drSavePending();return render()}
+ if(a==='new'){if(drPending())drSavePending();return render()}
+ if(a==='journal'){let d=drPending();if(d&&d.id===t.dataset.id)d=drSavePending();return openEntry('bk:dream:'+t.dataset.id)}
+ if(a==='fam'){V.drOpenK=t.dataset.k;V.drRange='30';return go('discover','dream-patterns')}
+ if(a==='range'){V.drRange=t.dataset.v;return render()}
+ if(a==='edit'){V.drEdit=t.dataset.id;return render()}
+ if(a==='keepedit'||a==='reread'){const d=dreams().find(x=>x.id===t.dataset.id);if(!d)return;const x=$('#dte');if(x&&x.value.trim())d.text=x.value.trim();V.drEdit=null;
+  if(a==='keepedit'){drUpdate(d);toast('Your dream is updated');return render()}
+  V.drBusy=true;render();drRead(d.text,d.mood).then(I=>{V.drBusy=false;d.interp=I;drUpdate(d);render();window.scrollTo(0,0)});return}
+ if(a==='pat'){const d=dreams().find(x=>x.id===t.dataset.id);if(!d)return;d.noPat=!d.noPat;drUpdate(d);toast(d.noPat?'This dream is kept out of your patterns':'This dream is part of your patterns again');return render()}
+ if(a==='del'){V.drDel=t.dataset.id;return render()}
+ if(a==='delno'){V.drDel=null;return render()}
+ if(a==='delyes'){const b=drBm(t.dataset.id);if(b){S.bookmarks.splice(S.bookmarks.indexOf(b),1);save();C.deleteBookmark&&C.deleteBookmark('dream',b.ref)}V.drDel=null;toast('The dream is deleted');return go('discover','dream-journal',{replace:true})}
+});
+document.addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('dr-pat'))V.drOpenK=d.open?d.dataset.k:(V.drOpenK===d.dataset.k?null:V.drOpenK)},true);
+
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='ssn'){const v=t.value.replace(/[^0-9:]/g,'');if(v!==t.value)t.value=v;ssN().num=v}else if(t.id==='ssc')ssN().ctx=t.value;else if(t.id==='sst')ssS().text=t.value});
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-ss]');if(!t)return;const a=t.dataset.ss;

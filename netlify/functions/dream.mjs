@@ -1,4 +1,4 @@
-// POST /api/dream {text, mood?, symbols?:[name], dictionary?:[id]} -> {title, keywords, meaning, symbols:[{name, meaning}], reflection, art}
+// POST /api/dream {text, mood?, symbols?:[name], dictionary?:[id]} -> {title, keywords, symbols:[{name, keys, meaning, id}], beneath, reflection, art}
 // Kassandra reads a dream: its main symbol, possible themes and feelings, and a question to sit with. Dream meanings are
 // offered as symbolic and subjective, never as predictions or diagnoses; only what the reader wrote is sent.
 import { authUser, claim, fail, limit } from '../../lib/supa.mjs';
@@ -21,22 +21,26 @@ export default async req => {
     r = await write({
       user: user.id,
       effort: 'medium',
-      schema: obj({ title: str, keywords: list(str), meaning: str, symbols: list(obj({ name: str, meaning: str })), reflection: str, art: str }),
-      system: `You are Kassandra, the fortune teller of Kosmia, reading a dream in warm, poised British English. Treat dream symbols as personal and symbolic: say what they may suggest, never what will happen, and never diagnose. If the dream suggests distress or danger to the dreamer, gently suggest talking to someone they trust or a professional. Reply with JSON only, with these keys: "title" (the dream's main symbol as a short title, such as "The Owl" or "Falling"), "keywords" (three single words), "meaning" (two or three short paragraphs separated by \n, about 140 words in all, speaking to the dreamer as "you"), "symbols" (up to four other symbols in the dream, each {"name", "meaning"} where meaning is one or two words), "reflection" (one question for the dreamer to sit with), and "art" (the id from this list that best matches the main symbol, or ""): ${ids.join(', ')}. No markdown, no emoji.`,
-      messages: [{ role: 'user', content: `My dream: ${dream}${mood ? `\nHow I felt: ${clip(mood, 30)}` : ''}${symbols.length ? `\nSymbols I noticed: ${symbols.map(s => clip(s, 30)).slice(0, 8).join(', ')}` : ''}` }]
+      schema: obj({ title: str, keywords: list(str), symbols: list(obj({ name: str, keys: list(str), meaning: str, id: str })), beneath: str, reflection: str, art: str }),
+      system: `You are Kassandra, the dream reader of Kosmia, reading a dream in warm, poised British English, speaking to the dreamer as "you". Dreams are personal: offer every meaning as a possible emotional association ("may", "perhaps", "you might"), take the dreamer's own feelings into account, and never predict, diagnose or claim certainty. If the dream suggests distress or danger to the dreamer, gently suggest talking to someone they trust or a professional. Reply with JSON only, with these keys: "title" (a short, poetic, personal title for the dream, two to four words, such as "Beyond the Shore"), "keywords" (three single words for its themes, such as Transition, Freedom, Possibility), "symbols" (the two to four main symbols in the dream, most important first, each {"name" (such as "The Ocean" or "The Open Door"), "keys" (two or three single words), "meaning" (one or two sentences on what it may reflect for the dreamer), "id" (the id from this list that best matches it, or "")}), "beneath" (about 70 words on what the symbols together may suggest about the dreamer's emotional life now, gentle and personal), "reflection" (one question written in the first person, such as "What new possibility am I drawn towards, and what feelings might be holding me back?"), and "art" (the id of the main symbol from the list, or ""). The ids: ${ids.join(', ')}. No markdown, no emoji.`,
+      messages: [{ role: 'user', content: `My dream: ${dream}${mood ? `
+How I felt when I woke: ${clip(mood, 30)}` : ''}${symbols.length ? `
+Symbols I noticed: ${symbols.map(s => clip(s, 30)).slice(0, 8).join(', ')}` : ''}` }]
     });
   } catch (e) {
     console.error(e.message);
     return fail(502, 'Kassandra could not read this dream just now, so the dream dictionary has.');
   }
-  const str = (v, n) => clip(v, n);
+  const syms = (Array.isArray(r.symbols) ? r.symbols : []).map(s => ({ name: clip(s && s.name, 30), keys: (Array.isArray(s && s.keys) ? s.keys : []).map(k => clip(k, 20)).filter(Boolean).slice(0, 3), meaning: clip(s && s.meaning, 300), id: ids.includes(s && s.id) ? s.id : '' })).filter(s => s.name).slice(0, 4);
+  const beneath = clip(r.beneath, 900);
   return Response.json({
-    title: str(r.title, 40) || 'Your Dream',
-    keywords: (Array.isArray(r.keywords) ? r.keywords : []).map(k => str(k, 20)).filter(Boolean).slice(0, 3),
-    meaning: String(r.meaning || '').split(/\n+/).map(p => str(p, 700)).filter(Boolean).slice(0, 4).join('\n'),
-    symbols: (Array.isArray(r.symbols) ? r.symbols : []).map(s => ({ name: str(s && s.name, 30), meaning: str(s && s.meaning, 40) })).filter(s => s.name).slice(0, 4),
-    reflection: str(r.reflection, 200),
-    art: ids.includes(r.art) ? r.art : ''
+    title: clip(r.title, 40) || 'Your Dream',
+    keywords: (Array.isArray(r.keywords) ? r.keywords : []).map(k => clip(k, 20)).filter(Boolean).slice(0, 3),
+    symbols: syms,
+    beneath,
+    meaning: beneath,
+    reflection: clip(r.reflection, 200),
+    art: ids.includes(r.art) ? r.art : (syms[0] && syms[0].id) || ''
   });
 };
 
