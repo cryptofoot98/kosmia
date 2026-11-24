@@ -3559,7 +3559,7 @@ const dots=a=>a.map(x=>`<div class="spb">${x}</div>`).join('');
 // the four cards are the Moon page's own: all one size, growing only when their words need more room
 const SPH=[1744,1984,2240],SKT=[[49,924,70],[49,924,64],[49,924,66]],SKL=185,SKX=194,SKHB=180,SKRH=183;
 // each page's icons for the cards [file prefix, [w,h] each], set in the middle of the card's round end
-const SKI={moon:['moon',[[139,108],[123,121],[126,94]]],sun:['sun',[[166,96],[156,154],[136,96]]],pl:['pl',[[130,95],[128,122],[126,105]]]};
+const SKI={moon:['moon',[[124,88],[98,100],[124,84]]],sun:['sun',[[124,65],[101,100],[124,77]]],pl:['pl',[[118,100],[101,100],[124,79]]]};
 const skHead=(title,sub)=>`${tx('sk-t',182,138,660,98,title,82)}${tx('sk-k',112,252,800,34,sub,25)}`;
 // the four cards: one size, tall enough for their words, round at both ends, spread evenly down the screen
 const SKC=250;
@@ -3567,12 +3567,12 @@ function spCards(n,bodies,rit){
  const [f,ics]=SKI[n];
  return `${[0,1,2].map(k=>{const [iw,ih]=ics[k];
   return `<div class="spc" data-k="${k}" style="left:49px;top:0;width:924px;height:${SKC}px;background-image:url(${SKY}sp-c${k}.webp)">
-   <img class="spi" src="${SKY}sp-${f}-i${k}.webp" alt="" style="left:${110-iw/2}px;top:${SKC/2-ih/2+14}px;width:${iw}px;height:${ih}px">
+   <img class="spi" src="${SKY}sp-${f}-i${k}.webp" alt="" style="left:${125-iw/2}px;top:${128-ih/2}px;width:${iw}px;height:${ih}px">
    ${tx('sp-b'+(k===2?' sp-l':''),SKX,74,672,SKC-74-30,bodies[k],k===2?35:36)}</div>`}).join('')}
   <div class="spc spr" data-k="3" style="left:49px;top:0;width:924px;height:${SKC}px;background-image:url(${SKY}sp-c3.webp)">
-   <img class="spi" src="${SKY}sp-rit-bowl.webp" alt="" style="left:44px;top:${SKC/2-60}px;width:120px;height:144px">${rit}</div>`;
+   <img class="spi" src="${SKY}sp-rit-bowl.webp" alt="" style="left:60px;top:10px;width:130px;height:156px">${rit}</div>`;
 }
-const skRit=(name,desc)=>`${tx('sp-rn',182,96,330,60,name,33)}${tx('sp-rd',566,26,300,SKC-52,desc,32)}`;
+const skRit=(name,desc)=>`${tx('sp-rn',198,96,318,60,name,33)}${tx('sp-rd',566,26,300,SKC-52,desc,32)}`;
 function skLay(t,n,sc,hr,H){
  const ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
  t.style.setProperty('--img',`url(${SKY}${n==='pl'?'pl-bg':'sp-'+n}-${ch}.webp)`);
