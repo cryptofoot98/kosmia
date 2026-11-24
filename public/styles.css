@@ -4048,3 +4048,44 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 .lt-sig{text-align:right;font-style:italic;color:#E9C985}
 .jpath .btn.ghost{width:100%;margin-top:8px}
 .lt-box{padding-bottom:180px!important}
+/* Signs & Synchronicities (interim look until the section's own art is painted): night pages under the life-path sky */
+.mnp.ss .mn-sub{max-width:30ch;margin:0 auto;text-align:center}
+.ss-lead{margin:0 6px;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:1.12rem;line-height:1.4;color:#F1DFB4;text-shadow:0 1px 3px #000}
+.ss-k{margin:6px 4px -8px;font-family:var(--font-display,Cinzel),serif;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#E9C987;text-shadow:0 1px 3px #000}
+.ss-g{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;border:1px solid rgba(233,201,135,.75);background:radial-gradient(circle,rgba(40,48,86,.9),rgba(10,14,32,.95));font-family:var(--font-serif);font-size:1.35rem;font-weight:600;color:#F6E2AE;text-shadow:0 0 8px rgba(240,190,90,.55);box-shadow:0 0 12px rgba(240,190,90,.25)}
+.ss-g.sm{width:44px;height:44px;font-size:1rem}
+.ss-g.lg{width:76px;height:76px;font-size:2rem}
+.ss-door.big{min-height:84px}
+.ss-door.big .ss-g{width:60px;height:60px;font-size:1.55rem}
+.ss-door.big strong{font-size:1.2rem}
+.ss-chips{gap:8px}
+.ss-in{font-size:1.6rem!important;letter-spacing:.2em;text-align:center}
+.mnp.ss .field label i{font-style:italic;font-weight:400;opacity:.8}
+.ss-hero{display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0 2px;text-align:center}
+.ss-num{font-family:var(--font-serif);font-size:4.2rem;line-height:1;letter-spacing:.08em;color:#F8E6B4;text-shadow:0 0 18px rgba(240,190,90,.75),0 2px 4px #000}
+.ss-hero h2{margin:0;font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:1.5rem;color:#F1DFB4;text-shadow:0 1px 3px #000}
+.ss-link{display:flex;flex-direction:column;align-items:center;gap:10px;padding:4px 8px;text-align:center}
+.ss-link p{margin:0;font-family:var(--font-serif);font-style:italic;font-size:1.02rem;color:#F1DFB4;text-shadow:0 1px 3px #000}
+.ss-acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.ss-acts .btn{flex:1 1 140px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.ss-acts .btn svg{width:18px;height:18px}
+.mnp.ss>.muted{color:#E8D9B8;text-shadow:0 1px 3px #000}
+.ss-hero.n{margin-top:clamp(40px,15cqw,64px)}
+.mnp.ssh{gap:10px}
+.mnp.ssh .ss-lead{margin-top:clamp(28px,12cqw,52px)}
+.mnp.ssh .ss-k{margin:4px 4px -2px}
+.mnp.ssh .list{gap:8px}
+@media (max-height:720px){.ss-door.big{min-height:66px}.ss-door.big .ss-g{width:50px;height:50px}.mnp.ssh .ss-door:not(.big){min-height:58px}.mnp.ssh .ss-lead{font-size:1.02rem}}
+.ss-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ss-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px 12px;border:1px solid rgba(233,201,135,.6);border-radius:18px;background:rgba(10,14,32,.72);color:#F1DFB4;text-align:center;cursor:pointer;box-shadow:0 0 18px rgba(240,190,90,.12) inset}
+.ss-tile strong{font-family:var(--font-serif);font-weight:600;font-size:1.15rem;line-height:1.1;color:#F6E2AE}
+.ss-tile span:not(.ss-g){font-family:var(--font-serif);font-size:.86rem;line-height:1.25;color:#E2D3B0}
+.ss-tile .ss-g{width:54px;height:54px;font-size:1.4rem}
+@media (max-height:720px){.ss-tile{padding:10px 8px;gap:4px}.ss-tile .ss-g{width:44px;height:44px;font-size:1.15rem}.mnp.ssh .ss-lead{margin-top:clamp(24px,9cqw,40px)}}
+@media (max-height:640px){.mnp.ssh .ss-lead{font-size:.95rem;margin-top:20px}.ss-tile span:not(.ss-g){font-size:.8rem}}
+.ss-two>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.ss-two .ss-k{margin:2px 2px 0;font-size:.7rem;letter-spacing:.1em;white-space:nowrap}
+.ss-two .ss-tile{flex:1;padding:10px 8px}
+.ss-two .ss-tile .ss-g{width:44px;height:44px;font-size:1.15rem}
+.ss-two .ss-tile strong{font-size:1.05rem}
+@media (max-height:640px){.ss-two .ss-tile span:not(.ss-g){display:none}.ss-two .ss-tile{padding:8px}}

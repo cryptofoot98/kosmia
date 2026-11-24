@@ -200,7 +200,7 @@ const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
- discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
+ discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
@@ -211,7 +211,7 @@ const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the blueprint's five places (Ritual, Sky, Oracle, Calendar, Journal); My Cosmos opens from the round symbol at the top
 const NAV=[{key:'home',label:'Ritual'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'calendar',label:'Calendar'},{key:'journal',label:'Journal'}];
 const CPAGES=['calendar','moon','planets','events'];
-const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
+const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
 // the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
 // numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
 function navCur(){const t=tab();
@@ -222,7 +222,7 @@ function navCur(){const t=tab();
  return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
- 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'tarot/journal','discover/dreams':'tarot/home',
+ 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'tarot/journal','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
@@ -263,7 +263,7 @@ function applyLocation(){
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
  if(sec==='tarot'&&q.k)V.jkey=q.k;
- if(sec==='discover'){if(q.id)V.dreamId=q.id;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
+ if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
 }
 // the query string mirrors the page's own choices, so a forecast, an entry or a month can be shared and reopened
 function viewQuery(){
@@ -271,6 +271,7 @@ function viewQuery(){
  if(V.sec==='horoscope')return t==='sign'?{sign:V.exploreSign||S.sign,period:V.period!=='daily'?V.period:'',cat:V.hcat!=='overview'?V.hcat:''}:{period:V.period!=='daily'?V.period:''};
  if(V.sec==='tarot'&&t==='entry')return {k:V.jkey};
  if(V.sec==='discover'&&t==='dream')return {id:V.dreamId};
+ if(V.sec==='discover'&&(t==='number'||t==='sync-reading'))return {id:V.ssId};
  if(V.sec==='discover'&&t==='calendar')return {view:V.cal.view!=='list'?V.cal.view:'',month:V.cal.month&&V.cal.month!==dkey().slice(0,7)?V.cal.month:''};
  if(V.sec==='discover'&&t==='library')return {lib:V.lib.tab!=='guides'?V.lib.tab:''};
  return {};
@@ -1011,6 +1012,7 @@ function myItems(){
  Object.entries(S.notes).forEach(([d,n])=>add(d,n,'reflection'));
  S.readings.forEach(r=>{add(r.date,r.q,'question');add(r.date,r.note,'reflection')});
  S.bookmarks.forEach(b=>{const d=b.data||{};if(b.kind==='dream')add(d.day||(b.at||'').slice(0,10),d.text,'dream');
+  else if(b.kind==='sign')add(d.day,d.type==='number'?`Noticed the number ${d.number} again${d.context?': '+d.context:''}`:d.text,'sign');
   else if(b.kind==='chat')(d.msgs||[]).filter(m=>m.role==='user').forEach(m=>add((b.at||'').slice(0,10),m.content,'kassandra'));
   else if(b.note)add((b.at||'').slice(0,10),b.note,'reflection')});
  (typeof KS!=='undefined'?KS.msgs:[]).filter(m=>m.role==='user').forEach(m=>add(dkey(),m.content,'kassandra'));
@@ -1028,7 +1030,7 @@ function myPortrait(){
 function myStory(){
  if(!personalOn())return '';
  const k=dkey(),days={},add=(d,s)=>{d=String(d||'').slice(0,10);if(!s||!/^\d{4}-\d\d-\d\d$/.test(d)||d>k||dayGap(d,k)>21)return;(days[d]=days[d]||[]).push(s)};
- const LBL={journal:'Journal page',reflection:'Reflection',question:'Asked the cards',dream:'Dream',kassandra:'Said to Kassandra'};
+ const LBL={sign:'A sign noticed',journal:'Journal page',reflection:'Reflection',question:'Asked the cards',dream:'Dream',kassandra:'Said to Kassandra'};
  myItems().forEach(x=>add(x.day,`${LBL[x.kind]}: “${clip(x.text,x.kind==='journal'?500:300)}”`));
  S.readings.forEach(r=>{const sp=SPREADS[r.spread];if(r.cards&&r.cards.length)add(r.date,`Tarot reading${sp?' ('+sp.n+')':''}: ${r.cards.map(c=>`${c.pos?c.pos+': ':''}${c.name}${c.rev?' reversed':''}`).join(', ')}`)});
  Object.entries(S.days).forEach(([d,id])=>{const c=oc(id);if(c)add(d,`Turned the Whisper card “${c.title}”`)});
@@ -1373,7 +1375,7 @@ function journalPages(){
  const e=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),
   ...wd.map(d=>({t:'n',day:d,n:S.notes[d]||'',o:cardFor(d)})),
   ...S.readings.map(r=>({t:'r',day:r.date,at:r.at,r})),
-  ...S.bookmarks.filter(b=>b.kind!=='chat').map(b=>b.kind==='dream'?{t:'d',day:(b.data||{}).day||kept(b),at:b.at,b,d:b.data||{}}:{t:b.kind==='horoscope'?'h':'e',day:kept(b),at:b.at,b}),
+  ...S.bookmarks.filter(b=>b.kind!=='chat'&&b.kind!=='sign').map(b=>b.kind==='dream'?{t:'d',day:(b.data||{}).day||kept(b),at:b.at,b,d:b.data||{}}:{t:b.kind==='horoscope'?'h':'e',day:kept(b),at:b.at,b}),
   ...S.conns.map(c=>({t:'c',day:kept(c),at:c.at,c}))]
   .sort((a,b)=>a.day>b.day?1:a.day<b.day?-1:((a.at||'')>(b.at||'')?1:-1));
  return [{t:'cover'},...e,{t:'new'}];
@@ -2099,6 +2101,8 @@ const LPX={1:['Courage, originality and the drive to begin what others only imag
  11:['Intuition, inspiration and a sensitivity that lights the way for others.','Nervous tension, self-doubt and feeling the world too keenly.','Ground your visions in daily life; your light is steadiest when you rest.'],
  22:['Vision with the practical power to build it on a grand scale.','Pressure, overwhelm and fear of not living up to the dream.','Build one stone at a time; the great work is made of small, faithful days.'],
  33:['Selfless love, healing and the gift of teaching through example.','Over-responsibility and neglecting your own needs.','Serve from fullness, not depletion; your care heals best when it includes you.']};
+const LPREL={1:'You love with loyalty and fire, and need a partner who respects your independence. Growth comes from letting others lead sometimes.',2:'You are a natural partner: attentive, gentle and devoted. Choose people who meet your care with their own.',3:'You bring lightness and play to love, and need to be heard and enjoyed. Depth grows when you share the quieter feelings too.',4:'You show love through constancy and practical care. You flourish with someone steady, and with room for a little spontaneity.',5:'You need freedom and adventure in love. The right bond feels like an open door, not a cage.',6:'You love by nurturing and making a home of every bond. Let yourself be cared for as well as caring.',7:'You value depth and meaningful connection above all. Trust grows slowly in you, and once given it runs deep.',8:'You love with strength and generosity, and respect a partner with their own purpose. Tenderness matters as much as achievement.',9:'You love widely and compassionately. Your bonds flourish when you also let others give back to you.',11:'You feel others deeply and seek a soul connection. Protect your sensitivity with people who are gentle with it.',22:'You build love like you build everything: to last. Shared vision and steady trust are your foundations.',33:'You love selflessly and heal those around you. Love flows best when it includes yourself.'};
+const LPQ={1:'Where am I being asked to lead my own life more boldly?',2:'Where am I giving more than I let myself receive?',3:'What would I create if no one were watching?',4:'What am I building, and does it still feel like mine?',5:'Where do I need more freedom, and where more roots?',6:'How can I care for myself as I care for others?',7:'What do I already know, deep down, that I have not yet trusted?',8:'What does true abundance look like for me, beyond results?',9:'What am I ready to complete, so that something new can begin?',11:'Which quiet insight am I ready to honour?',22:'What is the first stone of the great work I dream of?',33:'Where can my love heal without depleting me?'};
 function lifePathView(){
  const other=!!V.ns.lp,d=other?V.lpOther:(hasBirthDate()?S.birth.date:''),H=hdr('Life Path',{sub:other?'Another soul’s journey':'Your soul’s journey'});
  const lead='Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.';
@@ -2108,7 +2112,7 @@ function lifePathView(){
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
  return `<div class="sub">${H}${form}
  ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">${other?'Their':'Your'} Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>${soulBlock(L.r.n,other?'':firstOf(S.name||S.fullName),'A message for '+(other?'this path':'you'))}`,'ornate')}
- <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Guidance','How to align with your path',`<p>${X[2]}</p>`)}
+ <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Purpose &amp; Growth','How to align with your path',`<p>${X[2]}</p>`)}${acc(pic('cats','love','acc-i'),'Relationships','How you love and connect',`<p>${LPREL[L.r.n]||LPREL[L.r.n%9||9]}</p>`)}${acc(pic('cats','insights','acc-i'),'Reflection','A question to carry',`<p class="quote">“${LPQ[L.r.n]||LPQ[L.r.n%9||9]}”</p>`)}
  ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
  ${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My cycles</button>'}</div>`;
@@ -2120,8 +2124,8 @@ function nameView(){
  const letters=x=>`<div class="letters">${x.letters.map(l=>`<span class="lt${l.vowel?' v':''}"><b>${l.c}</b><i>${l.v}</i></span>`).join('')}</div>`;
  const one=(x,k)=>x[k]&&x[k].r.n?`<span class="num">${x[k].r.n}</span> <strong>${N.MEANING[x[k].r.n][0]}</strong>`:'';
  const rows=x=>acc(pic('cats','general','acc-i'),'Expression Number',`Your natural abilities and purpose ${one(x,'expression')}`,`${numBlock('Expression (Destiny): who you are becoming',x.expression,true)}<p>${N.MEANING[x.expression.r.n]?N.MEANING[x.expression.r.n][2]:''}</p>`,true)
-  +acc(pic('cats','love','acc-i'),'Soul Urge Number',`Your inner desires ${one(x,'soul')}`,numBlock('Soul Urge: what your heart longs for',x.soul,true))
-  +acc(pic('cats','insights','acc-i'),'Personality Number',`How you show up to the world ${one(x,'personality')}`,numBlock('Personality: how others first meet you',x.personality,true))
+  +acc(pic('cats','love','acc-i'),'Soul Urge Number',`Your inner desires ${one(x,'soul')}`,numBlock('Soul Urge: what your heart longs for',x.soul,true),true)
+  +acc(pic('cats','insights','acc-i'),'Personality Number',`How you show up to the world ${one(x,'personality')}`,numBlock('Personality: how others first meet you',x.personality,true),true)
   +(L&&x.expression.r.n?(()=>{const m=N.reduce(L.r.n+x.expression.r.n);return acc(pic('cats','lifepath','acc-i'),'Maturity Number',`Who you grow into · <span class="num">${m.n}</span>`,`<p>Your Life Path (${L.r.n}) and Expression (${x.expression.r.n}) together: ${L.r.n} + ${x.expression.r.n} = ${L.r.n+x.expression.r.n}${m.chain.length>1?' → '+m.chain.slice(1).join(' → '):''}. <strong>${N.MEANING[m.n][0]}</strong>: ${N.MEANING[m.n][1]}, the qualities that tend to ripen in the second half of life.</p>`)})():'')
   +acc('','Your letters','Vowels are highlighted',letters(x));
  const lead='Your name carries a vibration and a story. Discover what your name reveals about your personality, purpose and life path.';
@@ -2230,6 +2234,8 @@ function journalLib(){
  return `<div class="land jlib jnight skyp pg pg-jn">${bar}${main}</div>`+`${V.letter?moonLetter(V.letter):''}${sheetView()}${V.insPop?`<div class="pop" role="dialog" aria-modal="true" aria-label="Your journal insights" data-act="inspopclose"><div class="pop-box ins-box"><button class="pop-x" data-act="inspopclose" aria-label="Close">×</button><p class="cp-k">Insights &amp; Themes</p><h2 class="center">${firstName()?esc(firstName())+', your words so far':'Your words so far'}</h2>${journalInsights()}</div></div>`:''}`;
 }
 // the sheet that starts a new entry, from any of the things a reflection can belong to
+// Signs & Synchronicities lives in a later block; what earlier code needs of it is reached through here
+const SSX={};
 function sheetView(){
  if(!V.sheet)return '';
  let body='',title=firstName()?`${esc(firstName())}, what will you keep?`:'New Entry';
@@ -2237,8 +2243,14 @@ function sheetView(){
   .map(([i,t,s,k])=>lrow(ui(i,'th'),t,s,`data-act="ne" data-k="${k}"`)).join('');
  if(V.sheet==='event'){title='Cosmic Event';const now=new Date(),m=K.moon(now);
   body=lrow(moonPic(m,'th round'),`${m.name} in ${sIdx(m.sign).name}`,'The Moon tonight','data-act="ne" data-k="moon"')+upcoming().slice(0,8).map(e=>lrow(evArt(e,true),esc(e.name),evWhen(e),`data-act="ne" data-k="ev" data-ref="${evRef(e)}"`)).join('')}
- if(V.sheet==='reading'){title='Tarot Reading';
-  body=S.readings.slice().reverse().slice(0,10).map(r=>lrow(`<span class="fan">${r.cards.slice(0,3).map(x=>pic('deck',x.id,'fan-c'+(x.rev?' rev':''))).join('')}</span>`,esc((SPREADS[r.spread]||{s:r.spread}).s),relDay(r.date),`data-act="jopen" data-k="reading:${esc(r.id)}"`)).join('')+lrow(ui('t-reading','th oval'),'Draw a new reading','Shuffle the deck and choose your cards','data-go="tarot" data-t="reading"')}
+ if(V.sheet==='reading'){title='Your Readings';
+  const all=[...S.readings.map(r=>({at:r.at||r.date,h:lrow(`<span class="fan">${r.cards.slice(0,3).map(x=>pic('deck',x.id,'fan-c'+(x.rev?' rev':''))).join('')}</span>`,esc((SPREADS[r.spread]||{s:r.spread}).s),'Tarot · '+relDay(r.date),`data-act="jopen" data-k="reading:${esc(r.id)}"`)})),
+   ...dreams().map(d=>({at:d.at||d.day,h:lrow(dreamArt(d),esc((d.interp||{}).title||'A Dream'),'Dream · '+relDay(d.day),`data-act="dreamopen" data-id="${esc(d.id)}"`)})),
+   ...(SSX.list?SSX.list():[]).map(d=>({at:d.at||d.day,h:lrow(SSX.glyph(d.type==='number'?esc(d.number.slice(0,4)):'✧','sm'),esc(d.type==='number'?`${d.number} · ${(d.r||{}).title||''}`:(d.r||{}).title||'A Synchronicity'),(d.type==='number'?'Sacred Number · ':'Synchronicity · ')+relDay(d.day),`data-ss="open" data-id="${esc(d.id)}"`)}))]
+   .sort((a,b)=>String(b.at)>String(a.at)?1:-1).slice(0,20);
+  body=all.length?all.map(x=>x.h).join(''):'<p class="muted center">Your readings will be kept here: tarot, dreams, numbers and synchronicities.</p>';
+  body+=lrow(ui('t-reading','th oval'),'Draw a new reading','Shuffle the deck and choose your cards','data-go="tarot" data-t="reading"')}
+ if(0){body=S.readings.slice().reverse().slice(0,10).map(r=>lrow(`<span class="fan">${r.cards.slice(0,3).map(x=>pic('deck',x.id,'fan-c'+(x.rev?' rev':''))).join('')}</span>`,esc((SPREADS[r.spread]||{s:r.spread}).s),relDay(r.date),`data-act="jopen" data-k="reading:${esc(r.id)}"`)).join('')+lrow(ui('t-reading','th oval'),'Draw a new reading','Shuffle the deck and choose your cards','data-go="tarot" data-t="reading"')}
  return `<div class="pop" role="dialog" aria-modal="true" aria-label="${title}" data-act="sheetclose"><div class="pop-box sheet-box"><button class="pop-x" data-act="sheetclose" aria-label="Close">×</button><h2 class="center">${title}</h2><div class="list">${body}</div></div></div>`;
 }
 /* the entry page: what the reflection belongs to above, the writing below with its prompts, and what the day is taken
@@ -2623,9 +2635,9 @@ async function voiceRec(target){
  rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());if(KS.cancel){KS.cancel=false;KS.state='idle';render();return}
   const blob=new Blob(KS.chunks,{type:(rec.mimeType||type||'audio/webm').split(';')[0]});KS.state='processing';render();
   C.transcribe(blob).then(r=>{KS.state='idle';if(!r.text){toast('That was not caught. Try again or type.');return render()}
-   if(target==='dream'){const t=$('#dt');V.dream.text=((t?t.value:V.dream.text)+' '+r.text).trim().slice(0,1000);render()}else kasSend(r.text)},e=>{KS.state='idle';toast(e.message||'Could not hear that. Try typing.');render()})};
+   if(target==='dream'){const t=$('#dt');V.dream.text=((t?t.value:V.dream.text)+' '+r.text).trim().slice(0,1000);render()}else if(target==='sync'){const t=$('#sst'),F=SSX.form();F.text=((t?t.value:F.text)+' '+r.text).trim().slice(0,1200);render()}else kasSend(r.text)},e=>{KS.state='idle';toast(e.message||'Could not hear that. Try typing.');render()})};
  rec.start();render();
- clearTimeout(KS.timer);KS.timer=setTimeout(()=>kasStopRec(false),target==='dream'?90000:45000);
+ clearTimeout(KS.timer);KS.timer=setTimeout(()=>kasStopRec(false),target==='kas'?45000:90000);
 }
 function kasStopRec(cancel){if(KS.rec&&KS.rec.state!=='inactive'){KS.cancel=!!cancel;KS.rec.stop()}KS.rec=null;clearTimeout(KS.timer)}
 
@@ -3133,7 +3145,7 @@ document.addEventListener('click',e=>{
  if(a==='jnew'){const j={id:uuid(),day:dkey(),kind:'reflection',title:myDay().focus,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='ne'){const k=t.dataset.k,today=dkey();V.sheet=null;
   if(k==='card'){if(!S.revealed[today]){toast('Reveal today’s Whisper first');return go('tarot','whisper')}return openEntry('fortune:'+today)}
-  if(k==='reading'){if(!S.readings.length)return go('tarot','reading');V.sheet='reading';return render()}
+  if(k==='reading'){V.sheet='reading';return render()}
   if(k==='horoscope'){const h=horoscope(S.sign,'overview','daily'),ref=`${S.sign}/overview/daily/${h.per.key}`;return openEntry(ensureBook('horoscope',ref,horoData(S.sign,'overview','daily',h.per.key)))}
   if(k==='event'){V.sheet='event';return render()}
   if(k==='moon'){const now=new Date(),ph=K.lunarPhases(new Date(+now-16*DAY),now),e=ph[ph.length-1];if(!e)return;return openEntry(ensureBook('event',evRef(e),evData(e)))}
@@ -3530,7 +3542,7 @@ function skyHome(){
 // width, never stretched. Each thing's place [x, y, w, h] in its own painting
 const ORV={a:{h:1992,l:[212,508],hot:{omens:[60,220,300,350],dreams:[880,230,200,290],conn:[840,570,270,290],read:[50,1430,320,300],tarot:[730,1500,390,230],kas:[440,1345,270,395],me:[1012,96,96,96]}},
  b:{h:2532,l:[212,630],hot:{omens:[60,300,310,400],dreams:[870,350,210,300],conn:[840,710,280,320],read:[50,1800,330,340],tarot:[690,1870,430,250],kas:[420,1830,290,445],me:[1016,128,96,96]}}};
-const ORT={omens:['data-go="discover" data-t="life-path"','Signs and Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="affinity"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
+const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="affinity"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
 function oracleHome(){
  const v=innerHeight/Math.min(innerWidth,520)>1.93?'b':'a',P=ORV[v];
  return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
@@ -3541,6 +3553,249 @@ function oracleHome(){
   <nav class="rit-nav sk0-nav or-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky"></button><button data-nav="tarot" aria-label="Oracle" aria-current="page"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
  </div>${sheetView()}</div>`;
 }
+// ---- Signs & Synchronicities (Oracle): three intentions, four entrances. Interpret: Sacred Numbers and Synchronicities,
+// read by Kassandra when signed in and from Kosmia's own book of signs otherwise. Discover: Patterns, the themes that keep
+// returning across dreams, tarot, signs, the Ritual and the Journal, each with the entries behind it. Understand:
+// Numerology (Life Path and The Name Within). Readings are kept in Your Readings (bookmarks of kind 'sign'); the heart
+// keeps one in the Journal. Signs are offered for reflection, never as predictions or messages that must be obeyed.
+// [id, name, words that bring it to mind, meaning, a question, a phrase for the thread, a gentle action]
+const SS_THEMES=[
+ ['water','Water',/\b(water|sea|ocean|rain\w*|river|lake|swim\w*|waves?|tears?|flood\w*|tide)\b/,'Water often carries emotion, intuition and the need for things to flow.','What feeling is asking to move through me?','emotion and flow','Spend a few quiet minutes near water, even a glass of it, and notice what you feel.'],
+ ['beginnings','New beginnings',/\b(begin\w*|new start|fresh start|new chapter|seeds?|dawn|birth\w*|baby|first step)\b/,'New beginnings speak of intention, possibility and the courage to start.','What is quietly asking to begin in my life?','renewal','Write down one small thing you could begin this week.'],
+ ['lettinggo','Letting go',/\b(let\w* go|releas\w*|forgiv\w*|goodbye|endings?|surrender\w*|move on|moving on)\b/,'Letting go often makes room: an ending honoured so that something new can arrive.','What am I ready to release?','emotional release','Write what you are ready to release on a scrap of paper, and let it go.'],
+ ['love','Love',/\b(love\w*|partner|romance|heart|kiss\w*|soulmate|relationships?)\b/,'Love in its many forms: connection, tenderness and how you give and receive care.','Where am I being invited to open my heart?','love and connection','Send a few kind words to someone you love, without waiting for a reason.'],
+ ['change','Transformation',/\b(chang\w*|transform\w*|shift\w*|butterfl\w*|snakes?|rebirth|reborn)\b/,'Transformation is the old shape giving way to a new one, rarely comfortable and often necessary.','What in me is changing shape?','transformation','Notice one way you are not who you were a year ago, and honour it.'],
+ ['freedom','Freedom',/\b(free\w*|fly\w*|flight|flew|wings?|birds?|travel\w*|escap\w*|journey\w*)\b/,'Freedom points to space, movement and the wish to live more on your own terms.','Where do I long for more space?','freedom','Take a short walk with no destination and let your mind wander.'],
+ ['guidance','Messages & guidance',/\b(feathers?|signs?|messages?|angels?|guid\w*|synchronicit\w*|coinciden\w*)\b/,'Messages and guidance reflect a wish to feel accompanied and to trust your next step.','What guidance have I been hoping to hear?','guidance','Ask yourself tonight what you most need to hear, and write the answer.'],
+ ['intuition','Intuition',/\b(intuit\w*|gut feeling|instinct\w*|dream\w*|moon\w*|knew|knowing|deja vu|déjà vu|owls?)\b/,'Intuition is the quiet knowing beneath thought, often louder in dreams and coincidences.','What does my intuition already know?','intuition','Before your next decision, pause and notice your first, quiet answer.'],
+ ['home','Home & belonging',/\b(home|house|family|mother|mum|mom|father|dad|belong\w*|roots)\b/,'Home and belonging speak of safety, roots and the people who hold you.','Where do I feel most at home?','belonging','Make one corner of your home a little more yours today.'],
+ ['abundance','Abundance',/\b(money|abundan\w*|wealth|prosper\w*|grateful|gratitude|harvest|coins?)\b/,'Abundance is about what you value and what you allow yourself to receive.','What am I ready to receive?','abundance','Name three things you already have that you once wished for.'],
+ ['growth','Growth',/\b(grow\w*|learn\w*|heal\w*|progress\w*|bloom\w*|garden\w*|trees?|patien\w*)\b/,'Growth is slow and faithful: learning, healing and becoming.','What is growing in me, even slowly?','growth','Tend to something living today: a plant, a friendship, or yourself.'],
+ ['balance','Balance',/\b(balanc\w*|calm\w*|peace\w*|rest\w*|harmon\w*|stillness|breath\w*)\b/,'Balance is the return to centre: rest, calm and the harmony between giving and receiving.','What would bring me back to centre?','balance and peace','Take five slow breaths before you next pick up your phone.'],
+ ['light','Light & clarity',/\b(light|sun\w*|clarity|clear\w*|bright\w*|rainbows?|stars?)\b/,'Light and clarity speak of things coming into view and of hope returning.','What is becoming clearer to me?','clarity','Step into the daylight for a few minutes and let it warm your face.'],
+ ['courage','Courage',/\b(courag\w*|brave\w*|fears?|afraid|confiden\w*|strength|strong)\b/,'Courage is not the absence of fear but the step taken with it.','What would I do if I were a little braver?','courage','Take one small step today towards something that frightens you a little.']
+].map(a=>({id:a[0],name:a[1],re:a[2],m:a[3],q:a[4],ph:a[5],act:a[6]}));
+const ssTheme=id=>SS_THEMES.find(x=>x.id===id);
+const ssFind=t=>{const low=String(t||'').toLowerCase();return SS_THEMES.filter(x=>x.re.test(low)).map(x=>x.id)};
+// dream symbols and number roots, each read as one of the themes
+const SS_DT={water:'water',ocean:'water',flying:'freedom',bird:'guidance',snake:'change',death:'lettinggo',baby:'beginnings',door:'beginnings',key:'intuition',house:'home',moon:'intuition',sun:'light',fire:'change',garden:'growth',forest:'growth',money:'abundance',storm:'change',falling:'lettinggo',owl:'intuition',bridge:'change',mountain:'courage',chase:'courage',journey:'freedom',horse:'freedom',wedding:'love',mirror:'intuition',stairs:'growth',lost:'guidance',exam:'courage',teeth:'change',spider:'growth',cat:'intuition',dog:'love'};
+const SS_NT={0:'guidance',1:'beginnings',2:'love',3:'growth',4:'home',5:'change',6:'love',7:'intuition',8:'abundance',9:'lettinggo',11:'intuition',22:'growth',33:'love'};
+// the book of signs: each number's title, symbolism, what it may mean and a question
+const SS_NUM={
+ 0:['The Open Circle','Zero is the circle with no beginning or end: potential, wholeness and the space before something takes form.','It may be inviting you to rest in possibility for a while, rather than rush towards an answer.','What wants to take shape if I give it space?'],
+ 1:['The Beginning of Something New','In numerology, one is associated with beginnings, intention and possibility: the first step, and the self that takes it.','Consider whether something in your life is asking for a fresh perspective or a new beginning.','What would I begin today if I trusted myself a little more?'],
+ 2:['Trust in Timing','Two is the number of partnership, balance and patience: two things meeting and learning to move together.','It may be a gentle reminder that some things grow best with cooperation, and with time.','Where can I trust that things are unfolding at the right pace?'],
+ 3:['The Voice Within','Three is associated with expression, creativity and joy: what is inside finding its way out.','You might be invited to speak, create or share something you have been holding back.','What would I express if I were not afraid of how it sounds?'],
+ 4:['Steady Foundations','Four is the number of structure, stability and care: the four corners of a home, the four seasons.','It may point to the quiet work of building something that lasts, one faithful step at a time.','What foundation am I building, and does it still feel true?'],
+ 5:['Change on the Wind','Five is associated with change, freedom and movement: the restless, curious part of us.','Something may be shifting. Consider where you are ready for more space, or a new direction.','What change am I resisting that might set me free?'],
+ 6:['Care and Harmony','Six is the number of love, home and responsibility: the heart that tends to others.','It may be inviting you to include yourself in the care you give so easily to others.','How can I care for myself as tenderly as I care for others?'],
+ 7:['The Inner Seeker','Seven is associated with reflection, intuition and the search for deeper meaning.','You may be in a season of looking inward. Quiet time could bring the answers you seek.','What does my inner voice already know?'],
+ 8:['Abundance and Flow','Eight is the number of abundance and of balance between giving and receiving: an infinity standing upright.','Consider what you value, and whether you allow yourself to receive as well as to give.','What am I ready to receive?'],
+ 9:['Completion and Release','Nine is the last of the single numbers: completion, compassion and the wisdom of endings.','Something may be coming to a natural close, making room for what comes next.','What am I ready to let go of with grace?'],
+ 11:['The Awakened Light','Eleven is a master number, often linked with intuition, inspiration and moments of sudden awareness.','You may be noticing more than usual. Trust the quiet insights arriving now.','What insight have I been brushing aside?'],
+ 22:['The Master Builder','Twenty-two is a master number, associated with turning a vision into something real and lasting.','It may encourage you to give your dream a practical first step.','Which dream of mine deserves a first practical step?'],
+ 33:['The Healing Heart','Thirty-three is a master number, associated with compassion, teaching and love offered freely.','It may be inviting you to lead with kindness, including towards yourself.','Where can my kindness make a difference today?']};
+const SS_NK={0:'potential',1:'beginnings',2:'partnership',3:'expression',4:'stability',5:'change',6:'care',7:'reflection',8:'abundance',9:'completion'};
+const SS_FREQ=['111','222','333','444','555','11:11','1212'];
+function ssLocalNumber(s){
+ const ds=s.split('').map(Number),tot=ds.reduce((a,b)=>a+b,0),R=N.reduce(tot),root=R.n,B=SS_NUM[root]||SS_NUM[root%9||9];
+ let title=B[0],sym=B[1],mean=B[2],q=B[3],themes=[SS_NT[root]];
+ if(/^(\d)\1+$/.test(s)){const d=ds[0],D=SS_NUM[d];title=D[0];sym=`${D[1]} Seen as ${s}, the ${d} repeats ${s.length} times, which is often read as the same quiet message, amplified.`;mean=D[2];q=D[3];themes=[SS_NT[d]]}
+ else if(s.length>2&&ds.every((d,i)=>!i||d===ds[i-1]+1)){title='Step by Step';sym=`A rising sequence such as ${s} is often read as progress: one step leading naturally to the next.`;mean='It may be a reassurance that you are moving in the right order, even if it feels slow.';q='What is my next simple step?';themes=['growth']}
+ else if(/^(\d\d)\1+$/.test(s)&&ds[0]!==ds[1]){const [a,b]=ds;title=`${cap(SS_NK[a])} and ${SS_NK[b]}`;sym=`${s} weaves ${a} and ${b} together: ${SS_NK[a]} and ${SS_NK[b]}, returning in rhythm. ${SS_NUM[a][1]}`;mean=`${SS_NUM[b][2]}`;q=SS_NUM[a][3];themes=[SS_NT[a],SS_NT[b]]}
+ else if(s.length>2&&s===s.split('').reverse().join('')){title='The Mirror';sym=`${s} reads the same in both directions, so it is often seen as a mirror: what you give returns to you. It reduces to ${root}. ${B[1]}`}
+ else sym=`${s} reduces to ${root} (${ds.join(' + ')} = ${tot}${R.chain.length>1?' → '+R.chain.slice(1).join(' → '):''}). ${B[1]}`;
+ return {title,symbolism:sym,meaning:mean,reflection:q,themes:[...new Set(themes.filter(Boolean))],ai:false};
+}
+// what a coincidence may hold: a few things that often appear, then the feeling it left
+const SS_SYM=[
+ [/\bfeathers?\b/,'A feather is often read as a sign of lightness and protection, a reminder that you are not as alone as you may feel.'],
+ [/\bbutterfl\w*/,'The butterfly is one of the oldest symbols of transformation: something emerging, changed, from a time of waiting.'],
+ [/\bdragonfl\w*/,'The dragonfly, at home in water and air, is often linked with change, lightness and seeing through illusion.'],
+ [/\b(robin|cardinal|birds?|crow|raven|dove)s?\b/,'Birds have long been read as messengers between worlds, carrying hope, news or a reminder of freedom.'],
+ [/\b(song|music|lyrics?|radio)\b/,'A song arriving at just the right moment often carries words you needed to hear.'],
+ [/\b(thinking|thought) (of|about)\b[^.]*\b(call\w*|text\w*|messag\w*|appear\w*|saw|met|ran into)\b|\b(called|texted|messaged) me\b/,'Thinking of someone just before they appear is one of the most common synchronicities, often read as a thread of connection between you.'],
+ [/\b(\d)\1{1,}\b|11:11|\bnumbers?\b/,'Numbers that keep returning are often read as a nudge to pay attention, each carrying its own symbolism.'],
+ [/\b(coin|penny|pennies)\b/,'Finding a coin is often read as a small sign of abundance, or of someone thinking of you.'],
+ [/\brainbows?\b/,'A rainbow appears after rain: hope, promise and the light returning.'],
+ [/\b(deja vu|déjà vu)\b/,'Déjà vu is often read as a moment of alignment, a pause that asks you to notice where you are.'],
+ [/\b(same|again|keeps?|kept|repeat\w*)\b[^.]*\b(word|name|phrase|book|title)s?\b/,'When the same word, name or phrase keeps finding you, it may be a theme asking for your attention.']];
+const SS_FEEL=[['curious','Curious'],['peaceful','Peaceful'],['surprised','Surprised'],['hopeful','Hopeful'],['unsettled','Unsettled'],['confused','Confused']];
+const SS_FEELM={curious:'Your curiosity suggests you are open to what this moment might be showing you. Let the question stay open for a while.',peaceful:'The peace it left with you may be the meaning itself: a moment of feeling held, in step with your life.',surprised:'Surprise wakes us up. This moment may be asking you to look again at something you had stopped noticing.',hopeful:'The hope it stirred is worth trusting. It may point towards something you are ready to welcome.',unsettled:'Feeling unsettled is natural; a coincidence can stir what we have not yet put into words. It does not have to mean anything is wrong.',confused:'Not everything needs an explanation straight away. Let the moment settle, and notice whether it returns.'};
+function ssLocalSync(text,feel){
+ const low=text.toLowerCase(),found=SS_SYM.filter(([re])=>re.test(low)).map(x=>x[1]),themes=ssFind(text).slice(0,3),T=themes.map(ssTheme);
+ const clip=text.length>170?text.slice(0,170).replace(/\s+\S*$/,'')+'…':text;
+ return {title:T[0]?T[0].name:'A Meaningful Moment',moment:`You noticed: “${clip}”${feel?` It left you feeling ${feel.toLowerCase()}.`:''}`,
+  symbolism:found.slice(0,2).join(' ')||'Meaningful coincidences are moments when the outer world seems to echo the inner one. Their meaning lives less in the event itself than in what it stirs in you.',
+  deeper:[feel?SS_FEELM[feel.toLowerCase()]:'',T.length?`It seems to touch on ${T.map(x=>x.ph).join(' and ')}. ${T[0].m}`:'Notice what you were thinking about, or longing for, just before it happened: that is often where its meaning lives.'].filter(Boolean).join(' '),
+  reflection:T[0]?T[0].q:'What did this moment stir in me?',action:T[0]?T[0].act:'Write one line about this moment in your Journal tonight, and notice whether it returns.',themes,ai:false};
+}
+// the readings kept in Your Readings
+const ssList=()=>S.bookmarks.filter(b=>b.kind==='sign').map(b=>b.data||{}).sort((a,b)=>(b.at||'')>(a.at||'')?1:-1);
+const ssGet=id=>ssList().find(d=>d.id===id);
+function ssKeep(d){const b={id:d.id,kind:'sign',ref:d.id,data:d,at:d.at};S.bookmarks.push(b);save();C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{})}
+const ssN=()=>V.ssN||(V.ssN={num:'',ctx:'',busy:false});
+const ssS=()=>V.ssS||(V.ssS={text:'',feel:'',busy:false});
+async function ssReadNumber(){
+ const F=ssN(),i=$('#ssn'),c=$('#ssc');if(i)F.num=i.value;if(c)F.ctx=c.value;
+ const num=F.num.replace(/[^0-9]/g,'').slice(0,12);if(!num){toast('Enter the number you noticed first.');const x=$('#ssn');if(x)x.focus();return}
+ F.busy=true;render();let r=null;
+ if(C.user&&C.signs){try{const x=await C.signs({kind:'number',number:num,context:F.ctx.trim(),themes:SS_THEMES.map(t=>t.id)});if(x&&x.meaning)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'Kassandra could not read this just now, so Kosmia’s book of signs has.')}}
+ const L=ssLocalNumber(num);if(!r)r=L;else if(!(r.themes||[]).length)r.themes=L.themes;
+ const now=new Date().toISOString(),id=uuid();ssKeep({id,type:'number',day:dkey(),at:now,number:num,shown:F.num.trim(),context:F.ctx.trim(),r,themes:r.themes});
+ V.ssN={num:'',ctx:'',busy:false};V.ssId=id;go('discover','number');
+}
+async function ssReadSync(){
+ const F=ssS(),t=$('#sst');if(t)F.text=t.value;const text=F.text.trim();
+ if(text.length<8){toast('Tell a little more about what happened first.');return}
+ F.busy=true;render();let r=null;const feel=(SS_FEEL.find(f=>f[0]===F.feel)||['',''])[1];
+ if(C.user&&C.signs){try{const x=await C.signs({kind:'sync',text,feel,themes:SS_THEMES.map(t=>t.id)});if(x&&x.deeper)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'Kassandra could not read this just now, so Kosmia’s book of signs has.')}}
+ const L=ssLocalSync(text,feel);if(!r)r=L;else if(!(r.themes||[]).length)r.themes=L.themes;
+ const now=new Date().toISOString(),id=uuid();ssKeep({id,type:'sync',day:dkey(),at:now,text,feel,r,themes:r.themes});
+ V.ssS={text:'',feel:'',busy:false};V.ssId=id;go('discover','sync-reading');
+}
+// the heart: the reading written into the Journal, where it can be added to; once kept, it opens the page
+function ssToJournal(d){
+ if(d.kept&&S.journal.some(j=>j.id===d.kept))return openEntry('j:'+d.kept);
+ const r=d.r||{},title=d.type==='number'?`Sacred Number ${d.number} · ${r.title}`:`Synchronicity · ${r.title}`;
+ const body=(d.type==='number'?[d.context&&`What was happening: ${d.context}`,r.symbolism,r.meaning,r.reflection&&`To reflect on: ${r.reflection}`]:[`What happened: ${d.text}`,r.symbolism,r.deeper,r.reflection&&`To reflect on: ${r.reflection}`,r.action&&`A gentle action: ${r.action}`]).filter(Boolean).join('\n\n');
+ const j={id:uuid(),day:d.day||dkey(),kind:'synchronicity',title,body,at:new Date().toISOString()};S.journal.push(j);C.saveJournal&&C.saveJournal(j);
+ d.kept=j.id;const b=S.bookmarks.find(x=>x.kind==='sign'&&x.ref===d.id);if(b)C.saveBookmark&&C.saveBookmark(b);save();toast('Kept in your Journal');render();
+}
+// ---- Patterns: the evidence behind each theme, from every corner of Kosmia
+const SS_SRC={dream:'Dreams',tarot:'Tarot',number:'Sacred Numbers',sync:'Synchronicities',reflection:'Reflections',journal:'Journal'};
+const SS_RIT=/intention|gratitude|reflection|let(ting)? go|wish/i;
+function ssEvidence(){
+ const ev=[],add=(day,text,src,title,open,extra=[])=>{if(!day)return;const t=new Set([...extra.filter(Boolean),...ssFind(text)]);if(t.size)ev.push({day:String(day).slice(0,10),src,title,open,themes:[...t]})};
+ S.journal.filter(j=>j.kind!=='synchronicity').forEach(j=>add(j.day,[j.title,j.body].filter(Boolean).join('. '),SS_RIT.test(j.title||'')?'reflection':'journal',j.title||'A Journal page',`data-act="jopen" data-k="j:${esc(j.id)}"`));
+ Object.entries(S.notes||{}).forEach(([d,n])=>n&&add(d,n,'reflection','Your note on the Whisper',`data-act="jopen" data-k="fortune:${d}"`));
+ dreams().forEach(d=>{const I=d.interp||{};add(d.day,[d.text,I.title].filter(Boolean).join('. '),'dream',I.title||'A Dream',`data-act="dreamopen" data-id="${esc(d.id)}"`,[I.art,...(I.symbols||[]).map(s=>s.id)].map(x=>SS_DT[x]))});
+ S.readings.forEach(r=>add(r.date,[r.q,r.note,...(r.cards||[]).map(c=>{const x=dk(c.id);return x?[x.name,c.rev?x.rev:x.up].join(' '):c.name||''})].filter(Boolean).join('. '),'tarot',`${(SPREADS[r.spread]||{s:'Tarot'}).s} reading`,`data-act="jopen" data-k="reading:${esc(r.id)}"`));
+ ssList().forEach(d=>add(d.day,d.type==='number'?d.context:d.text,d.type,d.type==='number'?`Sacred Number ${d.number}`:(d.r||{}).title||'A Synchronicity',`data-ss="open" data-id="${esc(d.id)}"`,d.themes||[]));
+ return ev;
+}
+const SS_RANGES=[['7','7 days'],['30','30 days'],['all','All time']];
+function ssPatterns(range){
+ const from=range==='all'?'':dkey(new Date(Date.now()-(+range-1)*DAY)),ev=ssEvidence().filter(e=>e.day>=from),out=[];
+ SS_THEMES.forEach(t=>{const it=ev.filter(e=>e.themes.includes(t.id));if(it.length>1)out.push({k:'t:'+t.id,name:t.name,n:it.length,it,t})});
+ const nums={};ssList().filter(d=>d.type==='number'&&d.day>=from).forEach(d=>(nums[d.number]=nums[d.number]||[]).push(d));
+ Object.entries(nums).forEach(([n,l])=>{if(l.length>1)out.push({k:'n:'+n,name:n,num:true,n:l.length,it:l.map(d=>({day:d.day,src:'number',title:`Sacred Number ${n}`,open:`data-ss="open" data-id="${esc(d.id)}"`}))})});
+ out.forEach(p=>{const c={};p.it.forEach(e=>c[e.src]=(c[e.src]||0)+1);p.srcs=Object.entries(c).sort((a,b)=>b[1]-a[1]);p.where=p.srcs.slice(0,2).map(([s],i)=>i?SS_SRC[s].toLowerCase():SS_SRC[s]).join(' & ')});
+ return {ev,list:out.sort((a,b)=>b.n-a.n).slice(0,8)};
+}
+const ssRange=()=>V.ssRange||'30';
+const ssTimes=n=>n===1?'once':n===2?'twice':n+' times';
+// ---- the pages
+const ssGlyph=(g,cls='')=>`<span class="ss-g ${cls}" aria-hidden="true">${g}</span>`;
+const ssHead=(k)=>`<p class="ss-k">${k}</p>`;
+const ssDoor=(g,title,line,attrs,cls='')=>`<button class="lrow ss-door ${cls}" ${attrs}><span class="lr-i">${ssGlyph(g)}</span><span class="lr-t"><strong>${title}</strong><span>${line}</span></span><span class="lr-c">${IC.chev}</span></button>`;
+const ssTile=(g,title,line,attrs)=>`<button class="ss-tile" ${attrs}>${ssGlyph(g)}<strong>${title}</strong><span>${line}</span></button>`;
+function ssHome(){
+ return nightSub(`<div class="sub">${hdr('Signs &amp; Synchronicities',{sub:'Discover the meaning woven into everyday life.'})}
+ <p class="ss-lead">Sometimes, the smallest things invite us to look a little deeper.</p>
+ ${ssHead('What have you noticed?')}<div class="ss-pair">${ssTile('11','Sacred Numbers','Explore the numbers you keep seeing.','data-go="discover" data-t="numbers"')}${ssTile('✧','Synchronicities','Explore meaningful coincidences.','data-go="discover" data-t="sync"')}</div>
+ <div class="ss-pair ss-two"><div>${ssHead('What keeps returning?')}${ssTile('⁂','Patterns','Discover what keeps returning.','data-go="discover" data-t="patterns"')}</div>
+ <div>${ssHead('What lies within?')}${ssTile('9','Numerology','Discover the numbers within you.','data-go="discover" data-t="numerology"')}</div></div></div>`,'dj ss ssh');
+}
+function ssNumbersView(){
+ const F=ssN();
+ if(F.busy)return `<div class="sub">${hdr('Sacred Numbers')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Kassandra is reading your number…</p></div></div>`;
+ const recent=ssList().filter(d=>d.type==='number').slice(0,3);
+ return nightSub(`<div class="sub">${hdr('Sacred Numbers',{sub:'What number has been finding its way into your day?'})}
+ <div class="field"><label for="ssn">The number you noticed</label><input type="text" id="ssn" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="111" value="${esc(F.num)}" class="ss-in"></div>
+ ${ssHead('Frequently explored')}<div class="fchips ss-chips">${SS_FREQ.map(n=>`<button class="fchip" data-ss="num" data-v="${n}" aria-pressed="${F.num===n}">${n}</button>`).join('')}</div>
+ <div class="field"><label for="ssc">What was happening when you noticed it? <i>(Optional)</i></label><textarea id="ssc" maxlength="400" rows="3" placeholder="A thought, a place, a feeling…">${esc(F.ctx)}</textarea></div>
+ <button class="btn" data-ss="numgo">Reveal Its Meaning</button>
+ ${recent.length?`${ssHead('Recently explored')}<div class="list">${recent.map(ssRow).join('')}</div>`:''}</div>`,'dj ss');
+}
+function ssSyncView(){
+ const F=ssS(),rec=KS.state!=='idle'&&KS.target==='sync';
+ if(F.busy)return `<div class="sub">${hdr('Synchronicities')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Kassandra is listening to your moment…</p></div></div>`;
+ const recent=ssList().filter(d=>d.type==='sync').slice(0,3);
+ return nightSub(`<div class="sub">${hdr('Synchronicities',{sub:'Not everything needs an explanation. Some moments simply invite reflection.'})}
+ <div class="field"><label for="sst">What happened?</label><textarea id="sst" maxlength="1200" rows="6" placeholder="A feather on your doorstep, a song at the right moment, someone calling just as you thought of them…">${esc(F.text)}</textarea></div>
+ <div class="list"><button class="lrow" data-ss="mic"><span class="lr-i ico">${IC.mic}</span><span class="lr-t"><strong>${rec?(KS.state==='listening'?'Listening… tap to finish':'Hearing you…'):'Tell it by voice'}</strong><span>${C.user?'Speak, and it is written down for you':'Sign in to describe it by voice'}</span></span><span class="lr-c">${IC.chev}</span></button></div>
+ ${ssHead('How did it make you feel? (Optional)')}<div class="fchips ss-chips">${SS_FEEL.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.feel===k}" data-ss="feel" data-v="${k}">${l}</button>`).join('')}</div>
+ <button class="btn" data-ss="syncgo">Explore Its Meaning</button>
+ ${recent.length?`${ssHead('Recent moments')}<div class="list">${recent.map(ssRow).join('')}</div>`:''}</div>`,'dj ss');
+}
+const ssRow=d=>lrow(ssGlyph(d.type==='number'?esc(d.number.length>4?d.number.slice(0,4)+'…':d.number):'✧','sm'),esc(d.type==='number'?`${d.number} · ${(d.r||{}).title||''}`:(d.r||{}).title||'A Synchronicity'),relDay(d.day),`data-ss="open" data-id="${esc(d.id)}"`);
+function ssReadActs(d){
+ const kept=d.kept&&S.journal.some(j=>j.id===d.kept);
+ return `<div class="ss-acts"><button class="btn${kept?' ghost':''}" data-ss="keep" data-id="${esc(d.id)}" style="--fill:${kept?'currentColor':'none'}">${IC.heart} ${kept?'In your Journal':'Save to Journal'}</button><button class="btn ghost" data-act="sheet" data-k="reading">Your Readings</button></div>
+ <p class="muted small center">${(d.r||{}).ai?'Read by Kassandra with AI. ':'Read from Kosmia’s book of signs. '}Kept in Your Readings. Signs are offered for reflection, not as predictions.</p>`;
+}
+function ssNumberReading(){
+ const d=ssGet(V.ssId||(V.q||{}).id);if(!d||d.type!=='number')return `<div class="sub">${hdr('Sacred Numbers')}${empty('This reading is no longer here','It may have been removed on another device.',linkBtn('Explore a number','discover','numbers','btn'))}</div>`;
+ const r=d.r||{},since=dkey(new Date(Date.now()-29*DAY)),seen=ssList().filter(x=>x.type==='number'&&x.number===d.number&&x.day>=since).length;
+ return nightSub(`<div class="sub">${hdr('Sacred Numbers',{sub:ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'})})}
+ <div class="ss-hero n"><div class="ss-num" aria-label="${esc(d.number)}">${esc(d.number).split('').join(' ')}</div><h2>${esc(r.title||'')}</h2></div>
+ ${mbox(`<h3>The Symbolism</h3><p>${esc(r.symbolism||'')}</p>`)}
+ ${mbox(`<h3>What It May Mean for You</h3><p>${esc(r.meaning||'')}</p>${d.context?`<p class="muted small">You noticed it when: ${esc(d.context)}</p>`:''}`)}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(r.reflection||'')}”</p>`)}
+ ${seen>1?`<div class="ss-link"><p>You have explored this number ${ssTimes(seen)} recently. Discover how it connects with other themes in your journey.</p><button class="btn ghost" data-go="discover" data-t="patterns">Explore Your Patterns</button></div>`:''}
+ ${ssReadActs(d)}</div>`,'dj ss');
+}
+function ssSyncReading(){
+ const d=ssGet(V.ssId||(V.q||{}).id);if(!d||d.type!=='sync')return `<div class="sub">${hdr('Synchronicities')}${empty('This reading is no longer here','It may have been removed on another device.',linkBtn('Share a moment','discover','sync','btn'))}</div>`;
+ const r=d.r||{};
+ return nightSub(`<div class="sub">${hdr('Synchronicities',{sub:ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'})})}
+ <div class="ss-hero">${ssGlyph('✧','lg')}<h2>${esc(r.title||'A Meaningful Moment')}</h2></div>
+ ${mbox(`<h3>The Moment</h3><p>${esc(r.moment||'')}</p>`)}
+ ${mbox(`<h3>The Symbolism</h3><p>${esc(r.symbolism||'')}</p>`)}
+ ${mbox(`<h3>A Deeper Meaning</h3>${paras(r.deeper)}`)}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(r.reflection||'')}”</p>`)}
+ ${r.action?mbox(`<h3>A Gentle Action</h3><p>${esc(r.action)}</p>`):''}
+ ${(d.themes||[]).length?`<div class="ss-link"><p>This moment touches ${d.themes.map(ssTheme).filter(Boolean).map(t=>t.name.toLowerCase()).join(' and ')}. See where else it appears in your journey.</p><button class="btn ghost" data-go="discover" data-t="patterns">Explore Your Patterns</button></div>`:''}
+ ${ssReadActs(d)}</div>`,'dj ss');
+}
+const ssRangeBar=()=>`<div class="fchips ss-chips ss-range" role="radiogroup" aria-label="Time">${SS_RANGES.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${ssRange()===k}" data-ss="range" data-v="${k}">${l}</button>`).join('')}</div>`;
+function ssPatternsView(){
+ const R=ssRange(),{list}=ssPatterns(R),T=list.filter(p=>p.t).slice(0,3);
+ let thread='';
+ if(T.length>1)thread=`Themes of ${T[0].t.ph} and ${T[1].t.ph} have appeared across several of your ${R==='all'?'':'recent '}experiences. You may find it meaningful to ask yourself: “${T[0].t.q}”`;
+ else if(T.length)thread=`${T[0].name} has appeared ${ssTimes(T[0].n)}, in your ${T[0].where.toLowerCase()}. ${T[0].t.m} You may find it meaningful to ask yourself: “${T[0].t.q}”`;
+ return nightSub(`<div class="sub">${hdr('Patterns',{sub:'The invisible threads woven through your journey.'})}
+ ${ssRangeBar()}
+ ${list.length?`${ssHead('Your recurring themes')}<div class="list">${list.map(p=>lrow(ssGlyph(p.num?esc(p.name.length>4?p.name.slice(0,4)+'…':p.name):'⁂','sm'),esc(p.name),esc(p.where),`data-ss="pat" data-k="${esc(p.k)}"`,`<span class="lr-m">${ssTimes(p.n)}</span>`)).join('')}</div>
+ ${thread?mbox(`<h3>The Thread Connecting Them</h3><p>${esc(thread)}</p>`):''}`
+ :mbox(`<h3>Every journey begins with a single thread</h3><p>As you record your dreams, signs and reflections, your recurring themes will begin to unfold here.</p><div class="ss-acts"><button class="btn ghost" data-go="discover" data-t="numbers">A number</button><button class="btn ghost" data-go="discover" data-t="new-dream">A dream</button><button class="btn ghost" data-go="discover" data-t="sync">A moment</button></div>`)}
+ <p class="muted small center">Patterns are found in what you have kept in Kosmia, on this device and in your account. Nothing is invented.</p></div>`,'dj ss');
+}
+function ssPatternView(){
+ const R=ssRange(),{list}=ssPatterns(R),p=list.find(x=>x.k===V.ssPat)||ssPatterns('all').list.find(x=>x.k===V.ssPat);
+ if(!p)return `<div class="sub">${hdr('Patterns')}${empty('This thread has faded for now','It may appear again as you keep exploring.',linkBtn('Your Patterns','discover','patterns','btn'))}</div>`;
+ const t=p.t,nm=p.num?SS_NUM[N.reduce(p.name.split('').reduce((a,b)=>a+ +b,0)).n]:null;
+ const items=p.it.slice().sort((a,b)=>a.day>b.day?1:-1);
+ return nightSub(`<div class="sub">${hdr(esc(p.name),{sub:`Appeared ${ssTimes(p.n)}${R==='all'?'':' in the last '+R+' days'}`})}
+ ${mbox(`<h3>Where It Appeared</h3><div class="pills">${p.srcs.map(([s,n])=>`<span class="pill">${SS_SRC[s]} <b>${n}</b></span>`).join('')}</div>`)}
+ ${mbox(`<h3>What It May Mean</h3><p>${esc(t?t.m:(nm?nm[1]:''))}</p>`)}
+ ${ssHead('Its thread through your journey')}<div class="list">${items.map(e=>lrow('',esc(e.title),`${SS_SRC[e.src]} · ${relDay(e.day)}`,e.open)).join('')}</div>
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(t?t.q:(nm?nm[3]:''))}”</p>`)}</div>`,'dj ss');
+}
+function ssNumerologyView(){
+ const bd=hasBirthDate()?S.birth.date:'',L=bd?N.lifePath(bd).r.n:0,nm=nameNums(S.fullName),E=nm&&nm.expression.r.n;
+ return nightSub(`<div class="sub">${hdr('Numerology',{sub:'The hidden symbolism of your birth and name.'})}
+ <div class="list">${ssDoor(L||'✶','Life Path',L?`${L} · ${N.MEANING[L][0]}. The symbolic journey revealed through your date of birth.`:'The symbolic journey revealed through your date of birth.','data-go="discover" data-t="life-path"','big')}
+ ${ssDoor(E||'✶','The Name Within',E?`${E} · ${N.MEANING[E][0]}. The qualities, desires and expression in your name.`:'Explore the qualities, desires and expression associated with your name.','data-go="discover" data-t="name-within"','big')}</div>
+ <p class="muted small center">${L?'Calculated from your birth date':'Add your birth date to your Cosmic Profile to reveal your Life Path'}${E?' and your full birth name.':'; the Name Within reads your full birth name.'}</p></div>`,'dj ss');
+}
+{const SSV={signs:ssHome,numbers:ssNumbersView,number:ssNumberReading,sync:ssSyncView,'sync-reading':ssSyncReading,patterns:ssPatternsView,pattern:ssPatternView,numerology:ssNumerologyView};
+ const vd=views.discover;views.discover=()=>SSV[tab()]?SSV[tab()]():vd()}
+Object.assign(SSX,{list:ssList,glyph:ssGlyph,form:ssS});
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='ssn'){const v=t.value.replace(/[^0-9:]/g,'');if(v!==t.value)t.value=v;ssN().num=v}else if(t.id==='ssc')ssN().ctx=t.value;else if(t.id==='sst')ssS().text=t.value});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-ss]');if(!t)return;const a=t.dataset.ss;
+ if(a==='num'){ssN().num=t.dataset.v;return render()}
+ if(a==='numgo')return ssReadNumber();
+ if(a==='feel'){const F=ssS();F.feel=F.feel===t.dataset.v?'':t.dataset.v;return render()}
+ if(a==='syncgo')return ssReadSync();
+ if(a==='mic'){if(!C.user)return toast('Sign in to describe it by voice');const x=$('#sst');if(x)ssS().text=x.value;return voiceRec('sync')}
+ if(a==='open'){const d=ssGet(t.dataset.id);if(!d)return;V.sheet=null;V.ssId=d.id;return go('discover',d.type==='number'?'number':'sync-reading')}
+ if(a==='keep'){const d=ssGet(t.dataset.id);if(d)ssToJournal(d);return}
+ if(a==='range'){V.ssRange=t.dataset.v;return render()}
+ if(a==='pat'){V.ssPat=t.dataset.k;return go('discover','pattern')}
+});
 // ---- the Moon and the Sun, each a full-screen page painted from the user's pictures; the words are today's sky ----
 // the hemisphere follows where the phone is: its time zone (set by the phone from its location) and the latitude the
 // IANA time zone database gives that zone; every zone south of the equator is listed
