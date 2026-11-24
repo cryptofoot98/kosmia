@@ -230,10 +230,8 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 /* Oracle: the painting, its frame on the screen's edges, the bar */
 body:has(.or0) #nav{display:none!important}
 body:has(.or0){overflow:hidden}
-#app .or-sc{position:absolute;left:0;top:0;width:850px;height:1850px;transform:translateX(var(--oox,0px)) scale(var(--osx,.45),var(--osy,.45));transform-origin:0 0}
+#app .or-sc{position:absolute;left:0;top:0;width:1170px;transform:scale(var(--os,.333));transform-origin:0 0}
 #app .or-sc>*{position:absolute}
-#app .or-bg{left:-120px;top:0;width:1090px;height:1850px;pointer-events:none}
-#app .or-l{transform:translateX(-50%);white-space:nowrap;font:italic 500 41px/1 'Cormorant Garamond',Georgia,serif;color:#F6E6C4;letter-spacing:.01em;text-shadow:0 0 12px rgba(245,190,110,.55),0 0 3px rgba(255,225,170,.6),0 1px 2px rgba(6,8,24,.8);pointer-events:none}
-#app .or-fr{position:absolute;inset:0;border-style:solid;border-width:calc(118px*var(--osy,.45)) calc(118px*var(--osx,.45));border-image:url(/art/sky/or-frame.webp) 118 stretch;pointer-events:none}
-#app .or-orn{position:absolute;left:50%;top:0;width:calc(106px*var(--osx,.45));height:calc(40px*var(--osy,.45));transform:translateX(-50%);pointer-events:none}
+#app .or-bg{left:0;top:0;width:1170px;pointer-events:none}
+#app .or-l{transform:translate(-50%,-50%);white-space:nowrap;font:italic 500 58px/1 'Cormorant Garamond',Georgia,serif;color:#F6E6C4;letter-spacing:.01em;text-shadow:0 0 14px rgba(245,190,110,.55),0 0 4px rgba(255,225,170,.6),0 1px 2px rgba(6,8,24,.8);pointer-events:none}
 #app .or-nav{background-image:url(/art/sky/or-nav.webp)}

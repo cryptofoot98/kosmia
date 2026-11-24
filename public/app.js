@@ -3394,8 +3394,7 @@ function fit(){
  const s=Math.max(W/1024,(H-nh+24)/2032);
  r.setProperty('--rw',W+'px');r.setProperty('--rs',s);r.setProperty('--rx',(W-1024*s)/2+'px');r.setProperty('--rnh',nh+'px');
  r.setProperty('--pw',W+'px');
- const o=document.querySelector('.or0');if(o){const s0=W/850,need=(H-nh*.92)/ORH,sy=Math.min(s0,need),sx=need>=s0?s0:Math.min(s0,need/.9);
-  o.style.setProperty('--osx',sx);o.style.setProperty('--osy',sy);o.style.setProperty('--oox',(W-850*sx)/2+'px')}
+ const o=document.querySelector('.or0');if(o){const v=H/W>1.93?'b':'a',img=o.querySelector('.or-bg');if(img&&!img.src.endsWith('or-'+v+'.webp'))return render();o.style.setProperty('--os',W/1170)}
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
   let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
   if(id==='rtu'||id==='rtq'){const n=id==='rtu'?'u':'q',L=UQL[n],hs=Object.keys(L.v).map(Number);ch=hs.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
@@ -3527,21 +3526,18 @@ function skyHome(){
 // is Omens (signs, numbers and synchronicities), the Moon Dreams, the doves Connections, the book Your Readings, the
 // cards Tarot and the crystal ball Kassandra. The painting is laid out in its own 850-wide units; a short screen narrows
 // it a little and squeezes it very slightly, its edges melting into the frame's shadow, so all of it stays above the bar
-const ORH=1685;
+// two paintings of the one scene, each 1170 wide: A for shorter screens, B for full-height ones; shown at the screen's
+// width, never stretched. Each thing's place [x, y, w, h] in its own painting
+const ORV={a:{h:1992,l:[212,522],hot:{omens:[60,220,300,350],dreams:[880,230,200,290],conn:[840,570,270,290],read:[50,1430,320,300],tarot:[730,1500,390,230],kas:[440,1530,270,350],back:[62,96,96,96],me:[1012,96,96,96]}},
+ b:{h:2532,l:[212,643],hot:{omens:[60,300,310,400],dreams:[870,350,210,300],conn:[840,710,280,320],read:[50,1800,330,340],tarot:[690,1870,430,250],kas:[420,1940,290,440],back:[56,128,96,96],me:[1016,128,96,96]}}};
+const ORT={omens:['data-go="discover" data-t="life-path"','Omens: signs, numbers and synchronicities'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="affinity"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],back:['data-nav="home"','Back to the Ritual'],me:['data-go="you"','My Cosmos']};
 function oracleHome(){
- const hot=(x,y,w,h,at,l,r)=>`<button class="rit-hot" ${at} aria-label="${l}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r?'50%':'40px'}"></button>`;
+ const v=innerHeight/Math.min(innerWidth,520)>1.93?'b':'a',P=ORV[v];
  return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
-  <div class="or-sc"><img class="or-bg" src="${SKY}or-body.webp" alt="">
-   <span class="or-l" style="left:152px;top:376px">Omens</span>
-   ${hot(36,140,232,300,'data-go="discover" data-t="life-path"','Omens: signs, numbers and synchronicities')}
-   ${hot(615,215,200,215,'data-go="discover" data-t="dreams"','Dreams')}
-   ${hot(605,460,210,215,'data-go="discover" data-t="affinity"','Connections')}
-   ${hot(48,1245,236,250,'data-act="sheet" data-k="reading"','Your Readings')}
-   ${hot(458,1282,350,190,'data-go="tarot" data-t="spreads"','Tarot')}
-   ${hot(306,1385,218,292,'data-act="kasgo"','Kassandra')}
-   ${hot(28,79,88,88,'data-nav="home"','Back to the Ritual',1)}${hot(734,79,88,88,'data-go="you"','My Cosmos',1)}
+  <div class="or-sc" style="height:${P.h}px"><img class="or-bg" src="${SKY}or-${v}.webp" alt="" style="height:${P.h}px">
+   <span class="or-l" style="left:${P.l[0]}px;top:${P.l[1]}px">Omens</span>
+   ${Object.entries(P.hot).map(([k,[x,y,w,h]])=>`<button class="rit-hot" ${ORT[k][0]} aria-label="${ORT[k][1]}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${k==='back'||k==='me'?'50%':'48px'}"></button>`).join('')}
   </div>
-  <div class="or-fr"></div><img class="or-orn" src="${SKY}or-orn.webp" alt="">
   <nav class="rit-nav sk0-nav or-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky"></button><button data-nav="tarot" aria-label="Oracle" aria-current="page"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
  </div>${sheetView()}</div>`;
 }
