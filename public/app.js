@@ -200,7 +200,7 @@ const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
- discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
+ discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['readings','Your Readings'],['saved','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
@@ -211,7 +211,7 @@ const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the blueprint's five places (Ritual, Sky, Oracle, Calendar, Journal); My Cosmos opens from the round symbol at the top
 const NAV=[{key:'home',label:'Ritual'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'calendar',label:'Calendar'},{key:'journal',label:'Journal'}];
 const CPAGES=['calendar','moon','planets','events'];
-const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','dream-journal','dream-patterns','connections','affinity','insights','synastry','people','person','conn-reading','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
+const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['readings','saved','dreams','new-dream','dream','dream-journal','dream-patterns','connections','affinity','insights','synastry','people','person','conn-reading','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
 // the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
 // numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
 function navCur(){const t=tab();
@@ -222,7 +222,7 @@ function navCur(){const t=tab();
  return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
- 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/connections':'tarot/home','discover/affinity':'discover/connections','discover/insights':'discover/connections','discover/synastry':'discover/connections','discover/people':'discover/connections','discover/person':'discover/people','discover/conn-reading':'discover/connections','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
+ 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/connections':'tarot/home','discover/readings':'tarot/home','discover/saved':'discover/readings','tarot/reading':'tarot/spreads','discover/affinity':'discover/connections','discover/insights':'discover/connections','discover/synastry':'discover/connections','discover/people':'discover/connections','discover/person':'discover/people','discover/conn-reading':'discover/connections','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
@@ -263,7 +263,7 @@ function applyLocation(){
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
  if(sec==='tarot'&&q.k)V.jkey=q.k;
- if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.id)V.cnId=q.id;if(q.p)V.cnPid=q.p;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
+ if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.id)V.cnId=q.id;if(q.p)V.cnPid=q.p;if(q.r)V.rk=q.r;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
 }
 // the query string mirrors the page's own choices, so a forecast, an entry or a month can be shared and reopened
 function viewQuery(){
@@ -274,6 +274,7 @@ function viewQuery(){
  if(V.sec==='discover'&&(t==='number'||t==='sync-reading'))return {id:V.ssId};
  if(V.sec==='discover'&&t==='pattern')return {k:V.ssPat};
  if(V.sec==='discover'&&t==='conn-reading')return {id:V.cnId};
+ if(V.sec==='discover'&&t==='saved')return {r:V.rk};
  if(V.sec==='discover'&&t==='person')return {p:V.cnPid};
  if(V.sec==='discover'&&t==='calendar')return {view:V.cal.view!=='list'?V.cal.view:'',month:V.cal.month&&V.cal.month!==dkey().slice(0,7)?V.cal.month:''};
  if(V.sec==='discover'&&t==='library')return {lib:V.lib.tab!=='guides'?V.lib.tab:''};
@@ -1378,7 +1379,7 @@ function journalPages(){
  const e=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),
   ...wd.map(d=>({t:'n',day:d,n:S.notes[d]||'',o:cardFor(d)})),
   ...S.readings.map(r=>({t:'r',day:r.date,at:r.at,r})),
-  ...S.bookmarks.filter(b=>!['chat','sign','person','conn'].includes(b.kind)).map(b=>b.kind==='dream'?{t:'d',day:(b.data||{}).day||kept(b),at:b.at,b,d:b.data||{}}:{t:b.kind==='horoscope'?'h':'e',day:kept(b),at:b.at,b}),
+  ...S.bookmarks.filter(b=>!['chat','sign','person','conn','tarot','rmeta'].includes(b.kind)).map(b=>b.kind==='dream'?{t:'d',day:(b.data||{}).day||kept(b),at:b.at,b,d:b.data||{}}:{t:b.kind==='horoscope'?'h':'e',day:kept(b),at:b.at,b}),
   ...S.conns.map(c=>({t:'c',day:kept(c),at:c.at,c}))]
   .sort((a,b)=>a.day>b.day?1:a.day<b.day?-1:((a.at||'')>(b.at||'')?1:-1));
  return [{t:'cover'},...e,{t:'new'}];
@@ -2118,7 +2119,7 @@ function lifePathView(){
  <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Purpose &amp; Growth','How to align with your path',`<p>${X[2]}</p>`)}${acc(pic('cats','love','acc-i'),'Relationships','How you love and connect',`<p>${LPREL[L.r.n]||LPREL[L.r.n%9||9]}</p>`)}${acc(pic('cats','insights','acc-i'),'Reflection','A question to carry',`<p class="quote">“${LPQ[L.r.n]||LPQ[L.r.n%9||9]}”</p>`)}
  ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
- ${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My cycles</button>'}</div>`;
+ ${other?'':'<button class="btn ghost" data-ss="savelp">Save to Your Readings</button>'}${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My cycles</button>'}</div>`;
 }
 /* The Name Within: the numbers in a full birth name, each an expandable reading with its working */
 function nameView(){
@@ -2141,7 +2142,7 @@ function nameView(){
  <div class="list">${rows(nm)}</div>
  ${alt?`<h3 class="sec-h">The name you use now</h3><div class="list">${rows(alt)}</div><p class="muted small">Your birth name is read as the blueprint you arrived with; the name you use now as the way you have chosen to express it.</p>`:''}
  ${acc('','The Pythagorean letter table','How each letter is counted',`${tbl}<p class="muted small">Accents are ignored (É counts as E), as are hyphens, apostrophes and spaces. Each word of a name is reduced on its own, then the words are added and reduced again, keeping master numbers 11, 22 and 33.</p>`)}
- ${nsBtn('nw')}${other?mineBtn('nw',!!nameNums(S.fullName)):''}</div>`;
+ ${other?'':'<button class="btn ghost" data-ss="savenw">Save to Your Readings</button>'}${nsBtn('nw')}${other?mineBtn('nw',!!nameNums(S.fullName)):''}</div>`;
 }
 /* Cosmic Calendar: a month of the sky, each event with its picture, its words and, when opened, its astronomy and meaning */
 function calendarView(){
@@ -3551,7 +3552,7 @@ function skyHome(){
 // width, never stretched. Each thing's place [x, y, w, h] in its own painting
 const ORV={a:{h:1992,l:[212,508],hot:{omens:[60,220,300,350],dreams:[880,230,200,290],conn:[840,570,270,290],read:[50,1430,320,300],tarot:[730,1500,390,230],kas:[440,1345,270,395],me:[1012,96,96,96]}},
  b:{h:2532,l:[212,630],hot:{omens:[60,300,310,400],dreams:[870,350,210,300],conn:[840,710,280,320],read:[50,1800,330,340],tarot:[690,1870,430,250],kas:[420,1830,290,445],me:[1016,128,96,96]}}};
-const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="connections"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
+const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="connections"','Connections'],read:['data-go="discover" data-t="readings"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
 function oracleHome(){
  const v=innerHeight/Math.min(innerWidth,520)>1.93?'b':'a',P=ORV[v];
  return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
@@ -3640,8 +3641,9 @@ function ssLocalSync(text,feel){
   reflection:T[0]?T[0].q:'What did this moment stir in me?',action:T[0]?T[0].act:'Write one line about this moment in your Journal tonight, and notice whether it returns.',themes,ai:false};
 }
 // the readings kept in Your Readings
-const ssList=()=>S.bookmarks.filter(b=>b.kind==='sign').map(b=>b.data||{}).sort((a,b)=>(b.at||'')>(a.at||'')?1:-1);
+const ssList=()=>S.bookmarks.filter(b=>b.kind==='sign').map(b=>b.data||{}).filter(d=>d.type==='number'||d.type==='sync').sort((a,b)=>(b.at||'')>(a.at||'')?1:-1);
 const ssGet=id=>ssList().find(d=>d.id===id);
+function ssKeepSnap(o){const d=Object.assign({id:uuid(),day:dkey(),at:new Date().toISOString()},o);ssKeep(d);toast('Saved to Your Readings')}
 function ssKeep(d){const b={id:d.id,kind:'sign',ref:d.id,data:d,at:d.at};S.bookmarks.push(b);save();C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{})}
 const ssN=()=>V.ssN||(V.ssN={num:'',ctx:'',busy:false});
 const ssS=()=>V.ssS||(V.ssS={text:'',feel:'',busy:false});
@@ -3679,8 +3681,9 @@ function ssEvidence(){
  S.journal.filter(j=>j.kind!=='synchronicity').forEach(j=>add(j.day,[j.title,j.body].filter(Boolean).join('. '),SS_RIT.test(j.title||'')?'reflection':'journal',j.title||'A Journal page',`data-act="jopen" data-k="j:${esc(j.id)}"`));
  Object.entries(S.notes||{}).forEach(([d,n])=>n&&add(d,n,'reflection','Your note on the Whisper',`data-act="jopen" data-k="fortune:${d}"`));
  dreams().filter(d=>!d.noPat).forEach(d=>{const I=d.interp||{};add(d.day,[d.text,I.title].filter(Boolean).join('. '),'dream',I.title||'A Dream',`data-act="dreamopen" data-id="${esc(d.id)}"`,[I.art,...(I.symbols||[]).map(s=>s.id)].map(x=>SS_DT[x]))});
- S.readings.forEach(r=>add(r.date,[r.q,r.note,...(r.cards||[]).map(c=>{const x=dk(c.id);return x?[x.name,c.rev?x.rev:x.up].join(' '):c.name||''})].filter(Boolean).join('. '),'tarot',`${(SPREADS[r.spread]||{s:'Tarot'}).s} reading`,`data-act="jopen" data-k="reading:${esc(r.id)}"`));
- ssList().forEach(d=>add(d.day,d.type==='number'?d.context:d.text,d.type,d.type==='number'?`Sacred Number ${d.number}`:(d.r||{}).title||'A Synchronicity',`data-ss="open" data-id="${esc(d.id)}"`,d.themes||[]));
+ S.bookmarks.filter(b=>b.kind==='tarot').map(b=>b.data||{}).filter(d=>!(SSX.noPat&&SSX.noPat('tarot:'+d.id))).forEach(d=>add(d.day,[d.q,(d.cards||[]).map(c=>{const x=dk(c.id)||{};return [x.name,c.rv?x.rev:x.up].join(' ')}).join('. ')].join('. '),'tarot',(d.r||{}).title||'A tarot reading',`data-rd="open" data-k="tarot:${esc(d.id)}"`));
+ S.readings.filter(r=>!(SSX.noPat&&SSX.noPat('old:'+r.id))).forEach(r=>add(r.date,[r.q,r.note,...(r.cards||[]).map(c=>{const x=dk(c.id);return x?[x.name,c.rev?x.rev:x.up].join(' '):c.name||''})].filter(Boolean).join('. '),'tarot',`${(SPREADS[r.spread]||{s:'Tarot'}).s} reading`,`data-act="jopen" data-k="reading:${esc(r.id)}"`));
+ ssList().filter(d=>!(SSX.noPat&&SSX.noPat('sign:'+d.id))).forEach(d=>add(d.day,d.type==='number'?d.context:d.text,d.type,d.type==='number'?`Sacred Number ${d.number}`:(d.r||{}).title||'A Synchronicity',`data-ss="open" data-id="${esc(d.id)}"`,d.themes||[]));
  return ev;
 }
 const SS_RANGES=[['7','7 days'],['30','30 days'],['all','All time']];
@@ -3731,7 +3734,7 @@ function ssSyncView(){
 const ssRow=d=>lrow(ssGlyph(d.type==='number'?esc(d.number.length>4?d.number.slice(0,4)+'…':d.number):'✧','sm'),esc(d.type==='number'?`${d.number} · ${(d.r||{}).title||''}`:(d.r||{}).title||'A Synchronicity'),relDay(d.day),`data-ss="open" data-id="${esc(d.id)}"`);
 function ssReadActs(d){
  const kept=d.kept&&S.journal.some(j=>j.id===d.kept);
- return `<div class="ss-acts"><button class="btn${kept?' ghost':''}" data-ss="keep" data-id="${esc(d.id)}" style="--fill:${kept?'currentColor':'none'}">${IC.heart} ${kept?'In your Journal':'Save to Journal'}</button><button class="btn ghost" data-act="sheet" data-k="reading">Your Readings</button></div>
+ return `<div class="ss-acts"><button class="btn${kept?' ghost':''}" data-ss="keep" data-id="${esc(d.id)}" style="--fill:${kept?'currentColor':'none'}">${IC.heart} ${kept?'In your Journal':'Save to Journal'}</button><button class="btn ghost" data-go="discover" data-t="readings">Your Readings</button></div>
  <p class="muted small center">${(d.r||{}).ai?'Read by Kassandra with AI. ':'Read from Kosmia’s book of signs. '}Kept in Your Readings. Signs are offered for reflection, not as predictions.</p>`;
 }
 function ssNumberReading(){
@@ -3780,7 +3783,8 @@ function ssPatternView(){
  ${mbox(`<h3>Where It Appeared</h3><div class="pills">${p.srcs.map(([s,n])=>`<span class="pill">${SS_SRC[s]} <b>${n}</b></span>`).join('')}</div>`)}
  ${mbox(`<h3>What It May Mean</h3><p>${esc(t?t.m:(nm?nm[1]:''))}</p>`)}
  ${ssHead('Its thread through your journey')}<div class="list">${items.map(e=>lrow('',esc(e.title),`${SS_SRC[e.src]} · ${relDay(e.day)}`,e.open)).join('')}</div>
- ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(t?t.q:(nm?nm[3]:''))}”</p>`)}</div>`,'dj ss');
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(t?t.q:(nm?nm[3]:''))}”</p>`)}
+ <button class="btn ghost" data-ss="snap">Save this thread to Your Readings</button></div>`,'dj ss');
 }
 function ssNumerologyView(){
  const bd=hasBirthDate()?S.birth.date:'',L=bd?N.lifePath(bd).r.n:0,nm=nameNums(S.fullName),E=nm&&nm.expression.r.n;
@@ -3832,7 +3836,7 @@ async function drExplore(){
  const D=drDraft(),t=$('#dt');if(t)D.text=t.value;const text=D.text.trim();
  if(text.length<8){toast('Tell a few more words of your dream first.');if(t)t.focus();return}
  V.drBusy=true;render();const I=await drRead(text,D.mood);V.drBusy=false;
- V.drShow=null;S.dreamPending={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:I,note:''};S.dreamDraft={text:'',mood:''};save();render();window.scrollTo(0,0);
+ V.drShow=null;S.dreamPending={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:I,note:''};S.dreamDraft={text:'',mood:''};save();if(S.settings.autosave!==false)drSavePending();render();window.scrollTo(0,0);
 }
 function drStore(d){
  const b={id:d.id,kind:'dream',ref:d.id,data:d,at:d.at};S.bookmarks.push(b);save();C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{});
@@ -4172,7 +4176,7 @@ async function cnInsight(){
  X.busy=true;render();let r=null;
  if(C.user&&C.connect){try{const x=await C.connect({kind:'insight',rel:X.rel,q:X.q,me:!!A.me,a:cnBrief(A,cnChartOf(A)),b:cnBrief(B,cnChartOf(B))});if(x&&x.essence)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'Kassandra could not read this just now, so Kosmia’s own book has.')}}
  if(!r)r=cnInsightLocal(A,B,X.rel,X.q);
- X.busy=false;X.res={kind:'insight',id:uuid(),na:A.name,nb:B.name,sa:A.sign,sb:B.sign,rel:X.rel,q:X.q,r,pids:[A.id,B.id].filter(Boolean)};cnKeepNewOnRead();X.res.pids=[cnX().a.who,cnX().b.who].filter(w=>w&&w!=='me'&&w!=='new');render();cnScroll();
+ X.busy=false;X.res={kind:'insight',id:uuid(),na:A.name,nb:B.name,sa:A.sign,sb:B.sign,rel:X.rel,q:X.q,r,pids:[A.id,B.id].filter(Boolean)};cnKeepNewOnRead();X.res.pids=[cnX().a.who,cnX().b.who].filter(w=>w&&w!=='me'&&w!=='new');if(S.settings.autosave!==false)cnKeepRead(true);render();cnScroll();
 }
 async function cnChart(){
  const AB=cnCheck(true);if(!AB)return;const [A,B]=AB,X=cnX();
@@ -4181,14 +4185,14 @@ async function cnChart(){
  let r=null;
  if(C.user&&C.connect){try{const x=await C.connect({kind:'chart',rel:X.rel,a:cnBrief(A,cnChartOf(A)),b:cnBrief(B,cnChartOf(B)),limited:syn.limited,aspects:syn.aspects.map(x=>`${A.name}'s ${x.a} in ${x.sa} ${x.n} ${B.name}'s ${x.b} in ${x.sb} (orb ${x.orb})`),houses:syn.houses.map(h=>`${h.who}'s ${h.p} in ${h.in}'s house ${h.h}`)});if(x&&x.essence)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'Kassandra could not read this just now, so Kosmia’s own book has.')}}
  if(!r)r=cnChartLocal(A,B,X.rel,syn);
- X.busy=false;X.res={kind:'chart',id:uuid(),na:A.name,nb:B.name,rel:X.rel,syn,r};cnKeepNewOnRead();X.res.pids=[cnX().a.who,cnX().b.who].filter(w=>w&&w!=='me'&&w!=='new');render();cnScroll();
+ X.busy=false;X.res={kind:'chart',id:uuid(),na:A.name,nb:B.name,rel:X.rel,syn,r};cnKeepNewOnRead();X.res.pids=[cnX().a.who,cnX().b.who].filter(w=>w&&w!=='me'&&w!=='new');if(S.settings.autosave!==false)cnKeepRead(true);render();cnScroll();
 }
 const cnScroll=()=>requestAnimationFrame(()=>{const e=$('#cnres');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})});
-function cnKeepRead(){
+function cnKeepRead(quiet){
  const t=tab(),now=new Date().toISOString();let d;
  if(t==='affinity'){const L=V.love,a=L.a||S.sign;d={id:uuid(),type:'zodiac',day:dkey(),at:now,signs:[a,L.b],z:cnZodiac(a,L.b)};L.saved=true}
  else{const R=cnX().res;if(!R)return;d=Object.assign({type:R.kind,day:dkey(),at:now},R);delete d.kind;delete d.saved;R.saved=true}
- cnSaveBm('conn',d);toast('Saved to Your Readings');render();
+ cnSaveBm('conn',d);if(!quiet)toast('Saved to Your Readings');render();
 }
 function cnJournal(title,q){const j={id:uuid(),day:dkey(),kind:'reflection',title:q||title,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id)}
 // moving on carries the signs, the people and the nature of the bond
@@ -4211,7 +4215,7 @@ document.addEventListener('change',e=>{const t=e.target;if(!t.dataset)return;
  if(t.dataset.cn==='pf'&&t.tagName==='SELECT'){V.cnDraft[t.dataset.k]=t.value;return render()}});
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-cn]');if(!t||t.tagName==='INPUT'||t.tagName==='SELECT')return;const a=t.dataset.cn,X=cnX();
- if(a==='zgo'){V.love.done=true;V.love.saved=false;render();return cnScroll()}
+ if(a==='zgo'){V.love.done=true;V.love.saved=false;if(S.settings.autosave!==false)cnKeepRead(true);render();return cnScroll()}
  if(a==='who'){X[t.dataset.slot]={who:t.dataset.v};X.res=null;return render()}
  if(a==='rel'){X.rel=t.dataset.v;return render()}
  if(a==='igo')return cnInsight();
@@ -4240,6 +4244,298 @@ document.addEventListener('click',e=>{
   ['a','b'].forEach(sl=>{if(X[sl]&&X[sl].who===id)X[sl]={who:''}});V.cnDel=null;toast(all?'Removed, with their readings':'Removed from My Relationships');return goBack()}
 });
 document.addEventListener('click',e=>{const t=e.target.closest('[data-ss-cn]');if(!t)return;V.cnId=t.dataset.id;V.sheet=null;go('discover','conn-reading')});
+
+// ---- Tarot (Oracle): a ritual of discovery in four steps. The Tarot entrance (Daily Card, Ask the Tarot, the spreads
+// opened in place, Explore the Deck), Prepare Your Reading (a question or "I'm open to guidance", an optional area of
+// focus; skipped for the Daily Card), Draw Your Cards (a shuffled 78-card deck, cards chosen face down or drawn for the
+// reader, each revealed in its position) and Your Tarot Reading (from the overall message to each card and on to
+// guidance). A reading in progress is kept (S.tt) so leaving never loses it; a finished one is kept in Your Readings
+// unless the reader turned automatic saving off.
+const TT={
+ daily:{n:'Daily Card',s:'A moment of guidance and reflection for today.',p:['Your card for today'],f:'general'},
+ ask:{n:'Ask the Tarot',s:'Explore a question or situation on your mind.',p:['Your situation','What to understand','Your guidance'],f:''},
+ present:{n:'The Present Moment',s:'Understand your current circumstances.',p:['What surrounds you','What needs attention','What may support you'],f:'general'},
+ love:{n:'Love & Relationships',s:'Explore emotional connections and relationship dynamics.',p:['Your heart','The other heart','What connects you','What challenges you','What may help it grow'],f:'love'},
+ career:{n:'Career & Purpose',s:'Reflect on your direction and professional journey.',p:['Where you are','Your strengths','What holds you back','What to develop','Where it may lead'],f:'career'},
+ crossroads:{n:'The Crossroads',s:'Explore the possibilities surrounding a decision.',p:['The heart of the decision','One path','The other path','What you may be overlooking','What may guide your choice'],f:'decisions'},
+ growth:{n:'Inner Growth',s:'Discover opportunities for personal development.',p:['Where you stand','What is ready to grow','What to release','Your hidden strength','Your next step'],f:'growth'},
+ ppf:{n:'Past, Present & Future',s:'Reflect on how your journey is unfolding.',p:['Past','Present','Future'],f:'general'},
+ celtic:{n:'The Celtic Cross',s:'An extensive exploration of a complex situation.',p:['The present','The challenge','The foundation','The past','The crown','The near future','Yourself','Your surroundings','Hopes and fears','The outcome'],f:''}};
+const TT_SPREADS=['present','love','career','crossroads','growth','ppf','celtic'];
+const TT_CELTIC=[[0,1,'The Heart of the Matter'],[2,5,'What Shapes It'],[6,9,'You and the Way Ahead']];
+const TT_FOCUS=[['general','General guidance'],['love','Love & Relationships'],['career','Career & Purpose'],['growth','Personal Growth'],['wellbeing','Wellbeing'],['decisions','Decisions & Change']];
+const TT_EX=['What should I pay more attention to right now?','What can I learn from my current relationship?','What is holding me back from making a change?','How can I move forward with greater confidence?'];
+const TT_CTX={love:'love',career:'work',growth:'growth',wellbeing:'growth',decisions:'growth',general:'growth'};
+const TT_SUIT={Cups:'feelings and relationships',Wands:'energy, passion and action',Swords:'thoughts, choices and truth',Pentacles:'work, the body and practical matters'};
+const TT_Q={general:'What is this moment inviting me to notice?',love:'What does my heart need me to understand?',career:'What step would bring me closer to work that feels like mine?',growth:'What part of me is ready to grow?',wellbeing:'What would caring for myself look like today?',decisions:'What do I already know about this choice?'};
+const ttX=()=>S.tt||null;
+const ttSave=()=>save();
+const ttCard=id=>dk(id)||{};
+// the reading from Kosmia's own book, when Kassandra is not asked
+function ttLocal(T){
+ const cs=T.drawn.map(d=>Object.assign({},ttCard(d.id),{pos:d.pos,rv:d.rv})),ctx=TT_CTX[T.focus||'general'],kw=c=>String(c.rv?c.rev:c.up).split(/,\s*/)[0];
+ const lc=s=>s?s.charAt(0).toLowerCase()+s.slice(1):s;
+ const cards=cs.map(c=>`In the position of ${c.pos.toLowerCase()}, ${c.name}${c.rv?' reversed':''} invites reflection: ${lc(c.rv?c.revm:c.upm)}${cs.length<=5&&c[ctx]?' '+c[ctx]:''}`);
+ const last=cs[cs.length-1],K=cap(kw(last));
+ const titles=[`Finding ${K}`,`The Gift of ${K}`,`A Path Towards ${K}`,`The Season of ${K}`];
+ const title=cs.length===1?`${cs[0].name}${cs[0].rv?' Reversed':''}`:titles[cs.reduce((a,c)=>a+c.name.length,0)%titles.length];
+ const majors=cs.filter(c=>c.arcana==='major').length,suits={};cs.forEach(c=>{if(c.suit)suits[c.suit]=(suits[c.suit]||0)+1});const top=Object.entries(suits).sort((a,b)=>b[1]-a[1])[0];
+ const message=cs.length===1?`${cs[0].name}${cs[0].rv?', reversed,':''} comes to you today, speaking of ${String(cs[0].rv?cs[0].rev:cs[0].up).toLowerCase()}. ${cs[0].rv?cs[0].revm:cs[0].upm}`
+  :`Together, ${cs.map(c=>c.name).join(', ').replace(/, ([^,]*)$/,' and $1')} invite you to consider ${cs.slice(0,3).map(c=>kw(c).toLowerCase()).join(', ').replace(/, ([^,]*)$/,' and $1')}.${T.q?` In light of your question, they suggest looking at it through ${kw(last).toLowerCase()}.`:''}`;
+ const connect=cs.length===1?'':[majors?`${majors===1?'One card is':majors+' cards are'} from the Major Arcana, which often marks themes of deeper significance.`:'All your cards come from the Minor Arcana, which tends to speak of everyday choices and situations.',top&&top[1]>1?`${top[0]} appear ${top[1]} times, drawing attention to ${TT_SUIT[top[0]]}.`:'',cs.some(c=>c.rv)?`${cs.filter(c=>c.rv).length===1?'One card is':cs.filter(c=>c.rv).length+' cards are'} reversed, which may point to energy that is turned inward or still unfolding.`:''].filter(Boolean).join(' ');
+ const up=cs.filter(c=>!c.rv),rv=cs.filter(c=>c.rv);
+ return {title,message,cards,connect,embrace:cs.length===1?'':`Embrace ${(up.length?up:cs).slice(0,2).map(c=>kw(c).toLowerCase()).join(' and ')}: qualities your cards bring forward.`,
+  mindful:cs.length===1?'':`Be mindful of ${(rv.length?rv:cs.slice(1,2)).slice(0,2).map(c=>String(c.rv?c.rev:c.up).split(/,\s*/).slice(-1)[0].toLowerCase()).join(' and ')}, which may need gentle attention.`,
+  guidance:last[ctx]||(last.rv?last.revm:last.upm),reflection:TT_Q[T.focus||'general'],ai:false};
+}
+// a fresh reading of a kind; the Daily Card goes straight to the draw
+function ttStart(kind){
+ const t=TT[kind];S.tt={id:uuid(),kind,q:'',open:false,focus:t.f||'',stage:kind==='daily'?'draw':'prep',deck:shuffle(DECK).map(c=>c.id),picks:[],drawn:[],res:null,key:''};ttSave();
+}
+function ttDraw(i){
+ const T=ttX(),n=TT[T.kind].p.length;if(!T||T.drawn.length>=n||T.picks.includes(i))return;
+ const r=new Uint8Array(1);crypto.getRandomValues(r);T.picks.push(i);T.drawn.push({id:T.deck[i],pos:TT[T.kind].p[T.drawn.length],rv:r[0]<64});ttSave();
+}
+async function ttRead(){
+ const T=ttX();if(!T)return;T.stage='read';T.res=null;ttSave();render();window.scrollTo(0,0);
+ let r=null;
+ if(C.user&&C.interpret){V.ttBusy=true;render();try{const x=await C.interpret(T.kind,T.q,T.drawn.map(d=>({id:d.id,reversed:d.rv})),T.focus);if(x&&x.message)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'The cards are quiet right now, so Kosmia’s own book has read them.')}V.ttBusy=false}
+ if(!r)r=ttLocal(T);
+ if(S.tt!==T)return;T.res=r;T.at=new Date().toISOString();T.day=dkey();
+ if(S.settings.autosave!==false)ttKeep(T,true);
+ if(T.kind==='daily')S.tdaily={day:dkey(),id:T.id};
+ ttSave();render();
+}
+function ttKeep(T,quiet){
+ if(!T||!T.res)return;const d={id:T.id,type:T.kind,q:T.q,open:T.open,focus:T.focus,day:T.day||dkey(),at:T.at||new Date().toISOString(),cards:T.drawn.map(c=>({id:c.id,name:ttCard(c.id).name,pos:c.pos,rv:c.rv})),r:T.res};
+ const b=S.bookmarks.find(x=>x.kind==='tarot'&&x.ref===d.id);if(b)b.data=d;else S.bookmarks.push({id:d.id,kind:'tarot',ref:d.id,data:d,at:d.at});
+ T.key='tarot:'+d.id;save();const bb=S.bookmarks.find(x=>x.kind==='tarot'&&x.ref===d.id);C.saveBookmark&&C.saveBookmark(bb).then(()=>{bb.sy=true;save()},()=>{});if(!quiet)toast('Saved to Your Readings');
+}
+const ttSaved=()=>S.bookmarks.filter(b=>b.kind==='tarot').map(b=>b.data||{}).sort((a,b)=>(b.at||'')>(a.at||'')?1:-1);
+const ttToday=()=>{const D=S.tdaily;if(!D||D.day!==dkey())return null;return ttSaved().find(x=>x.id===D.id)||(S.tt&&S.tt.id===D.id&&S.tt.res?S.tt:null)};
+// the reading itself, for a reading just drawn and for a saved one alike
+function ttBody(d){
+ const r=d.r||d.res||{},cards=(d.cards||d.drawn||[]).map(c=>Object.assign({},ttCard(c.id),{pos:c.pos,rv:c.rv})),daily=d.type==='daily'||d.kind==='daily',kind=d.type||d.kind;
+ const thumb=c=>`<figure class="tt-th${c.rv?' rev':''}">${pic('deck',c.id,'tt-img')}<figcaption><strong>${esc(c.name)}${c.rv?' <i>reversed</i>':''}</strong><span>${esc(c.pos)}</span></figcaption></figure>`;
+ const one=(c,i)=>`<div class="dr-sym tt-one">${pic('deck',c.id,'tt-mini'+(c.rv?' rev':''))}<div><strong>${esc(c.name)}${c.rv?' reversed':''}</strong><span class="dr-keys">${esc(c.pos)} · ${esc(String(c.rv?c.rev:c.up).split(/,\s*/).slice(0,3).join(' · '))}</span><p>${esc((r.cards||[])[i]||'')}</p></div></div>`;
+ const under=kind==='celtic'&&cards.length===10?TT_CELTIC.map(([a,b,t])=>`<details class="acc tt-ch"${a===0?' open':''}><summary><span class="lr-t"><strong>${t}</strong><span>${cards.slice(a,b+1).map(c=>esc(c.pos)).join(' · ')}</span></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b">${cards.slice(a,b+1).map((c,k)=>one(c,a+k)).join('')}</div></details>`).join('')
+  :cards.map(one).join('<i class="dr-div" aria-hidden="true">✦</i>');
+ return `<div class="dr-hero"><h2>${esc(r.title||TT[kind]?.n||'Your Reading')}</h2><p class="dr-kw">${esc((TT[kind]||{n:''}).n)}${d.focus&&d.focus!=='general'&&!daily?' · '+esc((TT_FOCUS.find(f=>f[0]===d.focus)||['',''])[1]):''}</p>${d.q?`<p class="cn-q">“${esc(d.q)}”</p>`:d.open?'<p class="cn-q">Open to guidance</p>':''}</div>
+ <div class="tt-cards${cards.length===1?' solo':''}">${cards.map(thumb).join('')}</div>
+ ${ssHead(daily?'Your Card Today':'The Message of Your Reading')}<div class="dr-text"><p>${esc(r.message||r.whole||'')}</p></div>
+ ${daily?'':`${ssHead('Understanding Your Cards')}<div class="dr-syms">${under}</div>`}
+ ${r.connect?`${ssHead('How the Cards Connect')}<div class="dr-text"><p>${esc(r.connect)}</p></div>`:''}
+ ${r.embrace?`${ssHead('What to Embrace')}<div class="dr-text"><p>${esc(r.embrace)}</p></div>`:''}
+ ${r.mindful?`${ssHead('What to Be Mindful Of')}<div class="dr-text"><p>${esc(r.mindful)}</p></div>`:''}
+ ${r.guidance?`${ssHead(daily?'Guidance for Today':'Your Guidance')}<div class="dr-text"><p>${esc(r.guidance)}</p></div>`:''}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(r.reflection||'What is this reading inviting me to notice?')}”</p>`,'dr-q')}`;
+}
+const ttKasQ=d=>{const cards=(d.cards||d.drawn||[]).map(c=>`${ttCard(c.id).name}${c.rv?' reversed':''} (${c.pos})`).join(', ');return `About my tarot reading${d.q?` on “${d.q}”`:''}: ${cards}. The message was: ${String((d.r||d.res||{}).message||'').slice(0,240)} What else might it be inviting me to see?`};
+const ttPage=h=>nightSub(`<div class="sub">${h}</div>`,'dj ss tt');
+function ttHome(){
+ const T=ttX(),D=ttToday(),open=V.ttOpen,resume=T&&!T.res&&T.kind!=='daily'&&(T.drawn.length||T.stage!=='prep'||T.q);
+ const dc=D?ttCard((D.cards||D.drawn)[0].id):null;
+ return ttPage(`${hdr('Tarot',{sub:'Discover what the cards invite you to see.'})}
+ ${resume?`<button class="dr-link tt-resume" data-tt="resume">Continue your ${esc(TT[T.kind].n)} reading · ${T.drawn.length} of ${TT[T.kind].p.length} cards ${IC.chev}</button>`:''}
+ <div class="list tt-doors">${D?`<button class="lrow ss-door big" data-tt="daily"><span class="lr-i">${pic('deck',dc.id,'tt-door')}</span><span class="lr-t"><strong>Daily Card · ${esc(dc.name)}</strong><span>Your card for today. Revisit its message.</span></span><span class="lr-c">${IC.chev}</span></button>`:ssDoor('1','Daily Card','A moment of guidance and reflection for today. One card.','data-tt="daily"','big')}
+ ${ssDoor('3','Ask the Tarot','Explore a question or situation on your mind. Three cards.','data-tt="start" data-k="ask"','big')}
+ <button class="lrow ss-door big" data-tt="spreads" aria-expanded="${!!open}"><span class="lr-i">${ssGlyph('✶')}</span><span class="lr-t"><strong>Tarot Spreads</strong><span>Explore a particular area of your life in greater depth. 3 to 10 cards.</span></span><span class="lr-c tt-chev${open?' up':''}">${IC.chev}</span></button></div>
+ ${open?`${ssHead('Choose your tarot spread')}<div class="list">${TT_SPREADS.map(k=>{const s=TT[k];return `<details class="acc tt-sp"${V.ttSp===k?' open':''} data-k="${k}"><summary><span class="lr-t"><strong>${s.n}</strong><span>${s.s}</span></span><span class="lr-m">${s.p.length} cards</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><p class="tt-pos-h">Card positions</p><ol class="tt-pos">${s.p.map(p=>`<li>${esc(p)}</li>`).join('')}</ol><button class="btn" data-tt="start" data-k="${k}">Begin this reading</button></div></details>`}).join('')}</div>`:''}
+ <button class="dr-link" data-act="libgo" data-tab="tarot">Explore the Deck · all 78 cards ${IC.chev}</button>`);
+}
+function ttPrep(T){
+ const s=TT[T.kind];
+ return ttPage(`${hdr('Prepare Your Reading',{sub:s.n})}
+ ${ssHead('What is on your mind?')}<p class="tt-lead">Take a moment to consider what you would like to explore.</p>
+ <div class="field"><label for="ttq" class="sr-only">Your question</label><textarea id="ttq" rows="3" maxlength="300" placeholder="Write a question or describe a situation…" ${T.open?'disabled':''}>${esc(T.q)}</textarea></div>
+ <div class="fchips ss-chips tt-ex">${TT_EX.map(q=>`<button class="fchip" data-tt="ex" data-v="${esc(q)}">${esc(q)}</button>`).join('')}<button class="fchip" role="switch" aria-checked="${!!T.open}" data-tt="openg">I’m open to guidance</button></div>
+ ${ssHead('Area of focus · Optional')}<div class="fchips ss-chips">${TT_FOCUS.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${T.focus===k}" data-tt="focus" data-v="${k}">${l}</button>`).join('')}</div>
+ <p class="muted small">${s.p.length} cards: ${s.p.map(esc).join(' · ')}</p>
+ <button class="btn" data-tt="todraw">Draw My Cards</button>`);
+}
+function ttDrawView(T){
+ const s=TT[T.kind],n=s.p.length,done=T.drawn.length>=n;
+ return ttPage(`${hdr(T.kind==='daily'?'Your Daily Card':'Draw Your Cards',{sub:done?'Your cards are drawn.':'Choose the cards you feel drawn towards.'})}
+ <p class="tt-count" aria-live="polite">${T.drawn.length} of ${n} card${n>1?'s':''} selected</p>
+ <div class="tt-slots${n>5?' many':''}">${s.p.map((p,i)=>{const d=T.drawn[i],c=d?ttCard(d.id):null;return `<div class="tt-slot${c?' on':''}"><span class="tt-n">${i+1}</span>${c?`<span class="tt-face${d.rv?' rev':''}">${pic('deck',c.id,'tt-img')}</span><strong>${esc(c.name)}${d.rv?' <i>reversed</i>':''}</strong>`:'<span class="tt-back"></span>'}<span class="tt-p">${esc(p)}</span></div>`}).join('')}</div>
+ ${done?`<button class="btn" data-tt="read">${T.kind==='daily'?'Read My Card':'Explore My Reading'}</button>`:`<div class="tt-deck" role="group" aria-label="The deck, face down">${T.deck.slice(0,24).map((id,i)=>`<button class="tt-c" data-tt="pick" data-i="${i}" aria-label="Card ${i+1}" ${T.picks.includes(i)?'disabled':''}></button>`).join('')}</div>
+ <div class="ss-acts">${T.drawn.length?'':`<button class="btn ghost" data-tt="shuffle">Shuffle again</button>`}<button class="btn ghost" data-tt="auto">Draw for me</button></div>`}`);
+}
+function ttReadView(T){
+ if(!T.res)return `<div class="sub">${hdr('Your Tarot Reading')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">The cards are speaking…</p></div></div>`;
+ const kept=!!T.key;
+ return ttPage(`${hdr('Your Tarot Reading',{sub:ymdLong(T.day||dkey(),{day:'numeric',month:'long'})})}${ttBody(T)}
+ <div class="ss-acts">${kept?`<button class="btn ghost" data-go="discover" data-t="readings">✓ In Your Readings</button>`:`<button class="btn" data-tt="keep">Save Reading</button>`}<button class="btn ghost" data-tt="journal">Reflect in My Journal</button></div>
+ <div class="ss-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(ttKasQ(T))}">Ask Kassandra</button></div>
+ <div class="dr-tools"><button class="dr-link" data-tt="home">Return to Tarot</button><button class="dr-link" data-go="tarot" data-t="home">Return to Oracle</button></div>
+ <p class="muted small center">${T.res.ai?'Read by Kassandra with AI. ':'Read from Kosmia’s own book of the cards. '}Tarot is a mirror for reflection, not a prediction.</p>`);
+}
+function ttView(){
+ const T=ttX();if(!T)return ttHome();
+ if(T.stage==='prep')return ttPrep(T);
+ if(T.stage==='draw')return ttDrawView(T);
+ return ttReadView(T);
+}
+{const vt=views.tarot;views.tarot=()=>{const t=tab();if(t==='spreads')return ttHome();if(t==='reading')return ttView();return vt()}}
+document.addEventListener('input',e=>{if(e.target.id==='ttq'&&S.tt){S.tt.q=e.target.value;clearTimeout(ttSave.t);ttSave.t=setTimeout(save,500)}});
+document.addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('tt-sp')&&d.open)V.ttSp=d.dataset.k},true);
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-tt]');if(!t)return;const a=t.dataset.tt,T=ttX();
+ if(['daily','start','resume'].includes(a))V.ttFrom=V.sec==='tarot'&&tab()==='spreads';
+ if(a==='daily'){const D=ttToday();if(D){if(D.res){S.tt=D;return go('tarot','reading')}return rdOpen('tarot:'+D.id)}ttStart('daily');return go('tarot','reading')}
+ if(a==='start'){ttStart(t.dataset.k);return go('tarot','reading')}
+ if(a==='resume')return go('tarot','reading');
+ if(a==='spreads'){V.ttOpen=!V.ttOpen;return render()}
+ if(!T)return;
+ if(a==='ex'){T.q=t.dataset.v;T.open=false;ttSave();return render()}
+ if(a==='openg'){T.open=!T.open;if(T.open)T.q='';ttSave();return render()}
+ if(a==='focus'){T.focus=T.focus===t.dataset.v?'':t.dataset.v;ttSave();return render()}
+ if(a==='todraw'){const q=$('#ttq');if(q&&!T.open)T.q=q.value.trim();T.stage='draw';ttSave();render();return window.scrollTo(0,0)}
+ if(a==='shuffle'){if(T.drawn.length)return;T.deck=shuffle(DECK).map(c=>c.id);ttSave();toast('The deck is shuffled.');return render()}
+ if(a==='pick'){ttDraw(+t.dataset.i);return render()}
+ if(a==='auto'){const n=TT[T.kind].p.length;let i=0;while(T.drawn.length<n&&i<T.deck.length){if(!T.picks.includes(i))ttDraw(i);i++}return render()}
+ if(a==='read')return ttRead();
+ if(a==='keep'){ttKeep(T);return render()}
+ if(a==='journal'){if(!T.key)ttKeep(T,true);return rdReflect(T.key)}
+ if(a==='home'){S.tt=null;save();return V.ttFrom?goBack():go('tarot','spreads',{replace:true})}
+});
+// ---- Your Readings: one collection of every saved reading across the Oracle, with search, filters and favourites, and
+// a detail page that shows each reading exactly as it was received, with its themes, the reflections written about it,
+// related readings and what can be done next. The reader's own marks (favourite, name, note, reflections, kept out of
+// patterns, last revisited) live in one record (bookmark 'rmeta') beside the readings, never inside them.
+const RD_CATS=[['tarot','Tarot'],['dreams','Dreams'],['numbers','Sacred Numbers'],['sync','Synchronicities'],['patterns','Patterns'],['numerology','Numerology'],['connections','Connections'],['kassandra','Kassandra']];
+const rdMeta=()=>{let b=S.bookmarks.find(x=>x.kind==='rmeta');if(!b){b={id:uuid(),kind:'rmeta',ref:'all',data:{},at:new Date().toISOString()};S.bookmarks.push(b)}return b};
+const rdM=k=>rdMeta().data[k]||{};
+function rdSet(k,patch){const b=rdMeta();b.data[k]=Object.assign({},b.data[k]||{},patch);save();C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{})}
+// every reading, in one shape: its key, category, kind, title, date, a line, searchable words and themes
+function rdAll(){
+ const out=[],add=x=>{const m=rdM(x.k);out.push(Object.assign(x,{fav:!!m.fav,title:m.title||x.title,note:m.note||'',noPat:!!m.noPat,seen:m.seen||'',refl:(m.refl||[]).filter(id=>S.journal.some(j=>j.id===id))}))};
+ ttSaved().forEach(d=>{const names=(d.cards||[]).map(c=>c.name);add({k:'tarot:'+d.id,cat:'tarot',kind:d.type==='daily'?'Daily card':d.type==='ask'?'Ask the Tarot':(d.cards||[]).length===3?'Three-card reading':(TT[d.type]||{n:'Tarot reading'}).n,title:(d.r||{}).title||'A Tarot Reading',day:d.day,at:d.at,line:names.join(' · '),words:[d.q,names.join(' '),(d.r||{}).message,(d.cards||[]).map(c=>{const x=ttCard(c.id);return c.rv?x.rev:x.up}).join(' ')].join(' '),d})});
+ S.readings.forEach(r=>add({k:'old:'+r.id,cat:'tarot',kind:(SPREADS[r.spread]||{s:'Tarot reading'}).s,title:r.q||(SPREADS[r.spread]||{s:'A Tarot Reading'}).s,day:r.date,at:r.at||r.date,line:(r.cards||[]).map(c=>c.name).join(' · '),words:[r.q,r.note,(r.cards||[]).map(c=>c.name).join(' ')].join(' '),d:r}));
+ dreams().forEach(d=>{const I=d.interp||{};add({k:'dream:'+d.id,cat:'dreams',kind:'Dream interpretation',title:I.title||'A Dream Not Yet Read',day:d.day,at:d.at,line:drKeys(d).slice(0,3).map(drName).join(' · '),words:[d.text,I.title,I.beneath||I.meaning,drKeys(d).map(drName).join(' '),(I.keywords||[]).join(' ')].join(' '),d})});
+ S.bookmarks.filter(b=>b.kind==='sign').map(b=>b.data||{}).forEach(d=>{const r=d.r||{};
+  if(d.type==='number')add({k:'sign:'+d.id,cat:'numbers',kind:'Sacred Numbers',title:`${d.number} · ${r.title||''}`,day:d.day,at:d.at,line:(d.themes||[]).map(x=>(ssTheme(x)||{name:x}).name).join(' · '),words:[d.number,d.context,r.title,r.symbolism,r.meaning,(d.themes||[]).join(' ')].join(' '),d});
+  else if(d.type==='sync')add({k:'sign:'+d.id,cat:'sync',kind:'Synchronicity reading',title:r.title||'A Synchronicity',day:d.day,at:d.at,line:(d.themes||[]).map(x=>(ssTheme(x)||{name:x}).name).join(' · '),words:[d.text,r.title,r.symbolism,r.deeper,(d.themes||[]).join(' ')].join(' '),d});
+  else if(d.type==='pattern')add({k:'sign:'+d.id,cat:'patterns',kind:'Recurring themes',title:d.title,day:d.day,at:d.at,line:d.line||'',words:[d.title,d.line,d.text].join(' '),d});
+  else if(d.type==='numerology')add({k:'sign:'+d.id,cat:'numerology',kind:d.which==='lp'?'Life Path reading':'The Name Within',title:d.title,day:d.day,at:d.at,line:d.line||'',words:[d.title,d.line,d.text].join(' '),d})});
+ cnReads().forEach(d=>add({k:'conn:'+d.id,cat:'connections',kind:CN_TYPES[d.type]+(d.rel?' · '+(CN_RELN[d.rel]||''):''),title:d.type==='zodiac'?(d.z||{}).title||'Zodiac Compatibility':d.type==='insight'?`${d.na} & ${d.nb}`:`The Two Skies of ${d.na} & ${d.nb}`,day:d.day,at:d.at,line:d.type==='zodiac'?`${sg(d.signs[0]).name} & ${sg(d.signs[1]).name}`:d.type==='insight'?`${sg(d.sa).name} & ${sg(d.sb).name}`:`${(d.syn||{aspects:[]}).aspects.length} meetings between their charts`,words:[d.na,d.nb,d.q,d.type==='zodiac'?d.signs.map(x=>sg(x).name).join(' '):'',JSON.stringify(d.r||d.z||{})].join(' '),d}));
+ S.bookmarks.filter(b=>b.kind==='chat').forEach(b=>{const d=b.data||{},first=(d.msgs||[]).find(m=>m.role==='user');add({k:'chat:'+b.ref,cat:'kassandra',kind:'Conversation with Kassandra',title:first?clip(first.content,60):'A conversation',day:(b.at||'').slice(0,10)||dkey(),at:b.at,line:`${(d.msgs||[]).length} messages`,words:(d.msgs||[]).map(m=>m.content).join(' '),d})});
+ out.forEach(x=>{x.themes=[...new Set([...ssFind(x.words+' '+x.title),...((x.d&&x.d.themes)||[])])].slice(0,4)});
+ return out;
+}
+const RD_RANGES=[['all','All time'],['7','7 days'],['30','30 days'],['90','90 days']],RD_SORT=[['new','Newest first'],['old','Oldest first'],['seen','Recently revisited']];
+const rdF=()=>V.rdf||(V.rdf={cat:'',q:'',fav:false,refl:false,range:'all',sort:'new'});
+function rdFilter(){
+ const F=rdF(),q=F.q.trim().toLowerCase(),from=F.range==='all'?'':dkey(new Date(Date.now()-(+F.range-1)*DAY));
+ let l=rdAll().filter(x=>(!F.cat||x.cat===F.cat)&&(!F.fav||x.fav)&&(!F.refl||x.refl.length)&&(x.day||'')>=from);
+ if(q)l=l.filter(x=>[x.title,x.kind,x.line,x.words,x.note,x.themes.map(t=>(ssTheme(t)||{name:t}).name).join(' '),ymdLong(x.day,{day:'numeric',month:'long',year:'numeric'})].join(' ').toLowerCase().includes(q));
+ const key=x=>F.sort==='seen'?(x.seen||''):(x.at||x.day||'');
+ return l.sort((a,b)=>F.sort==='old'?(key(a)>key(b)?1:-1):(key(b)>key(a)?1:-1));
+}
+function rdList(){
+ const l=rdFilter(),F=rdF();
+ if(!l.length)return `<p class="muted center rd-none">${rdAll().length?'No reading matches these filters.':'Your readings will gather here as you explore the Oracle: tarot, dreams, numbers, synchronicities, connections and more.'}</p>`;
+ if(F.sort!=='new'&&F.sort!=='old')return l.map(rdRow).join('');
+ const by={};l.forEach(x=>(by[(x.day||'').slice(0,7)]=by[(x.day||'').slice(0,7)]||[]).push(x));
+ return Object.keys(by).sort(F.sort==='old'?undefined:(a,b)=>a<b?1:-1).map(m=>`<p class="dr-month">${ymdLong(m+'-01',{month:'long',year:'numeric'})} · ${by[m].length} reading${by[m].length>1?'s':''}</p>${by[m].map(rdRow).join('')}`).join('');
+}
+const rdRow=x=>`<div class="rd-row"><button class="dr-entry" data-rd="open" data-k="${esc(x.k)}"><span class="dr-d">${esc(x.kind)} · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.title)}</strong>${x.line?`<span class="dr-s">${esc(x.line)}</span>`:''}${x.refl.length?`<span class="dr-f">${x.refl.length} reflection${x.refl.length>1?'s':''}</span>`:''}</button><button class="rd-fav" data-rd="fav" data-k="${esc(x.k)}" aria-pressed="${x.fav}" aria-label="${x.fav?'Remove from favourites':'Add to favourites'}">${x.fav?'★':'☆'}</button></div>`;
+function rdView(){
+ const all=rdAll(),F=rdF(),auto=S.settings.autosave!==false;
+ return nightSub(`<div class="sub">${hdr('Your Readings',{sub:'Every insight is a thread in the story of your journey.'})}
+ <div class="dr-stats"><div><b>${all.length}</b><span>Saved readings</span></div><div><b>${all.filter(x=>x.fav).length}</b><span>Favourites</span></div></div>
+ <div class="field"><label for="rdq" class="sr-only">Search your readings</label><input type="search" id="rdq" placeholder="Search titles, cards, symbols, numbers, names…" value="${esc(F.q)}" autocomplete="off"></div>
+ <div class="fchips ss-chips rd-cats"><button class="fchip" role="radio" aria-checked="${!F.cat}" data-rd="cat" data-v="">All Readings</button>${RD_CATS.filter(([k])=>all.some(x=>x.cat===k)||F.cat===k).map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.cat===k}" data-rd="cat" data-v="${k}">${l}</button>`).join('')}</div>
+ <details class="cn-more rd-more"${F.fav||F.refl||F.range!=='all'||F.sort!=='new'?' open':''}><summary>Sort and filter</summary>
+ <div class="fchips ss-chips"><button class="fchip" role="switch" aria-checked="${F.fav}" data-rd="tog" data-v="fav">★ Favourites</button><button class="fchip" role="switch" aria-checked="${F.refl}" data-rd="tog" data-v="refl">With reflections</button></div>
+ <div class="fchips ss-chips">${RD_RANGES.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.range===k}" data-rd="range" data-v="${k}">${l}</button>`).join('')}</div>
+ <div class="fchips ss-chips">${RD_SORT.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.sort===k}" data-rd="sort" data-v="${k}">${l}</button>`).join('')}</div></details>
+ <div class="dr-book rd-book" id="rdlist">${rdList()}</div>
+ <label class="row cn-cb rd-auto"><input type="checkbox" class="cb" data-rd="auto" ${auto?'checked':''}> <span>Keep every completed reading here automatically</span></label></div>`,'dj ss rd');
+}
+// one reading, exactly as it was received, with the reader's own threads around it
+function rdBody(x){
+ const d=x.d;
+ if(x.k.startsWith('tarot:'))return ttBody(d);
+ if(x.k.startsWith('old:'))return `<div class="dr-hero"><h2>${esc(x.title)}</h2><p class="dr-kw">${esc(x.kind)}</p></div><div class="tt-cards">${(d.cards||[]).map(c=>`<figure class="tt-th${c.rev?' rev':''}">${pic('deck',c.id,'tt-img')}<figcaption><strong>${esc(c.name)}${c.rev?' <i>reversed</i>':''}</strong><span>${esc(c.pos||'')}</span></figcaption></figure>`).join('')}</div>${(d.cards||[]).map(c=>{const k=ttCard(c.id);return `${ssHead(c.name+(c.rev?' reversed':''))}<div class="dr-text"><p>${esc(c.rev?k.revm:k.upm)}</p></div>`}).join('')}${d.note?`${ssHead('Your note')}<div class="dr-text"><p>${esc(d.note)}</p></div>`:''}`;
+ if(x.k.startsWith('dream:'))return d.interp?drReading(d,true).replace(/<div class="ss-acts">[\s\S]*?<\/div>\s*<p class="muted small center">/,'<p class="muted small center">'):`<div class="dr-hero"><h2>A Dream Not Yet Read</h2></div><div class="dr-text"><p class="pre">${esc(d.text||'')}</p></div><button class="btn" data-act="dreamopen" data-id="${esc(d.id)}">Explore this dream</button>`;
+ if(x.k.startsWith('sign:')){const r=d.r||{};
+  if(d.type==='number')return `<div class="ss-hero n"><div class="ss-num">${esc(d.number).split('').join(' ')}</div><h2>${esc(r.title||'')}</h2></div>${d.context?`<p class="cn-q">You noticed it when: ${esc(d.context)}</p>`:''}${cnSec('The Symbolism',r.symbolism)}${cnSec('What It May Mean for You',r.meaning)}${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(r.reflection||'')}”</p>`,'dr-q')}`;
+  if(d.type==='sync')return `<div class="dr-hero"><h2>${esc(r.title||'')}</h2></div>${cnSec('The Moment',r.moment)}${cnSec('The Symbolism',r.symbolism)}${cnSec('A Deeper Meaning',r.deeper)}${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(r.reflection||'')}”</p>`,'dr-q')}${cnSec('A Gentle Action',r.action)}`;
+  return `<div class="dr-hero"><h2>${esc(d.title)}</h2><p class="dr-kw">${esc(d.line||'')}</p></div>${(d.parts||[]).map(([t,v])=>cnSec(t,v)).join('')}${d.q?mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(d.q)}”</p>`,'dr-q'):''}`}
+ if(x.k.startsWith('conn:')){if(d.type==='zodiac'){const z=d.z;return `<div class="dr-hero"><h2>${esc(sg(d.signs[0]).name)} &amp; ${esc(sg(d.signs[1]).name)}</h2><p class="dr-kw">${esc(z.title)}</p></div>${z.sections.map(([t,v])=>cnSec(t,v)).join('')}${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(z.reflect)}”</p>`,'dr-q')}`}
+  if(d.type==='insight')return `<div class="dr-hero"><h2>${esc(d.na)} &amp; ${esc(d.nb)}</h2><p class="dr-kw">${esc(CN_RELN[d.rel]||'')}</p></div>${d.q?`<p class="cn-q">You asked: “${esc(d.q)}”</p>`:''}${CN_INS.map(([k,t])=>cnSec(t,d.r[k])).join('')}${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(d.r.reflection||'')}”</p>`,'dr-q')}`;
+  return cnChartReading(Object.assign({view:true},d))}
+ if(x.k.startsWith('chat:'))return `<div class="rd-chat">${(d.msgs||[]).map(m=>`<p class="rd-m ${m.role}"><b>${m.role==='user'?'You':'Kassandra'}</b>${esc(m.content)}</p>`).join('')}</div>`;
+ return '';
+}
+const rdQ=x=>{const d=x.d||{},r=d.r||d.res||{};return (x.k.startsWith('tarot:')?r.reflection:x.k.startsWith('dream:')?(d.interp||{}).reflection:x.k.startsWith('sign:')?(r.reflection||d.q):x.k.startsWith('conn:')?(d.type==='zodiac'?(d.z||{}).reflect:(d.r||{}).reflection):'')||'What does this reading mean to me now?'};
+function rdDetail(){
+ const x=rdAll().find(y=>y.k===V.rk);
+ if(!x)return `<div class="sub">${hdr('Your Readings')}${empty('This reading is no longer here','It may have been removed on another device.',linkBtn('Your Readings','discover','readings','btn'))}</div>`;
+ if(!V.rdSeen||V.rdSeen!==x.k){V.rdSeen=x.k;setTimeout(()=>rdSet(x.k,{seen:new Date().toISOString()}),0)}
+ const R=(()=>{if(!x.themes.length)return [];return rdAll().filter(y=>y.k!==x.k&&y.themes.some(t=>x.themes.includes(t))).map(y=>({y,s:y.themes.filter(t=>x.themes.includes(t))})).sort((a,b)=>b.s.length-a.s.length).slice(0,3)})();
+ const shared=[...new Set(R.flatMap(r=>r.s))].map(t=>(ssTheme(t)||{}).ph).filter(Boolean);
+ const refl=[...x.refl.map(id=>S.journal.find(j=>j.id===id)).filter(Boolean),...(x.d&&x.d.note&&!x.k.startsWith('old:')?[{day:x.d.day,body:x.d.note,legacy:true}]:[])].sort((a,b)=>a.day>b.day?1:-1);
+ const E=V.rdEdit===x.k,del=V.rdDel===x.k;
+ return nightSub(`<div class="sub">${hdr(esc(x.title),{sub:`${esc(x.kind)} · ${ymdLong(x.day,{day:'numeric',month:'long',year:'numeric'})}`})}
+ <div class="rd-top"><button class="rd-fav big" data-rd="fav" data-k="${esc(x.k)}" aria-pressed="${x.fav}">${x.fav?'★ Favourite':'☆ Add to favourites'}</button></div>
+ ${rdBody(x)}
+ ${x.themes.length?`${ssHead('Key Themes')}<div class="pills">${x.themes.map(t=>`<span class="pill">${esc((ssTheme(t)||{name:t}).name)}</span>`).join('')}</div>`:''}
+ ${ssHead('Your Reflections')}${refl.length?`<div class="rd-refl">${refl.map(j=>`<button class="rd-r" ${j.legacy?'':`data-act="jopen" data-k="j:${esc(j.id)}"`}><span class="dr-d">${ymdLong(j.day,{day:'numeric',month:'long',year:'numeric'})}${j.day!==x.day?' · '+relLater(x.day,j.day):' · Original reflection'}</span><span>${esc(clip(j.body||j.title||'',160))||'<i>A page waiting for your words</i>'}</span></button>`).join('')}</div>`:'<p class="muted small">No reflections yet. You can return to this reading and write at any time.</p>'}
+ <button class="btn ghost" data-rd="reflect" data-k="${esc(x.k)}">Add a reflection</button>
+ ${x.note&&!E?`${ssHead('Your note')}<div class="dr-text"><p>${esc(x.note)}</p></div>`:''}
+ ${R.length?`${ssHead('Threads Across Your Journey')}<div class="list">${R.map(({y})=>lrow('',esc(y.title),`${esc(RD_CATS.find(c=>c[0]===y.cat)[1])} · ${ymdLong(y.day,{day:'numeric',month:'long'})}`,`data-rd="open" data-k="${esc(y.k)}"`)).join('')}</div><p class="muted small">These readings share themes of ${esc(shared.join(', ').replace(/, ([^,]*)$/,' and $1'))}: a thematic connection in what you have kept, offered for reflection.</p><button class="dr-link" data-go="discover" data-t="patterns">Explore your Patterns ${IC.chev}</button>`:''}
+ ${ssHead('Continue Exploring')}
+ <div class="ss-acts">${x.k.startsWith('chat:')?'':`<button class="btn ghost" data-act="kasask" data-q="${esc(rdKas(x))}">Ask Kassandra</button>`}${x.cat==='tarot'?'<button class="btn ghost" data-tt="start" data-k="ask">A new tarot reading</button>':x.cat==='dreams'?'<button class="btn ghost" data-go="discover" data-t="dreams">Record a dream</button>':x.cat==='connections'?'<button class="btn ghost" data-go="discover" data-t="connections">Explore another connection</button>':x.cat==='numbers'||x.cat==='sync'?'<button class="btn ghost" data-go="discover" data-t="signs">Signs &amp; Synchronicities</button>':''}</div>
+ ${E?`<div class="field"><label for="rd-title">Name</label><input type="text" id="rd-title" value="${esc(x.title)}"></div><div class="field"><label for="rd-note">A personal note</label><textarea id="rd-note" rows="3">${esc(x.note)}</textarea></div><div class="ss-acts"><button class="btn" data-rd="editsave" data-k="${esc(x.k)}">Save</button><button class="btn ghost" data-rd="editno">Cancel</button></div>`:''}
+ <div class="dr-tools"><button class="dr-link" data-rd="edit" data-k="${esc(x.k)}">Rename or add a note</button><button class="dr-link" data-rd="share" data-k="${esc(x.k)}">Share</button><button class="dr-link" role="switch" aria-checked="${!x.noPat}" data-rd="pat" data-k="${esc(x.k)}">${x.noPat?'Kept out of patterns · include it':'Included in patterns · keep it out'}</button><button class="dr-link" data-rd="del" data-k="${esc(x.k)}">Delete</button></div>
+ ${del?`<div class="dr-confirm"><p>Delete this reading? Your journal reflections stay in your Journal.</p><div class="ss-acts"><button class="btn ghost" data-rd="delno">Keep it</button><button class="btn" data-rd="delyes" data-k="${esc(x.k)}">Delete</button></div></div>`:''}</div>`,'dj ss rd');
+}
+const relLater=(a,b)=>{const d=Math.round((K.parseYmd(b)-K.parseYmd(a))/DAY);return d<1?'The same day':d<7?d+(d===1?' day':' days')+' later':d<30?Math.round(d/7)+(Math.round(d/7)===1?' week':' weeks')+' later':Math.round(d/30)+(Math.round(d/30)===1?' month':' months')+' later'};
+const rdKas=x=>x.k.startsWith('tarot:')?ttKasQ(x.d):`About my saved reading “${x.title}” (${x.kind}, ${ymdLong(x.day,{day:'numeric',month:'long'})})${x.line?': '+x.line:''}. What else might it be inviting me to see?`;
+// a reflection about a reading is a Journal page, linked to the reading
+function rdReflect(k){
+ const x=rdAll().find(y=>y.k===k);const q=x?rdQ(x):'What does this reading mean to me now?';
+ const j={id:uuid(),day:dkey(),kind:'reflection',title:q,body:'',at:new Date().toISOString()};S.journal.push(j);save();
+ rdSet(k,{refl:[...(rdM(k).refl||[]),j.id]});openEntry('j:'+j.id);
+}
+function rdOpen(k){V.rk=k;V.rdEdit=null;V.rdDel=null;go('discover','saved')}
+// sharing leaves out what is personal: the question, names, the dream's words and notes
+function rdShareText(x){const d=x.d||{},r=d.r||d.res||{};
+ const main=x.k.startsWith('tarot:')?`${(d.cards||[]).map(c=>c.name).join(' · ')}\n\n${r.message||''}`:x.k.startsWith('dream:')?((d.interp||{}).beneath||(d.interp||{}).meaning||''):x.k.startsWith('sign:')?(r.symbolism||d.title||''):x.k.startsWith('conn:')&&d.type==='zodiac'?(d.z.sections[0]||['',''])[1]:'';
+ return `${x.title}\n${main}`.trim()+'\n\nFrom Kosmia ✦'}
+function rdDelete(x){
+ const [kind,id]=[x.k.slice(0,x.k.indexOf(':')),x.k.slice(x.k.indexOf(':')+1)];
+ const rmB=(bk,ref)=>{const b=S.bookmarks.find(y=>y.kind===bk&&y.ref===ref);if(b){S.bookmarks.splice(S.bookmarks.indexOf(b),1);C.deleteBookmark&&C.deleteBookmark(bk,ref)}};
+ if(kind==='tarot'){rmB('tarot',id);if(S.tt&&S.tt.id===id)S.tt.key=''}
+ else if(kind==='old'){const r=S.readings.find(y=>y.id===id);if(r){S.readings.splice(S.readings.indexOf(r),1);r.rid&&C.deleteReading&&C.deleteReading(r.rid)}}
+ else if(kind==='chat')rmB('chat',id);else rmB(kind,id);
+ const b=rdMeta();delete b.data[x.k];save();C.saveBookmark&&C.saveBookmark(b);
+}
+{const RDV={readings:rdView,saved:rdDetail};const vd=views.discover;views.discover=()=>RDV[tab()]?RDV[tab()]():vd()}
+Object.assign(SSX,{rdOpen,noPat:k=>!!rdM(k).noPat});
+document.addEventListener('input',e=>{if(e.target.id==='rdq'){rdF().q=e.target.value;const l=$('#rdlist');if(l)l.innerHTML=rdList()}});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-rd]');if(!t)return;const a=t.dataset.rd,F=rdF();
+ if(a==='open')return rdOpen(t.dataset.k);
+ if(a==='fav'){rdSet(t.dataset.k,{fav:!rdM(t.dataset.k).fav});return render()}
+ if(a==='cat'){F.cat=t.dataset.v;return render()}
+ if(a==='tog'){F[t.dataset.v]=!F[t.dataset.v];return render()}
+ if(a==='range'){F.range=t.dataset.v;return render()}
+ if(a==='sort'){F.sort=t.dataset.v;return render()}
+ if(a==='auto'){S.settings.autosave=t.checked;save();toast(t.checked?'Completed readings are kept here automatically':'Readings are kept only when you save them');return}
+ if(a==='reflect')return rdReflect(t.dataset.k);
+ if(a==='edit'){V.rdEdit=t.dataset.k;return render()}
+ if(a==='editno'){V.rdEdit=null;return render()}
+ if(a==='editsave'){const ti=$('#rd-title'),no=$('#rd-note');rdSet(t.dataset.k,{title:ti?ti.value.trim():'',note:no?no.value.trim():''});V.rdEdit=null;toast('Saved');return render()}
+ if(a==='pat'){const k=t.dataset.k,v=!rdM(k).noPat;rdSet(k,{noPat:v});if(k.startsWith('dream:')){const d=dreams().find(y=>'dream:'+y.id===k);if(d){d.noPat=v;drUpdate(d)}}toast(v?'Kept out of your patterns':'Part of your patterns again');return render()}
+ if(a==='share'){const x=rdAll().find(y=>y.k===t.dataset.k);if(!x)return;const text=rdShareText(x);
+  if(navigator.share)navigator.share({title:x.title,text}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>toast('Copied, without your personal details'),()=>toast('Sharing is not available here'));return}
+ if(a==='del'){V.rdDel=t.dataset.k;return render()}
+ if(a==='delno'){V.rdDel=null;return render()}
+ if(a==='delyes'){const x=rdAll().find(y=>y.k===t.dataset.k);if(x)rdDelete(x);V.rdDel=null;toast('The reading is deleted');return goBack()}
+});
 
 {let drLast='';const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
  const vd=views.discover;views.discover=()=>{const t=tab(),k=V.sec+'/'+t;if(t==='dreams'&&drLast&&!/^(discover\/(dreams|dream|dream-patterns|dream-journal)|tarot\/entry)$/.test(drLast))V.drShow=null;drLast=k;return DRV[t]?DRV[t]():vd()};
@@ -4282,6 +4578,10 @@ document.addEventListener('click',e=>{
  if(a==='keep'){const d=ssGet(t.dataset.id);if(d)ssToJournal(d);return}
  if(a==='range'){V.ssRange=t.dataset.v;return render()}
  if(a==='pat'){V.ssPat=t.dataset.k;return go('discover','pattern')}
+ if(a==='snap'){const R=ssRange(),p=(ssPatterns(R).list.find(x=>x.k===V.ssPat)||ssPatterns('all').list.find(x=>x.k===V.ssPat));if(!p)return;const th=p.t,nm=p.num?SS_NUM[N.reduce(p.name.split('').reduce((a,b)=>a+ +b,0)).n]:null;
+  ssKeepSnap({type:'pattern',title:`The Thread of ${p.name}`,line:p.srcs.map(([k,n])=>`${SS_SRC[k]} ${n}`).join(' · '),text:p.it.map(e=>e.title).join(', '),themes:th?[th.id]:[],parts:[['Where It Appeared',`${p.name} appeared ${ssTimes(p.n)}${R==='all'?'':' in the last '+R+' days'}: `+p.it.map(e=>`${e.title} (${SS_SRC[e.src]}, ${ymdLong(e.day,{day:'numeric',month:'long'})})`).join('; ')+'.'],['What It May Mean',th?th.m:(nm?nm[1]:'')]],q:th?th.q:(nm?nm[3]:'')});return}
+ if(a==='savelp'||a==='savenw'){if(a==='savelp'){if(!hasBirthDate())return;const L=N.lifePath(S.birth.date).r.n,M=N.MEANING[L],X=LPX[L]||LPX[L%9||9];ssKeepSnap({type:'numerology',which:'lp',title:`Your Life Path — ${L}`,line:M[1].split(/,\s*/).map(cap).join(' · '),text:M[0],parts:[['The Archetype',M[0]],['Essence',M[2]],['Natural Strengths',X[0]],['Challenges',X[1]],['Relationships',LPREL[L]||LPREL[L%9||9]],['Purpose & Growth',X[2]]],q:LPQ[L]||LPQ[L%9||9]})}
+  else{const x=nameNums(S.fullName);if(!x)return;const m=k=>x[k]&&x[k].r.n?`${x[k].r.n} · ${N.MEANING[x[k].r.n][0]}: ${N.MEANING[x[k].r.n][1]}.`:'';ssKeepSnap({type:'numerology',which:'nw',title:`The Name Within — ${x.expression.r.n}`,line:[x.expression,x.soul,x.personality].map(y=>y&&y.r.n).filter(Boolean).join(' · '),text:S.fullName,parts:[['Expression Number',m('expression')],['Soul Urge Number',m('soul')],['Personality Number',m('personality')]],q:'Which quality in my name am I ready to live more fully?'})}return}
 });
 // ---- the Moon and the Sun, each a full-screen page painted from the user's pictures; the words are today's sky ----
 // the hemisphere follows where the phone is: its time zone (set by the phone from its location) and the latitude the

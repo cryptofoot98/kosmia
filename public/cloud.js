@@ -88,7 +88,7 @@ const Cloud={
  // dreams and kept conversations wait on this device until the database accepts their kinds (a check violation, 23514);
  // they are sent again on the next sync. The rejection is passed on so the item is not marked as synced.
  saveBookmark(b){if(!user)return Promise.resolve();const q=sb.from('bookmarks').upsert({id:b.id,user_id:user.id,kind:b.kind,ref:b.ref,data:b.data},{onConflict:'user_id,kind,ref'});
-  return /^(dream|chat|sign|person|conn)$/.test(b.kind)?q.then(check):soft(q)},
+  return /^(dream|chat|sign|person|conn|tarot|rmeta)$/.test(b.kind)?q.then(check):soft(q)},
  deleteBookmark(kind,ref){if(!user)return Promise.resolve();return soft(sb.from('bookmarks').delete().eq('user_id',user.id).eq('kind',kind).eq('ref',ref))},
  // Removes painted cards, then the account itself (every table cascades from it).
  async deleteAccount(){
@@ -109,7 +109,7 @@ const Cloud={
  paint(day,cardId,sign){return Cloud.api('/api/paint',{day,cardId,sign}).then(r=>r.json())},
  speak(text){return Cloud.api('/api/speak',{text}).then(r=>r.blob())},
  // personal interpretation of a finished tarot reading (cards are sent as ids and orientations only)
- interpret(spread,question,cards){return Cloud.api('/api/interpret',{spread,question,cards}).then(r=>r.json())},
+ interpret(spread,question,cards,focus){return Cloud.api('/api/interpret',{spread,question,cards,focus}).then(r=>r.json())},
  horoscope(sign,cat,period,key){return Cloud.api(`/api/horoscope?sign=${sign}&cat=${cat}&period=${period}&key=${encodeURIComponent(key)}`,null,{method:'GET'}).then(r=>r.json())},
  // the day's personal message and Whisper note, written once a day from the reader's own portrait
  daily(o){return Cloud.api('/api/daily',o).then(r=>r.json())},
