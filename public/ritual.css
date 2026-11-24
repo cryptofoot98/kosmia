@@ -226,3 +226,4 @@ body:has(.sky0) .toast{bottom:calc(var(--rnh,80px) + env(safe-area-inset-bottom,
 #app .spc .sp-rn{color:#1c1108;font-weight:500;display:flex;align-items:center;justify-content:center;text-align:center;text-shadow:none;line-height:1.1}
 #app .rupill{white-space:nowrap}
 #app .ruq{line-height:1.15}
+#app .spc .sp-rt{color:#2a1508;font-style:italic;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;text-shadow:0 1px 0 rgba(255,236,200,.5);line-height:1}

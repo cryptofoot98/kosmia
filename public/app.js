@@ -3572,7 +3572,7 @@ function spCards(n,bodies,rit){
   <div class="spc spr" data-k="3" style="left:49px;top:0;width:924px;height:${SKC}px;background-image:url(${SKY}sp-c3.webp)">
    <img class="spi" src="${SKY}sp-rit-bowl.webp" alt="" style="left:60px;top:10px;width:130px;height:156px">${rit}</div>`;
 }
-const skRit=(name,desc)=>`${tx('sp-rn',198,96,318,60,name,33)}${tx('sp-rd',566,26,300,SKC-52,desc,32)}`;
+const skRit=(name,desc)=>`${tx('sp-rt',198,52,318,62,'Optional Ritual',44)}${tx('sp-rn',198,118,318,60,name,33)}${tx('sp-rd',566,26,300,SKC-52,desc,32)}`;
 function skLay(t,n,sc,hr,H){
  const ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
  t.style.setProperty('--img',`url(${SKY}${n==='pl'?'pl-bg':'sp-'+n}-${ch}.webp)`);
