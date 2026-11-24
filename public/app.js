@@ -263,7 +263,7 @@ function applyLocation(){
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
  if(sec==='tarot'&&q.k)V.jkey=q.k;
- if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
+ if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
 }
 // the query string mirrors the page's own choices, so a forecast, an entry or a month can be shared and reopened
 function viewQuery(){
@@ -272,6 +272,7 @@ function viewQuery(){
  if(V.sec==='tarot'&&t==='entry')return {k:V.jkey};
  if(V.sec==='discover'&&t==='dream')return {id:V.dreamId};
  if(V.sec==='discover'&&(t==='number'||t==='sync-reading'))return {id:V.ssId};
+ if(V.sec==='discover'&&t==='pattern')return {k:V.ssPat};
  if(V.sec==='discover'&&t==='calendar')return {view:V.cal.view!=='list'?V.cal.view:'',month:V.cal.month&&V.cal.month!==dkey().slice(0,7)?V.cal.month:''};
  if(V.sec==='discover'&&t==='library')return {lib:V.lib.tab!=='guides'?V.lib.tab:''};
  return {};
@@ -300,7 +301,7 @@ const goBack=()=>{
 addEventListener('popstate',e=>{stopAudio();jLeave();jeLeave();V.tpop=null;V.edit=null;V.sheet=null;if(!S.sign)return;applyLocation();render();const y=(e.state&&e.state.scroll)||0;requestAnimationFrame(()=>window.scrollTo(0,y))});
 
 // a passing message, with an action (Undo) when there is one
-function toast(t,act){const e=$('#toast');e.innerHTML=esc(t)+(act?` <button class="toast-a" data-act="${act}">Undo</button>`:'');e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,act?6500:2600)}
+function toast(t,act,label){const e=$('#toast');e.innerHTML=esc(t)+(act?` <button class="toast-a" data-act="${act}">${label||'Undo'}</button>`:'');e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,act?(label?9000:6500):2600)}
 // leaving the journal: the page being written is kept, and next time it opens on a new page
 function jLeave(){jDone();jflushSave();V.jx=false;V.jpage=null}
 
@@ -3451,6 +3452,8 @@ function close(){
 function complete(i,msg){
  mark(i);close();
  setTimeout(()=>{wheel();const n=count(),all=[...Array(n).keys()].every(done);
+  const dreamt=(S.bookmarks||[]).some(b=>b.kind==='dream'&&(b.data||{}).day===dkey());
+  if(all&&!isEve()&&!dreamt)return toast('Your morning ritual is complete. Your day is held.','drask','Do you remember your dreams?');
   toast(all?(isEve()?goodnight(dkey()):'Your morning ritual is complete. Your day is held.'):msg)},500);
 }
 function flip(){
@@ -3823,12 +3826,12 @@ async function drExplore(){
  const D=drDraft(),t=$('#dt');if(t)D.text=t.value;const text=D.text.trim();
  if(text.length<8){toast('Tell a few more words of your dream first.');if(t)t.focus();return}
  V.drBusy=true;render();const I=await drRead(text,D.mood);V.drBusy=false;
- S.dreamPending={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:I,note:''};S.dreamDraft={text:'',mood:''};save();render();window.scrollTo(0,0);
+ V.drShow=null;S.dreamPending={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:I,note:''};S.dreamDraft={text:'',mood:''};save();render();window.scrollTo(0,0);
 }
 function drStore(d){
  const b={id:d.id,kind:'dream',ref:d.id,data:d,at:d.at};S.bookmarks.push(b);save();C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{});
 }
-function drSavePending(){const d=drPending();if(!d)return null;S.dreamPending=null;drStore(d);toast('Saved to My Dreams');return d}
+function drSavePending(){const d=drPending();if(!d)return null;S.dreamPending=null;drStore(d);V.drShow=d.id;toast('Saved to My Dreams');return d}
 const drBm=id=>S.bookmarks.find(b=>b.kind==='dream'&&b.ref===id);
 function drUpdate(d){const b=drBm(d.id);if(b){b.data=d;save();C.saveBookmark&&C.saveBookmark(b)}}
 // Dream Patterns: every saved dream that is not kept out, within the chosen time
@@ -3863,7 +3866,8 @@ function drReading(d,saved){
 const drDoors=()=>`<div class="ss-pair dr-doors">${ssTile('⁂','Dream Patterns','Symbols that return to you','data-go="discover" data-t="dream-patterns"')}${ssTile('❦','Dream Archive','Revisit your dreams','data-go="discover" data-t="dream-journal"')}</div>`;
 function drHome(){
  if(V.drBusy)return `<div class="sub">${hdr('Dreams')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Your dream is unfolding…</p></div></div>`;
- const P=drPending(),H=hdr('Dreams',{sub:'Explore the world that unfolds while you sleep.'});
+ const P=drPending(),H=hdr('Dreams',{sub:'Explore the world that unfolds while you sleep.'}),SV=!P&&V.drShow&&dreams().find(x=>x.id===V.drShow);
+ if(SV)return nightSub(`<div class="sub">${H}${drReading(SV,true)}<button class="dr-link dr-new" data-dr="new">Record another dream ${IC.chev}</button>${drDoors()}</div>`,'dj ss dr');
  if(P)return nightSub(`<div class="sub">${H}${drReading(P,false)}<button class="dr-link dr-new" data-dr="new">Record another dream ${IC.chev}</button>${drDoors()}</div>`,'dj ss dr');
  const D=drDraft(),rec=KS.state!=='idle'&&KS.target==='dream';
  return nightSub(`<div class="sub">${H}
@@ -3920,8 +3924,9 @@ function drArchive(){
  <div class="field"><label for="drq" class="sr-only">Search dreams or symbols</label><input type="search" id="drq" placeholder="Search dreams or symbols…" value="${esc(V.drQ||'')}" autocomplete="off"></div>
  <div class="dr-book" id="drlist">${drArchiveList(V.drQ)}</div></div>`,'dj ss dr');
 }
-{const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
- const vd=views.discover;views.discover=()=>DRV[tab()]?DRV[tab()]():vd()}
+{let drLast='';const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
+ const vd=views.discover;views.discover=()=>{const t=tab(),k=V.sec+'/'+t;if(t==='dreams'&&drLast&&!/^(discover\/(dreams|dream|dream-patterns|dream-journal)|tarot\/entry)$/.test(drLast))V.drShow=null;drLast=k;return DRV[t]?DRV[t]():vd()};
+ const vt=views.tarot;views.tarot=()=>{drLast='tarot/'+tab();return vt()}}
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='dt'&&V.sec==='discover'){drDraft().text=t.value;clearTimeout(drDraft.t);drDraft.t=setTimeout(save,600);if(t.rows<8&&t.scrollHeight>t.clientHeight)t.rows=Math.min(12,t.rows+2)}
  else if(t.id==='drq'){V.drQ=t.value;const l=$('#drlist');if(l)l.innerHTML=drArchiveList(t.value)}});
 document.addEventListener('click',e=>{
@@ -3932,7 +3937,7 @@ document.addEventListener('click',e=>{
  if(a==='later'){keepText();const D=drDraft(),text=D.text.trim();if(text.length<3)return toast('Write a few words of your dream first.');
   const d={id:uuid(),day:dkey(),at:new Date().toISOString(),text,mood:D.mood,symbols:[],interp:null,note:''};drStore(d);S.dreamDraft={text:'',mood:''};save();toast('Saved in your Dream Archive, to explore later');return render()}
  if(a==='save'){drSavePending();return render()}
- if(a==='new'){if(drPending())drSavePending();return render()}
+ if(a==='new'){if(drPending())drSavePending();V.drShow=null;render();window.scrollTo(0,0);const x=$('#dt');if(x)x.focus();return}
  if(a==='journal'){let d=drPending();if(d&&d.id===t.dataset.id)d=drSavePending();return openEntry('bk:dream:'+t.dataset.id)}
  if(a==='fam'){V.drOpenK=t.dataset.k;V.drRange='30';return go('discover','dream-patterns')}
  if(a==='range'){V.drRange=t.dataset.v;return render()}
@@ -3943,8 +3948,9 @@ document.addEventListener('click',e=>{
  if(a==='pat'){const d=dreams().find(x=>x.id===t.dataset.id);if(!d)return;d.noPat=!d.noPat;drUpdate(d);toast(d.noPat?'This dream is kept out of your patterns':'This dream is part of your patterns again');return render()}
  if(a==='del'){V.drDel=t.dataset.id;return render()}
  if(a==='delno'){V.drDel=null;return render()}
- if(a==='delyes'){const b=drBm(t.dataset.id);if(b){S.bookmarks.splice(S.bookmarks.indexOf(b),1);save();C.deleteBookmark&&C.deleteBookmark('dream',b.ref)}V.drDel=null;toast('The dream is deleted');return go('discover','dream-journal',{replace:true})}
+ if(a==='delyes'){const b=drBm(t.dataset.id);if(b){S.bookmarks.splice(S.bookmarks.indexOf(b),1);save();C.deleteBookmark&&C.deleteBookmark('dream',b.ref)}V.drDel=null;toast('The dream is deleted');return goBack()}
 });
+document.addEventListener('click',e=>{if(e.target.closest('[data-act=drask]')){$('#toast').hidden=true;go('discover','dreams')}});
 document.addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('dr-pat'))V.drOpenK=d.open?d.dataset.k:(V.drOpenK===d.dataset.k?null:V.drOpenK)},true);
 
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='ssn'){const v=t.value.replace(/[^0-9:]/g,'');if(v!==t.value)t.value=v;ssN().num=v}else if(t.id==='ssc')ssN().ctx=t.value;else if(t.id==='sst')ssS().text=t.value});
