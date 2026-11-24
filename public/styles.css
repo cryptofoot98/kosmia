@@ -4153,3 +4153,29 @@ html body:has(#app>.hsp.sx){min-height:0!important;overflow:hidden}
 html body.tp.tp.tp #app .mnp.dr .dr-parch textarea{background:linear-gradient(#EFE2C8,#E8D6B9)!important;color:#2B2236!important;border:1px solid #B99A61!important;-webkit-text-fill-color:#2B2236;box-shadow:inset 0 0 24px rgba(120,90,50,.18)!important}
 html body.tp.tp.tp #app .mnp.dr input[type=search]:not([type=checkbox]):not([type=radio]){background:linear-gradient(#EFE2C8,#E8D6B9)!important;color:#2B2236!important;-webkit-text-fill-color:#2B2236;border:1px solid #B99A61!important}
 @media (max-height:720px){.dr-parch textarea{min-height:100px}.mnp.dr .dr-ask{margin-top:clamp(16px,7cqw,30px)}}
+/* Connections (interim look until the section is painted) */
+.cn-doors{margin-top:clamp(30px,12cqw,52px)}
+.cn-doors .ss-door strong{font-size:1.15rem}
+.cn-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cn-two>.field{min-width:0}
+.mnp.cn .field label{color:#F1DFB4;text-shadow:0 1px 3px #000}
+.mnp.cn .field label i{font-weight:400;opacity:.8}
+.cn-pick{display:flex;flex-direction:column;gap:8px}
+.cn-new{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid rgba(233,201,135,.45);border-radius:16px;background:rgba(10,14,32,.6)}
+.cn-cb{gap:10px;align-items:flex-start;color:#F1DFB4;font-family:var(--font-serif);font-size:1rem;text-shadow:0 1px 3px #000}
+.cn-more summary{cursor:pointer;color:#E2C98F;font-family:var(--font-serif);font-style:italic}
+.cn-more[open] summary{margin-bottom:8px}
+.cn-tab{width:100%;border-collapse:collapse;font-family:var(--font-serif);color:#F1DFB4;text-shadow:0 1px 3px #000;background:rgba(10,14,32,.6);border-radius:12px;overflow:hidden}
+.cn-tab th,.cn-tab td{padding:6px 8px;border-bottom:1px solid rgba(233,201,135,.2);text-align:left;font-size:.98rem}
+.cn-tab th{font-family:var(--font-display,Cinzel),serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#E2C98F}
+.cn-ok{color:#BFE3B4}
+.cn-miss{font-style:italic;color:#F0B9A0}
+.cn-gsub{margin:-6px 4px 0;font-family:var(--font-serif);font-style:italic;color:#CFCBE6;text-shadow:0 1px 3px #000}
+.mnp.cn .cn-asp{background:rgba(10,14,32,.72)}
+.cn-asp .acc-b p{margin:0 0 6px;font-family:var(--font-serif);line-height:1.45}
+.cn-tech summary{cursor:pointer;font-style:italic;opacity:.85}
+.cn-q{margin:0;font-family:var(--font-serif);font-style:italic;color:#F1DFB4;text-align:center;text-shadow:0 1px 3px #000}
+.cn-next{display:flex;flex-direction:column;gap:8px}
+.mnp.cn .ss-acts .btn.ghost{flex-basis:100%}
+.cn-cb{display:flex!important;flex-wrap:nowrap}
+.cn-cb>span{flex:1;min-width:0}

@@ -200,7 +200,7 @@ const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
- discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
+ discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
@@ -211,7 +211,7 @@ const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the blueprint's five places (Ritual, Sky, Oracle, Calendar, Journal); My Cosmos opens from the round symbol at the top
 const NAV=[{key:'home',label:'Ritual'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'calendar',label:'Calendar'},{key:'journal',label:'Journal'}];
 const CPAGES=['calendar','moon','planets','events'];
-const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','dream-journal','dream-patterns','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
+const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['dreams','new-dream','dream','dream-journal','dream-patterns','connections','affinity','insights','synastry','people','person','conn-reading','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
 // the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
 // numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
 function navCur(){const t=tab();
@@ -222,7 +222,7 @@ function navCur(){const t=tab();
  return V.sec}
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
- 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
+ 'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/connections':'tarot/home','discover/affinity':'discover/connections','discover/insights':'discover/connections','discover/synastry':'discover/connections','discover/people':'discover/connections','discover/person':'discover/people','discover/conn-reading':'discover/connections','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
  'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
@@ -263,7 +263,7 @@ function applyLocation(){
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
  if(sec==='tarot'&&q.k)V.jkey=q.k;
- if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
+ if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.id)V.cnId=q.id;if(q.p)V.cnPid=q.p;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
 }
 // the query string mirrors the page's own choices, so a forecast, an entry or a month can be shared and reopened
 function viewQuery(){
@@ -273,6 +273,8 @@ function viewQuery(){
  if(V.sec==='discover'&&t==='dream')return {id:V.dreamId};
  if(V.sec==='discover'&&(t==='number'||t==='sync-reading'))return {id:V.ssId};
  if(V.sec==='discover'&&t==='pattern')return {k:V.ssPat};
+ if(V.sec==='discover'&&t==='conn-reading')return {id:V.cnId};
+ if(V.sec==='discover'&&t==='person')return {p:V.cnPid};
  if(V.sec==='discover'&&t==='calendar')return {view:V.cal.view!=='list'?V.cal.view:'',month:V.cal.month&&V.cal.month!==dkey().slice(0,7)?V.cal.month:''};
  if(V.sec==='discover'&&t==='library')return {lib:V.lib.tab!=='guides'?V.lib.tab:''};
  return {};
@@ -1376,7 +1378,7 @@ function journalPages(){
  const e=[...S.journal.map(j=>({t:'j',day:j.day,at:j.at,j})),
   ...wd.map(d=>({t:'n',day:d,n:S.notes[d]||'',o:cardFor(d)})),
   ...S.readings.map(r=>({t:'r',day:r.date,at:r.at,r})),
-  ...S.bookmarks.filter(b=>b.kind!=='chat'&&b.kind!=='sign').map(b=>b.kind==='dream'?{t:'d',day:(b.data||{}).day||kept(b),at:b.at,b,d:b.data||{}}:{t:b.kind==='horoscope'?'h':'e',day:kept(b),at:b.at,b}),
+  ...S.bookmarks.filter(b=>!['chat','sign','person','conn'].includes(b.kind)).map(b=>b.kind==='dream'?{t:'d',day:(b.data||{}).day||kept(b),at:b.at,b,d:b.data||{}}:{t:b.kind==='horoscope'?'h':'e',day:kept(b),at:b.at,b}),
   ...S.conns.map(c=>({t:'c',day:kept(c),at:c.at,c}))]
   .sort((a,b)=>a.day>b.day?1:a.day<b.day?-1:((a.at||'')>(b.at||'')?1:-1));
  return [{t:'cover'},...e,{t:'new'}];
@@ -1862,7 +1864,7 @@ const mnHead=(t,right='',back=true)=>{if(V.sec==='discover'&&SHARE_PAGES.include
 const MN_ORN='<svg class="mn-orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h56M104 8h56" stroke="currentColor" stroke-width=".8"/><circle cx="62" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="98" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M80 0l1.6 6.4L88 8l-6.4 1.6L80 16l-1.6-6.4L72 8l6.4-1.6z" fill="currentColor"/></svg>';
 const mnHead0=(t,right='',back=true)=>`<div class="mn-bar">${back?iconBtn('back','data-act="back"','Back'):''}${right?`<div class="mn-r">${right}</div>`:''}</div><header class="mn-hd stay"><div class="mn-t"><h1>${t}</h1>${MN_ORN}${mnGreet()}</div></header>`;
 // a line for the reader beneath the title of each inner page, in the voice of the page
-const MN_GREET={whisper:'the card that found you today',affinity:'you and another, beneath the same sky',resonance:'the music two names make together',synastry:'two skies, read side by side',calendar:'the sky above you, night by night',moon:'the Moon above you tonight',planets:'the wanderers that move through your sky',events:'what the heavens are preparing',
+const MN_GREET={whisper:'the card that found you today',resonance:'the music two names make together',calendar:'the sky above you, night by night',moon:'the Moon above you tonight',planets:'the wanderers that move through your sky',events:'what the heavens are preparing',
  'birth-chart':'the sky you were born beneath','life-path':'the road your soul chose','name-within':'the music in your name',cycles:'the season you are walking through',library:'the old knowledge, open to you',profile:'the sky that is yours alone',notifications:'what the stars will whisper to you',settings:'your Kosmia, as you wish it'};
 const mnGreet=()=>{const g=MN_GREET[tab()],n=firstName();return g&&n?`<p class="mn-greet">${esc(n)}, ${g}</p>`:''};
 // a page built as a stack of parchment panels, set as a night page instead: its painting behind (cls picks it), the
@@ -2247,7 +2249,8 @@ function sheetView(){
  if(V.sheet==='reading'){title='Your Readings';
   const all=[...S.readings.map(r=>({at:r.at||r.date,h:lrow(`<span class="fan">${r.cards.slice(0,3).map(x=>pic('deck',x.id,'fan-c'+(x.rev?' rev':''))).join('')}</span>`,esc((SPREADS[r.spread]||{s:r.spread}).s),'Tarot · '+relDay(r.date),`data-act="jopen" data-k="reading:${esc(r.id)}"`)})),
    ...dreams().map(d=>({at:d.at||d.day,h:lrow(dreamArt(d),esc((d.interp||{}).title||'A Dream'),'Dream · '+relDay(d.day),`data-act="dreamopen" data-id="${esc(d.id)}"`)})),
-   ...(SSX.list?SSX.list():[]).map(d=>({at:d.at||d.day,h:lrow(SSX.glyph(d.type==='number'?esc(d.number.slice(0,4)):'✧','sm'),esc(d.type==='number'?`${d.number} · ${(d.r||{}).title||''}`:(d.r||{}).title||'A Synchronicity'),(d.type==='number'?'Sacred Number · ':'Synchronicity · ')+relDay(d.day),`data-ss="open" data-id="${esc(d.id)}"`)}))]
+   ...(SSX.list?SSX.list():[]).map(d=>({at:d.at||d.day,h:lrow(SSX.glyph(d.type==='number'?esc(d.number.slice(0,4)):'✧','sm'),esc(d.type==='number'?`${d.number} · ${(d.r||{}).title||''}`:(d.r||{}).title||'A Synchronicity'),(d.type==='number'?'Sacred Number · ':'Synchronicity · ')+relDay(d.day),`data-ss="open" data-id="${esc(d.id)}"`)})),
+   ...(SSX.cnReads?SSX.cnReads():[]).map(d=>({at:d.at||d.day,h:lrow(SSX.glyph(d.type==='zodiac'?'☉':d.type==='insight'?'♡':'✶','sm'),esc(d.type==='zodiac'?`${sg(d.signs[0]).name} & ${sg(d.signs[1]).name}`:`${d.na} & ${d.nb}`),SSX.CN_TYPES[d.type]+' · '+relDay(d.day),`data-ss-cn="1" data-id="${esc(d.id)}"`)}))]
    .sort((a,b)=>String(b.at)>String(a.at)?1:-1).slice(0,20);
   body=all.length?all.map(x=>x.h).join(''):'<p class="muted center">Your readings will be kept here: tarot, dreams, numbers and synchronicities.</p>';
   body+=lrow(ui('t-reading','th oval'),'Draw a new reading','Shuffle the deck and choose your cards','data-go="tarot" data-t="reading"')}
@@ -2662,7 +2665,7 @@ views.you=()=>{
   miss=!bd?'Add your birth date to open them all':S.birth.unk||!S.birth.time?'Add your birth time for your Rising':!S.fullName?'Add your full birth name for its number':'';
   pg=`<div class="sky-l sky-list or-list jn-list yo-list">${dr('birth-chart','ex-chart','Birth chart','',esc(line))}${dr('life-path','ex-lifepath','Life path','',lp)}${dr('name-within','ex-name','Your name','',nmL)}${dr('cycles','m-'+S.sign,'My cycles','',cy)}
   ${row('data-go="discover" data-t="profile"',ui('ic-birth','sky-i'),'Birth details','',miss||'Your day, time and place of birth')}</div>`}
- else if(yc==='circle')pg=`<p class="pg-in">Read for the people you love.</p><div class="sky-l sky-list or-list jn-list yo-list">${dr('affinity','ex-compat','Two signs','','How your sign flows with theirs')}${dr('resonance','ex-resonance','Two names','','The numbers in both your names')}${dr('synastry','ex-chart','Two birth charts','','Your skies side by side')}${row('data-act="spkopen"',ui('ic-someone','sky-i'),'Someone else’s sky','','Read today for another sign')}</div>`;
+ else if(yc==='circle')pg=`<p class="pg-in">Read for the people you love.</p><div class="sky-l sky-list or-list jn-list yo-list">${dr('people','ex-compat','My Relationships','','The people you have kept')}${dr('affinity','ex-compat','Two signs','','How your sign flows with theirs')}${dr('resonance','ex-resonance','Two names','','The numbers in both your names')}${dr('synastry','ex-chart','Two birth charts','','Your skies side by side')}${row('data-act="spkopen"',ui('ic-someone','sky-i'),'Someone else’s sky','','Read today for another sign')}</div>`;
  else pg=`<p class="yo-acct">${!C.enabled?'Kept on this device':C.user?'Signed in as '+esc(C.user.email||''):'Not signed in · kept on this device'}</p><div class="sky-l sky-list or-list jn-list yo-list">${sr('account','profile','Name and photo',esc(S.name||'Not set'))}${sr('notifications','bell','Notifications','Your daily horoscope, Whispers and events')}${sr('display','list','Display','Text size, motion, time zone and voice')}${sr('privacy','lock','Privacy and data','Consent, download and deletion')}${sr('subscription','star','Membership','Early access · everything is open')}</div>
   ${C.user?'<button class="btn ghost yo-out" data-act="signout">Sign out</button>':C.enabled?'<button class="btn ghost yo-out" data-act="toauth">Sign in or create an account</button>':''}`;
  return `<div class="land hland hnight yland skyp pg pg-you"><header class="hl-top stay sk-head"><h1 class="pg-t">${nm?esc(nm):'You'}</h1><p class="pg-s">${esc(line)}</p>${pgStrip('you')}</header>
@@ -2936,10 +2939,13 @@ function footFit(){
  const pr=document.createElement('i');pr.style.cssText='position:absolute;visibility:hidden;width:0;height:var(--t-foot)';app.append(pr);const T=pr.offsetHeight;pr.remove();
  const sy=scrollY;app.style.setProperty('padding-bottom','0px','important');(footFit.cut||[]).forEach(e=>e.style.removeProperty('padding-bottom'));footFit.cut=[];
  let last=-1e9;
- for(const e of pg.querySelectorAll('*')){const r=e.getBoundingClientRect();if(!r.width||!r.height||r.bottom<=last)continue;
+ // what scrolls inside a night page's own panel ends, for the page, at the panel's foot
+ const ms=pg.querySelector('.mn-scroll'),msB=ms?ms.getBoundingClientRect().bottom:Infinity;
+ if(ms&&ms.scrollHeight>ms.clientHeight+1){app.style.removeProperty('padding-bottom');if(scrollY!==sy)scrollTo(0,sy);return}
+ for(const e of pg.querySelectorAll('*')){const r=e.getBoundingClientRect(),bot=ms&&e!==ms&&ms.contains(e)?Math.min(r.bottom,msB):r.bottom;if(!r.width||!r.height||bot<=last)continue;
   const c=getComputedStyle(e);if(c.position==='fixed'||c.visibility==='hidden'||+c.opacity===0||(e.tagName==='IMG'&&c.position==='absolute'))continue;
   const own=!e.children.length||/^(IMG|svg|CANVAS|INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.tagName)||parseFloat(c.borderBottomWidth)>0||c.backgroundImage!=='none'||c.backgroundColor!=='rgba(0, 0, 0, 0)'||[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim());
-  if(own)last=r.bottom}
+  if(own)last=bot}
  if(last<-1e8){if(scrollY!==sy)scrollTo(0,sy);return}
  // the page's end is found by measuring, adjusted until it lies the right height below the last words (the margins of
  // a page and of its sheets fold into one another, so the space added is not always the space gained): more room is
@@ -3545,7 +3551,7 @@ function skyHome(){
 // width, never stretched. Each thing's place [x, y, w, h] in its own painting
 const ORV={a:{h:1992,l:[212,508],hot:{omens:[60,220,300,350],dreams:[880,230,200,290],conn:[840,570,270,290],read:[50,1430,320,300],tarot:[730,1500,390,230],kas:[440,1345,270,395],me:[1012,96,96,96]}},
  b:{h:2532,l:[212,630],hot:{omens:[60,300,310,400],dreams:[870,350,210,300],conn:[840,710,280,320],read:[50,1800,330,340],tarot:[690,1870,430,250],kas:[420,1830,290,445],me:[1016,128,96,96]}}};
-const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="affinity"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
+const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities'],dreams:['data-go="discover" data-t="dreams"','Dreams'],conn:['data-go="discover" data-t="connections"','Connections'],read:['data-act="sheet" data-k="reading"','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot'],kas:['data-act="kasgo"','Kassandra'],me:['data-go="you"','My Cosmos']};
 function oracleHome(){
  const v=innerHeight/Math.min(innerWidth,520)>1.93?'b':'a',P=ORV[v];
  return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
@@ -3924,6 +3930,317 @@ function drArchive(){
  <div class="field"><label for="drq" class="sr-only">Search dreams or symbols</label><input type="search" id="drq" placeholder="Search dreams or symbols…" value="${esc(V.drQ||'')}" autocomplete="off"></div>
  <div class="dr-book" id="drlist">${drArchiveList(V.drQ)}</div></div>`,'dj ss dr');
 }
+// ---- Compatibility & Connections (Oracle): one entrance to three readings, from general curiosity to the most personal.
+// Zodiac Compatibility (two signs, no personal details), Relationship Insights (two people and the nature of their bond,
+// with an optional question) and Birth Chart Comparison (synastry from real birth details; without birth times the
+// houses, Ascendant and an uncertain Moon are left out). The input and the reading share one page; the people chosen,
+// the signs and the relationship type carry from one reading to the next. People are kept in My Relationships only when
+// the reader chooses (their birth details only with the reader's word that they have permission); readings are kept in
+// Your Readings. No percentages, no verdicts: astrology as a symbolic mirror for reflection.
+const CN_RELS=[['romantic','Romantic'],['friendship','Friendship'],['family','Family'],['professional','Professional'],['other','Other']];
+const CN_RELN=Object.fromEntries(CN_RELS);
+const CN_TYPES={zodiac:'Zodiac Compatibility',insight:'Relationship Insights',chart:'Birth Chart Comparison'};
+// ---- the book of connections: the words for each pairing when Kassandra is not asked
+const CN_EL={'Fire-Fire':'Two fires feed each other: warmth, courage and a shared appetite for life, as long as both leave room to breathe.','Earth-Earth':'Two earth signs build on common ground: patience, loyalty and a love of what is real and lasting.','Air-Air':'Two air signs meet in the mind: ideas, conversation and a lightness that keeps the bond curious.','Water-Water':'Two water signs feel each other deeply: intuition, tenderness and an unspoken understanding.','Air-Fire':'Air feeds fire: inspiration, enthusiasm and a lively exchange that can lift you both.','Earth-Water':'Water nourishes earth: care, devotion and a quiet sense of safety that can grow over time.','Earth-Fire':'Fire brings spark to earth, earth gives fire a place to land: vision meets patience, if both respect the other’s pace.','Fire-Water':'Fire and water meet as passion and feeling: intense and transforming, asking for gentleness on both sides.','Air-Earth':'Air brings ideas, earth brings form: a meeting of the possible and the practical that can build something real.','Air-Water':'Air thinks, water feels: a meeting of head and heart that can teach each of you the other’s language.'};
+const CN_FRIEND=['As friends, you recognise each other instantly and may share the same humour and the same blind spots.','As friends, you bring each other fresh perspectives, even when you do not quite understand one another.','As friends, you are natural companions: easy, encouraging and good at having fun together.','As friends, you challenge each other to grow, and the respect you earn is real.','As friends, you understand each other with little effort and tend to support one another naturally.','As friends, you learn from your differences, offering care in ways the other may not expect.','As friends, you balance each other, each holding what the other lacks.'];
+const CN_CHAL=['Sharing the same nature can mean sharing the same blind spots; remember to give each other space.','Your instincts differ, so assumptions can slip in; asking rather than guessing helps.','Ease can become complacency; keep choosing each other’s company with intention.','Different rhythms and needs can create friction, which asks for patience rather than winning.','Harmony can make it tempting to avoid hard conversations; honesty keeps the bond alive.','What feels natural to one may feel foreign to the other; small adjustments go a long way.','You may pull in opposite directions; the meeting point lies in valuing what the other brings.'];
+const CN_NUR={'Fire-Fire':'Share adventures, take turns leading, and cool down before difficult talks.','Earth-Earth':'Build rituals together, honour each other’s pace, and make room for the unexpected now and then.','Air-Air':'Keep talking, learn something new together, and remember to turn ideas into shared moments.','Water-Water':'Create a safe space for feelings, check in gently, and keep a little lightness close.','Air-Fire':'Dream out loud together, then choose one idea and bring it to life.','Earth-Water':'Show care in practical ways, and make time to talk about what you feel as well as what you do.','Earth-Fire':'Agree on a shared plan, but leave room for spontaneity; patience and enthusiasm both have a place.','Fire-Water':'Pause before reacting, speak your feelings gently, and celebrate the passion you share.','Air-Earth':'Give ideas a timeline and plans a little freedom; listen for what the other values most.','Air-Water':'Name feelings as well as thoughts, and give each other time to answer in your own way.'};
+const CN_Q=['What do I see of myself in this person?','What could I learn from the way this person sees the world?','How can we keep this ease meaningful?','What is this friction inviting me to understand?','How can harmony make room for honesty between us?','What small adjustment would show my care in their language?','What does this person bring that I need more of?'];
+const CN_REL={romantic:{support:'In love, support often looks like presence: listening, tenderness and making each other feel chosen.',bounds:'Romantic bonds flourish when each keeps a life of their own; closeness and independence can live together.',growth:'Growing together means letting each other change, and choosing each other again as you do.',q:'What helps me feel truly close to this person, and how can I offer the same?'},
+ friendship:{support:'Friends support each other through loyalty, humour and simply showing up.',bounds:'Friendships stay healthy when both can say no without fear and yes with joy.',growth:'Friendship deepens through shared experiences and through honesty when it matters.',q:'How can I be the kind of friend I would love to have?'},
+ family:{support:'Family support is often quiet: shared history, practical help and the steadiness of being known.',bounds:'Family roles can harden over time; gentle boundaries let each person be who they are now.',growth:'Growing together in a family means meeting each other as you are today, not only as you once were.',q:'What would I like this person to understand about who I am now?'},
+ professional:{support:'At work, support means reliability, clear agreements and recognising each other’s strengths.',bounds:'Clear roles and expectations protect both the work and the relationship.',growth:'Growing together professionally means sharing goals and learning from each other’s ways of working.',q:'What working agreement would help us both do our best work?'},
+ other:{support:'Support grows from attention: noticing what the other needs and offering what you can.',bounds:'Every bond needs space; knowing your limits helps the connection stay kind.',growth:'Growth comes from curiosity about each other and patience with your differences.',q:'What does this connection ask of me, and what does it give me?'}};
+// aspects between two charts: the strengths, challenges and a suggestion for each kind of meeting
+const CN_ASP={conjunction:['Your energies blend and amplify each other.','The intensity can be overwhelming at times.','Notice when you need the same thing at the same time.'],trine:['This tends to flow naturally, with little effort.','Ease can be taken for granted.','Appreciate this gift aloud from time to time.'],sextile:['This offers opportunities that grow when you both reach for them.','It asks for initiative to come alive.','Plan something that draws on this together.'],square:['Friction here can become a source of growth and energy.','It may create tension or repeated disagreements.','Approach it with curiosity rather than defence.'],opposition:['You can balance and complete each other.','You may pull in different directions.','Look for the middle ground where both needs are honoured.']};
+const CN_GROUPS=[['Sun','sun','Sun Connections','Identity and mutual understanding'],['Moon','moon','Moon Connections','Emotional needs and emotional dynamics'],['Mercury','mercury','Mercury Connections','Communication and intellectual connection'],['Venus','venus','Venus Connections','Affection, appreciation and shared values'],['Mars','mars','Mars Connections','Motivation, attraction and conflict'],['Jupiter','jupiter','Jupiter Connections','Growth, encouragement and expansion'],['Saturn','saturn','Saturn Connections','Responsibility, boundaries and commitment'],['outer','outer','Outer Planet Connections','Deeper symbolic and transformative themes']];
+const CN_HARM=['trine','sextile'],CN_TENS=['square','opposition'];
+// ---- people: the reader, someone kept in My Relationships, or someone new entered on the page
+const cnPeople=()=>S.bookmarks.filter(b=>b.kind==='person').map(b=>b.data||{}).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+const cnPerson=id=>cnPeople().find(p=>p.id===id);
+const cnReads=()=>S.bookmarks.filter(b=>b.kind==='conn').map(b=>b.data||{}).sort((a,b)=>(b.at||'')>(a.at||'')?1:-1);
+const cnX=()=>V.cx||(V.cx={a:{who:'me'},b:{who:''},rel:'',q:'',na:{},nb:{},res:null,busy:false});
+const cnMe=()=>({me:true,name:firstName()||'You',sign:S.sign,date:hasBirthDate()?S.birth.date:'',time:S.birth.unk?'':S.birth.time||'',unk:!!S.birth.unk||!S.birth.time,place:S.birth.place||'',lat:S.birth.lat,lon:S.birth.lon,tz:S.birth.tz||''});
+function cnWho(slot){
+ const X=cnX(),s=X[slot];if(!s||!s.who)return null;
+ if(s.who==='me')return cnMe();
+ if(s.who==='new'){const n=X['n'+slot]||{};const sign=n.sign||(n.date?sunSign(n.date):'');return Object.assign({},n,{sign,isNew:true,name:(n.name||'').trim()})}
+ const p=cnPerson(s.who);return p?Object.assign({},p,{sign:p.sign||(p.date?sunSign(p.date):'')}):null;
+}
+function cnSaveBm(kind,d){const b=S.bookmarks.find(x=>x.kind===kind&&x.ref===d.id);if(b){b.data=d}else S.bookmarks.push({id:d.id,kind,ref:d.id,data:d,at:d.at||new Date().toISOString()});save();const bb=S.bookmarks.find(x=>x.kind===kind&&x.ref===d.id);C.saveBookmark&&C.saveBookmark(bb).then(()=>{bb.sy=true;save()},()=>{})}
+// a new person kept in My Relationships; their birth details only with the reader's word that they agreed
+function cnKeepNew(slot){
+ const X=cnX(),n=X['n'+slot]||{};if(!(n.name||'').trim())return null;
+ const p={id:uuid(),at:new Date().toISOString(),name:n.name.trim(),rel:X.rel||'',sign:n.sign||(n.date?sunSign(n.date):''),consent:!!n.consent};
+ if(n.consent)Object.assign(p,{date:n.date||'',time:n.unk?'':n.time||'',unk:!!n.unk||!n.time,place:n.place||'',lat:n.lat,lon:n.lon,tz:n.tz||''});
+ cnSaveBm('person',p);X[slot]={who:p.id};X['n'+slot]={};toast(`${p.name} is kept in My Relationships`);return p;
+}
+// ---- the readings
+function cnZodiac(a,b){
+ const A1=sg(a),B1=sg(b),ia=SIGNS.indexOf(A1),ib=SIGNS.indexOf(B1),d=Math.min((ib-ia+12)%12,(ia-ib+12)%12),r=zodiacMatch(a,b),ep=[A1.el,B1.el].sort().join('-'),el=ELP[A1.el+'-'+B1.el]||ELP[B1.el+'-'+A1.el];
+ return {title:AFF_T[d],sections:[['The Essence of Their Connection',`${A1.name} and ${B1.name}: ${AFF_T[d].toLowerCase().replace(/^a /,'a ')}. ${DIST[d][1]}`],['Elemental Connection',`${A1.name} is ${A1.el.toLowerCase()} and ${B1.name} is ${B1.el.toLowerCase()}. ${CN_EL[ep]}`],['Natural Harmony',`${r.themes[3][1]} ${r.themes[4][1]}`],['Emotional Connection',el[1]],['Communication',el[0]],['Love & Romance',`${A1.name} tends to love ${STYLE[a]}; ${B1.name} ${STYLE[b]}. ${DIST[d][1]}`],['Friendship',CN_FRIEND[d]],['Areas of Challenge',CN_CHAL[d]],['Nurturing the Connection',CN_NUR[ep]]],reflect:CN_Q[d]};
+}
+function cnInsightLocal(A,B,rel,q){
+ const z=cnZodiac(A.sign,B.sign),R=CN_REL[rel]||CN_REL.other,s=Object.fromEntries(z.sections);
+ return {essence:`In this ${({romantic:'romantic relationship',friendship:'friendship',family:'family bond',professional:'working relationship'})[rel]||'connection'}, ${A.name} and ${B.name} meet as ${sg(A.sign).name} and ${sg(B.sign).name}. ${s['The Essence of Their Connection']}`,
+  together:s['Natural Harmony'],emotional:s['Emotional Connection'],communication:s['Communication'],support:R.support,tension:s['Areas of Challenge'],boundaries:R.bounds,growth:R.growth,
+  answer:q?`You asked: “${q}” Astrology cannot answer for another person, but it can offer a way in: ${s['Communication'].charAt(0).toLowerCase()+s['Communication'].slice(1)} Consider asking them gently how it feels from their side.`:'',
+  nurture:s['Nurturing the Connection'],reflection:R.q,ai:false};
+}
+const CN_INS=[['essence','The Essence of Your Bond'],['together','What Brings You Together'],['emotional','Emotional Dynamics'],['communication','Communication'],['support','Mutual Support'],['tension','Areas of Tension'],['boundaries','Boundaries & Expectations'],['growth','Growth Together'],['answer','Your Personal Question'],['nurture','Nurturing Your Connection']];
+// the synastry itself, calculated from both birth details
+function cnSynastry(A,B){
+ const ch=p=>K.chart({date:p.date,time:p.unk?'':p.time,unk:!!p.unk||!p.time||!p.tz,lat:p.lat,lon:p.lon,tz:p.tz||'UTC'});
+ const ca=ch(A),cb=ch(B),ta=ca.known,tb=cb.known,full=ta&&tb;
+ const pts=(c,timed)=>c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).concat(timed&&c.ang?[{n:'Ascendant',lon:c.ang.asc,sign:K.signIdx(c.ang.asc)}]:[]);
+ const asp=K.aspects(pts(ca,ta),pts(cb,tb),'synastry').filter(x=>!(['Uranus','Neptune','Pluto'].includes(x.a.n)&&['Uranus','Neptune','Pluto'].includes(x.b.n)));
+ const order=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn'],grp=x=>{const i=Math.min(...[x.a.n,x.b.n].map(n=>{const k=order.indexOf(n);return k<0?99:k}));return i<99?order[i]:'outer'};
+ const list=asp.map(x=>({a:x.a.n,b:x.b.n,n:x.n,g:x.g,orb:+x.orb.toFixed(1),sa:sIdx(x.a.sign).name,sb:sIdx(x.b.sign).name,grp:grp(x)})).sort((p,q)=>p.orb-q.orb).slice(0,24);
+ const hs=[];if(full){const h=(lon,asc)=>((K.signIdx(lon)-K.signIdx(asc)+12)%12)+1;
+  ca.pl.filter(p=>['Sun','Moon','Venus','Mars'].includes(p.n)).forEach(p=>hs.push({who:A.name,p:p.n,in:B.name,h:h(p.lon,cb.ang.asc)}));
+  cb.pl.filter(p=>['Sun','Moon','Venus','Mars'].includes(p.n)).forEach(p=>hs.push({who:B.name,p:p.n,in:A.name,h:h(p.lon,ca.ang.asc)}))}
+ const place=c=>c.pl.map(p=>({n:p.n,s:p.n==='Moon'&&c.moonRange?`${sIdx(c.moonRange[0]).name} or ${sIdx(c.moonRange[1]).name}`:sIdx(p.sign).name})).concat(c.known&&c.ang?[{n:'Ascendant',s:sIdx(K.signIdx(c.ang.asc)).name}]:[]);
+ return {aspects:list,houses:hs,pa:place(ca),pb:place(cb),limited:!full,ta,tb};
+}
+function cnChartLocal(A,B,rel,syn){
+ const h=syn.aspects.filter(x=>CN_HARM.includes(x.n)).length,t=syn.aspects.filter(x=>CN_TENS.includes(x.n)).length,R=CN_REL[rel]||CN_REL.other,groups={};
+ CN_GROUPS.forEach(([pl,k])=>{const l=syn.aspects.filter(x=>x.grp===pl);groups[k]=l.length?l.slice(0,2).map(x=>`${x.a===x.b?'Your two':''}${A.name}’s ${x.a} and ${B.name}’s ${x.b} ${ASPT[x.n]}`).join('. ')+'.':''});
+ return {essence:`Between ${A.name}’s and ${B.name}’s charts there are ${syn.aspects.length} significant meetings: ${h} flowing and ${t} challenging. ${h>=t?'Ease tends to outweigh friction here, which may make the connection feel natural.':'Friction is part of this connection, which can bring both tension and growth.'}`,
+  groups,story:`The story of your two skies is written in these meetings: where your planets flow, there is ease to rely on; where they press against each other, there is something to learn. ${R.growth}`,nurture:R.support+' '+R.bounds,reflection:R.q,ai:false};
+}
+// ---- the pages
+const cnHd=(t,sub)=>hdr(t,{sub});
+const cnPage=(h)=>nightSub(`<div class="sub">${h}</div>`,'dj ss cn');
+function cnHome(){
+ const n=cnPeople().length;
+ return cnPage(`${cnHd('Connections','Discover the invisible threads that bring us together.')}
+ <div class="list cn-doors">${ssDoor('☉','Zodiac Compatibility','Explore the natural harmony, differences and potential between two zodiac signs.','data-go="discover" data-t="affinity"','big')}
+ ${ssDoor('♡','Relationship Insights','Understand the dynamics, strengths and challenges between two people, in love, friendship or another meaningful relationship.','data-go="discover" data-t="insights"','big')}
+ ${ssDoor('✶','Birth Chart Comparison','Explore a deeper connection through the planetary placements and interactions between two birth charts.','data-go="discover" data-t="synastry"','big')}</div>
+ <button class="dr-link" data-go="discover" data-t="people">My Relationships${n?` · ${n} ${n===1?'person':'people'}`:''} ${IC.chev}</button>`);
+}
+const cnSec=(t,body)=>body?`${ssHead(t)}<div class="dr-text"><p>${esc(body)}</p></div>`:'';
+const cnSignSel=(id,label,v)=>`<div class="field"><label for="${id}">${label}</label><select id="${id}" data-cn="sign">${v?'':'<option value="">Choose a sign</option>'}${SIGNS.map(s=>`<option value="${s.id}" ${v===s.id?'selected':''}>${s.g} ${s.name}</option>`).join('')}</select></div>`;
+function cnActs(kind,R){
+ const saved=R.saved;
+ return `<div class="ss-acts"><button class="btn${saved?' ghost':''}" data-cn="keep" ${saved?'disabled':''}>${saved?'✓ In Your Readings':'Save to Your Readings'}</button><button class="btn ghost" data-cn="journal">Reflect in My Journal</button></div>`;
+}
+function cnZodiacView(){
+ const L=V.love,a=L.a||S.sign,b=L.b,z=L.done&&a&&b?cnZodiac(a,b):null,X=cnX();
+ return cnPage(`${cnHd('Zodiac Compatibility','The natural harmony between two signs.')}
+ <div class="two cn-two">${cnSignSel('za','First sign',a)}${cnSignSel('zb','Second sign',b)}</div>
+ <button class="btn" data-cn="zgo" ${b?'':'disabled'}>Explore Their Connection</button>
+ ${z?`<div class="dr-hero" id="cnres"><h2>${sg(a).name} &amp; ${sg(b).name}</h2><p class="dr-kw">${esc(z.title)}</p></div>
+ ${z.sections.map(([t,x])=>cnSec(t,x)).join('')}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(z.reflect)}”</p>`,'dr-q')}
+ ${cnActs('zodiac',{saved:L.saved})}
+ <div class="cn-next">${ssHead('Go deeper')}<div class="list">${ssDoor('♡','Relationship Insights','Add the people and the nature of your bond.','data-cn="tonext" data-t="insights"')}${ssDoor('✶','Birth Chart Comparison','Compare two complete birth charts.','data-cn="tonext" data-t="synastry"')}</div></div>
+ <p class="muted small center">Sign compatibility is a symbolic starting point for reflection, not a measure of any relationship.</p>`:''}`);
+}
+// choosing a person: the reader, someone kept, or someone new (their details entered here)
+function cnPick(slot,label,chart){
+ const X=cnX(),s=X[slot]||{},ppl=cnPeople(),other=X[slot==='a'?'b':'a']||{},n=X['n'+slot]||{};
+ const opt=(who,l)=>`<button class="fchip" role="radio" aria-checked="${s.who===who}" data-cn="who" data-slot="${slot}" data-v="${who}">${l}</button>`;
+ let form='';
+ if(s.who==='new')form=`<div class="cn-new">
+  <div class="field"><label for="cn-${slot}-name">Name or nickname</label><input type="text" id="cn-${slot}-name" data-cn="f" data-slot="${slot}" data-k="name" value="${esc(n.name||'')}" autocomplete="off"></div>
+  <div class="two cn-two"><div class="field"><label for="cn-${slot}-date">Birth date${chart?'':' <i>or a sign</i>'}</label><input type="date" id="cn-${slot}-date" data-cn="f" data-slot="${slot}" data-k="date" value="${esc(n.date||'')}"></div>
+  ${chart?'':`<div class="field"><label for="cn-${slot}-sign">Zodiac sign</label><select id="cn-${slot}-sign" data-cn="f" data-slot="${slot}" data-k="sign"><option value="">${n.date?sg(sunSign(n.date)).name+' (from the date)':'Choose'}</option>${SIGNS.map(x=>`<option value="${x.id}" ${n.sign===x.id?'selected':''}>${x.name}</option>`).join('')}</select></div>`}</div>
+  ${chart?cnBirthMore(slot,n,true):`<details class="cn-more"${n.time||n.place?' open':''}><summary>Birth time and place · Optional</summary>${cnBirthMore(slot,n)}</details>`}
+  <label class="row cn-cb"><input type="checkbox" class="cb" data-cn="f" data-slot="${slot}" data-k="keep" ${n.keep?'checked':''}> <span>Save to My Relationships</span></label>
+  ${n.keep?`<label class="row cn-cb"><input type="checkbox" class="cb" data-cn="f" data-slot="${slot}" data-k="consent" ${n.consent?'checked':''}> <span>They are happy for me to keep their birth details</span></label>`:''}</div>`;
+ return `<div class="cn-pick">${ssHead(label)}<div class="fchips ss-chips">${other.who==='me'?'':opt('me','Me')}${ppl.filter(p=>p.id!==other.who).map(p=>opt(p.id,esc(p.name))).join('')}${opt('new','+ Someone new')}</div>${form}</div>`;
+}
+function cnBirthMore(slot,n,chart){
+ const P=V.places['cn'+slot]||{};
+ return `${chart?`<label class="row cn-cb"><input type="checkbox" class="cb" data-cn="f" data-slot="${slot}" data-k="unk" ${n.unk?'checked':''}> <span>Birth time unknown</span></label>`:''}${n.unk?'':`<div class="field"><label for="cn-${slot}-time">Birth time${chart?'':' (optional)'}</label><input type="time" id="cn-${slot}-time" data-cn="f" data-slot="${slot}" data-k="time" value="${esc(n.time||'')}"></div>`}
+ <div class="field"><label for="cn${slot}-q">Birthplace${chart?'':' (optional)'}</label><div class="row nowrap"><input type="text" id="cn${slot}-q" value="${esc(P.q!=null?P.q:n.place||'')}" placeholder="Town or city" autocomplete="off"><button class="btn ghost sm" data-cn="psearch" data-slot="${slot}">Search</button></div>
+ ${P.busy?'<p class="muted small">Searching…</p>':''}${P.err?`<p class="err small">${esc(P.err)}</p>`:''}${P.results?(P.results.length?`<ul class="places">${P.results.map((r,i)=>`<li><button class="link" data-cn="ppick" data-slot="${slot}" data-i="${i}">${esc([r.name,r.admin1,r.country].filter(Boolean).join(', '))}</button></li>`).join('')}</ul>`:'<p class="muted small">No places found. Try a nearby larger town.</p>'):''}
+ ${n.place&&!P.results?`<p class="muted small">${esc(n.place)}</p>`:''}</div>`;
+}
+const cnRelPick=()=>{const X=cnX();return `${ssHead('The nature of your connection')}<div class="fchips ss-chips">${CN_RELS.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${X.rel===k}" data-cn="rel" data-v="${k}">${l}</button>`).join('')}</div>`};
+function cnNewSaveBtns(){
+ return ['a','b'].map(sl=>{const s=cnX()[sl]||{},n=cnX()['n'+sl]||{};return s.who==='new'&&(n.name||'').trim()?`<button class="btn ghost" data-cn="keepp" data-slot="${sl}">Save ${esc(n.name.trim())} to My Relationships</button>`:''}).join('');
+}
+function cnInsightsView(){
+ const X=cnX(),R=X.res&&X.res.kind==='insight'?X.res:null;
+ if(X.busy)return `<div class="sub">${hdr('Relationship Insights')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Kassandra is reading your connection…</p></div></div>`;
+ const A=cnWho('a'),B=cnWho('b');
+ return cnPage(`${cnHd('Relationship Insights','The dynamics, strengths and challenges between two people.')}
+ ${cnPick('a','First person')}${cnPick('b','Second person')}${cnRelPick()}
+ <div class="field"><label for="cnq">What would you like to understand? <i>(Optional)</i></label><textarea id="cnq" rows="2" maxlength="300" placeholder="Why do we communicate so differently?">${esc(X.q||'')}</textarea></div>
+ <button class="btn" data-cn="igo">Explore Their Connection</button>
+ ${R?`<div class="dr-hero" id="cnres"><h2>${esc(R.na)} &amp; ${esc(R.nb)}</h2><p class="dr-kw">${esc(CN_RELN[R.rel]||'')} · ${esc(sg(R.sa).name)} and ${esc(sg(R.sb).name)}</p></div>
+ ${CN_INS.map(([k,t])=>cnSec(t,R.r[k])).join('')}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(R.r.reflection||'')}”</p>`,'dr-q')}
+ ${cnActs('insight',R)}<div class="ss-acts">${cnNewSaveBtns()}</div>
+ <div class="cn-next"><div class="list">${ssDoor('✶','Birth Chart Comparison','Continue with these two people and their full birth charts.','data-cn="tonext" data-t="synastry"')}</div></div>
+ <p class="muted small center">${R.r.ai?'Read by Kassandra with AI. ':'Read from Kosmia’s book of connections. '}Astrology is offered as a symbolic mirror for reflection; it cannot know another person’s thoughts or feelings.</p>`:''}`);
+}
+// what a chart still needs: a date always; a time and place for houses and the Ascendant
+function cnNeeds(p){if(!p)return null;return {date:!!p.date,time:!p.unk&&!!p.time,place:!!(p.place&&p.tz)}}
+function cnChartView(){
+ const X=cnX(),R=X.res&&X.res.kind==='chart'?X.res:null;
+ if(X.busy)return `<div class="sub">${hdr('Birth Chart Comparison')}<div class="reading-anim">${ui('owl','ra-owl')}<p class="quote center">Kosmia is calculating both skies…</p></div></div>`;
+ if(!A)return `<div class="sub">${hdr('Birth Chart Comparison')}${needLib()}</div>`;
+ const PA=cnWho('a'),PB=cnWho('b'),na=cnNeeds(PA),nb=cnNeeds(PB);
+ const cell=(ok,req)=>ok?'<span class="cn-ok">✓</span>':`<span class="cn-miss">${req?'Needed':'For full chart'}</span>`;
+ const fix=(P,slot)=>!P||P.isNew?'':P.me?(!P.date||P.unk||!P.place?`<button class="dr-link" data-go="discover" data-t="profile">Complete my birth details ${IC.chev}</button>`:''):(!P.date||P.unk||!P.place)?`<button class="dr-link" data-cn="editp" data-id="${esc(P.id)}">Complete ${esc(P.name)}’s birth details ${IC.chev}</button>`:'';
+ const table=PA&&PB?`${ssHead('Birth details')}<table class="cn-tab"><tr><th></th><th>${esc(PA.name||'First')}</th><th>${esc(PB.name||'Second')}</th></tr><tr><td>Birth date</td><td>${cell(na.date,1)}</td><td>${cell(nb.date,1)}</td></tr><tr><td>Birth time</td><td>${cell(na.time)}</td><td>${cell(nb.time)}</td></tr><tr><td>Birthplace</td><td>${cell(na.place)}</td><td>${cell(nb.place)}</td></tr></table>${fix(PA,'a')}${fix(PB,'b')}
+ ${na.date&&nb.date&&(!na.time||!nb.time||!na.place||!nb.place)?'<p class="muted small">Without both birth times and places, you can still compare: houses, Ascendants and other time-sensitive details are left out rather than guessed.</p>':''}`:'';
+ return cnPage(`${cnHd('Birth Chart Comparison','Two skies, read side by side.')}
+ ${cnPick('a','First person',true)}${cnPick('b','Second person',true)}${table}${cnRelPick()}
+ <button class="btn" data-cn="cgo">Compare Birth Charts</button>
+ ${R?cnChartReading(R):''}`);
+}
+function cnChartReading(R){
+ const s=R.syn,r=R.r,line=x=>`${esc(R.na)}’s ${x.a} ${x.g} ${esc(R.nb)}’s ${x.b}`;
+ const aspCard=x=>{const c=CN_ASP[x.n]||['','',''];return `<details class="acc cn-asp"><summary><span class="lr-t"><strong>${line(x)}</strong><span>${cap(x.n)} · ${PM[x.a]} and ${PM[x.b]}</span></span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b">
+  <p><strong>Its meaning:</strong> ${esc(R.na)}’s ${x.a} (${PM[x.a]}) and ${esc(R.nb)}’s ${x.b} (${PM[x.b]}) ${ASPT[x.n]}.</p><p><strong>A possible strength:</strong> ${c[0]}</p><p><strong>A possible challenge:</strong> ${c[1]}</p><p><strong>To nurture it:</strong> ${c[2]}</p>
+  <details class="cn-tech"><summary>Technical details</summary><p class="small">${x.a} in ${x.sa}, ${x.b} in ${x.sb}; ${x.n} with an orb of ${x.orb}°.</p></details></div></details>`};
+ const grp=CN_GROUPS.map(([pl,k,t,sub])=>{const l=s.aspects.filter(x=>x.grp===pl);if(!l.length)return '';return `${ssHead(t)}<p class="cn-gsub">${sub}</p>${r.groups&&r.groups[k]?`<div class="dr-text"><p>${esc(r.groups[k])}</p></div>`:''}<div class="list">${l.map(aspCard).join('')}</div>`}).join('');
+ const harm=s.aspects.filter(x=>CN_HARM.includes(x.n)),tens=s.aspects.filter(x=>CN_TENS.includes(x.n));
+ return `<div class="dr-hero" id="cnres"><h2>${esc(R.na)} &amp; ${esc(R.nb)}</h2><p class="dr-kw">${esc(CN_RELN[R.rel]||'')} · ${s.aspects.length} meetings between your skies</p></div>
+ ${ssHead('Your Two Birth Charts')}<table class="cn-tab cn-pl"><tr><th></th><th>${esc(R.na)}</th><th>${esc(R.nb)}</th></tr>${s.pa.map((p,i)=>`<tr><td>${p.n}</td><td>${esc(p.s)}</td><td>${esc((s.pb.find(q=>q.n===p.n)||{s:'·'}).s)}</td></tr>`).join('')}${!s.pa.some(p=>p.n==='Ascendant')&&s.pb.some(p=>p.n==='Ascendant')?`<tr><td>Ascendant</td><td>·</td><td>${esc(s.pb.find(p=>p.n==='Ascendant').s)}</td></tr>`:''}</table>
+ ${s.limited?`<p class="muted small">${!s.ta&&!s.tb?'Both birth times or places are':(!s.ta?esc(R.na)+'’s':esc(R.nb)+'’s')+' birth time or place is'} missing, so houses and the Ascendant are left out${s.pa.concat(s.pb).some(p=>/ or /.test(p.s))?', and the Moon’s sign is uncertain, so its aspects are left out too':''}.</p>`:''}
+ ${cnSec('The Essence of Your Connection',r.essence)}
+ ${grp}
+ ${s.houses.length?`${ssHead('House Connections')}<div class="dr-text">${s.houses.map(h=>`<p>${esc(h.who)}’s ${h.p} falls in ${esc(h.in)}’s ${h.h}${['st','nd','rd'][h.h-1]||'th'} house: ${HOUSE[h.h-1]}.</p>`).join('')}</div>`:''}
+ ${ssHead('Harmonious Aspects')}<div class="dr-text"><p>${harm.length?harm.map(line).join('; ')+'.':'No flowing aspects within orb; ease may come from elsewhere.'}</p></div>
+ ${ssHead('Challenging Aspects')}<div class="dr-text"><p>${tens.length?tens.map(line).join('; ')+'.':'No challenging aspects within orb.'}</p></div>
+ ${cnSec('The Story of Your Two Skies',r.story)}${cnSec('Nurturing Your Connection',r.nurture)}
+ ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(r.reflection||'')}”</p>`,'dr-q')}
+ ${R.view?'':`${cnActs('chart',R)}<div class="ss-acts">${cnNewSaveBtns()}</div>`}
+ <p class="muted small center">${r.ai?'Interpreted by Kassandra with AI from positions calculated by Kosmia. ':'Positions calculated by Kosmia (tropical, geocentric); words from Kosmia’s own book. '}Symbolic, for reflection, never a verdict on a relationship.</p>`;
+}
+// a saved reading, read again exactly as it was
+function cnReadView(){
+ const d=cnReads().find(x=>x.id===(V.cnId||(V.q||{}).id));
+ if(!d)return `<div class="sub">${hdr('Your Reading')}${empty('This reading is no longer here','It may have been removed on another device.',linkBtn('Connections','discover','connections','btn'))}</div>`;
+ let body='';
+ if(d.type==='zodiac'){const z=d.z;body=`<div class="dr-hero"><h2>${esc(sg(d.signs[0]).name)} &amp; ${esc(sg(d.signs[1]).name)}</h2><p class="dr-kw">${esc(z.title)}</p></div>${z.sections.map(([t,x])=>cnSec(t,x)).join('')}${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(z.reflect)}”</p>`,'dr-q')}`}
+ else if(d.type==='insight')body=`<div class="dr-hero"><h2>${esc(d.na)} &amp; ${esc(d.nb)}</h2><p class="dr-kw">${esc(CN_RELN[d.rel]||'')}</p></div>${d.q?`<p class="cn-q">You asked: “${esc(d.q)}”</p>`:''}${CN_INS.map(([k,t])=>cnSec(t,d.r[k])).join('')}${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(d.r.reflection||'')}”</p>`,'dr-q')}`;
+ else body=cnChartReading(Object.assign({view:true},d));
+ const del=V.cnDel===d.id?`<div class="dr-confirm"><p>Delete this reading?</p><div class="ss-acts"><button class="btn ghost" data-cn="delno">Keep it</button><button class="btn" data-cn="delread" data-id="${esc(d.id)}">Delete</button></div></div>`:'';
+ return cnPage(`${cnHd(CN_TYPES[d.type],ymdLong(d.day,{day:'numeric',month:'long',year:'numeric'}))}${body}<div class="ss-acts"><button class="btn ghost" data-cn="rjournal" data-id="${esc(d.id)}">Reflect in My Journal</button></div><div class="dr-tools"><button class="dr-link" data-cn="del" data-id="${esc(d.id)}">Delete this reading</button></div>${del}`);
+}
+// My Relationships: the people kept, each with their details and readings
+function cnPeopleView(){
+ const l=cnPeople();
+ return cnPage(`${cnHd('My Relationships','The people you have chosen to keep.')}
+ ${l.length?`<div class="list">${l.map(p=>lrow(ssGlyph(p.sign?sg(p.sign).g:'✦','sm'),esc(p.name),[p.rel?CN_RELN[p.rel]:'',p.sign?sg(p.sign).name:'',p.date?'birth details kept':''].filter(Boolean).join(' · '),`data-cn="openp" data-id="${esc(p.id)}"`)).join('')}</div>`:mbox(`<h3>No one kept yet</h3><p>When you explore a connection with someone new, you can choose to keep them here, so you never have to enter their details twice.</p>`)}
+ <button class="btn ghost" data-cn="addp">Add someone</button>
+ <p class="muted small center">People you keep stay private to you. Their birth details are kept only when you say they are happy for you to keep them.</p>`);
+}
+function cnPersonView(){
+ const id=V.cnPid,isNew=id==='new',p=isNew?(V.cnDraft||(V.cnDraft={name:'',rel:'',sign:'',date:'',time:'',unk:false,place:'',consent:false})):(V.cnDraft&&V.cnDraft.id===id?V.cnDraft:(V.cnDraft=Object.assign({},cnPerson(id)||{})));
+ if(!isNew&&!cnPerson(id))return `<div class="sub">${hdr('My Relationships')}${empty('This person is no longer here','They may have been removed on another device.',linkBtn('My Relationships','discover','people','btn'))}</div>`;
+ const reads=isNew?[]:cnReads().filter(r=>(r.pids||[]).includes(id)),P=V.places.cnp||{};
+ const del=V.cnDel===id?`<div class="dr-confirm"><p>Remove ${esc(p.name)} from My Relationships?${reads.length?` ${reads.length===1?'One saved reading includes':reads.length+' saved readings include'} them.`:''}</p><div class="ss-acts">${reads.length?`<button class="btn ghost" data-cn="delp" data-id="${esc(id)}" data-all="0">Remove, keep the readings</button><button class="btn" data-cn="delp" data-id="${esc(id)}" data-all="1">Remove them and the readings</button>`:`<button class="btn" data-cn="delp" data-id="${esc(id)}" data-all="0">Remove</button>`}<button class="btn ghost" data-cn="delno">Cancel</button></div></div>`:'';
+ return cnPage(`${cnHd(isNew?'Someone New':esc(p.name),isNew?'Kept in My Relationships':'In My Relationships')}
+ <div class="field"><label for="cp-name">Name or nickname</label><input type="text" id="cp-name" data-cn="pf" data-k="name" value="${esc(p.name||'')}" autocomplete="off"></div>
+ <div class="field"><label for="cp-rel">Your relationship</label><select id="cp-rel" data-cn="pf" data-k="rel"><option value="">Choose</option>${CN_RELS.map(([k,l])=>`<option value="${k}" ${p.rel===k?'selected':''}>${l}</option>`).join('')}</select></div>
+ <div class="field"><label for="cp-sign">Zodiac sign</label><select id="cp-sign" data-cn="pf" data-k="sign"><option value="">${p.date?sg(sunSign(p.date)).name+' (from the date)':'Choose'}</option>${SIGNS.map(x=>`<option value="${x.id}" ${p.sign===x.id?'selected':''}>${x.name}</option>`).join('')}</select></div>
+ ${ssHead('Birth details')}<label class="row cn-cb"><input type="checkbox" class="cb" data-cn="pf" data-k="consent" ${p.consent?'checked':''}> <span>They are happy for me to keep their birth details</span></label>${`<div class="field"><label for="cp-date">Birth date</label><input type="date" id="cp-date" data-cn="pf" data-k="date" value="${esc(p.date||'')}"></div>
+ <label class="row cn-cb"><input type="checkbox" class="cb" data-cn="pf" data-k="unk" ${p.unk?'checked':''}> <span>Birth time unknown</span></label>${p.unk?'':`<div class="field"><label for="cp-time">Birth time</label><input type="time" id="cp-time" data-cn="pf" data-k="time" value="${esc(p.time||'')}"></div>`}
+ <div class="field"><label for="cnp-q">Birthplace</label><div class="row nowrap"><input type="text" id="cnp-q" value="${esc(P.q!=null?P.q:p.place||'')}" placeholder="Town or city" autocomplete="off"><button class="btn ghost sm" data-cn="psearch" data-slot="p">Search</button></div>
+ ${P.busy?'<p class="muted small">Searching…</p>':''}${P.results?(P.results.length?`<ul class="places">${P.results.map((r,i)=>`<li><button class="link" data-cn="ppick" data-slot="p" data-i="${i}">${esc([r.name,r.admin1,r.country].filter(Boolean).join(', '))}</button></li>`).join('')}</ul>`:'<p class="muted small">No places found.</p>'):''}${p.place&&!P.results?`<p class="muted small">${esc(p.place)}</p>`:''}</div>`}<p class="muted small">Birth details are kept only when they are happy for you to keep them; otherwise only their name, sign and your relationship are kept.</p>
+ <button class="btn" data-cn="savep">${isNew?'Keep in My Relationships':'Save changes'}</button>
+ ${isNew?'':`<div class="list cn-next">${ssDoor('♡','Relationship Insights',`You and ${esc(p.name)}`,`data-cn="withp" data-t="insights" data-id="${esc(id)}"`)}${ssDoor('✶','Birth Chart Comparison',`Your chart and ${esc(p.name)}’s`,`data-cn="withp" data-t="synastry" data-id="${esc(id)}"`)}</div>
+ ${reads.length?`${ssHead('Previous readings')}<div class="list">${reads.map(r=>lrow('',CN_TYPES[r.type],relDay(r.day),`data-cn="openr" data-id="${esc(r.id)}"`)).join('')}</div>`:''}
+ <div class="dr-tools"><button class="dr-link" data-cn="del" data-id="${esc(id)}">Remove from My Relationships</button></div>${del}`}`);
+}
+{const CNV={connections:cnHome,affinity:cnZodiacView,insights:cnInsightsView,synastry:cnChartView,people:cnPeopleView,person:cnPersonView,'conn-reading':cnReadView};
+ const vd=views.discover;views.discover=()=>CNV[tab()]?CNV[tab()]():vd()}
+Object.assign(SSX,{cnReads,CN_TYPES});
+// ---- reading, keeping and moving between the three
+function cnPeopleOf(){const A=cnWho('a'),B=cnWho('b');return [A,B]}
+function cnCheck(chart){
+ const [A,B]=cnPeopleOf();
+ if(!A||!B){toast('Choose both people first.');return null}
+ for(const P of [A,B]){if(!P.name){toast('Add a name or nickname for each person.');return null}
+  if(chart&&!P.date){toast(`${P.me?'Your':P.name+'’s'} birth date is needed to compare charts.`);return null}
+  if(!chart&&!P.sign){toast(`Add ${P.me?'your':P.name+'’s'} sign or birth date.`);return null}}
+ if(!cnX().rel){toast('Choose the nature of the connection.');return null}
+ return [A,B];
+}
+const cnBrief=(P,ch)=>{const o={name:P.name,sun:sg(P.sign).name};if(ch){const g=n=>{const p=ch.pl.find(x=>x.n===n);return p?sIdx(p.sign).name:''};if(!ch.moonRange)o.moon=g('Moon');o.mercury=g('Mercury');o.venus=g('Venus');o.mars=g('Mars')}return o};
+const cnChartOf=P=>{if(!A||!P.date)return null;try{return K.chart({date:P.date,time:P.unk?'':P.time,unk:!!P.unk||!P.time||!P.tz,lat:P.lat,lon:P.lon,tz:P.tz||'UTC'})}catch(e){return null}};
+function cnKeepNewOnRead(){['a','b'].forEach(sl=>{const X=cnX();if(X[sl].who==='new'&&(X['n'+sl]||{}).keep)cnKeepNew(sl)})}
+async function cnInsight(){
+ const q=$('#cnq');if(q)cnX().q=q.value.trim();const AB=cnCheck(false);if(!AB)return;const [A,B]=AB,X=cnX();
+ X.busy=true;render();let r=null;
+ if(C.user&&C.connect){try{const x=await C.connect({kind:'insight',rel:X.rel,q:X.q,me:!!A.me,a:cnBrief(A,cnChartOf(A)),b:cnBrief(B,cnChartOf(B))});if(x&&x.essence)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'Kassandra could not read this just now, so Kosmia’s own book has.')}}
+ if(!r)r=cnInsightLocal(A,B,X.rel,X.q);
+ X.busy=false;X.res={kind:'insight',id:uuid(),na:A.name,nb:B.name,sa:A.sign,sb:B.sign,rel:X.rel,q:X.q,r,pids:[A.id,B.id].filter(Boolean)};cnKeepNewOnRead();X.res.pids=[cnX().a.who,cnX().b.who].filter(w=>w&&w!=='me'&&w!=='new');render();cnScroll();
+}
+async function cnChart(){
+ const AB=cnCheck(true);if(!AB)return;const [A,B]=AB,X=cnX();
+ X.busy=true;render();await new Promise(r=>setTimeout(r,30));
+ let syn;try{syn=cnSynastry(A,B)}catch(e){X.busy=false;render();return toast('These birth details could not be calculated. Check the dates and places.')}
+ let r=null;
+ if(C.user&&C.connect){try{const x=await C.connect({kind:'chart',rel:X.rel,a:cnBrief(A,cnChartOf(A)),b:cnBrief(B,cnChartOf(B)),limited:syn.limited,aspects:syn.aspects.map(x=>`${A.name}'s ${x.a} in ${x.sa} ${x.n} ${B.name}'s ${x.b} in ${x.sb} (orb ${x.orb})`),houses:syn.houses.map(h=>`${h.who}'s ${h.p} in ${h.in}'s house ${h.h}`)});if(x&&x.essence)r=Object.assign({ai:true},x)}catch(e){toast(e.message||'Kassandra could not read this just now, so Kosmia’s own book has.')}}
+ if(!r)r=cnChartLocal(A,B,X.rel,syn);
+ X.busy=false;X.res={kind:'chart',id:uuid(),na:A.name,nb:B.name,rel:X.rel,syn,r};cnKeepNewOnRead();X.res.pids=[cnX().a.who,cnX().b.who].filter(w=>w&&w!=='me'&&w!=='new');render();cnScroll();
+}
+const cnScroll=()=>requestAnimationFrame(()=>{const e=$('#cnres');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})});
+function cnKeepRead(){
+ const t=tab(),now=new Date().toISOString();let d;
+ if(t==='affinity'){const L=V.love,a=L.a||S.sign;d={id:uuid(),type:'zodiac',day:dkey(),at:now,signs:[a,L.b],z:cnZodiac(a,L.b)};L.saved=true}
+ else{const R=cnX().res;if(!R)return;d=Object.assign({type:R.kind,day:dkey(),at:now},R);delete d.kind;delete d.saved;R.saved=true}
+ cnSaveBm('conn',d);toast('Saved to Your Readings');render();
+}
+function cnJournal(title,q){const j={id:uuid(),day:dkey(),kind:'reflection',title:q||title,body:'',at:new Date().toISOString()};S.journal.push(j);save();openEntry('j:'+j.id)}
+// moving on carries the signs, the people and the nature of the bond
+function cnCarry(to){
+ const X=cnX(),L=V.love;
+ if(tab()==='affinity'&&L.b){const a=L.a||S.sign;if(!X.a.who)X.a={who:'me'};if(a!==S.sign&&X.a.who==='me'){X.a={who:'new'};X.na=Object.assign({},X.na,{sign:a})}if(!X.b.who||X.b.who==='new'){X.b={who:'new'};X.nb=Object.assign({},X.nb,{sign:X.nb.sign||L.b})}}
+ X.res=null;go('discover',to);
+}
+function cnReadField(el){
+ const X=cnX(),sl=el.dataset.slot,k=el.dataset.k,n=X['n'+sl]||(X['n'+sl]={});n[k]=el.type==='checkbox'?el.checked:el.value;
+ return ['keep','consent','unk','sign'].includes(k)||el.type==='date';
+}
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset)return;
+ if(t.dataset.cn==='f'){if(cnReadField(t)&&t.type!=='date')render()}
+ else if(t.dataset.cn==='pf'){const p=V.cnDraft;if(!p)return;p[t.dataset.k]=t.type==='checkbox'?t.checked:t.value;if(t.type==='checkbox')render()}
+ else if(t.id==='cnq')cnX().q=t.value});
+document.addEventListener('change',e=>{const t=e.target;if(!t.dataset)return;
+ if(t.id==='za'||t.id==='zb'){V.love[t.id==='za'?'a':'b']=t.value;V.love.done=false;V.love.saved=false;return render()}
+ if(t.dataset.cn==='f'&&(t.type==='date'||t.tagName==='SELECT'))return render();
+ if(t.dataset.cn==='pf'&&t.tagName==='SELECT'){V.cnDraft[t.dataset.k]=t.value;return render()}});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-cn]');if(!t||t.tagName==='INPUT'||t.tagName==='SELECT')return;const a=t.dataset.cn,X=cnX();
+ if(a==='zgo'){V.love.done=true;V.love.saved=false;render();return cnScroll()}
+ if(a==='who'){X[t.dataset.slot]={who:t.dataset.v};X.res=null;return render()}
+ if(a==='rel'){X.rel=t.dataset.v;return render()}
+ if(a==='igo')return cnInsight();
+ if(a==='cgo')return cnChart();
+ if(a==='keep')return cnKeepRead();
+ if(a==='journal'){const t2=tab(),q=t2==='affinity'?cnZodiac(V.love.a||S.sign,V.love.b).reflect:((X.res||{}).r||{}).reflection;return cnJournal('Reflecting on a connection',q)}
+ if(a==='rjournal'){const d=cnReads().find(x=>x.id===t.dataset.id);if(!d)return;return cnJournal('Reflecting on a connection',d.type==='zodiac'?d.z.reflect:(d.r||{}).reflection)}
+ if(a==='tonext')return cnCarry(t.dataset.t);
+ if(a==='keepp'){cnKeepNew(t.dataset.slot);if(X.res)X.res.pids=[X.a.who,X.b.who].filter(w=>w&&w!=='me'&&w!=='new');return render()}
+ if(a==='psearch'){const sl=t.dataset.slot,inp=$(sl==='p'?'#cnp-q':'#cn'+sl+'-q'),q=inp?inp.value.trim():'';const P=V.places['cn'+sl]={q};if(q.length<2){P.err='Type at least two letters of the place.';return render()}
+  P.busy=true;render();fetch(`https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&format=json&name=${encodeURIComponent(q)}`).then(r=>r.json()).then(j=>{P.results=(j.results||[]).filter(x=>x.timezone)},()=>{P.err='The place search is unavailable right now.'}).then(()=>{P.busy=false;render()});return}
+ if(a==='ppick'){const sl=t.dataset.slot,P=V.places['cn'+sl],r=P.results[+t.dataset.i],o=sl==='p'?V.cnDraft:(X['n'+sl]||(X['n'+sl]={}));Object.assign(o,{place:[r.name,r.admin1,r.country].filter(Boolean).join(', '),lat:r.latitude,lon:r.longitude,tz:r.timezone});V.places['cn'+sl]={};return render()}
+ if(a==='openp'||a==='editp'){V.cnPid=t.dataset.id;V.cnDraft=null;V.cnDel=null;return go('discover','person')}
+ if(a==='addp'){V.cnPid='new';V.cnDraft=null;return go('discover','person')}
+ if(a==='savep'){const p=V.cnDraft;if(!p||!(p.name||'').trim())return toast('Add a name or nickname.');if(!p.consent&&(p.date||p.time||p.place))return toast('Tick that they are happy for you to keep their birth details, or clear them.');const keep={id:p.id||uuid(),at:p.at||new Date().toISOString(),name:p.name.trim(),rel:p.rel||'',sign:p.sign||(p.consent&&p.date?sunSign(p.date):''),consent:!!p.consent};
+  if(p.consent)Object.assign(keep,{date:p.date||'',time:p.unk?'':p.time||'',unk:!!p.unk||!p.time,place:p.place||'',lat:p.lat,lon:p.lon,tz:p.tz||''});
+  cnSaveBm('person',keep);V.cnDraft=null;toast(`${keep.name} is kept in My Relationships`);if(V.cnPid==='new'){V.cnPid=keep.id;return go('discover','person',{replace:true})}return goBack()}
+ if(a==='withp'){X.a={who:'me'};X.b={who:t.dataset.id};X.rel=(cnPerson(t.dataset.id)||{}).rel||X.rel;X.res=null;return go('discover',t.dataset.t)}
+ if(a==='openr'){V.cnId=t.dataset.id;return go('discover','conn-reading')}
+ if(a==='del'){V.cnDel=t.dataset.id;return render()}
+ if(a==='delno'){V.cnDel=null;return render()}
+ if(a==='delread'){const b=S.bookmarks.find(x=>x.kind==='conn'&&x.ref===t.dataset.id);if(b){S.bookmarks.splice(S.bookmarks.indexOf(b),1);save();C.deleteBookmark&&C.deleteBookmark('conn',b.ref)}V.cnDel=null;toast('The reading is deleted');return goBack()}
+ if(a==='delp'){const id=t.dataset.id,all=t.dataset.all==='1';
+  const rm=(kind,ref)=>{const b=S.bookmarks.find(x=>x.kind===kind&&x.ref===ref);if(b){S.bookmarks.splice(S.bookmarks.indexOf(b),1);C.deleteBookmark&&C.deleteBookmark(kind,ref)}};
+  if(all)cnReads().filter(r=>(r.pids||[]).includes(id)).forEach(r=>rm('conn',r.id));rm('person',id);save();
+  ['a','b'].forEach(sl=>{if(X[sl]&&X[sl].who===id)X[sl]={who:''}});V.cnDel=null;toast(all?'Removed, with their readings':'Removed from My Relationships');return goBack()}
+});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-ss-cn]');if(!t)return;V.cnId=t.dataset.id;V.sheet=null;go('discover','conn-reading')});
+
 {let drLast='';const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
  const vd=views.discover;views.discover=()=>{const t=tab(),k=V.sec+'/'+t;if(t==='dreams'&&drLast&&!/^(discover\/(dreams|dream|dream-patterns|dream-journal)|tarot\/entry)$/.test(drLast))V.drShow=null;drLast=k;return DRV[t]?DRV[t]():vd()};
  const vt=views.tarot;views.tarot=()=>{drLast='tarot/'+tab();return vt()}}

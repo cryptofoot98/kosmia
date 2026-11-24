@@ -88,7 +88,7 @@ const Cloud={
  // dreams and kept conversations wait on this device until the database accepts their kinds (a check violation, 23514);
  // they are sent again on the next sync. The rejection is passed on so the item is not marked as synced.
  saveBookmark(b){if(!user)return Promise.resolve();const q=sb.from('bookmarks').upsert({id:b.id,user_id:user.id,kind:b.kind,ref:b.ref,data:b.data},{onConflict:'user_id,kind,ref'});
-  return /^(dream|chat|sign)$/.test(b.kind)?q.then(check):soft(q)},
+  return /^(dream|chat|sign|person|conn)$/.test(b.kind)?q.then(check):soft(q)},
  deleteBookmark(kind,ref){if(!user)return Promise.resolve();return soft(sb.from('bookmarks').delete().eq('user_id',user.id).eq('kind',kind).eq('ref',ref))},
  // Removes painted cards, then the account itself (every table cascades from it).
  async deleteAccount(){
@@ -118,6 +118,8 @@ const Cloud={
  dream(d){return Cloud.api('/api/dream',d).then(r=>r.json())},
  // a Sacred Number or a Synchronicity read by Kassandra
  signs(d){return Cloud.api('/api/signs',d).then(r=>r.json())},
+ // the bond between two people, from their signs or their calculated birth charts
+ connect(d){return Cloud.api('/api/connect',d).then(r=>r.json())},
  transcribe(blob){return Cloud.api('/api/transcribe',blob).then(r=>r.json())},
  // Signed URL for a painting made earlier, or null when there is none.
  async paintingUrl(day){
