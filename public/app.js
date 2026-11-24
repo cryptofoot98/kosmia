@@ -199,7 +199,7 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
- tarot:{label:'Oracle',tabs:[['home','Oracle'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
+ tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Journal'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Compatibility'],['resonance','Compatibility'],['synastry','Compatibility'],['life-path','Life Path'],['name-within','The Name Within'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
@@ -1307,7 +1307,7 @@ views.tarot=()=>{
  // the night with the old card and the lilies holds still behind the page; the title under the arc, then today's card
  // (the daily step, the same Whisper as on Home) and the readings, each way of reading one tap from its own spread
  const nm=firstName();
- const oc=pgCur('or');let pg;
+ const oc=t==='spreads'?'cards':pgCur('or');let pg;
  if(oc==='kas'){const has=KS.msgs.length>0,last=has?[...KS.msgs].reverse().find(m=>m.role==='user'):null;
   pg=`<section class="or-k"><span class="tk-m">${ui('kassandra','tk-i')}</span><div><h3>${has?'She remembers':'She is listening'}</h3><p>${has&&last?`You last asked: “${esc(clip(last.content,70))}”`:'Speak or write your question. She knows your sign, your chart and your day.'}</p>${obj('kas','data-act="kasgo"',has?'Continue with Kassandra':'Ask Kassandra','obj-big')}</div></section>
   <section>${pgl(has?'Or ask her':'Or begin with')}<div class="or-pr">${kasPrompts().slice(0,2).map(q=>`<button class="or-p" data-act="kasask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div></section>`}
@@ -3213,7 +3213,7 @@ document.addEventListener('click',e=>{
   t.disabled=true;C.updatePassword(v).then(()=>{toast('Password updated');if(V.sec==='reset')go('home','today',{replace:true});else{t.disabled=false;$('#npw').value=''}},x=>{t.disabled=false;toast(authMsg(x))});return}
  const T=V.tarot;
  if(a==='tspreadgo'){newReading();V.tarot.spread=t.dataset.k;return go('tarot','reading')}
- if(a==='tspreadback'){S.pgc=S.pgc||{};S.pgc.or='cards';save();return go('tarot')}
+ if(a==='tspreadback')return go('tarot','spreads');
  if(a==='tspread'){T.q=($('#q')||{value:T.q}).value;T.spread=t.dataset.k;return render()}
  if(a==='shuffle'){T.q=($('#q')||{value:T.q}).value.trim();T.deck=shuffle(DECK);T.picks=[];T.stage='pick';T.ai='';T.aiState='';render();return window.scrollTo(0,0)}
  if(a==='tflip'){const c=T.drawn[+t.dataset.k];if(!c.shown){c.shown=true;render();if(T.drawn.every(x=>x.shown))setTimeout(interpret,1200);return}V.tpop=+t.dataset.k;V.tctx=SPREAD_CTX[T.spread]||'love';return render()}
@@ -3394,6 +3394,8 @@ function fit(){
  const s=Math.max(W/1024,(H-nh+24)/2032);
  r.setProperty('--rw',W+'px');r.setProperty('--rs',s);r.setProperty('--rx',(W-1024*s)/2+'px');r.setProperty('--rnh',nh+'px');
  r.setProperty('--pw',W+'px');
+ const o=document.querySelector('.or0');if(o){const s0=W/850,need=(H-nh*.92)/ORH,sy=Math.min(s0,need),sx=need>=s0?s0:Math.min(s0,need/.9);
+  o.style.setProperty('--osx',sx);o.style.setProperty('--osy',sy);o.style.setProperty('--oox',(W-850*sx)/2+'px')}
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
   let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
   if(id==='rtu'||id==='rtq'){const n=id==='rtu'?'u':'q',L=UQL[n],hs=Object.keys(L.v).map(Number);ch=hs.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
@@ -3492,7 +3494,7 @@ document.addEventListener('keydown',e=>{
 addEventListener('resize',fit);
 // after every render the scales and the Whisper's words are fitted again; a re-render while a pop-up is open keeps it
 // still and keeps the manuscript where the reader was
-ritAfter=(y)=>{if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0')){fit();const t=document.querySelector('#rov .rt');if(t){t.classList.add('on');spFit();(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{fit();spFit()});if(V.skpIn)t.classList.add('in');else requestAnimationFrame(()=>requestAnimationFrame(()=>{t.classList.add('in');V.skpIn=true}))}}else V.skp=null}};
+ritAfter=(y)=>{if(document.querySelector('.or0'))fit();if(V.sec==='home'){fit();const h=document.getElementById('rth');if(h&&y)h.scrollTop=y}else{V.rp=null;if(document.querySelector('.sky0')){fit();const t=document.querySelector('#rov .rt');if(t){t.classList.add('on');spFit();(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{fit();spFit()});if(V.skpIn)t.classList.add('in');else requestAnimationFrame(()=>requestAnimationFrame(()=>{t.classList.add('in');V.skpIn=true}))}}else V.skp=null}};
 views.home=view;
 // Sky: the painting of the heavens held between two hands, the reader's own sign at its heart. The Sun opens today's
 // Sun, the Moon the Moon of the day, each planet where the planets are now, and the sign the full horoscope
@@ -3520,6 +3522,28 @@ function skyHome(){
   <div class="sk0-tip">Tap on the Sun, Moon, planets or your sign<br>to explore their meaning for you.</div>
   <nav class="rit-nav sk0-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky" aria-current="page"></button><button data-nav="tarot" aria-label="Oracle"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
  </div>${V.spk&&V.skp==='sign'?signPick(V.exploreSign||S.sign):''}${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():V.skp==='sun'?sunPop():V.skp==='sign'?signPop():planetPop(V.skp.slice(3))}</div>`:''}</div>${sk?skyPop(sk):''}`;
+}
+// Oracle: the user's painting of the seeker by the lake at dusk; each thing in it opens its own way of asking. The Sun
+// is Omens (signs, numbers and synchronicities), the Moon Dreams, the doves Connections, the book Your Readings, the
+// cards Tarot and the crystal ball Kassandra. The painting is laid out in its own 850-wide units; a short screen narrows
+// it a little and squeezes it very slightly, its edges melting into the frame's shadow, so all of it stays above the bar
+const ORH=1685;
+function oracleHome(){
+ const hot=(x,y,w,h,at,l,r)=>`<button class="rit-hot" ${at} aria-label="${l}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r?'50%':'40px'}"></button>`;
+ return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
+  <div class="or-sc"><img class="or-bg" src="${SKY}or-body.webp" alt="">
+   <span class="or-l" style="left:152px;top:376px">Omens</span>
+   ${hot(36,140,232,300,'data-go="discover" data-t="life-path"','Omens: signs, numbers and synchronicities')}
+   ${hot(615,215,200,215,'data-go="discover" data-t="dreams"','Dreams')}
+   ${hot(605,460,210,215,'data-go="discover" data-t="affinity"','Connections')}
+   ${hot(48,1245,236,250,'data-act="sheet" data-k="reading"','Your Readings')}
+   ${hot(458,1282,350,190,'data-go="tarot" data-t="spreads"','Tarot')}
+   ${hot(306,1385,218,292,'data-act="kasgo"','Kassandra')}
+   ${hot(28,79,88,88,'data-nav="home"','Back to the Ritual',1)}${hot(734,79,88,88,'data-go="you"','My Cosmos',1)}
+  </div>
+  <div class="or-fr"></div><img class="or-orn" src="${SKY}or-orn.webp" alt="">
+  <nav class="rit-nav sk0-nav or-nav" aria-label="Kosmia"><button data-nav="home" aria-label="Ritual"></button><button data-nav="horoscope" aria-label="Sky"></button><button data-nav="tarot" aria-label="Oracle" aria-current="page"></button><button data-nav="calendar" aria-label="Cosmic Calendar"></button><button data-nav="journal" aria-label="Journal"></button></nav>
+ </div>${sheetView()}</div>`;
 }
 // ---- the Moon and the Sun, each a full-screen page painted from the user's pictures; the words are today's sky ----
 // the hemisphere follows where the phone is: its time zone (set by the phone from its location) and the latitude the
@@ -3714,6 +3738,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(V.sec==='horoscope'&&V.skp&&e.key==='Escape'){V.skp=null;render()}});
 {const vh=views.horoscope;views.horoscope=()=>(!A||!K||tab()==='sign')?vh():skyHome()}
+{const vt=views.tarot;views.tarot=()=>tab()==='home'?oracleHome():vt()}
 SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
 fit();
 }
