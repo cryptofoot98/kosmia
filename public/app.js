@@ -201,10 +201,10 @@ const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal'],['reflections','My Reflections'],['intentions','My Intentions'],['gratitude','My Gratitude'],['library','My Library'],['write','Write'],['page','Journal Entry'],['month','Your Journey']]},
- discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['event','Cosmic Event'],['event-ritual','Event Ritual'],['saved-events','Saved Events'],['readings','Your Readings'],['saved','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
+ discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','My Birth Details'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['event','Cosmic Event'],['event-ritual','Event Ritual'],['saved-events','Saved Events'],['readings','Your Readings'],['saved','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','Personal Year'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos'],['chart','My Birth Chart'],['placement','Cosmic Placement'],['zodiac','My Zodiac'],['identity','My Cosmic Identity'],['cycles','My Cosmic Cycles'],['transit','Personal Transit'],['people','My Relationships'],['person','Relationship Profile'],['person-edit','Add Someone'],['preferences','My Preferences']]},
- settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership'],['ritual','My Ritual Times'],['region','Language & Region']]}
+ settings:{label:'Profile',tabs:[['account','My Account'],['birth','My Birth Details'],['notifications','Notifications'],['privacy','Privacy & My Data'],['display','Display & Accessibility'],['subscription','My Membership'],['ritual','My Ritual Times'],['region','Language & Region']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the five places: Today (the day's path), Sky (look up), Oracle (ask: Kassandra, the cards, a dream), Journal
@@ -479,9 +479,9 @@ function chartOf(b){if(!A||!b||!/^\d{4}-\d\d-\d\d$/.test(b.date||''))return null
 // the readings drawn from the Cosmic Profile. Without the reader's details: an invitation to complete the profile, or a
 // New search for anyone else. With them: the reader's own reading first, and New search beneath it. A search never
 // changes the profile.
-const invite=(what,k)=>mbox(`<p class="lead">${what}</p><button class="btn" data-act="cpopen">Complete my Cosmic Profile</button><button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`);
+const invite=(what,k)=>mbox(`<p class="lead">${what}</p><button class="btn" data-act="cpopen">Complete my Birth Details</button><button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`);
 const nsBtn=k=>`<button class="btn ghost" data-act="nsearch" data-k="${k}">New search</button>`;
-const mineBtn=(k,has)=>has?`<button class="btn ghost" data-act="nsmine" data-k="${k}">Back to my own reading</button>`:`<button class="btn ghost" data-act="cpopen">Complete my Cosmic Profile</button>`;
+const mineBtn=(k,has)=>has?`<button class="btn ghost" data-act="nsmine" data-k="${k}">Back to my own reading</button>`:`<button class="btn ghost" data-act="cpopen">Complete my Birth Details</button>`;
 const nameNums=nm=>nm&&N.clean(nm)?N.name(nm,S.settings.yMode):null;
 
 /* ---------- views ---------- */
@@ -664,7 +664,7 @@ function energySlides(now,m,sign,h){
  const sl=[[moonPic(m,'en-moon'),`${m.name}<br>in ${sIdx(m.sign).name}`,MOON_LINE[m.name]||'','data-go="discover" data-t="moon"']];
  const ev=upcoming().find(e=>['eclipse','meteor','conjunction','season','planet'].includes(e.type)&&e.date>now);
  const pn=ev&&(ev.name.match(/Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto/)||[])[0];
- if(ev)sl.push([pn?ui('pl-'+pn.toLowerCase(),'en-moon'):ev.type==='season'?ui('pl-sun','en-moon'):evArt(ev,true).replace('ev-r','en-moon'),esc(ev.name),`${ymdLong(dkey(ev.date),{day:'numeric',month:'long'})} · ${esc(evKeys(ev))}`,'data-go="discover" data-t="events"']);
+ if(ev)sl.push([pn?ui('pl-'+pn.toLowerCase(),'en-moon'):ev.type==='season'?ui('pl-sun','en-moon'):evArt(ev,true).replace('ev-r','en-moon'),esc(ev.name),`${ymdLong(dkey(ev.date),{day:'numeric',month:'long'})} · ${esc(evKeys(ev))}`,`data-cal="open" data-ref="${esc(evRef(ev))}"`]);
  const rx=K.retrogrades(now,new Date(+now+120*DAY)).find(w=>w.start&&w.start<=now&&(!w.end||w.end>=now))||K.retrogrades(now,new Date(+now+120*DAY)).find(w=>w.start&&w.start>now);
  if(rx){const on=rx.start<=now;sl.push([ui('pl-'+rx.planet.toLowerCase(),'en-moon'),`${rx.planet} ${on?'retrograde':'turns retrograde'}`,on?`Until ${rx.end?ymdLong(dkey(rx.end),{day:'numeric',month:'long'}):'next year'}: a time to review ${PM[rx.planet]}.`:`From ${ymdLong(dkey(rx.start),{day:'numeric',month:'long'})}: a time to review ${PM[rx.planet]}.`,'data-go="discover" data-t="planets"'])}
  const sun=sIdx(K.signIdx(K.positions(now)[0].lon));
@@ -1106,12 +1106,12 @@ function pzCard(cls=''){
 function forYou(){
  const ch=hasBirthDate()&&S.fullName?myChart():null,rows=[];
  if(ch){const pl=n=>{const x=ch.pl.find(p=>p.n===n);return x?sIdx(x.sign).name:''},asc=ch.ang&&!S.birth.unk?sIdx(Math.floor(ch.ang.asc/30)).name:'';
-  rows.push(lrow(ui('ex-chart','th round'),'Your Birth Chart',[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon',asc&&asc+' Rising'].filter(Boolean).join(' · '),'data-go="discover" data-t="birth-chart"'))}
- else rows.push(lrow(ui('ex-chart','th round'),'Complete your Cosmic Profile','Your birth day, time and place open your chart','data-go="discover" data-t="profile"'));
+  rows.push(lrow(ui('ex-chart','th round'),'Your Birth Chart',[pl('Sun')&&pl('Sun')+' Sun',pl('Moon')&&pl('Moon')+' Moon',asc&&asc+' Rising'].filter(Boolean).join(' · '),'data-go="you" data-t="chart"'))}
+ else rows.push(lrow(ui('ex-chart','th round'),'Complete your Birth Details','Your birth day, time and place open your chart','data-go="discover" data-t="profile"'));
  const last=journalItems().sort((a,b)=>(b.day+(b.at||''))>(a.day+(a.at||''))?1:-1)[0];
  rows.push(last?lrow(ui('t-journal','th oval'),'Your Journal',`Last written: ${jHeading(last)}, ${relDay(last.day).toLowerCase()}`,'data-go="tarot" data-t="journal"'):lrow(ui('t-journal','th oval'),'Your Journal','Every thought you write is a star in your own sky','data-go="tarot" data-t="journal"'));
  const ev=A?upcoming().find(e=>e.k!=='ingress'):null;
- if(ev)rows.push(lrow(evArt(ev,true),esc(ev.name),evWhen(ev),'data-go="discover" data-t="calendar"'));
+ if(ev)rows.push(lrow(evArt(ev,true),esc(ev.name),evWhen(ev),`data-cal="open" data-ref="${esc(evRef(ev))}"`));
  return panel(`${orn('For You')}<div class="list">${rows.join('')}</div>`,'gilt hfor');
 }
 const sunSign=date=>{try{return sIdx(K.chart({date,unk:true,tz:'UTC'}).pl[0].sign).id}catch(e){return ''}};
@@ -1190,7 +1190,7 @@ function skyItems(){
   out.push({id:'ev:'+evRef(e),date:e.date,ev:true,bg:skyBgEv(e,pn),sig:!!r,img:pn?ui('pl-'+pn.toLowerCase(),'sky-i'):e.type==='season'?ui('pl-sun','sky-i'):evArt(e,true).replace('ev-r','sky-i'),title:esc(e.name)+(sn&&e.type==='moon'?` in ${sn}`:''),when:dm(e.date),
    line:r?`${REL_S[r.rel]}: ${areaShort(r.area)}.`:'A night to step outside and look up.',
    fact:i.fact,you:r?`${i.sym} For you it falls ${REL_IN[r.rel]}, lighting ${r.area}. ${REL_FEEL[r.rel]}`:`${i.sym} There is no sign to read here, only something beautiful to see.`,
-   act:r?`Mark the date, and give ${areaShort(r.area)} ten quiet minutes that day.`:'Mark the date, step outside and look up.',rit:RITUAL[e.name]||EV_RITE[e.k]||EV_RITE[e.type]||'Step outside that night, look up for one whole minute, and breathe.',q:i.ref||'What would I like to notice that day?',more:'events',moreL:'All events'})});
+   act:r?`Mark the date, and give ${areaShort(r.area)} ten quiet minutes that day.`:'Mark the date, step outside and look up.',rit:RITUAL[e.name]||EV_RITE[e.k]||EV_RITE[e.type]||'Step outside that night, look up for one whole minute, and breathe.',q:i.ref||'What would I like to notice that day?',more:'',moreA:`data-cal="open" data-ref="${esc(evRef(e))}"`,moreL:'Its page in the Calendar'})});
  {const si=K.signIdx(K.positions(now)[0].lon),sun=sIdx(si),r=skyRel(si);
   out.push({id:'sun',date:now,season:true,bg:'sun',img:ui('pl-sun','sky-i'),title:`Sun in ${sun.name}`,when:`${sun.name} season`,line:`${cap(REL_IN[r.rel])}. This month’s light falls on ${areaShort(r.area)}.`,
    fact:`The Sun is moving through ${sun.name}, as it does at this time every year. Each season lasts about a month.`,
@@ -1210,7 +1210,7 @@ function skyPop(x){
  <p class="cp-k">${x.when}</p><h2 class="cp-t">${x.title}</h2>
  <div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map((parts,i)=>`<section class="cp-box skz-tile${i===1?' you':''}${parts[0][0]==='A question to sit with'?' q':''}${parts.length>1?' two':''}" aria-label="${parts.map(u=>u[0]).join(' and ')}, ${i+1} of ${tiles.length}">${parts.map(([h,t])=>`<div class="skz-part"><h3>${h}</h3><p>${esc(t)}</p></div>`).join('')}</section>`).join('')}</div>
   <nav class="hp-dots skz-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skzmove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="skz-d" aria-hidden="true">${tiles.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skzmove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>
-  <div class="skz-obj"><button data-act="kasask" data-q="${esc(x.q)}" aria-label="Ask Kassandra about it">${ui('ic-orb-k','skz-o')}</button><button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button><button data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it in your Journal">${ui('ic-quill-k','skz-o')}</button><button class="skz-heart" data-heart="sky:${esc(x.id)}:${dkey()}" aria-pressed="${hearted('sky:'+x.id+':'+dkey())}" aria-label="${hearted('sky:'+x.id+':'+dkey())?'In My Library':'Keep in My Library'}" style="--fill:${hearted('sky:'+x.id+':'+dkey())?'currentColor':'none'}">${IC.heart}</button></div></div></div>`}
+  <div class="skz-obj"><button data-act="kasask" data-q="${esc(x.q)}" aria-label="Ask Kassandra about it">${ui('ic-orb-k','skz-o')}</button><button class="skd-m" ${x.moreA||`data-go="discover" data-t="${x.more}"`}>${x.moreL} ${IC.chev}</button><button data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it in your Journal">${ui('ic-quill-k','skz-o')}</button><button class="skz-heart" data-heart="sky:${esc(x.id)}:${dkey()}" aria-pressed="${hearted('sky:'+x.id+':'+dkey())}" aria-label="${hearted('sky:'+x.id+':'+dkey())?'In My Library':'Keep in My Library'}" style="--fill:${hearted('sky:'+x.id+':'+dkey())?'currentColor':'none'}">${IC.heart}</button></div></div></div>`}
 // the window's tiles: the dots follow the swipe; one step is a tile and the gap after it
 const skzStep=T=>T.children.length>1?T.children[1].offsetLeft-T.children[0].offsetLeft:Math.max(1,T.clientWidth);
 function skzCar(){const t=$('.skz-track');if(!t||t._on)return;t._on=1;
@@ -1225,7 +1225,7 @@ function skyDetail(x){
  <section><h3>One thing to do</h3><p>${esc(x.act)}</p></section>
  <p class="skd-q">“${esc(x.q)}”</p>
  <div class="sx-acts obj-row">${obj('kas',`data-act="kasask" data-q="${esc(x.q)}"`,'Ask Kassandra')}${obj('pen',`data-act="skdwrite" data-t="${esc(x.title)}"`,'Write about it in your Journal')}<button class="skz-heart" data-heart="sky:${esc(x.id)}:${dkey()}" aria-pressed="${hearted('sky:'+x.id+':'+dkey())}" aria-label="Keep in My Library" style="--fill:${hearted('sky:'+x.id+':'+dkey())?'currentColor':'none'}">${IC.heart}</button></div>
- <button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button></div></div>`}
+ <button class="skd-m" ${x.moreA||`data-go="discover" data-t="${x.more}"`}>${x.moreL} ${IC.chev}</button></div></div>`}
 views.horoscope=()=>{
  if(!A||!K)return needLib();
  if(tab()==='sign')return horoSign();
@@ -1776,7 +1776,7 @@ function synastryView(){
  if(!A)return needLib();
  const Y=V.syn,mine=hasBirthDate();
  const form=panel(`${plate('synastry')}<h3>Their birth details</h3><div class="field"><label for="sn">Their name</label><input type="text" id="sn" value="${esc(Y.name)}"></div><div class="field"><label for="sd">Date of birth</label><input type="date" id="sd" value="${esc(Y.date)}"></div><label class="row"><input type="checkbox" id="su" ${Y.unk?'checked':''} class="cb"> Birth time unknown</label>${Y.unk?'':`<div class="field"><label for="st">Time of birth</label><input type="time" id="st" value="${esc(Y.time)}"></div>`}${placeField('syn',Y)}<button class="btn" data-act="dosyn">Compare our charts</button><p class="muted small">Their details are private to you and are only kept if you save the connection.</p>`);
- if(!mine)return `<div class="stack"><h1>Synastry</h1>${empty('Your birth details first','Synastry compares two birth charts, so it needs your date of birth (and, for the most detail, your time and place).',linkBtn('Complete my Cosmic Profile','discover','profile','btn'))}</div>`;
+ if(!mine)return `<div class="stack"><h1>Synastry</h1>${empty('Your birth details first','Synastry compares two birth charts, so it needs your date of birth (and, for the most detail, your time and place).',linkBtn('Complete my Birth Details','discover','profile','btn'))}</div>`;
  let out='';
  if(Y.done&&Y.date){
   const saved=S.conns.some(c=>c.kind==='synastry'&&(c.data.them||{}).date===Y.date&&(c.data.them||{}).name===Y.name);
@@ -1789,14 +1789,14 @@ function profileView(){
  const ch=myChart(),L=hasBirthDate()?N.lifePath(S.birth.date):null,nm=nameNums(S.fullName),b=S.birth,yr=Number(dkey().slice(0,4));
  const val=v=>v?`<span>${v}</span>`:`<span class="muted">Not added yet</span>`;
  const sun=ch?sIdx(ch.pl[0].sign):null;
- return `<div class="stack"><h1>Cosmic Profile</h1>
+ return `<div class="stack"><h1>My Birth Details</h1>
  ${panel(`<button class="link cp-edit" data-act="cpedit">Edit</button><div class="prof-h">${pic('icons',S.sign,'sign-ico')}<div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="muted">${sg(S.sign).name} · ${sg(S.sign).el} · ruled by ${sg(S.sign).ruler}</p></div></div>
   <dl class="dl"><dt>Birth date</dt><dd>${val(hasBirthDate()?ymdLong(b.date):'')}</dd><dt>Birth time</dt><dd>${val(b.unk?'Unknown':b.time)}</dd><dt>Birth place</dt><dd>${val(b.place)}</dd><dt>Full birth name</dt><dd>${val(esc(S.fullName))}</dd></dl>
   <p class="muted small">${S.birthConsent?'Birth details are kept privately in your account.':'Birth details stay on this device unless you keep them in your account.'}</p>`)}
  ${hasBirthDate()?mbox(soulBlock(L.r.n,firstOf(S.name||S.fullName),'Your soul’s reading')+`<p>Your Sun in ${sg(ch?sIdx(ch.pl[0].sign).id:S.sign).name} colours how you shine: ${SIGN_DESC[ch?sIdx(ch.pl[0].sign).id:S.sign]}</p>`):`<p class="cp-intro">Add your details once for a reading that is yours alone: your full birth name for your numerology, and your date, time and place of birth for your birth chart, Life Path and cycles.</p><button class="btn" data-act="cpedit">Add my details</button>`}
  ${panel(`<div class="label">The big three</div>${plate('astro')}<dl class="dl"><dt>Sun</dt><dd>${ch?sun.name+` <span class="muted small">calculated</span>`:`<span class="muted">Needs birth date</span>`}</dd><dt>Moon</dt><dd>${ch?(ch.moonRange?`${sIdx(ch.moonRange[0]).name} or ${sIdx(ch.moonRange[1]).name} <span class="muted small">needs birth time</span>`:sIdx(ch.pl[1].sign).name+' <span class="muted small">calculated</span>'):'<span class="muted">Needs birth date</span>'}</dd><dt>Rising</dt><dd>${ch&&ch.ang?sIdx(K.signIdx(ch.ang.asc)).name+' <span class="muted small">calculated</span>':`<span class="muted">Needs birth time and place</span>`}</dd></dl>${ch&&sun.id!==S.sign?`<p class="note">Your calculated Sun sign is ${sun.name}, but your chosen sign is ${sg(S.sign).name}. Births near the edge of a sign can fall either side; you can change your chosen sign in Settings.</p>`:''}`)}
  ${panel(`<div class="label">Numerology</div><dl class="dl"><dt>Life Path</dt><dd>${L?L.r.n+' · '+N.MEANING[L.r.n][0]:'<span class="muted">Needs birth date</span>'}</dd><dt>Expression</dt><dd>${nm?nm.expression.r.n+' · '+N.MEANING[nm.expression.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Soul Urge</dt><dd>${nm&&nm.soul.r.n?nm.soul.r.n+' · '+N.MEANING[nm.soul.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Personality</dt><dd>${nm&&nm.personality.r.n?nm.personality.r.n+' · '+N.MEANING[nm.personality.r.n][0]:'<span class="muted">Needs full birth name</span>'}</dd><dt>Personal Year ${yr}</dt><dd>${hasBirthDate()?N.personalYear(S.birth.date,yr).r.n:'<span class="muted">Needs birth date</span>'}</dd></dl>`)}
- ${V.cpEdit?`<div class="pop" role="dialog" aria-modal="true" aria-label="Edit your Cosmic Profile" data-act="cpclose"><div class="pop-box cp-box"><button class="pop-x" data-act="cpclose" aria-label="Close">×</button><h2 class="center">Your Cosmic Profile</h2><p class="center muted">Your details are read in your birth chart, numerology, Life Path and cycles.</p>${birthForm()}</div></div>`:''}
+ ${V.cpEdit?`<div class="pop" role="dialog" aria-modal="true" aria-label="Edit your birth details" data-act="cpclose"><div class="pop-box cp-box"><button class="pop-x" data-act="cpclose" aria-label="Close">×</button><h2 class="center">Your Cosmic Profile</h2><p class="center muted">Your details are read in your birth chart, numerology, Life Path and cycles.</p>${birthForm()}</div></div>`:''}
  </div>`;
 }
 function birthForm(other){
@@ -1804,15 +1804,15 @@ function birthForm(other){
  return panel(`${other?'':plate('natal')}<h3>${other?'Their':'Your'} birth details</h3><div class="field"><label for="bn">${other?'Their name':'Your full name at birth'}</label><input type="text" id="bn" value="${esc(b.name!=null?b.name:S.fullName)}" ${other?'':'autocomplete="name"'} placeholder="${other?'Their name':'Your full name'}"></div><div class="field"><label for="bd">Date of birth</label><input type="date" id="bd" value="${esc(b.date)}"></div><label class="row"><input type="checkbox" id="bu" ${b.unk?'checked':''} class="cb"> I don’t know my birth time</label>${b.unk?'':`<div class="field"><label for="bt">Time of birth (local time)</label><input type="time" id="bt" value="${esc(b.time)}"></div>`}${placeField(other?'other':'birth',b)}
  ${other?'':`<details class="more"><summary>More options</summary><div class="field"><label for="an">Name you use now (optional)</label><input type="text" id="an" value="${esc(S.altName)}" placeholder="A married name, a chosen name, a nickname"></div><div class="field"><label for="ym">The letter Y counts as</label><select id="ym"><option value="auto" ${S.settings.yMode==='auto'?'selected':''}>Vowel when no other vowel is beside it</option><option value="vowel" ${S.settings.yMode==='vowel'?'selected':''}>Always a vowel</option><option value="consonant" ${S.settings.yMode==='consonant'?'selected':''}>Always a consonant</option></select></div></details>
  <label class="row consent"><input type="checkbox" id="bcons" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my Kosmia account so they sync across my devices. They are private to me and I can delete them in Settings.</span></label>`}
- <button class="btn" data-act="savebirth"${other?' data-other="1"':''}>${other?'Calculate Their Chart':'Save my Cosmic Profile'}</button><p class="muted small">${other?'This search is not saved to your profile.':'Without a time and place, the Ascendant and houses are not calculated.'}</p>`);
+ <button class="btn" data-act="savebirth"${other?' data-other="1"':''}>${other?'Calculate Their Chart':'Save my Birth Details'}</button><p class="muted small">${other?'This search is not saved to your profile.':'Without a time and place, the Ascendant and houses are not calculated.'}</p>`);
 }
 function cyclesView(){
  const other=!!V.ns.cy;
- if(!other&&!hasBirthDate())return `<div class="stack"><h1>My Cycles</h1>${invite('Your personal cycles are counted from your birth day and month. Add your date of birth to your Cosmic Profile, or look up anyone’s cycles.','cy')}</div>`;
- if(other&&!V.cyOther)return `<div class="stack"><h1>My Cycles</h1>${mbox(`<p class="lead">Find anyone’s personal cycles from their date of birth.</p><div class="field"><label for="cyd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="cyd"></div></div>`)}<button class="btn" data-act="cygo">See their cycles →</button>${mineBtn('cy',hasBirthDate())}</div>`;
+ if(!other&&!hasBirthDate())return `<div class="stack"><h1>Personal Year</h1>${invite('Your personal cycles are counted from your birth day and month. Add your date of birth to your birth details, or look up anyone’s cycles.','cy')}</div>`;
+ if(other&&!V.cyOther)return `<div class="stack"><h1>Personal Year</h1>${mbox(`<p class="lead">Find anyone’s personal cycles from their date of birth.</p><div class="field"><label for="cyd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="cyd"></div></div>`)}<button class="btn" data-act="cygo">See their cycles →</button>${mineBtn('cy',hasBirthDate())}</div>`;
  const [y,mo,d]=dkey().split('-').map(Number),b=other?V.cyOther:S.birth.date,py=N.personalYear(b,y),pyn=N.personalYear(b,y+1),pm=N.personalMonth(b,y,mo),pdd=N.personalDay(b,y,mo,d),uy=N.universalYear(y),by=Number(b.slice(0,4));
  const mname=ymdLong(dkey(),{month:'long',year:'numeric'});
- return `<div class="stack"><h1>My Cycles</h1>
+ return `<div class="stack"><h1>Personal Year</h1>
  ${panel(`${plate('cycles')}<div class="label">Personal Year · ${y}</div><div class="num-line"><span class="num">${py.r.n}</span><p>${cap(N.CYCLE[py.r.n])}.</p></div><p class="calc">Birth month ${Number(b.slice(5,7))} + birth day ${Number(b.slice(8,10))} + year ${y}, each reduced: total ${py.total} → ${py.r.n}</p><p class="muted small">Your Personal Year runs with the calendar year, 1 January to 31 December ${y}.</p><div class="soul"><p class="soul-t">${other?'':esc(firstOf(S.name||S.fullName))+', '}${(YEAR[py.r.n]||YEAR[py.r.n%9||9]).replace(/^This/,other?'This':'this')}</p><p class="soul-q">“${soul(py.r.n)[2][0]}”<span>${soul(py.r.n)[2][1]}</span></p></div>`)}
  ${panel(`<div class="label">Personal Month · ${mname}</div><div class="num-line"><span class="num">${pm.r.n}</span><p>${cap(N.CYCLE[pm.r.n].replace('a year','a month'))}.</p></div><div class="rule"></div><div class="label">Personal Day · ${ymdLong(dkey(),{weekday:'long',day:'numeric',month:'long'})}</div><div class="num-line"><span class="num">${pdd.r.n}</span><p>${cap(N.CYCLE[pdd.r.n].replace('a year','a day'))}.</p></div>`)}
  ${panel(`<div class="label">Next year · ${y+1}</div><p>Personal Year <strong>${pyn.r.n}</strong>: ${N.CYCLE[pyn.r.n]}.</p><div class="label">Universal Year · ${y}</div><p>${uy.n}: the shared backdrop for everyone, ${N.CYCLE[uy.n]}.</p>`)}
@@ -1950,10 +1950,10 @@ function discoverLib(part){
  let lpSub='Your soul’s journey',cySub='Your personal year, month and day';try{if(bd&&N){const l=N.lifePath(bd).r.n;lpSub=`Your number ${l} · ${N.MEANING[l][0]}`;cySub=`Your Personal Year ${N.personalYear(bd,yr).r.n}`}}catch(e){}
  const ft=(img,title,sub,t,shape)=>`<button class="dft ${shape}" data-go="discover" data-t="${t}"><span class="dft-art">${ui(img,'dft-i')}</span><span class="dft-t"><strong>${title}</strong><span>${sub}</span></span></button>`;
  return `<div class="dlib">
-  ${part==='codex'?`${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Cosmic Profile</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
+  ${part==='codex'?`${hasBirthDate()&&S.fullName?'':`<button class="dprof" data-go="discover" data-t="profile">${ui('m-'+S.sign,'dp-i')}<span><strong>Complete your Birth Details</strong><span>Your birth day, time and place open your chart, your Life Path and your cycles.</span></span>${IC.chev}</button>`}
   ${shelf('Your Codex',`${nm?esc(nm)+', the':'The'} sky you were born beneath`)}
   ${ft('ex-chart','Birth Chart',esc(chSub),'birth-chart','round')}${ft('ex-lifepath','Life Path',esc(lpSub),'life-path','round')}
-  ${ft('ex-name','The Name Within','The numbers in your name','name-within','round')}${ft('m-'+S.sign,'My Cycles',esc(cySub),'cycles','round')}`:''}
+  ${ft('ex-name','The Name Within','The numbers in your name','name-within','round')}${ft('m-'+S.sign,'Personal Year',esc(cySub),'cycles','round')}`:''}
   ${part==='circle'?`${shelf('Your Circle','Read for the people you love')}
   ${ft('hero-affinity','Compatibility','Signs · Names · Birth charts','affinity','night wide')}`:''}
   ${part==='sky'?`${shelf('The Sky Above','What the heavens are doing now')}
@@ -2026,7 +2026,7 @@ const CHART_ROWS=[['planets',()=>pic('cats','planets','acc-i'),'Planetary Positi
 function chartView(){
  const other=!!V.ns.chart,c=other?V.oChart:myChart(),oname=(V.oBirthName||'').trim(),H=`${mnHead(other&&c?(oname?esc(oname.split(' ')[0])+'’s Chart':'Their Birth Chart'):c?'Your Birth Chart':'Birth Chart')}<p class="mn-sub">${other?'Another cosmic blueprint':'Your cosmic blueprint'}</p>`;
  if(other&&!c)return `<div class="mnp ch">${H}${mbox('<p class="lead">Calculate anyone’s birth chart from their date, time and place of birth.</p>')}${birthForm(true)}${mineBtn('chart',!!myChart())}</div>`;
- if(!c)return `<div class="mnp ch">${H}${invite('A personalised map of the sky at the moment you were born. Add your date, time and place of birth to your Cosmic Profile, or look up anyone’s chart.','chart')}</div>`;
+ if(!c)return `<div class="mnp ch">${H}${invite('A personalised map of the sky at the moment you were born. Add your date, time and place of birth to your birth details, or look up anyone’s chart.','chart')}</div>`;
  const b=other?V.oBirth:S.birth,sel=c.pl.find(p=>p.n===V.chartSel),ct=V.chartTab;
  const note=b.unk||!b.time?`<p class="note">Without a birth time, planets are taken at noon on your birth date. ${!hasPlace(b)?'Add your birth place to calculate the Ascendant, Midheaven and houses. ':''}${c.moonRange?`The Moon moves from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} during your birth day, so its sign depends on your birth time.`:''}</p>`:!hasPlace(b)?'<p class="note">Add your birth place so your birth time can be used for the Ascendant, Midheaven and houses.</p>':'';
  const big=[['Sun',c.pl[0]],['Moon',c.pl[1]]].map(([n,p])=>`<div class="b3"><span class="glyph">${p.g}</span><span>${n}</span><span class="b3-s"><span class="glyph">${sIdx(p.sign).g}</span> ${n==='Moon'&&c.moonRange?'Uncertain':sIdx(p.sign).name}</span><span class="b3-d">${n==='Moon'&&c.moonRange?'':degTxt(p.lon).replace(/ \S+ /,'° ').replace('°°','°')}</span></div>`).join('')
@@ -2042,7 +2042,7 @@ function chartView(){
  <div role="group" aria-label="Chart views">${seg([['chart','Chart'],['planets','Planets'],['aspects','Aspects'],['houses','Houses']],ct,'ctab')}</div>${note}${body}
  <details class="how"><summary>How this is worked out</summary><p>Tropical zodiac, geocentric positions on the true ecliptic of date from the Astronomy Engine ephemeris. Your local birth time is converted to UTC with the historical rules for ${esc(b.tz||TZ())}. Houses are whole-sign; aspect orbs are 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p></details>
  ${other?'':obj('kas','data-act="kasask" data-q="Explain my rising sign and what my chart’s big three suggest."','Ask Kassandra about my chart')}
- ${other?nsBtn('chart')+mineBtn('chart',!!myChart()):'<button class="btn ghost" data-go="discover" data-t="profile">Edit my Cosmic Profile</button>'}</div>`;
+ ${other?nsBtn('chart')+mineBtn('chart',!!myChart()):'<button class="btn ghost" data-go="discover" data-t="profile">Edit my Birth Details</button>'}</div>`;
 }
 /* Zodiac Affinity: a symbolic score from the angle between the signs, their elements and modalities */
 const AFF_T=['A Mirror Connection','A Curious Connection','A Friendly Spark','A Dynamic Tension','A Harmonious Connection','An Unlikely Pairing','A Magnetic Pull'];
@@ -2119,14 +2119,14 @@ function lifePathView(){
  const lead='Discover the meaning behind your numbers and the path you are here to walk. Your Life Path reveals your gifts, lessons and the opportunities that shape your journey.';
  if(other&&!d)return `<div class="sub">${H}${mbox(`<p class="lead">Find anyone’s Life Path from their date of birth.</p><div class="field"><label for="lpd">Their date of birth</label><div class="inp">${IC.cal}<input type="date" id="lpd"></div></div>`)}<button class="btn" data-act="lpgo">Their Life Path →</button>${mineBtn('lp',hasBirthDate())}</div>`;
  const form=other?'':mbox(`<p class="lead">${lead}</p>`);
- if(!d)return `<div class="sub">${H}${invite(lead+' Add your date of birth to your Cosmic Profile, or look up anyone’s Life Path.','lp')}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
+ if(!d)return `<div class="sub">${H}${invite(lead+' Add your date of birth to your birth details, or look up anyone’s Life Path.','lp')}<div class="list dim">${[['ex-lifepath','Your Life Path Number','Your core purpose'],['t-whisper','Key Strengths','Your natural gifts'],['ds-flying','Challenges','Lessons to grow from'],['t-journal','Guidance','How to align with your path']].map(([i,a2,b2])=>lrow(ui(i,'acc-i round'),a2,b2,'disabled')).join('')}</div></div>`;
  const L=N.lifePath(d),bd=N.birthday(d),M=N.MEANING[L.r.n],X=LPX[L.r.n]||LPX[L.r.n%9||9],ch=x=>x.chain.length>1?x.chain.join(' → '):String(x.n);
  return `<div class="sub">${H}${form}
  ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">${other?'Their':'Your'} Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>${soulBlock(L.r.n,other?'':firstOf(S.name||S.fullName),'A message for '+(other?'this path':'you'))}`,'ornate')}
  <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Purpose &amp; Growth','How to align with your path',`<p>${X[2]}</p>`)}${acc(pic('cats','love','acc-i'),'Relationships','How you love and connect',`<p>${LPREL[L.r.n]||LPREL[L.r.n%9||9]}</p>`)}${acc(pic('cats','insights','acc-i'),'Reflection','A question to carry',`<p class="quote">“${LPQ[L.r.n]||LPQ[L.r.n%9||9]}”</p>`)}
  ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
- ${other?'':'<button class="btn ghost" data-ss="savelp">Save to Your Readings</button>'}${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">My cycles</button>'}</div>`;
+ ${other?'':'<button class="btn ghost" data-ss="savelp">Save to Your Readings</button>'}${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">Personal Year</button>'}</div>`;
 }
 /* The Name Within: the numbers in a full birth name, each an expandable reading with its working */
 function nameView(){
@@ -2143,7 +2143,7 @@ function nameView(){
  const dim=`<div class="list dim">${[['general','Expression Number','Your natural abilities'],['love','Soul Urge Number','Your inner desires'],['insights','Personality Number','How you show up to the world'],['lifepath','Destiny Number','Your life purpose']].map(([i,a2,b2])=>lrow(pic('cats',i,'acc-i'),a2,b2,'disabled')).join('')}</div>`;
  const H=hdr('The Name Within',{sub:other?'Another name’s numbers':'Name numerology'});
  if(other&&!nm)return `<div class="sub">${H}${mbox(`<p class="lead">Discover the numbers in anyone’s name: use their full name at birth.</p><div class="field"><label for="fn2">Their full name</label><div class="inp">${IC.star}<input type="text" id="fn2" value="${esc(V.oName||'')}" placeholder="Their full name at birth"></div></div>`)}<button class="btn" data-act="nwgo">Reveal their numbers →</button>${mineBtn('nw',!!nameNums(S.fullName))}</div>`;
- if(!nm)return `<div class="sub">${H}${invite(lead+' Add your full name at birth to your Cosmic Profile, or look up anyone’s name.','nw')}${dim}</div>`;
+ if(!nm)return `<div class="sub">${H}${invite(lead+' Add your full name at birth to your birth details, or look up anyone’s name.','nw')}${dim}</div>`;
  return `<div class="sub">${H}${mbox(`<p class="lead">${other?`The numbers in the name <strong>${esc(V.oName)}</strong>.`:lead}</p>`)}
  ${nm.expression.r.n?mbox(soulBlock(nm.expression.r.n,other?firstOf(V.oName):firstOf(S.name||S.fullName),other?'What this name carries':'What your name carries')):''}
  <div class="list">${rows(nm)}</div>
@@ -2609,7 +2609,7 @@ function kasScene(){
  const words=greet.split(' ').map((w,i)=>`<span style="--d:${(fog?3.1:.2)+i*.07}s">${esc(w)}</span>`).join(' ');
  return `<div class="kz${fog?' fog':''}"><div class="kz-sky" aria-hidden="true"></div><div class="kz-box" aria-hidden="true">${ui('kas-scene2','kz-img','',true)}<i class="kz-glow"></i><i class="kz-sweep"></i></div>
  ${fog===true?'<div class="kz-fog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>':''}
- <div class="kz-corner">${iconBtn('history','data-go="kassandra" data-t="history"','Past conversations')}${jdoor()}</div>
+ <div class="kz-back">${iconBtn('back','data-act="back"','Back')}</div><div class="kz-corner">${iconBtn('history','data-go="kassandra" data-t="history"','Past conversations')}${jdoor()}${avatar()}</div>
  <div class="kz-talk"><div class="kz-card">
   <div class="kz-thread" id="kthread" aria-live="polite"><p class="kz-say">${words}</p>${KS.msgs.map(m=>`<div class="kas-m ${m.role}">${esc(m.content).replace(/\n+/g,'<br>')}</div>`).join('')}${KS.busy?'<div class="kas-m assistant kz-wait">Kassandra gazes into the crystal…</div>':''}</div>
   ${signed?`${has?'':`<div class="kz-pr" style="--d:${fog?4.2:1}s">${prs.map((p,i)=>i===2&&/^(Something|I need guidance)/.test(p)?`<button class="pill-b" data-act="kasfocus">${esc(p)}</button>`:`<button class="pill-b" data-act="kasask" data-q="${esc(p)}">${esc(p)}</button>`).join('')}</div>`}
@@ -2617,12 +2617,13 @@ function kasScene(){
    <button type="button" class="kz-mic${on&&rec==='listening'?' on':''}" data-act="kasmic" aria-label="${on&&rec==='listening'?'Stop recording':'Ask with your voice'}" ${rec==='processing'||KS.busy?'disabled':''}>${on&&rec==='listening'?IC.stop:IC.mic}</button>
    <button type="submit" class="kas-send" aria-label="Send" ${KS.busy||rec!=='idle'?'disabled':''}>${IC.send}</button></form>
   ${on&&rec!=='idle'?`<p class="kz-note">${rec==='listening'?'Listening… tap again when you have finished.':'Hearing your question…'}</p>`:''}
+  ${has&&!KS.busy?`<div class="kz-next"><button class="pill-b" data-flow="kaskeep">${S.kcurId?'Kept in Your Readings ✓':'Keep this conversation'}</button><button class="pill-b" data-flow="kaswrite">Write about it</button></div>`:''}
   ${has?'<button class="link kz-new" data-act="kasnew">Begin a new conversation</button>':''}`
   :`<p class="kz-in">${firstName()?esc(firstName())+', she':'She'} speaks with those she knows. Sign in, and she will remember you, your sign and what you have told her.</p><button class="btn" data-act="toauth">Sign in to speak</button>`}
   <p class="kz-note">Kassandra speaks in symbols, not certainties. She cannot give medical, legal or financial advice.</p>
  </div></div></div>`;
 }
-function kasKeep(){S.kcur=KS.msgs.slice(-40);save()}
+function kasKeep(){S.kcur=KS.msgs.slice(-40);save();if(S.kcurId&&!KS.busy&&KS.msgs.length)try{kasSaveNow()}catch(e){}}
 function kasSend(q){
  q=String(q||'').trim();if(!q||KS.busy)return;if(!C.user)return render();
  if(!KS.msgs.length&&V.kasGreet)KS.msgs.push({role:'assistant',content:V.kasGreet});KS.msgs.push({role:'user',content:q});KS.busy=true;kasKeep();render();kasScroll();
@@ -2632,9 +2633,7 @@ function kasSend(q){
 const kasScroll=()=>requestAnimationFrame(()=>{const t=$('#kthread');if(t)t.lastElementChild&&t.lastElementChild.scrollIntoView({block:'nearest',behavior:'smooth'})});
 // a conversation set aside is kept among the past ones (and in the account), and a fresh one begins
 function kasNew(){
- if(!KS.msgs.length)return;const id=uuid(),first=KS.msgs.find(m=>m.role==='user'),now=new Date().toISOString();
- const b={id,kind:'chat',ref:id,data:{title:first?first.content.slice(0,60):'A conversation',msgs:KS.msgs.slice(-40)},at:now};
- S.bookmarks.push(b);C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{});KS.msgs=[];kasKeep();render();toast('Kept in your past conversations');
+ if(!KS.msgs.length)return;kasSaveNow();S.kcurId=null;KS.msgs=[];kasKeep();render();toast('Kept in your past conversations');
 }
 // voice: record only while the reader has pressed the microphone, for Kassandra or for a dream
 async function voiceRec(target){
@@ -2671,7 +2670,7 @@ views.you=()=>{
   try{if(bd&&N2){const l=N2.lifePath(bd).r.n;lp=`${l} · ${N2.MEANING[l][0]}`;cy=`You are in a Personal Year ${N2.personalYear(bd,Number(dkey().slice(0,4))).r.n}`}
    if(S.fullName&&N2){const e=N2.name(S.fullName,S.settings.yMode).expression.r.n;nmL=`Expression ${e} · ${N2.MEANING[e][0]}`}}catch(e){}
   miss=!bd?'Add your birth date to open them all':S.birth.unk||!S.birth.time?'Add your birth time for your Rising':!S.fullName?'Add your full birth name for its number':'';
-  pg=`<div class="sky-l sky-list or-list jn-list yo-list">${dr('birth-chart','ex-chart','Birth chart','',esc(line))}${dr('life-path','ex-lifepath','Life path','',lp)}${dr('name-within','ex-name','Your name','',nmL)}${dr('cycles','m-'+S.sign,'My cycles','',cy)}
+  pg=`<div class="sky-l sky-list or-list jn-list yo-list">${dr('birth-chart','ex-chart','Birth chart','',esc(line))}${dr('life-path','ex-lifepath','Life path','',lp)}${dr('name-within','ex-name','Your name','',nmL)}${dr('cycles','m-'+S.sign,'Personal year','',cy)}
   ${row('data-go="discover" data-t="profile"',ui('ic-birth','sky-i'),'Birth details','',miss||'Your day, time and place of birth')}</div>`}
  else if(yc==='circle')pg=`<p class="pg-in">Read for the people you love.</p><div class="sky-l sky-list or-list jn-list yo-list">${dr('people','ex-compat','My Relationships','','The people you have kept')}${dr('affinity','ex-compat','Two signs','','How your sign flows with theirs')}${dr('resonance','ex-resonance','Two names','','The numbers in both your names')}${dr('synastry','ex-chart','Two birth charts','','Your skies side by side')}${row('data-act="spkopen"',ui('ic-someone','sky-i'),'Someone else’s sky','','Read today for another sign')}</div>`;
  else pg=`<p class="yo-acct">${!C.enabled?'Kept on this device':C.user?'Signed in as '+esc(C.user.email||''):'Not signed in · kept on this device'}</p><div class="sky-l sky-list or-list jn-list yo-list">${sr('account','profile','Name and photo',esc(S.name||'Not set'))}${sr('notifications','bell','Notifications','Your daily horoscope, Whispers and events')}${sr('display','list','Display','Text size, motion, time zone and voice')}${sr('privacy','lock','Privacy and data','Consent, download and deletion')}${sr('subscription','star','Membership','Early access · everything is open')}</div>
@@ -2686,7 +2685,7 @@ views.settings=()=>{
  // Kosmia Premium: what stays free, what Premium opens, and the two plans. Payments are not switched on yet, so during
  // early access everything is open and nothing can be bought here
  if(t==='subscription'){const li=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-  return nightSub(`<div class="sub">${hdr('The Sanctuary')}<div class="prem">
+  return nightSub(`<div class="sub">${hdr('My Membership')}<div class="prem">
   <p class="prem-l">${firstName()?esc(firstName())+', a':'A'} place that knows you a little more each Moon</p>
   ${panel(`<p class="kick prem-now">Your plan · Early Access</p><p class="prem-now">Everything in Kosmia is open to you, free, while it is in early access. Nothing is charged, and nothing ever will be without your clear agreement.</p>`,'ornate')}
   ${panel(`<div class="prem-cols"><div class="prem-col"><h3>Always free</h3>${li(['Your Daily Whisper','Your sign’s horoscope','Journal and reflections','Moon and Cosmic Calendar','One-card and three-card readings'])}</div>
@@ -2698,7 +2697,7 @@ views.settings=()=>{
   :C.user?`<p class="muted">Signed in as ${esc(C.user.email||'')} · synced across your devices.</p>`:`<p class="muted">Not signed in. Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
  // the night garden runs the length of the page: the title set in its sky, the sign's figure whole before its moon with the
  // identity on parchment beside it, and the settings on parchment rows over the lilies and roses below
- return `<div class="mnp pfn">${mnHead0('Your Profile','',true)}
+ return `<div class="mnp pfn">${mnHead0('My Account','',true)}
  <div class="pf-id"><label class="pf-pic" aria-label="${S.photo?'Change':'Add'} your profile picture">${myFace('pf-img')}<span class="pf-cam" aria-hidden="true">${IC.plus}</span><input type="file" id="pfphoto" accept="image/*" class="sr-only"></label>
   <div><h2>${esc(S.name||S.fullName||'Traveller')}</h2><p class="pf-sign"><span class="glyph" aria-hidden="true">${s.g}</span> ${s.name} · ${SHORT_DATES(s)}</p><p class="keys">${keys(SIGN_KEYS[s.id])}</p>${S.photo?'<button class="link pf-rm" data-act="rmphoto">Remove picture</button>':''}</div></div>
  <div class="pf-body">${acct}
@@ -2712,11 +2711,11 @@ views.settings=()=>{
 function settingsPage(t){
  const n=S.notif,st=S.settings;
  if(t==='notifications')return `<div class="stack"><h1>Notifications</h1><p class="note">Kosmia saves these choices now. Delivery is not switched on yet: it needs push messaging, which is coming in a later release. Nothing will be sent until then, and your browser will ask permission first.</p>${panel(`${[['n_on','Daily horoscope',n.on],['n_wh','Daily Whisper',n.whisper],['n_ev','Important celestial events',n.events],['n_mo','Monthly forecast reminder',n.monthly],['n_an','Yearly forecast reminder',n.annual]].map(([id,l,v])=>`<label class="row"><input type="checkbox" id="${id}" ${v?'checked':''} class="cb"> ${l}</label>`).join('')}<div class="field"><label for="n_mn">Every New Moon and Full Moon</label><select id="n_mn">${[['','No reminder'],['before','The day before'],['day','On the day'],['both','The day before and on the day']].map(([v,l])=>`<option value="${v}" ${(n.moons||'')===v?'selected':''}>${l}</option>`).join('')}</select></div><p class="muted small">A reminder set on a single event replaces this one for that event, so nothing arrives twice.</p><div class="field"><label for="n_time">Delivery time</label><input type="time" id="n_time" value="${n.time}"></div><label class="row"><input type="checkbox" id="n_q" ${n.quiet?'checked':''} class="cb"> Quiet hours</label><div class="row two"><div class="field"><label for="n_qf">From</label><input type="time" id="n_qf" value="${n.quietFrom}"></div><div class="field"><label for="n_qt">Until</label><input type="time" id="n_qt" value="${n.quietTo}"></div></div><p class="muted small">Times are in your time zone (${esc(TZ())}).</p>`)}</div>`;
- if(t==='privacy')return `<div class="stack"><h1>Privacy</h1>
+ if(t==='privacy')return `<div class="stack"><h1>Privacy &amp; My Data</h1>
   ${panel(`<h3>What Kosmia keeps</h3><p>Your email, chosen sign and name; your Whispers, reflections, journal, readings, bookmarks and connections; and, only if you agree, your birth details. Everything is private to your account and protected so that only you can read it.</p><p class="muted small">AI features send only what they need: the tarot cards drawn, a forecast’s sign and period, or what you type to Kassandra. While personalisation is on, a short summary of the themes you have been writing about, with a few lines in your own words, is sent each day to write your message and to help Kassandra know you. It is never shared or used for anything else.</p>`)}
   ${panel(`<h3>Consent</h3><label class="row consent"><input type="checkbox" id="p_birth" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my account</span></label><label class="row consent"><input type="checkbox" id="p_pz" ${st.personal!==false?'checked':''} class="cb"> <span>Personalise my daily message, Whisper and Kassandra from what I write in my Journal, reflections, tarot questions and dreams</span></label><label class="row consent"><input type="checkbox" id="p_kas" ${st.kPersonal?'checked':''} class="cb"> <span>Let Kassandra see my sign, chart placements and numbers when I talk with her</span></label>`)}
   ${panel(`<h3>Your data</h3><button class="btn ghost" data-act="export">Download my data</button><button class="btn ghost" data-act="delbirth">Delete my birth details</button><div class="rule"></div><h3>Delete account</h3><p class="muted small">This permanently removes your account and everything in it. It cannot be undone.</p>${V.confirmDel?`<div class="field"><label for="delc">Type DELETE to confirm</label><input type="text" id="delc" autocomplete="off"></div><div class="row"><button class="btn danger" data-act="delacct">Delete my account</button><button class="btn ghost" data-act="canceldel">Cancel</button></div>`:`<button class="btn ghost danger-t" data-act="askdel" ${C.user?'':'disabled'}>Delete my account</button>${C.user?'':'<p class="muted small">Sign in to manage an account.</p>'}`}`)}</div>`;
- if(t==='display')return `<div class="stack"><h1>Display</h1>${panel(`<label class="row"><input type="checkbox" id="d_rm" ${st.reduce?'checked':''} class="cb"> Reduce motion</label><label class="row"><input type="checkbox" id="d_lg" ${st.large?'checked':''} class="cb"> Larger text</label><label class="row"><input type="checkbox" id="d_hp" ${st.haptics!==false?'checked':''} class="cb"> Soft haptics (a light tap as you move)</label><p class="muted small">Kosmia also follows your device’s reduced-motion setting.</p>`)}${panel(`<h3>Time zone</h3><div class="field"><label for="d_tz">Days, weeks and events use</label><select id="d_tz"><option value="">This device (${esc(DEVICE_TZ)})</option>${(Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):[]).map(z=>`<option ${st.tz===z?'selected':''}>${z}</option>`).join('')}</select></div>`)}${panel(`<h3>Kassandra</h3><label class="row"><input type="checkbox" id="d_vo" ${st.voiceOut?'checked':''} class="cb"> Read Kassandra’s replies aloud</label>`)}</div>`;
+ if(t==='display')return `<div class="stack"><h1>Display &amp; Accessibility</h1>${panel(`<label class="row"><input type="checkbox" id="d_rm" ${st.reduce?'checked':''} class="cb"> Reduce motion</label><label class="row"><input type="checkbox" id="d_lg" ${st.large?'checked':''} class="cb"> Larger text</label><label class="row"><input type="checkbox" id="d_hp" ${st.haptics!==false?'checked':''} class="cb"> Soft haptics (a light tap as you move)</label><p class="muted small">Kosmia also follows your device’s reduced-motion setting.</p>`)}${panel(`<h3>Time zone</h3><div class="field"><label for="d_tz">Days, weeks and events use</label><select id="d_tz"><option value="">This device (${esc(DEVICE_TZ)})</option>${(Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):[]).map(z=>`<option ${st.tz===z?'selected':''}>${z}</option>`).join('')}</select></div>`)}${panel(`<h3>Kassandra</h3><label class="row"><input type="checkbox" id="d_vo" ${st.voiceOut?'checked':''} class="cb"> Read Kassandra’s replies aloud</label>`)}</div>`;
  const acct=!C.enabled?'<h3>Local mode</h3><p class="muted">Accounts and sync are not configured for this build, so everything stays in this browser.</p>'
   :C.user?`<h3>Signed in</h3><p class="muted">${esc(C.user.email||'')} · synced across your devices.</p>`
   :`<h3>Not signed in</h3><p class="muted">Create an account or sign in to keep your universe in sync across devices.</p><button class="btn" data-act="toauth">Sign in or create an account</button>`;
@@ -3463,12 +3462,15 @@ function close(){
  const ov=document.getElementById('rov');V.rp=null;if(!ov)return;
  const t=ov.querySelector('.rt');if(t)t.classList.remove('in');ov.classList.remove('on');setTimeout(()=>{if(V.rp==null)ov.innerHTML=''},600);
 }
-function complete(i,msg){
+function complete(i,msg,to){
  mark(i);close();
  setTimeout(()=>{wheel();const n=count(),all=[...Array(n).keys()].every(done);
   const dreamt=(S.bookmarks||[]).some(b=>b.kind==='dream'&&(b.data||{}).day===dkey());
   if(all&&!isEve()&&!dreamt)return toast('Your morning ritual is complete. Your day is held.','drask','Do you remember your dreams?');
-  toast(all?(isEve()?goodnight(dkey()):'Your morning ritual is complete. Your day is held.'):msg)},500);
+  const fin=isEve()?goodnight(dkey()):'Your morning ritual is complete. Your day is held.',nl=all?nextLunar(3.5):null;
+  if(nl)return toastGo(`${fin} The ${calName(nl)} arrives ${calCount(nl).toLowerCase()}.`,'Prepare for it',{ref:evRef(nl)});
+  if(to)return toastGo(all?fin:msg,to[0],{s:to[1],t:to[2]});
+  toast(all?fin:msg)},500);
 }
 function flip(){
  const k=dkey();if(S.revealed[k])return;
@@ -3496,15 +3498,15 @@ function act(t,e){
  if(a==='skip'){close();return setTimeout(()=>toast('Rest well. Tonight needs no words.'),500)}
  if(a==='done'){const i=+t.dataset.i;
   if(i===0){S.readDay=k;save();return complete(0,'Your Horoscope is kept for today')}
-  if(i===1){if(!S.saved.some(x=>x.date===k)){S.saved.push({id:todayCard().id,date:k});save();syncFortune(k)}return complete(1,'Your Whisper walks with you today, kept in My Library')}
+  if(i===1){if(!S.saved.some(x=>x.date===k)){S.saved.push({id:todayCard().id,date:k});save();syncFortune(k)}return complete(1,'Your Whisper walks with you today.',['See it in My Library','tarot','library'])}
   if(i===2){const v=(document.getElementById('riin').value||'').trim();if(!v){toast('Write an intention, or choose one');document.getElementById('riin').focus();return}
-   S.carry=S.carry||{};S.carry[k]=v.slice(0,60);Object.keys(S.carry).sort().slice(0,-40).forEach(x=>delete S.carry[x]);save();return complete(2,'Your intention is set for today')}
+   S.carry=S.carry||{};S.carry[k]=v.slice(0,60);Object.keys(S.carry).sort().slice(0,-40).forEach(x=>delete S.carry[x]);save();return complete(2,'Your intention is set for today.',['See it in My Intentions','tarot','intentions'])}
   if(i===3){mark(3);wheel();return open(4)}
   if(i===4){const x=document.getElementById('rqin'),v=(x.value||'').trim();if(!v){toast('Write a few words, or choose Not tonight');x.focus();return}
    S.notes[k]=V.ritQ&&!S.notes[k]?`${V.ritQ} ${v}`:v;
    // a gratitude kept here is also kept among the reader's gratitude in the Journal
    if(V.ritQ==='What are you grateful for?'){const j={id:uuid(),day:k,kind:'reflection',title:'My Gratitude',body:v,at:new Date().toISOString()};S.journal.push(j);C.saveJournal&&C.saveJournal(j)}
-   V.ritQ=null;save();syncFortune(k);return complete(4,'Your reflection is kept in your Journal')}
+   V.ritQ=null;save();syncFortune(k);return complete(4,'Your reflection is kept.',['See it in My Reflections','tarot','reflections'])}
  }
 }
 document.addEventListener('click',e=>{
@@ -3798,7 +3800,7 @@ function ssNumerologyView(){
  return nightSub(`<div class="sub">${hdr('Numerology',{sub:'The hidden symbolism of your birth and name.'})}
  <div class="list">${ssDoor(L||'✶','Life Path',L?`${L} · ${N.MEANING[L][0]}. The symbolic journey revealed through your date of birth.`:'The symbolic journey revealed through your date of birth.','data-go="discover" data-t="life-path"','big')}
  ${ssDoor(E||'✶','The Name Within',E?`${E} · ${N.MEANING[E][0]}. The qualities, desires and expression in your name.`:'Explore the qualities, desires and expression associated with your name.','data-go="discover" data-t="name-within"','big')}</div>
- <p class="muted small center">${L?'Calculated from your birth date':'Add your birth date to your Cosmic Profile to reveal your Life Path'}${E?' and your full birth name.':'; the Name Within reads your full birth name.'}</p></div>`,'dj ss');
+ <p class="muted small center">${L?'Calculated from your birth date':'Add your birth date to your birth details to reveal your Life Path'}${E?' and your full birth name.':'; the Name Within reads your full birth name.'}</p></div>`,'dj ss');
 }
 {const SSV={signs:ssHome,numbers:ssNumbersView,number:ssNumberReading,sync:ssSyncView,'sync-reading':ssSyncReading,patterns:ssPatternsView,pattern:ssPatternView,numerology:ssNumerologyView};
  const vd=views.discover;views.discover=()=>SSV[tab()]?SSV[tab()]():vd()}
@@ -4867,7 +4869,7 @@ function jxIntentions(){
  else body=`<div class="dr-book">${(v==='past'?past:all).map(card).join('')||'<p class="muted center">Nothing here yet.</p>'}</div>`;
  return cjPage(`${hdr('My Intentions',{sub:'The things you choose to nurture and carry forward.'})}
  <div class="fchips ss-chips">${[['current','Current'],['past','Past'],['all','All']].map(([k,l2])=>`<button class="fchip" role="radio" aria-checked="${v===k}" data-jx="iv" data-v="${k}">${l2}</button>`).join('')}</div>
- ${body}<button class="jx-write sm" data-jx="write" data-c="intention"><span class="jx-pen">${FEATHER}</span><span><strong>A personal intention</strong></span></button>
+ ${body}${v==='current'?jxNextNm():''}<button class="jx-write sm" data-jx="write" data-c="intention"><span class="jx-pen">${FEATHER}</span><span><strong>A personal intention</strong></span></button>
  <p class="muted small center">Intentions are not tasks. Nothing here is overdue, scored or failed.</p>`,'jx');
 }
 function jxGratitude(){
@@ -4937,12 +4939,12 @@ function jxEntryView(){
 function jxMonthView(){
  const m=V.jxm||dkey().slice(0,7),M=jxMonth(m),[y,mo]=m.split('-').map(Number),ms=jxMilestones().filter(x=>x[0].slice(0,7)===m);
  const written=M.e.filter(x=>x.body),ok=S.settings.jInsights===true,enough=written.length>=7;
- let moons='';try{moons=K.lunarPhases(new Date(Date.UTC(y,mo-1,1)-DAY),new Date(Date.UTC(y,mo,1))).filter(e=>(e.k==='new_moon'||e.k==='full_moon')&&dkey(e.date).slice(0,7)===m).map(e=>`${e.name} ${ymdLong(dkey(e.date),{day:'numeric',month:'short'})}`).join(' · ')}catch(e){}
+ let moons='';try{moons=K.events(new Date(Date.UTC(y,mo-1,1)-DAY),new Date(Date.UTC(y,mo,1)+DAY)).filter(e=>(e.k==='new_moon'||e.k==='full_moon')&&evDay(e).slice(0,7)===m).map(e=>`<button class="fchip" ${calA(e)}>${esc(calName(e))} · ${shortDay(e)} ›</button>`).join('')}catch(e){}
  const rh={new:0,waxing:0,full:0,waning:0};written.forEach(x=>rh[jxBucket(x.phase)]++);const top=Object.entries(rh).sort((a,b)=>b[1]-a[1])[0];
  const th=jxThemes(written).slice(0,8),T=V.jxTheme&&th.find(t=>t[0]===V.jxTheme);
  const tl=[...M.e.map(x=>({day:x.day,at:x.at,h:jxRow(x)})),...M.lib.map(x=>({day:x.day,at:x.at||x.day,h:`<button class="dr-entry" ${x.open}><span class="dr-d">Kept · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.title)}</strong><span class="dr-f">My Library · ${(JX_LC.find(c=>c[0]===x.cat)||['',''])[1]}</span></button>`})),...ms.map(x=>({day:x[0],at:x[0]+'T23',h:`<p class="jx-ms">✦ <b>${x[1]}</b> · ${x[2]}</p>`}))].sort((a,b)=>String(a.at)>String(b.at)?1:-1);
  return cjPage(`${hdr(ymdLong(m+'-01',{month:'long',year:'numeric'}),{sub:'A chapter of your journey'})}
- ${moons?`<p class="jx-meta">${esc(moons)}</p>`:''}
+ ${moons?`<div class="fchips ss-chips jx-moons">${moons}</div>`:''}
  <div class="dr-stats jx-stats"><div><b>${M.r.length}</b><span>Reflections</span></div><div><b>${M.i.length}</b><span>Intentions</span></div><div><b>${M.g.length}</b><span>Gratitude</span></div><div><b>${M.lib.length}</b><span>Saved items</span></div></div>
  ${ms.length?`${ssHead('Personal Milestones')}${ms.map(x=>mbox(`<h3>${x[1]}</h3><p class="center">${x[2]}</p><p class="muted small center">${ymdLong(x[0],{day:'numeric',month:'long'})}</p>`,'dr-q')).join('')}`:''}
  ${ssHead('Personal Insights')}${!ok?`<div class="dr-text"><p>Kosmia can notice the words, themes and lunar rhythms in what you write this month. It is worked out on this device from your own words, and only when you allow it.</p></div><button class="btn ghost" data-jx="insok">Show insights from my words</button>`
@@ -5121,7 +5123,8 @@ function mcCycles(){
  ${c.known?'':`<p class="muted small center">Without your birth time and place, houses cannot be placed, so these cycles show only the planets meeting your natal planets. <button class="link" data-go="settings" data-t="birth">Add birth details</button></p>`}${mcApprox()}
  <div class="dr-book">${L.map(mcTrRow).join('')||`<p class="muted center">${v==='now'&&sh.length?'No long chapters are active right now.':v==='now'?'No major transits are active right now: a quiet sky for you.':v==='ahead'?'No major transits begin in the next eighteen months.':'No major transits in the last two years.'}</p>`}</div>
  ${sh.length?`${ssHead('Short-Term Influences')}<div class="dr-book">${sh.map(mcTrRow).join('')}</div>`:''}
- ${v!=='past'&&tl.length?`${ssHead('The Chapters Ahead')}<div class="mc-tl"><div class="mc-tl-h"><span>Today</span><span>${mcMonth(span[0]+274*DAY)}</span><span>${mcMonth(span[1])}</span></div>${tl.map(bar).join('')}</div><p class="muted small center">Longer chapters are drawn first. Several can overlap; each is a theme to reflect on, not an event that must happen.</p>`:''}`,'cyc');
+ ${v!=='past'&&tl.length?`${ssHead('The Chapters Ahead')}<div class="mc-tl"><div class="mc-tl-h"><span>Today</span><span>${mcMonth(span[0]+274*DAY)}</span><span>${mcMonth(span[1])}</span></div>${tl.map(bar).join('')}</div><p class="muted small center">Longer chapters are drawn first. Several can overlap; each is a theme to reflect on, not an event that must happen.</p>`:''}
+ ${flowRow([['Cosmic Calendar','data-go="discover" data-t="calendar"'],['Today’s Sky','data-nav="horoscope"']])}`,'cyc');
 }
 function mcTransitView(){
  const l=mcTransits()||[],x=l.find(y=>y.key===V.mcT);
@@ -5210,6 +5213,7 @@ function mcPlacement(){
  ${mbox(`<h3>A Question for You</h3><p class="quote center">“${esc(x.q)}”</p>`,'dr-q')}
  <div class="ss-acts"><button class="btn ghost cj-heart" data-heart="${esc(hk)}" data-snap-t="${esc(x.title)}" aria-pressed="${hearted(hk)}" style="--fill:${hearted(hk)?'currentColor':'none'}">${IC.heart} ${hearted(hk)?'In My Library':'Keep in My Library'}</button><button class="btn ghost" data-jx="write" data-link="${esc(hk)}" data-t="${esc('My Cosmos — '+x.title)}">Write a Reflection</button></div>
  <div class="ss-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(`In my birth chart I have ${x.title}. Help me understand what it may say about me.`)}">Ask Kassandra</button></div>
+ ${(()=>{const n=(V.mcP||'').split(':')[1],k=n==='Sun'?'sun':n==='Moon'?'moon':PLK[n]?'pl:'+n:'';return k?flowRow([[`Where ${n==='Sun'||n==='Moon'?'the '+n:n} is today`,`data-sky="${k}"`],['My Cosmic Cycles','data-go="you" data-t="cycles"']]):''})()}
  ${x.rel.length?`${ssHead('Related Placements')}<div class="dr-book">${x.rel.map(([k,t])=>`<button class="dr-entry" data-mc="pl" data-p="${esc(k)}"><strong>${esc(t)}</strong></button>`).join('')}</div>`:''}`,'place');
 }
 /* ---------- My Zodiac and My Cosmic Identity ---------- */
@@ -5223,7 +5227,8 @@ function mcZodiac(){
  const [S1,M1,R1]=L.map(x=>x[2]);
  const tog=S1?`Your ${S1.name} Sun is associated with ${SIGN_KEYS[S1.id].slice(0,2).join(' and ').toLowerCase()}${M1?`, while your ${M1.name} Moon brings themes of ${SIGN_KEYS[M1.id].slice(0,2).join(' and ').toLowerCase()}`:''}.${R1?` Your ${R1.name} Rising introduces ${SIGN_KEYS[R1.id][0].toLowerCase()} in the way you meet the world.`:''} ${M1||R1?`Together, these placements invite reflection on the balance between ${[S1,M1,R1].filter(Boolean).map(s=>EL_TXT[s.el][0].split(' and ')[0].toLowerCase()).filter((v,i,a)=>a.indexOf(v)===i).join(', ').replace(/, ([^,]*)$/,' and $1')}.`:'Add your birth time and place to see your Three Lights together.'}`:'';
  return mcPage(`${hdr('My Zodiac',{sub:'Your Sun, Moon and Rising signs.'})}<div class="mc-zs-w">${L.map(sec).join('')}</div>
- ${ssHead('Your Three Lights Together')}<div class="dr-text"><p>${esc(tog)}</p></div>`,'zod');
+ ${ssHead('Your Three Lights Together')}<div class="dr-text"><p>${esc(tog)}</p></div>
+ ${flowRow([['Today’s Horoscope','data-sky="sign"'],['My Birth Chart','data-go="you" data-t="chart"'],['My Relationships','data-go="you" data-t="people"']])}`,'zod');
 }
 function mcElements(c){
  const pts=c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).map(p=>sIdx(p.sign).el).concat(c.known&&c.ang?[sIdx(Math.floor(c.ang.asc/30)).el]:[]),n=pts.length,cnt={Fire:0,Earth:0,Air:0,Water:0};pts.forEach(e=>cnt[e]++);
@@ -5332,6 +5337,10 @@ const mcPrivacyExtra=()=>{const st=S.settings,others=cnPeople().filter(p=>p.date
  if(t==='privacy')return nightSub(subPage(settingsPage('privacy').replace(/<\/div>$/,mcPrivacyExtra()+'</div>')),'st');
  return vs()}}
 {const vd=views.discover;views.discover=()=>{const t=tab();
+ if(t==='events'||(t==='birth-chart'&&!V.ns.chart)){const s2=t==='events'?'discover':'you',t2=t==='events'?'calendar':'chart';V.sec=s2;V.tab[s2]=t2;history.replaceState(history.state,'',pathFor(s2,t2,{}));return views[s2]()}
+ if(t==='moon'||t==='planets'){const h=vd();const fl=t==='moon'?(()=>{const n=nextLunar();return flowRow([n&&[`${esc(calName(n))} · ${shortDay(n)}`,calA(n)],['Write tonight',writeA('The Moon tonight','What am I feeling today that I have not yet said aloud?')],['Today’s Moon in the Sky','data-sky="moon"']])})()
+   :`${ssHead('Each Planet Today')}<div class="fchips ss-chips">${Object.keys(PLK).map(P=>`<button class="fchip" data-sky="pl:${P}">${P}</button>`).join('')}</div>${flowRow([['How they touch you','data-go="you" data-t="cycles"'],['Cosmic Calendar','data-go="discover" data-t="calendar"']])}`;
+  return h.replace(/(<\/div>)\s*$/,fl+'$1')}
  if(t==='people'||t==='person'){const t2=t==='person'&&V.cnPid&&V.cnPid!=='new'&&cnPerson(V.cnPid)?'person':'people';V.sec='you';V.tab.you=t2;history.replaceState(history.state,'',pathFor('you',t2,t2==='person'?{p:V.cnPid}:{}));return views.you()}
  if(t==='patterns'&&S.settings.patterns===false)return mcPage(`${hdr('Patterns')}${mbox('<p class="center">Oracle patterns are turned off, so Kosmia does not gather themes across your dreams, readings and reflections.</p>')}<button class="btn ghost" data-go="settings" data-t="privacy">Privacy & My Data</button>`);
  if(t==='profile'){const h=vd();return h.replace(/(<\/div>)\s*$/,`${mbox(`<h3>Birth time certainty</h3><div class="field"><label for="b_cert" class="sr-only">How certain is your birth time?</label><select id="b_cert"><option value="exact" ${(S.birth.cert||'exact')==='exact'?'selected':''}>Exact, from a record</option><option value="approx" ${S.birth.cert==='approx'?'selected':''}>Approximate</option><option value="unknown" ${S.birth.cert==='unknown'?'selected':''}>Unknown</option></select></div><p class="muted small">Changing your birth details recalculates your chart, Three Lights, Cosmic Identity, Cosmic Cycles and Life Path. Readings you have already saved keep the details they were made with.</p>`)}$1`)}
@@ -5370,6 +5379,51 @@ document.addEventListener('change',e=>{
  if(/^(r_we|g_|d_)/.test(id))render();
 });
 document.body.classList.toggle('contrast',!!S.settings.contrast);document.body.classList.toggle('readmode',!!S.settings.readmode);
+
+/* ---------- the ways between places: every page offers where to go next ---------- */
+// the next New or Full Moon (or one kind of event) from the Calendar's own list, so it opens its own Cosmic Event page
+const nextLunar=(days=40)=>{try{const n=new Date(),lim=+n+days*DAY;return upcoming().find(e=>(e.k==='new_moon'||e.k==='full_moon')&&e.date>n&&+e.date<=lim)||null}catch(e){return null}};
+const nextOf=(f,days=400)=>{try{const n=new Date(),lim=+n+days*DAY;return upcoming().find(e=>e.date>n&&+e.date<=lim&&f(e))||null}catch(e){return null}};
+const calA=e=>`data-cal="open" data-ref="${esc(evRef(e))}"`;
+const shortDay=e=>ymdLong(evDay(e),{day:'numeric',month:'short'});
+const flowRow=(items,head='Continue Your Journey')=>{const l=items.filter(Boolean);return l.length?`${ssHead(head)}<div class="ss-acts flow">${l.map(([t,a])=>`<button class="btn ghost" ${a}>${t}</button>`).join('')}</div>`:''};
+const writeA=(t,q,src='sky')=>`data-flow="write" data-t="${esc(t)}" data-q="${esc(q)}" data-src="${src}"`;
+// a short line in the toast, with the way to where the thing was kept
+function toastGo(t,label,to){toast(t,'flowgo',label);const b=$('#toast .toast-a');if(b)Object.keys(to).forEach(k=>{if(to[k]!=null)b.dataset[k]=to[k]})}
+// the Sky's own pages (the Moon, the Sun, each planet, a sign) can be opened from anywhere
+function skyOpen(p){V.skp=p;V.skpIn=false;V.spo={};V.spk=false;if(p!=='sign')V.exploreSign=null;go('horoscope','overview')}
+document.addEventListener('click',e=>{
+ const g=e.target.closest('[data-act=flowgo]');if(g){$('#toast').hidden=true;if(g.dataset.ref){V.calRef=g.dataset.ref;V.calRem=null;V.calPath=null;return go('discover','event')}return go(g.dataset.s,g.dataset.t)}
+ const s=e.target.closest('[data-sky]');if(s){e.stopImmediatePropagation();e.preventDefault();return skyOpen(s.dataset.sky)}
+ const f=e.target.closest('[data-flow]');if(f){const a=f.dataset.flow;
+  if(a==='write')return jxStart({cat:'reflection',prompt:f.dataset.q||'',link:{k:'',t:f.dataset.t||''},src:f.dataset.src||'sky',force:true});
+  if(a==='kaskeep'){const b=kasSaveNow();if(b)toastGo('Kept in Your Readings','Open it',{s:'discover',t:'readings'});return}
+  if(a==='kaswrite'){const b=kasSaveNow();return jxStart({cat:'reflection',prompt:'What did this conversation help me see?',link:b?{k:'saved:chat:'+b.ref,t:'A conversation with Kassandra'}:null,src:'kassandra',force:true})}
+ }
+},true);
+// a Sky page left for another place is there again on Back
+{const g0=go;go=(sec,t,o)=>{try{if(V.sec==='horoscope'){const on=V.skp&&document.querySelector('#rov .rt');history.replaceState(Object.assign({},history.state,{skp:on?V.skp:null,xs:on?V.exploreSign||null:null,per:V.period||null}),'')}}catch(e){}return g0(sec,t,o)}}
+addEventListener('popstate',e=>{const s=e.state;if(s&&s.skp&&V.sec==='horoscope'&&!V.skp){V.skp=s.skp;V.exploreSign=s.xs||null;if(s.per)V.period=s.per;V.skpIn=true;V.spo={};render()}});
+// the Sky's pages: two ways onward at the foot of the Moon, the Sun and each planet, and on the horoscope's parchment
+function skFlowItems(k){
+ if(k==='moon'){const n=nextLunar();return [n&&[`${n.k==='new_moon'?'New Moon':'Full Moon'} · ${shortDay(n)}`,calA(n)],['Write tonight',writeA('The Moon tonight','What am I feeling today that I have not yet said aloud?')]]}
+ if(k==='sun'){const n=nextOf(e=>e.type==='season');return [n&&[`${esc(calName(n))} · ${shortDay(n)}`,calA(n)],['My Zodiac','data-go="you" data-t="zodiac"']]}
+ if(k.startsWith('pl:')){const P=k.slice(3),n=nextOf(e=>e.planet===P||e.planet2===P||new RegExp('\\b'+P+'\\b').test(e.name||''));return [n?[`${P}’s next event · ${shortDay(n)}`,calA(n)]:['Cosmic Calendar','data-go="discover" data-t="calendar"'],['How it touches you','data-go="you" data-t="cycles"']]}
+ return [];
+}
+const SKF=124,SKFH=96;
+const skFlow=k=>{const l=skFlowItems(k).filter(Boolean);return l.length?`<nav class="sk-fl" aria-label="Continue" style="left:56px;width:912px;height:${SKFH}px">${l.map(([t,a])=>`<button ${a}>${t}</button>`).join('')}</nav>`:''};
+const sgFlow=()=>{const me=!V.exploreSign||V.exploreSign===S.sign;return `<div class="sg-fl">${me?'<button data-go="you" data-t="zodiac">My Zodiac</button>':''}<button ${writeA('My horoscope today','What in today’s reading speaks to me?','horoscope')}>Reflect on today</button><button data-go="discover" data-t="calendar">What’s coming</button></div>`};
+// Kassandra: a conversation can be kept at any moment (and goes on being kept as it grows), or written about
+function kasSaveNow(){
+ if(!KS.msgs.length)return null;const first=KS.msgs.find(m=>m.role==='user'),now=new Date().toISOString();
+ let b=S.kcurId&&S.bookmarks.find(x=>x.id===S.kcurId);
+ if(!b){const id=uuid();b={id,kind:'chat',ref:id,data:{},at:now};S.bookmarks.push(b);S.kcurId=id}
+ b.data={title:first?first.content.slice(0,60):'A conversation',msgs:KS.msgs.slice(-40)};
+ C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{});save();return b;
+}
+// the Journal: the next New Moon for intentions
+function jxNextNm(){const n=nextOf(e=>e.k==='new_moon',45);return n?`${ssHead('The Next New Moon')}<div class="dr-book"><button class="dr-entry cal-ev" ${calA(n)}><span class="dr-d">${calCount(n)} · ${ymdLong(evDay(n),{weekday:'short',day:'numeric',month:'long'})}</span><strong>${esc(calName(n))}</strong><span class="dr-f">A time to set intentions, with its own ritual</span></button></div>`:''}
 
 {let drLast='';const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
  const vd=views.discover;views.discover=()=>{const t=tab(),k=V.sec+'/'+t;if(t==='dreams'&&drLast&&!/^(discover\/(dreams|dream|dream-patterns|dream-journal)|tarot\/entry)$/.test(drLast))V.drShow=null;drLast=k;return DRV[t]?DRV[t]():vd()};
@@ -5473,7 +5527,7 @@ const skRit=(name,desc)=>`${tx('sp-rt',198,52,318,62,'Optional Ritual',44)}${tx(
 function skLay(t,n,sc,hr,H){
  const ch=SPH.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a),sy=H/ch,k=sy/sc;
  t.style.setProperty('--img',`url(${SKY}${n==='pl'?'pl-bg':'sp-'+n}-${ch}.webp)`);
- const cards=[...t.querySelectorAll('.spc')],top0=n==='pl'?300*k:642*k,bottom=hr*(n==='pl'?.92:.965),room=bottom-top0;
+ const cards=[...t.querySelectorAll('.spc')],top0=n==='pl'?300*k:642*k,fl=t.querySelector('.sk-fl'),bottom=hr*(n==='pl'?.92:.965)-(fl?SKF:0),room=bottom-top0;if(fl)fl.style.top=(bottom+SKF-SKFH)+'px';
  let fs,gap,y;
  if(n==='pl'){fs=Math.min(1,(room-380)/(4*SKC+3*16));gap=16*fs;y=bottom-(4*SKC*fs+3*gap)}
  else{fs=Math.min(1,(room-5*12)/(4*SKC));gap=(room-4*SKC*fs)/5;y=top0+gap}
@@ -5490,7 +5544,7 @@ function moonPop(){
  const nd=nx?nx.date.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:TZ()}):'';
  const k=m.ill,cx=510,cy=440,R=141,rx=Math.abs(1-2*k)*R,flip=(!m.waxing)!==SOUTH();
  const shade=k>.97?'':`<svg class="sp-ph" viewBox="0 0 1024 1000" style="left:0;top:0;width:1024px;height:1000px" aria-hidden="true"><defs><filter id="spb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs><path filter="url(#spb)" transform="${flip?`translate(${2*cx} 0) scale(-1 1)`:''}" d="M${cx} ${cy-R}A${R} ${R} 0 0 0 ${cx} ${cy+R}A${rx} ${R} 0 0 ${k<.5?0:1} ${cx} ${cy-R}Z" fill="rgba(8,10,28,.85)"/></svg>`;
- const cards=`<div class="spw"><div class="spl">${spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],skRit(ph[2],ph[3]))}</div></div>`;
+ const cards=`<div class="spw"><div class="spl">${spCards('moon',[ph[0],`In ${si.name}, ${MSG[si.id][1]}. For you it falls ${REL_IN[r.rel]}, so your feelings gather around ${areaShort(r.area)}.`,dots(ph[1])],skRit(ph[2],ph[3]))}${skFlow('moon')}</div></div>`;
  return pane('rmoon',`The Moon. ${m.name} in ${si.name}.`,'',`${shade}
   ${tx('sp-big',110,372,214,110,`${l1}<br>${l2||''}`,47)}${tx('sp-sm c',110,478,214,32,`${Math.round(k*100)}% Illuminated`,25)}
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:741px;top:326px;width:48px;height:48px">
@@ -5501,7 +5555,7 @@ function moonPop(){
 function sunPop(){
  const now=new Date(),si=sIdx(K.signIdx(K.positions(now)[0].lon)),r=skyRel(SIGNS.indexOf(si)),me=sg(S.sign),x=SSG[si.id],rt=SRIT[si.el];
  const seas=SEAS[(SIGNS.indexOf(si)+(SOUTH()?6:0))%12].replace(' into ','<br>into ');
- const cards=`<div class="spw"><div class="spl">${spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],skRit(rt[0],rt[1]))}</div></div>`;
+ const cards=`<div class="spw"><div class="spl">${spCards('sun',[x[1],`For ${me.name}, the Sun is ${REL_IN[r.rel]}, lighting ${areaShort(r.area)}. For all signs, ${x[2]}`,dots(x[3])],skRit(rt[0],rt[1]))}${skFlow('sun')}</div></div>`;
  return pane('rsun',`The Sun in ${si.name}.`,'',`
   <img class="sp-g" src="${SKY}sk-g-${si.id}.webp" alt="" style="left:144px;top:362px;width:68px;height:68px">
   ${tx('sp-big',86,428,184,46,si.name,40)}${tx('sp-sm c',80,476,196,30,si.dates,22)}
@@ -5559,7 +5613,7 @@ function planetPop(P){
   ${pc('sp-big pl-n',40,-4,188,50,si.name,44)}${pc('sp-sm c pl-d',40,50,188,72,dates,27)}
   <img class="sp-g" ${ry(-120)} src="${SKY}pl-rx.webp" alt="" style="left:800px;width:190px;height:142px">
   ${pc('sp-sm c pl-r',796,24,186,40,rx?(rx.end?`Until ${fdate(rx.end,true)}`:'Retrograde now'):'Not Retrograde',27)}
-  ${spCards('pl',[happen,mean,dots(todo)],skRit(PLR[P][0],PLR[P][1]))}
+  ${spCards('pl',[happen,mean,dots(todo)],skRit(PLR[P][0],PLR[P][1]))}${skFlow('pl:'+P)}
  </div></div>`;
  return pane('rpl',`${P} in ${si.name}.`,'',`
   ${skHead(P,PLK[P].join(' <i>•</i> '))}${spBar()}`,'',lay);
@@ -5586,7 +5640,7 @@ function signPop(){
   <img class="sg-pill" src="${SKY}sg-pill.webp" alt="" style="left:${cx[pi]-122}px">
   ${SGP.map(([k,l],i)=>`<button class="sg-tab${i===pi?' on':''}" data-sgp="${k}" aria-pressed="${i===pi}" style="left:${cx[i]-115}px">${l}</button>`).join('')}
   <div class="sg-pt">${per[2]}</div>
-  <div class="sg-f"><div class="sg-body">${esc(ov.body)}</div>${rows}</div>
+  <div class="sg-f"><div class="sg-body">${esc(ov.body)}</div>${rows}${sgFlow()}</div>
   ${spBar()}`,'');
 }
 function sgLay(t,hr){
