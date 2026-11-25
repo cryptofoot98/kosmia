@@ -114,12 +114,13 @@ async function pullMerge(){
 
 /* ---------- time helpers (always in the reader's time zone) ---------- */
 const dkey=(d=new Date())=>K.ymdIn(TZ(),d);
-const fmt=(o,d)=>new Intl.DateTimeFormat('en-GB',Object.assign({timeZone:TZ()},o)).format(d);
+const fmt=(o,d)=>new Intl.DateTimeFormat(LOC(),Object.assign({timeZone:TZ()},o.hour&&!o.hourCycle?{hour12:S.settings&&S.settings.clock==='12'}:{},o)).format(d);
 const long=d=>fmt({weekday:'long',day:'numeric',month:'long',year:'numeric'},d);
 const evt=d=>fmt({weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'},d);
 const shortD=d=>fmt({day:'numeric',month:'short',year:'numeric'},d);
 // a calendar date (YYYY-MM-DD) shown as itself, whatever the time zone
-const ymdLong=(k,o={weekday:'long',day:'numeric',month:'long',year:'numeric'})=>new Intl.DateTimeFormat('en-GB',Object.assign({timeZone:'UTC'},o)).format(new Date(k+'T12:00:00Z'));
+const LOC=()=>S.settings&&S.settings.datefmt==='mdy'?'en-US':'en-GB';
+const ymdLong=(k,o={weekday:'long',day:'numeric',month:'long',year:'numeric'})=>new Intl.DateTimeFormat(LOC(),Object.assign({timeZone:'UTC'},o)).format(new Date(k+'T12:00:00Z'));
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function seeded(a,seed){a=a.slice();let t=seed;const r=()=>{t=(t+0x6D2B79F5)|0;let x=Math.imul(t^(t>>>15),1|t);x=(x+Math.imul(x^(x>>>7),61|x))^x;return((x^(x>>>14))>>>0)/4294967296};for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
@@ -202,8 +203,8 @@ const SECTIONS={
  tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal'],['reflections','My Reflections'],['intentions','My Intentions'],['gratitude','My Gratitude'],['library','My Library'],['write','Write'],['page','Journal Entry'],['month','Your Journey']]},
  discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['event','Cosmic Event'],['event-ritual','Event Ritual'],['saved-events','Saved Events'],['readings','Your Readings'],['saved','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
- you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
- settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
+ you:{label:'My Cosmos',tabs:[['home','My Cosmos'],['chart','My Birth Chart'],['placement','Cosmic Placement'],['zodiac','My Zodiac'],['identity','My Cosmic Identity'],['cycles','My Cosmic Cycles'],['transit','Personal Transit'],['people','My Relationships'],['person','Relationship Profile'],['person-edit','Add Someone'],['preferences','My Preferences']]},
+ settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership'],['ritual','My Ritual Times'],['region','Language & Region']]}
 };
 const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // the five places: Today (the day's path), Sky (look up), Oracle (ask: Kassandra, the cards, a dream), Journal
@@ -223,11 +224,11 @@ function navCur(){const t=tab();
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
  'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/connections':'tarot/home','discover/readings':'tarot/home','discover/saved':'discover/readings','tarot/reading':'tarot/spreads','discover/affinity':'discover/connections','discover/insights':'discover/connections','discover/synastry':'discover/connections','discover/people':'discover/connections','discover/person':'discover/people','discover/conn-reading':'discover/connections','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
- 'discover/moon':'discover/calendar','discover/event':'discover/calendar','discover/event-ritual':'discover/event','discover/saved-events':'discover/calendar','tarot/reflections':'tarot/journal','tarot/intentions':'tarot/journal','tarot/gratitude':'tarot/journal','tarot/library':'tarot/journal','tarot/write':'tarot/journal','tarot/page':'tarot/reflections','tarot/month':'tarot/journal','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
+ 'discover/moon':'discover/calendar','you/chart':'you/home','you/placement':'you/chart','you/zodiac':'you/home','you/identity':'you/home','you/cycles':'you/home','you/transit':'you/cycles','you/people':'you/home','you/person':'you/people','you/person-edit':'you/people','you/preferences':'you/home','discover/event':'discover/calendar','discover/event-ritual':'discover/event','discover/saved-events':'discover/calendar','tarot/reflections':'tarot/journal','tarot/intentions':'tarot/journal','tarot/gratitude':'tarot/journal','tarot/library':'tarot/journal','tarot/write':'tarot/journal','tarot/page':'tarot/reflections','tarot/month':'tarot/journal','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
  if(sec==='discover')return YPAGES.includes(t)?['you','home']:['horoscope','overview'];
- if(sec==='settings')return t==='account'?['you','home']:['settings','account'];
+ if(sec==='settings')return ['you','preferences'];
  return [sec,SECTIONS[sec].tabs[0][0]];
 }
 // earlier addresses keep working: the six-section release and the first release's single words
@@ -262,7 +263,7 @@ function applyLocation(){
  if(sec==='discover'&&(!t||t==='home')){history.replaceState(history.state,'','/horoscope');V.sec='horoscope';V.tab.horoscope='overview';return}
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
- if(sec==='tarot'&&q.k){V.jkey=q.k;V.jxk=q.k}if(sec==='tarot'&&q.m)V.jxm=q.m;if(sec==='discover'&&q.e)V.calRef=q.e;
+ if(sec==='tarot'&&q.k){V.jkey=q.k;V.jxk=q.k}if(sec==='tarot'&&q.m)V.jxm=q.m;if(sec==='discover'&&q.e)V.calRef=q.e;if(sec==='you'){if(q.p){V.mcP=q.p;V.cnPid=q.p}if(q.t)V.mcT=q.t}
  if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.id)V.cnId=q.id;if(q.p)V.cnPid=q.p;if(q.r)V.rk=q.r;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
 }
 // the query string mirrors the page's own choices, so a forecast, an entry or a month can be shared and reopened
@@ -271,6 +272,9 @@ function viewQuery(){
  if(V.sec==='horoscope')return t==='sign'?{sign:V.exploreSign||S.sign,period:V.period!=='daily'?V.period:'',cat:V.hcat!=='overview'?V.hcat:''}:{period:V.period!=='daily'?V.period:''};
  if(V.sec==='tarot'&&t==='entry')return {k:V.jkey};
  if(V.sec==='tarot'&&t==='page')return {k:V.jxk};
+ if(V.sec==='you'&&t==='placement')return {p:V.mcP};
+ if(V.sec==='you'&&t==='transit')return {t:V.mcT};
+ if(V.sec==='you'&&(t==='person'||t==='person-edit'))return {p:V.cnPid};
  if(V.sec==='tarot'&&t==='month')return {m:V.jxm};
  if(V.sec==='discover'&&(t==='event'||t==='event-ritual'))return {e:V.calRef};
  if(V.sec==='discover'&&t==='dream')return {id:V.dreamId};
@@ -360,7 +364,7 @@ const iconBtn=(ic,attrs,label)=>`<button class="ibtn" ${attrs} aria-label="${esc
 // the Journal's door, the same quill on every section's first page
 const jdoor=()=>'';
 function hdr(title,o={}){
- return `<header class="phd"><div class="ph-l">${o.back===false?'':iconBtn('back','data-act="back"','Back')}</div><div class="ph-t"><h1>${title}</h1>${o.sub?`<p class="ph-sub">${o.sub}</p>`:''}</div><div class="ph-r">${o.right||''}</div></header>`;
+ return `<header class="phd"><div class="ph-l">${o.back===false?'':iconBtn('back','data-act="back"','Back')}</div><div class="ph-t"><h1>${title}</h1>${o.sub?`<p class="ph-sub">${o.sub}</p>`:''}</div><div class="ph-r">${o.right||(V.sec==='you'||V.sec==='settings'?'':avatar())}</div></header>`;
 }
 // a dark, illustrated hero at the head of a section (a scene): stars that softly twinkle, a picture that drifts as the page
 // scrolls, and the title set over it in live type
@@ -941,7 +945,7 @@ const askNight=k=>{const h=hourNow();return (h>=18||h<4)&&S.released!==k};
 // Reflect belongs to the evening: by day, once the Whisper is turned, the morning is complete and the day is carried
 const GOODNIGHT=['The day has done what it could. Let the candle hold the rest, and sleep.','Whatever today was, it was enough, and so are you. Rest well.','The stars kept watch all day above you. Now let them keep watch while you dream.','Be gentle with yourself tonight. Tomorrow arrives only when you are ready for it.','One small flame is all the dark needs. Carry yours into sleep.','You showed up for your day. That is a quiet kind of courage. Goodnight.','Let the night take what you no longer need to carry. Morning will bring you what you do.','The Moon is awake so you can rest. Close your eyes; you are held.'];
 const goodnight=k=>GOODNIGHT[[...k].reduce((a,x)=>a+x.charCodeAt(0),0)%GOODNIGHT.length];
-const evening=()=>{const h=hourNow();return h>=18||h<4};
+const evening=()=>{const h=hourNow();let s=18;try{s=Math.max(12,+ritTimes().e.split(':')[0]-3)}catch(e){}return h>=s||h<4};
 const pathOrder=k=>[...(askSeek()?['seek']:[]),...(askIntent()?['intent']:[]),'stars','whisper','wfy','carry',...(evening()||S.notes[k]?['reflect']:[]),...(askNight(k)?['night']:[]),'held'];
 function pathStep(){
  const k=dkey(),dn=pathDone(k),ev=evening();
@@ -4024,7 +4028,7 @@ function cnHome(){
  <div class="list cn-doors">${ssDoor('☉','Zodiac Compatibility','Explore the natural harmony, differences and potential between two zodiac signs.','data-go="discover" data-t="affinity"','big')}
  ${ssDoor('♡','Relationship Insights','Understand the dynamics, strengths and challenges between two people, in love, friendship or another meaningful relationship.','data-go="discover" data-t="insights"','big')}
  ${ssDoor('✶','Birth Chart Comparison','Explore a deeper connection through the planetary placements and interactions between two birth charts.','data-go="discover" data-t="synastry"','big')}</div>
- <button class="dr-link" data-go="discover" data-t="people">My Relationships${n?` · ${n} ${n===1?'person':'people'}`:''} ${IC.chev}</button>`);
+ <button class="dr-link" data-go="you" data-t="people">My Relationships${n?` · ${n} ${n===1?'person':'people'}`:''} ${IC.chev}</button>`);
 }
 const cnSec=(t,body)=>body?`${ssHead(t)}<div class="dr-text"><p>${esc(body)}</p></div>`:'';
 const cnSignSel=(id,label,v)=>`<div class="field"><label for="${id}">${label}</label><select id="${id}" data-cn="sign">${v?'':'<option value="">Choose a sign</option>'}${SIGNS.map(s=>`<option value="${s.id}" ${v===s.id?'selected':''}>${s.g} ${s.name}</option>`).join('')}</select></div>`;
@@ -4231,11 +4235,11 @@ document.addEventListener('click',e=>{
  if(a==='psearch'){const sl=t.dataset.slot,inp=$(sl==='p'?'#cnp-q':'#cn'+sl+'-q'),q=inp?inp.value.trim():'';const P=V.places['cn'+sl]={q};if(q.length<2){P.err='Type at least two letters of the place.';return render()}
   P.busy=true;render();fetch(`https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&format=json&name=${encodeURIComponent(q)}`).then(r=>r.json()).then(j=>{P.results=(j.results||[]).filter(x=>x.timezone)},()=>{P.err='The place search is unavailable right now.'}).then(()=>{P.busy=false;render()});return}
  if(a==='ppick'){const sl=t.dataset.slot,P=V.places['cn'+sl],r=P.results[+t.dataset.i],o=sl==='p'?V.cnDraft:(X['n'+sl]||(X['n'+sl]={}));Object.assign(o,{place:[r.name,r.admin1,r.country].filter(Boolean).join(', '),lat:r.latitude,lon:r.longitude,tz:r.timezone});V.places['cn'+sl]={};return render()}
- if(a==='openp'||a==='editp'){V.cnPid=t.dataset.id;V.cnDraft=null;V.cnDel=null;return go('discover','person')}
- if(a==='addp'){V.cnPid='new';V.cnDraft=null;return go('discover','person')}
- if(a==='savep'){const p=V.cnDraft;if(!p||!(p.name||'').trim())return toast('Add a name or nickname.');if(!p.consent&&(p.date||p.time||p.place))return toast('Tick that they are happy for you to keep their birth details, or clear them.');const keep={id:p.id||uuid(),at:p.at||new Date().toISOString(),name:p.name.trim(),rel:p.rel||'',sign:p.sign||(p.consent&&p.date?sunSign(p.date):''),consent:!!p.consent};
+ if(a==='openp'||a==='editp'){V.cnPid=t.dataset.id;V.cnDraft=null;V.cnDel=null;return go('you',a==='editp'?'person-edit':'person')}
+ if(a==='addp'){V.cnPid='new';V.cnDraft=null;return go('you','person-edit')}
+ if(a==='savep'){const p=V.cnDraft;if(!p||!(p.name||'').trim())return toast('Add a name or nickname.');if(!p.consent&&(p.date||p.time||p.place))return toast('Tick that they are happy for you to keep their birth details, or clear them.');const keep={id:p.id||uuid(),at:p.at||new Date().toISOString(),name:p.name.trim(),rel:p.rel||'',cat:p.cat||'',sign:p.sign||(p.consent&&p.date?sunSign(p.date):''),consent:!!p.consent};
   if(p.consent)Object.assign(keep,{date:p.date||'',time:p.unk?'':p.time||'',unk:!!p.unk||!p.time,place:p.place||'',lat:p.lat,lon:p.lon,tz:p.tz||''});
-  cnSaveBm('person',keep);V.cnDraft=null;toast(`${keep.name} is kept in My Relationships`);if(V.cnPid==='new'){V.cnPid=keep.id;return go('discover','person',{replace:true})}return goBack()}
+  cnSaveBm('person',keep);V.cnDraft=null;toast(`${keep.name} is kept in My Relationships`);if(V.cnPid==='new'){V.cnPid=keep.id;return go('you','person',{replace:true})}return goBack()}
  if(a==='withp'){X.a={who:'me'};X.b={who:t.dataset.id};X.rel=(cnPerson(t.dataset.id)||{}).rel||X.rel;X.res=null;return go('discover',t.dataset.t)}
  if(a==='openr'){V.cnId=t.dataset.id;return go('discover','conn-reading')}
  if(a==='del'){V.cnDel=t.dataset.id;return render()}
@@ -4751,7 +4755,7 @@ function savedEventsView(){
 function calRemCheck(){
  if(!K||!S.sign)return;S.remSeen=S.remSeen||{};const now=new Date(),today=dkey(),tom=dkey(new Date(+now+DAY)),hm=fmt({hour:'2-digit',minute:'2-digit',hourCycle:'h23'},now),due=[];
  S.bookmarks.filter(b=>b.kind==='event'&&(b.data||{}).rem).forEach(b=>{const r=b.data.rem,d=dkey(new Date(b.data.date));if(hm<(r.time||'08:00'))return;if(r.before&&d===tom)due.push([b.ref+':b',b.data.name,'before',b.ref]);if(r.day&&d===today)due.push([b.ref+':d',b.data.name,'day',b.ref])});
- const mn=S.notif.moons;if(mn&&hm>=(S.notif.time||'08:00'))K.lunarPhases(new Date(+now-DAY),new Date(+now+2*DAY)).filter(e=>e.k==='new_moon'||e.k==='full_moon').forEach(e=>{const ref=evRef(e),d=evDay(e),b=calBm(ref);if(b&&b.data.rem)return;if((mn==='before'||mn==='both')&&d===tom)due.push([ref+':b',e.name,'before',ref]);if((mn==='day'||mn==='both')&&d===today)due.push([ref+':d',e.name,'day',ref])});
+ const mn=S.notif.moons||(S.notif.ecl?S.notif.def||'day':'');if(mn&&hm>=(S.notif.time||'08:00'))K.lunarPhases(new Date(+now-DAY),new Date(+now+2*DAY)).concat(S.notif.ecl?K.events(new Date(+now-DAY),new Date(+now+2*DAY)).filter(e=>e.type==='eclipse'):[]).filter(e=>(S.notif.moons&&e.k==='new_moon'&&S.notif.nm!==false)||(S.notif.moons&&e.k==='full_moon'&&S.notif.fm!==false)||e.type==='eclipse').forEach(e=>{const ref=evRef(e),d=evDay(e),b=calBm(ref);if(b&&b.data.rem)return;if((mn==='before'||mn==='both')&&d===tom)due.push([ref+':b',e.name,'before',ref]);if((mn==='day'||mn==='both')&&d===today)due.push([ref+':d',e.name,'day',ref])});
  const x=due.find(d=>!S.remSeen[d[0]]);if(!x)return;S.remSeen[x[0]]=today;Object.keys(S.remSeen).forEach(k=>{if(S.remSeen[k]<dkey(new Date(+now-10*DAY)))delete S.remSeen[k]});save();
  const nm=x[1].replace(/ meteor shower peak/,' meteor shower');V.remRef=x[3];
  toast(x[2]==='before'?`Tomorrow brings the ${nm}. Discover its themes and take a moment to prepare.`:`The ${nm} is here. Your reflection and ritual are ready whenever you are.`,'calremgo','Open');
@@ -4760,7 +4764,7 @@ setTimeout(calRemCheck,2500);document.addEventListener('visibilitychange',()=>{i
 function calRemPreview(){const p=$('#calrp');if(!p)return;const b=$('#calrb').checked,d=$('#calrd').checked,t=$('#calrt').value||'08:00',n=+b+ +d;p.textContent=n?`You would receive ${n===1?'one reminder':'two reminders'} at ${t} local time${n===1?(b?', the day before':', on the day'):', the day before and on the day'}.`:'Choose the day before, the day itself, or both.'}
 
 /* ---------- the Journal ---------- */
-const JX_SRC={free:'Free entry',evening:'Evening Ritual',morning:'Morning Ritual',calendar:'Calendar Ritual',oracle:'Oracle',sky:'Sky',kassandra:'Kassandra',horoscope:'Horoscope',event:'Calendar',signs:'Signs & Synchronicities'};
+const JX_SRC={free:'Free entry',evening:'Evening Ritual',morning:'Morning Ritual',calendar:'Calendar Ritual',oracle:'Oracle',sky:'Sky',kassandra:'Kassandra',horoscope:'Horoscope',event:'Calendar',signs:'Signs & Synchronicities',cosmos:'My Cosmos'};
 const jxBucket=n=>/^New/.test(n||'')?'new':/^Full/.test(n||'')?'full':/Waxing|First/.test(n||'')?'waxing':'waning';
 const JX_PH={new:'New Moon',waxing:'Waxing Moon',full:'Full Moon',waning:'Waning Moon'};
 const jxPhaseAt=(day,at)=>{try{return K.moon(new Date(at&&at.length>10?at:day+'T21:00:00')).name}catch(e){return ''}};
@@ -4793,7 +4797,7 @@ function jxLib(){
  S.bookmarks.filter(b=>b.kind==='horoscope').forEach(b=>{const d=b.data||{};out.push({k:'bk:horoscope:'+b.ref,cat:'horoscopes',title:`${sg(d.sign).name} — ${cap(d.period||'daily')} Horoscope`,day:(b.at||'').slice(0,10)||dkey(),at:b.at,open:`data-act="jopen" data-k="bk:horoscope:${esc(b.ref)}"`})});
  const CM={tarot:'tarot',dreams:'dreams',numbers:'signs',sync:'signs',patterns:'signs',numerology:'signs',connections:'connections',kassandra:'kassandra'};
  rdAll().filter(x=>x.fav).forEach(x=>{const m=rdM(x.k);out.push({k:x.k,cat:CM[x.cat]||'tarot',title:x.title,day:(m.favAt||x.at||x.day||'').slice(0,10),at:m.favAt||x.at,open:`data-rd="open" data-k="${esc(x.k)}"`})});
- Object.entries(rdMeta().data||{}).filter(([k,v])=>v.fav&&v.snap&&/^(event|sky):/.test(k)).forEach(([k,v])=>out.push({k,cat:k.startsWith('event:')?'events':'sky',title:v.snap.title,day:(v.favAt||'').slice(0,10)||dkey(),at:v.favAt,open:k.startsWith('event:')?`data-cal="open" data-ref="${esc(k.slice(6))}"`:`data-jx="open" data-k="${esc(k)}"`}));
+ Object.entries(rdMeta().data||{}).filter(([k,v])=>v.fav&&v.snap&&/^(event|sky|place):/.test(k)).forEach(([k,v])=>out.push({k,cat:k.startsWith('event:')?'events':'sky',title:v.snap.title,day:(v.favAt||'').slice(0,10)||dkey(),at:v.favAt,open:k.startsWith('event:')?`data-cal="open" data-ref="${esc(k.slice(6))}"`:k.startsWith('place:')?`data-mc="pl" data-p="${esc(k.slice(6))}"`:`data-jx="open" data-k="${esc(k)}"`}));
  return out.sort((a,b)=>String(b.at)>String(a.at)?1:-1);
 }
 function jxUnheart(k){
@@ -4967,12 +4971,14 @@ function jxGoLink(k){
  if(k.startsWith('event:')){V.calRef=k.slice(6);return go('discover','event')}
  if(k.startsWith('j:')){V.jxk=k;return go('tarot','page')}
  if(k.startsWith('sky:')){V.jxk=k;return go('tarot','page')}
+ if(k.startsWith('place:')){V.mcP=k.slice(6);return go('you','placement')}
  return openEntry(k);
 }
 document.addEventListener('click',e=>{
  const h=e.target.closest('[data-heart]');
  if(h){const k=h.dataset.heart,on=!hearted(k);let snap=null;
   if(on&&k.startsWith('event:')){const ev=calFind(k.slice(6));if(ev)snap={title:calName(ev),date:ev.date.toISOString()}}
+  if(on&&k.startsWith('place:'))snap={title:h.dataset.snapT||k.slice(6)};
   if(on&&k.startsWith('sky:')){const it=skyItems().find(i=>'sky:'+i.id+':'+dkey()===k);if(it)snap={title:plain(it.title),when:plain(it.when||''),fact:plain(it.fact||''),you:plain(it.you||''),act:plain(it.act||''),q:plain(it.q||''),day:dkey()}}
   heartSet(k,on,snap);return render()}
  const a0=e.target.closest('[data-act=calremgo]');if(a0&&V.remRef){V.calRef=V.remRef;$('#toast').hidden=true;return go('discover','event')}
@@ -5054,6 +5060,316 @@ document.addEventListener('change',e=>{
  if(t.id==='calrb'||t.id==='calrd'||t.id==='calrt')calRemPreview();
  if(t.id==='n_mn'){S.notif.moons=t.value;save();syncProfile();toast('Saved')}
 });
+
+/* ===================== My Cosmos =====================
+   How the universe relates to the reader: the Three Lights, the chart and its placements, the Zodiac, a Cosmic Identity,
+   personal transits, the people kept, and preferences. Opened from the medallion over any place, and closed back to the
+   very spot the reader left (inner scrolls included). Everything is read from the one profile; nothing is asked twice. */
+const mcPage=(h,cls='')=>nightSub(`<div class="sub">${h}</div>`,'dj ss cj mc '+cls);
+const NP={Ascendant:'outward presence and the way you meet the world',Midheaven:'direction, vocation and public life'};
+const pmOf=n=>PM[n]||NP[n]||n;
+const PL_REP={Sun:'The Sun is traditionally associated with identity, vitality and conscious self-expression: the light you live by.',Moon:'The Moon is traditionally associated with emotional needs, instinct, memory and the things that make you feel safe.',Mercury:'Mercury is traditionally associated with thought, language, learning and the way you exchange ideas.',Venus:'Venus is traditionally associated with affection, beauty, personal values and the ways we experience pleasure and connection.',Mars:'Mars is traditionally associated with drive, courage, desire and the way you take action.',Jupiter:'Jupiter is traditionally associated with growth, generosity, faith and the search for meaning.',Saturn:'Saturn is traditionally associated with structure, responsibility, time and the lessons that build lasting strength.',Uranus:'Uranus is traditionally associated with change, originality and the wish to be free.',Neptune:'Neptune is traditionally associated with imagination, compassion, dreams and the longing for something greater.',Pluto:'Pluto is traditionally associated with depth, transformation and the power to begin again.'};
+const PL_KW={Sun:'Identity',Moon:'Feeling',Mercury:'Thought',Venus:'Affection',Mars:'Drive',Jupiter:'Growth',Saturn:'Structure',Uranus:'Change',Neptune:'Imagination',Pluto:'Transformation'};
+const PL_Q={Sun:'When do I feel most fully myself?',Moon:'What helps me feel safe and at home?',Mercury:'How do I most enjoy learning and expressing my thoughts?',Venus:'How do I express love when I feel completely free to be myself?',Mars:'What truly moves me to act?',Jupiter:'Where in my life am I ready to grow?',Saturn:'What am I patiently building that will last?',Uranus:'Where am I longing for more freedom?',Neptune:'What do I dream of when no one is watching?',Pluto:'What in me is ready to be renewed?'};
+const SIGN_GROW={aries:'Learning patience, and listening before leaping.',taurus:'Letting change in, and loosening the grip on comfort.',gemini:'Staying with one thing long enough to let it deepen.',cancer:'Caring for yourself as tenderly as you care for others.',leo:'Shining without needing an audience to feel worthy.',virgo:'Being gentle with imperfection, your own above all.',libra:'Choosing for yourself, even when it may disappoint someone.',scorpio:'Trusting enough to let others see you.',sagittarius:'Following through, and finding wonder close to home.',capricorn:'Resting without guilt, and letting joy be part of the plan.',aquarius:'Letting feeling in alongside ideas.',pisces:'Holding gentle boundaries so your kindness has a home.'};
+const SIGN_LIFE={aries:'starting projects with energy, speaking up first, needing movement and a challenge to rise to',taurus:'making a home comfortable, savouring good food and music, keeping promises and steady routines',gemini:'juggling conversations, books and plans, asking questions, staying in touch with many people',cancer:'remembering birthdays, cooking for others, keeping old photographs, needing a quiet nest to return to',leo:'bringing warmth to a room, creating, celebrating others, enjoying being seen for your efforts',virgo:'noticing details others miss, improving how things work, caring through practical help',libra:'smoothing tensions, making spaces beautiful, weighing choices carefully, enjoying company',scorpio:'reading between the lines, forming few but deep bonds, needing privacy and honesty',sagittarius:'travelling, learning, laughing, and needing space to explore ideas and places',capricorn:'planning ahead, taking responsibility, working steadily towards long goals',aquarius:'thinking differently, caring about causes and communities, needing room to be yourself',pisces:'daydreaming, sensing moods, creating, offering kindness and needing time alone to recharge'};
+const EL_TXT={Fire:['Action and inspiration','enthusiasm, courage and spontaneity'],Earth:['Grounding and practicality','patience, steadiness and care for the real'],Air:['Thought and communication','curiosity, ideas and connection'],Water:['Emotion and intuition','sensitivity, empathy and depth']};
+const HOUSE_T=['Self & Presence','Values & Self-Worth','Learning & Communication','Home & Roots','Creativity & Joy','Work & Wellbeing','Relationships & Commitment','Intimacy & Transformation','Meaning & Exploration','Vocation & Direction','Community & Aspirations','Rest & Inner Life'];
+const TR_P={Pluto:'deep transformation, release and renewal',Neptune:'imagination, compassion and the softening of certainty',Uranus:'change, freedom and awakening',Saturn:'responsibility, maturity and lasting foundations',Jupiter:'growth, opportunity and widening horizons',Mars:'energy, courage and action',Venus:'affection, values and pleasure',Mercury:'thought, conversation and plans',Sun:'attention, vitality and visibility'};
+const TR_INV={Pluto:'depth, honesty and renewal',Neptune:'imagination, compassion and gentle letting go',Uranus:'fresh air, freedom and experiment',Saturn:'patience, structure and honest commitment',Jupiter:'openness, generosity and room to grow',Mars:'energy, initiative and courage',Venus:'warmth, pleasure and appreciation',Mercury:'curiosity, conversation and planning',Sun:'attention, vitality and visibility'};
+const TR_TH={Pluto:['Renewal','Release','Inner power'],Neptune:['Imagination','Compassion','Trust'],Uranus:['Freedom','Change','Originality'],Saturn:['Responsibility','Boundaries','Commitment'],Jupiter:['Growth','Learning','Generosity'],Mars:['Courage','Initiative','Energy'],Venus:['Affection','Values','Pleasure'],Mercury:['Conversation','Ideas','Plans'],Sun:['Vitality','Visibility','Purpose']};
+const TIER={Pluto:'long',Neptune:'long',Uranus:'long',Saturn:'long',Jupiter:'medium',Mars:'medium',Venus:'short',Mercury:'short',Sun:'short'};
+const ASP_PH={conjunction:'meeting',opposition:'opposite',square:'at a square to',trine:'in harmony with'};
+const mcMonth=t=>ymdLong(dkey(new Date(t)),{month:'long',year:'numeric'});
+const mcSign=(c,n)=>{const p=c.pl.find(q=>q.n===n);return p&&!(n==='Moon'&&c.moonRange)?sIdx(p.sign):null};
+const mcAsc=c=>c&&c.ang&&!S.birth.unk&&S.birth.cert!=='unknown'?sIdx(Math.floor(c.ang.asc/30)):null;
+const mcApprox=()=>S.birth.cert==='approx'?'<p class="muted small center">Your birth time is approximate, so the Rising sign and houses may differ slightly.</p>':'';
+/* ---------- personal transits: house chapters (with a birth time and place) and aspects to natal planets, grouped so a
+   transit that turns back and returns is one transit in phases ---------- */
+let mcTr={k:'',v:null};
+function mcTransits(){
+ const c=myChart();if(!c||!K)return null;const key=dkey()+JSON.stringify(S.birth);if(mcTr.k===key)return mcTr.v;
+ const now=Date.now(),from=now-730*DAY,to=now+548*DAY,step=3*DAY,sm=[];
+ for(let t=from;t<=to;t+=step){const o={};K.positions(new Date(t)).forEach(p=>o[p.n]=p);sm.push([t,o])}
+ const out=[],asc=c.known&&c.ang?Math.floor(c.ang.asc/30):null;
+ if(asc!=null)Object.keys(TR_P).forEach(P=>{let seg=[];sm.forEach(([t,o],i)=>{const s=o[P].sign;if(!seg.length||seg[seg.length-1].s!==s)seg.push({s,a:t,b:t});else seg[seg.length-1].b=t});
+  const by={};seg.forEach(g=>{const l=by[g.s]=by[g.s]||[];const last=l[l.length-1];if(last&&g.a-last.b<300*DAY)last.ph.push(g),last.b=g.b;else l.push({a:g.a,b:g.b,ph:[g]})});
+  Object.entries(by).forEach(([s,l])=>l.forEach(x=>{const h=(+s-asc+12)%12+1;out.push({key:`h:${P}:${h}:${s}`,kind:'house',P,h,sign:+s,a:x.a,b:x.b,openA:x.a<=from,openB:x.b>=to-step,phases:x.ph.length,tier:TIER[P]})}))});
+ const nat=c.pl.filter(p=>!(p.n==='Moon'&&!c.known)).map(p=>({n:p.n,lon:p.lon})).concat(c.known&&c.ang?[{n:'Ascendant',lon:c.ang.asc},{n:'Midheaven',lon:c.ang.mc}]:[]);
+ ['Pluto','Neptune','Uranus','Saturn','Jupiter'].forEach(P=>{const orb=P==='Saturn'||P==='Jupiter'?2:1.5;
+  nat.forEach(N=>[['conjunction',0],['opposition',180],['square',90],['trine',120]].forEach(([asp,ang])=>{
+   if(asp==='trine'&&P!=='Jupiter'&&P!=='Saturn')return;if(!/^(Sun|Moon|Mercury|Venus|Mars|Ascendant|Midheaven)$/.test(N.n)&&!(asp==='conjunction'&&N.n===P))return;let run=null;const iv=[];
+   sm.forEach(([t,o])=>{const d=Math.abs(((o[P].lon-N.lon)%360+540)%360-180),off=Math.abs(d-ang);if(off<=orb){if(!run)run={a:t,b:t,min:off,ex:t};run.b=t;if(off<run.min){run.min=off;run.ex=t}}else if(run){iv.push(run);run=null}});if(run)iv.push(run);
+   const g=[];iv.forEach(x=>{const l=g[g.length-1];if(l&&x.a-l.b<270*DAY){l.b=x.b;l.ex.push(x.ex)}else g.push({a:x.a,b:x.b,ex:[x.ex]})});
+   g.forEach(x=>{const ret=asp==='conjunction'&&N.n===P;out.push({key:`a:${P}:${asp}:${N.n}:${dkey(new Date(x.ex[0])).slice(0,7)}`,kind:'aspect',P,asp,N:N.n,a:x.a,b:x.b,ex:x.ex,openA:x.a<=from,openB:x.b>=to-step,tier:ret?'milestone':TIER[P],ret})})}))});
+ const rank={milestone:0,long:1,medium:2,short:3};out.sort((a,b)=>rank[a.tier]-rank[b.tier]||a.a-b.a);
+ mcTr={k:key,v:out};return out;
+}
+const mcTrTitle=x=>x.kind==='house'?`${x.P} through your ${CJ_ORD(x.h)} House`:x.ret?`Your ${x.P} Return`:`${x.P} ${ASP_PH[x.asp]} your ${x.N}`;
+const mcTrSub=x=>x.kind==='house'?HOUSE_T[x.h-1]:x.ret?(x.P==='Saturn'?'Maturity & Foundations':'Growth & Renewal'):`${(TR_TH[x.P]||[])[0]} & ${PL_KW[x.N]||(x.N==='Ascendant'?'Presence':'Direction')}`;
+const mcTrWhen=x=>{const now=Date.now();if(x.tier==='short'&&x.b>=now)return 'Short-term transit';if(x.a>now)return `Begins ${mcMonth(x.a)}`;if(x.b<now)return `${mcMonth(x.a)} – ${mcMonth(x.b)}`;return x.openB?`Active beyond ${mcMonth(x.b)}`:`Active until ${mcMonth(x.b)}`};
+const mcTrLine=x=>x.kind==='house'?`Reflect on ${HOUSE[x.h-1]}, with ${TR_INV[x.P]}.`:x.ret?(x.P==='Saturn'?'A threshold of maturity: review what you have built and choose what to carry forward.':'A renewal of growth, learning and hope.'):`Your ${pmOf(x.N)} meets ${TR_P[x.P]}.`;
+const mcTrRow=x=>`<button class="dr-entry mc-tr ${x.tier}" data-mc="tr" data-k="${esc(x.key)}"><span class="dr-d">${({milestone:'A milestone',long:'A long chapter',medium:'A medium cycle',short:'A short influence'})[x.tier]} · ${mcTrWhen(x)}</span><strong>${esc(mcTrTitle(x))}</strong><span class="dr-s">${esc(mcTrSub(x))}</span><span class="dr-x">${esc(mcTrLine(x))}</span></button>`;
+function mcCycles(){
+ const v=V.mcCv||'now',l=mcTransits(),c=myChart();
+ if(!l)return mcPage(`${hdr('My Cosmic Cycles',{sub:'The celestial chapters unfolding in your life.'})}${mcNeed('Add your birth date to see how the moving planets meet your own chart.')}`);
+ const now=Date.now(),act=l.filter(x=>x.a<=now&&x.b>=now),ah=l.filter(x=>x.a>now&&x.tier!=='short').sort((a,b)=>a.a-b.a),past=l.filter(x=>x.b<now&&x.tier!=='short').sort((a,b)=>b.b-a.b);
+ const L=(v==='now'?act.filter(x=>x.tier!=='short'):v==='ahead'?ah.slice(0,12):past.slice(0,12)),sh=v==='now'?act.filter(x=>x.tier==='short'):[],span=[now,now+548*DAY],tl=[...act,...ah].filter(x=>x.tier!=='short').slice(0,7);
+ const bar=x=>{const a=Math.max(x.a,span[0]),b=Math.min(x.b,span[1]),w=span[1]-span[0];return `<div class="mc-tl-r"><span>${esc(x.kind==='house'?`${x.P} · ${CJ_ORD(x.h)} house`:x.ret?`${x.P} return`:`${x.P} ${x.asp} ${x.N}`)}</span><i><b class="${x.tier}" style="left:${((a-span[0])/w*100).toFixed(1)}%;width:${Math.max(2,(b-a)/w*100).toFixed(1)}%"></b></i></div>`};
+ return mcPage(`${hdr('My Cosmic Cycles',{sub:'The celestial chapters unfolding in your life.'})}
+ <div class="fchips ss-chips mc-top">${[['now','Now'],['ahead','Ahead'],['past','Past']].map(([k,t])=>`<button class="fchip" role="radio" aria-checked="${v===k}" data-mc="cv" data-v="${k}">${t}</button>`).join('')}</div>
+ ${c.known?'':`<p class="muted small center">Without your birth time and place, houses cannot be placed, so these cycles show only the planets meeting your natal planets. <button class="link" data-go="settings" data-t="birth">Add birth details</button></p>`}${mcApprox()}
+ <div class="dr-book">${L.map(mcTrRow).join('')||`<p class="muted center">${v==='now'&&sh.length?'No long chapters are active right now.':v==='now'?'No major transits are active right now: a quiet sky for you.':v==='ahead'?'No major transits begin in the next eighteen months.':'No major transits in the last two years.'}</p>`}</div>
+ ${sh.length?`${ssHead('Short-Term Influences')}<div class="dr-book">${sh.map(mcTrRow).join('')}</div>`:''}
+ ${v!=='past'&&tl.length?`${ssHead('The Chapters Ahead')}<div class="mc-tl"><div class="mc-tl-h"><span>Today</span><span>${mcMonth(span[0]+274*DAY)}</span><span>${mcMonth(span[1])}</span></div>${tl.map(bar).join('')}</div><p class="muted small center">Longer chapters are drawn first. Several can overlap; each is a theme to reflect on, not an event that must happen.</p>`:''}`,'cyc');
+}
+function mcTransitView(){
+ const l=mcTransits()||[],x=l.find(y=>y.key===V.mcT);
+ if(!x)return mcPage(`${hdr('Personal Transit')}<p class="muted center">This cycle is no longer in view.</p><button class="btn" data-go="you" data-t="cycles">My Cosmic Cycles</button>`);
+ const area=x.kind==='house'?HOUSE[x.h-1]:'',d=t=>ymdLong(dkey(new Date(t)),{day:'numeric',month:'long',year:'numeric'});
+ const happen=x.kind==='house'?`${x.P} is moving through the ${CJ_ORD(x.h)} house of your chart, in ${sIdx(x.sign).name}: the area traditionally associated with ${area}.`:x.ret?`${x.P} returns to the place it held when you were born, about every ${x.P==='Saturn'?'29':'12'} years.`:`Transiting ${x.P} is ${ASP_PH[x.asp]} your natal ${x.N}.`;
+ const sym=x.kind==='house'?`In astrology, ${x.P} is associated with ${TR_P[x.P]}. Passing through this area, it invites reflection on ${HOUSE_T[x.h-1].toLowerCase().replace('&','and')}.`:x.ret?(x.P==='Saturn'?'Traditionally a threshold of maturity: a time to review the foundations of your life and choose what to carry into the next chapter.':'Traditionally a renewal of growth, learning and hope, as one twelve-year cycle closes and another begins.'):`This transit brings ${TR_P[x.P]} into contact with your ${pmOf(x.N)}. The two ${ASPT[x.asp]}.`;
+ const you=x.kind==='house'?`You may wish to consider how ${area} could welcome ${TR_INV[x.P]}.`:`You may wish to reflect on how your ${pmOf(x.N)} could meet ${TR_INV[x.P]}.`;
+ const q=x.kind==='house'?CAL_HQ[x.h-1]:x.ret&&x.P==='Saturn'?'Which commitments feel genuinely aligned with the person I am becoming?':PL_Q[x.N]||'What is this chapter inviting me to notice?';
+ const evs=K?K.events(new Date(Math.max(x.a,Date.now()-30*DAY)),new Date(x.b+DAY)).filter(e=>e.planet===x.P&&(e.k==='ingress'||e.type==='retrograde')):[],rel=evs[0];
+ const ex=(x.ex||[]).map(t=>d(t));
+ return mcPage(`${hdr(esc(mcTrTitle(x)),{sub:esc(mcTrWhen(x))})}
+ <section class="cal-ov">${ssGlyph(GLYPH_OF(x.P),'big')}<p class="cal-th big">${esc(mcTrSub(x))}</p><p class="cal-mode">${({milestone:'A milestone',long:'A long chapter',medium:'A medium cycle',short:'A short influence'})[x.tier]}</p></section>
+ ${ssHead('What’s Happening')}<div class="dr-text"><p>${esc(happen)}</p></div>
+ ${ssHead('What This Chapter Symbolises')}<div class="dr-text"><p>${esc(sym)}</p></div>
+ ${ssHead('What It May Mean for You')}<div class="dr-text"><p>${esc(you)}</p></div>
+ ${ssHead('Themes to Explore')}<div class="dr-text"><p>${esc([...(TR_TH[x.P]||[]),...(x.kind==='house'?HOUSE_T[x.h-1].split(' & '):[PL_KW[x.N]||'Presence'])].join(' · '))}</p></div>
+ ${mbox(`<h3>A Question for Reflection</h3><p class="quote center">“${esc(q)}”</p>`,'dr-q')}
+ ${ssHead('The Timeline')}<div class="dr-text"><p>${x.openA?'Began before '+d(x.a):'Begins '+d(x.a)}${ex.length?`<br>Exact ${ex.length>1?'in '+ex.length+' phases: '+ex.join(', '):'on '+ex[0]}`:''}${x.phases>1?`<br>It turns back and returns ${x.phases-1===1?'once':x.phases-1+' times'} with ${x.P}’s retrograde motion: phases of the same transit.`:''}<br>${x.openB?'Continues beyond '+d(x.b):'Ends around '+d(x.b)}</p></div>
+ ${ssHead('Continue Exploring')}<div class="ss-acts">${rel?`<button class="btn ghost" data-cal="open" data-ref="${esc(evRef(rel))}">${esc(rel.name)}</button>`:''}<button class="btn ghost" data-mc="trwrite">Reflect in Journal</button><button class="btn ghost" data-act="kasask" data-q="${esc(`I am in a personal transit: ${mcTrTitle(x)} (${mcTrWhen(x)}). What might this chapter invite me to reflect on?`)}">Explore with Kassandra</button></div>
+ <p class="muted small center">Transits describe symbolic themes, never events that must happen.</p>`);
+}
+const GLYPH_OF=n=>({Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Ascendant:'AC',Midheaven:'MC'})[n]||'✦';
+const mcNeed=t=>`${mbox(`<p class="center">${t}</p>`)}<button class="btn" data-go="settings" data-t="birth">Add birth details</button><p class="muted small center">Only what you know is needed. Kosmia shows what your details allow, and nothing is ever guessed.</p>`;
+/* ---------- the Three Lights and the entrance ---------- */
+function mcLights(){
+ const c=myChart(),sun=c?mcSign(c,'Sun'):sg(S.sign),moon=c?mcSign(c,'Moon'):null,asc=mcAsc(c);
+ return [['Sun','Your essence',sun,'sun'],['Moon','Your inner world',moon,c&&c.moonRange?'uncertain':'moon'],['Rising','Your outward presence',asc,'rising']];
+}
+function mcHome(){
+ const nm=firstName()||S.name||'',L=mcLights(),miss=!hasBirthDate()||!mcAsc(myChart());
+ return mcPage(`${hdr('My Cosmos',{back:false,sub:'Discover the universe within you.',right:'<button class="ibtn mc-x" data-mc="close" aria-label="Close My Cosmos">×</button>'})}
+ ${nm?`<p class="mc-name">${esc(nm)}</p>`:''}
+ ${ssHead('Your Cosmic Essence')}<div class="mc-three">${L.map(([n,l,s,k])=>`<button class="mc-l" data-mc="light" data-v="${n.toLowerCase()}"><span class="mc-g">${s?s.g:'?'}</span><strong>${s?s.name:k==='uncertain'?'Uncertain':'Unknown'}</strong><span>${n}</span><em>${l}</em></button>`).join('')}</div>
+ ${miss?`<p class="muted small center">Add your birth ${hasBirthDate()?'time and birthplace':'date, time and birthplace'} to discover more of your celestial blueprint. <button class="link" data-go="settings" data-t="birth">Add birth details</button></p>`:''}
+ <div class="list mc-doors">
+ ${ssDoor('✶','My Birth Chart','The celestial map of the moment you were born.','data-go="you" data-t="chart"')}
+ ${ssDoor('☉','My Zodiac','Discover your Sun, Moon and Rising signs.','data-go="you" data-t="zodiac"')}
+ ${ssDoor('✧','My Cosmic Identity','Your nature, strengths and potential for growth.','data-go="you" data-t="identity"')}
+ ${ssDoor('☾','My Cosmic Cycles','The celestial chapters unfolding in your life.','data-go="you" data-t="cycles"')}
+ ${ssDoor('♡','My Relationships','Explore the connections between your universe and others.','data-go="you" data-t="people"')}
+ ${ssDoor('⚙','My Preferences','Make Kosmia your own.','data-go="you" data-t="preferences"')}</div>`,'home');
+}
+/* ---------- My Birth Chart and Cosmic Placement ---------- */
+function mcChart(){
+ const c=myChart(),v=V.mcCh||'placements';
+ if(!c)return mcPage(`${hdr('My Birth Chart',{sub:'The celestial map of the moment you were born.'})}${mcNeed('Add your birth date to draw your chart. A birth time and place add your Rising sign and houses.')}`);
+ const b=S.birth,sel=c.pl.find(p=>p.n===V.chartSel),asc=c.known&&c.ang?Math.floor(c.ang.asc/30):null;
+ let body;
+ if(v==='houses')body=asc==null?'<p class="muted center">Houses need your birth time and birthplace.</p>':HOUSE.map((h,i)=>{const s=sIdx(asc+i),inn=c.pl.filter(p=>p.house===i+1).map(p=>p.n);return `<button class="dr-entry" data-mc="pl" data-p="house:${i+1}"><span class="dr-d">${CJ_ORD(i+1)} House · ${s.name}${inn.length?' · '+inn.join(', '):''}</span><strong>${HOUSE_T[i]}</strong><span class="dr-x">The area of ${h}.</span></button>`}).join('');
+ else if(v==='aspects')body=c.asp.slice(0,18).map((a,i)=>`<button class="dr-entry" data-mc="pl" data-p="aspect:${i}"><span class="dr-d">${cap(a.n)} · orb ${a.orb.toFixed(1)}°</span><strong>${a.a.n} ${a.g} ${a.b.n}</strong><span class="dr-x">Your ${pmOf(a.a.n)} and ${pmOf(a.b.n)} ${ASPT[a.n]}.</span></button>`).join('')||'<p class="muted center">No major aspects within the orbs used.</p>';
+ else body=c.pl.map(p=>{const un=p.n==='Moon'&&c.moonRange;return `<button class="dr-entry" data-mc="pl" data-p="planet:${p.n}"><span class="dr-d">${un?'Sign uncertain without a birth time':degTxt(p.lon)}${p.house?' · '+CJ_ORD(p.house)+' House':''}${p.retro?' · retrograde':''}</span><strong>${p.g} ${p.n} in ${un?'an uncertain sign':sIdx(p.sign).name}</strong><span class="dr-x">How you experience ${pmOf(p.n)}: ${un?'it depends on your birth time':STYLE[sIdx(p.sign).id]}.</span></button>`}).join('')+(asc!=null?`<button class="dr-entry" data-mc="pl" data-p="planet:Ascendant"><span class="dr-d">${degTxt(c.ang.asc)}</span><strong>AC ${sIdx(asc).name} Rising</strong><span class="dr-x">How you meet the world: ${STYLE[sIdx(asc).id]}.</span></button>`:'');
+ return mcPage(`${hdr('My Birth Chart',{sub:'Your Celestial Blueprint'})}
+ <p class="jx-meta">${ymdLong(b.date,{day:'numeric',month:'long',year:'numeric'})}${b.unk||!b.time?' · birth time unknown':' · '+esc(b.time)+(b.cert==='approx'?' (approximate)':'')}${b.place?' · '+esc(b.place):''}</p>${mcApprox()}
+ <div class="wheel-wrap wheel-free mc-wheel">${chartWheel(c)}</div>
+ ${sel?mbox(`<h3><span class="glyph">${sel.g}</span> ${sel.n} in ${sel.n==='Moon'&&c.moonRange?'an uncertain sign':sIdx(sel.sign).name}</h3>${sel.house?`<p class="center small">${CJ_ORD(sel.house)} House</p>`:''}<p class="center">${esc(cap(pmOf(sel.n)))}.</p><button class="btn ghost" data-mc="pl" data-p="planet:${sel.n}">Explore this placement</button>`):'<p class="muted center small">Select a planet to explore its placement.</p>'}
+ <div class="fchips ss-chips">${[['placements','Placements'],['houses','Houses'],['aspects','Aspects']].map(([k,t])=>`<button class="fchip" role="radio" aria-checked="${v===k}" data-mc="ch" data-v="${k}">${t}</button>`).join('')}</div>
+ <div class="dr-book">${body}</div>
+ ${ssHead('Explore Further')}<div class="ss-acts"><button class="btn ghost" data-act="kasask" data-q="Explain my birth chart simply: my Sun, Moon and Rising, and the one aspect most worth understanding.">Ask Kassandra about my chart</button></div>
+ <details class="how"><summary>How this is worked out</summary><p>Tropical zodiac, geocentric positions from the Astronomy Engine ephemeris, using your birth time in the historical local time of ${esc(b.tz||'your birthplace')}. Houses are whole-sign. Aspect orbs: 8° for conjunctions and oppositions, 6° for squares and trines, 4° for sextiles.</p></details>`,'chart');
+}
+function mcPlacementData(c,k){
+ const [t,v]=k.split(':');
+ if(t==='planet'){const p=v==='Ascendant'?(c.ang?{n:'Ascendant',g:'AC',sign:Math.floor(c.ang.asc/30),lon:c.ang.asc,house:1}:null):c.pl.find(q=>q.n===v);if(!p)return null;
+  const s=sIdx(p.sign),un=p.n==='Moon'&&c.moonRange,isA=p.n==='Ascendant';
+  return {g:p.g,title:isA?`${s.name} Rising`:`${p.n} in ${un?'an uncertain sign':s.name}`,kw:[isA?'Presence':PL_KW[p.n],...SIGN_KEYS[s.id].slice(0,2)].join(' · '),
+   parts:[[isA?'What the Rising Sign Represents':`What ${p.n} Represents`,isA?'The Rising sign, or Ascendant, is the sign on the eastern horizon at your birth: traditionally your outward presence, first impressions and approach to new experiences.':PL_REP[p.n]],
+    [isA?'Your Rising Sign':`${p.n} in Your Sign`,un?`The Moon moved from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name} on your birth day, so its sign depends on your birth time.`:`Within astrology, ${isA?s.name+' rising':p.n+' in '+s.name} is associated with ${SIGN_KEYS[s.id].join(', ').toLowerCase()}, expressed ${STYLE[s.id]}.`],
+    [isA?'In Everyday Life':`${p.n} in Your House`,isA?`You may notice it in ${SIGN_LIFE[s.id]}.`:p.house?`In the ${CJ_ORD(p.house)} house, these themes may be explored through ${HOUSE[p.house-1]}.`:'Add your birth time and birthplace to see which area of life this placement colours.'],
+    ['Your Strengths',un?'':`${SIGN_KEYS[s.id].join(', ')}, brought to ${pmOf(p.n)}.`],['Your Growth Opportunities',un?'':SIGN_GROW[s.id]],
+    ['The Details',`${degTxt(p.lon)}${p.house?' · '+CJ_ORD(p.house)+' House':''}${p.retro?' · retrograde at your birth, traditionally turning its themes inward':''}`]],
+   q:isA?'How do I want to be met by the world?':PL_Q[p.n],rel:c.asp.map((a,i)=>[a,i]).filter(([a])=>a.a.n===p.n||a.b.n===p.n).slice(0,4).map(([a,i])=>[`aspect:${i}`,`${a.a.n} ${a.n} ${a.b.n}`]).concat(p.house&&!isA?[[`house:${p.house}`,`Your ${CJ_ORD(p.house)} House`]]:[])}}
+ if(t==='house'){const h=+v;if(!(c.known&&c.ang))return null;const s=sIdx(Math.floor(c.ang.asc/30)+h-1),inn=c.pl.filter(p=>p.house===h);
+  return {g:String(h),title:`Your ${CJ_ORD(h)} House`,kw:HOUSE_T[h-1].replace('&','·'),parts:[['What This House Represents',`The ${CJ_ORD(h)} house is the area of life traditionally associated with ${HOUSE[h-1]}.`],['Its Sign',`${s.name} colours this area of your life ${STYLE[s.id]}.`],['Planets Here',inn.length?inn.map(p=>`${p.n}, bringing ${pmOf(p.n)}`).join('; ')+'.':'No planets were here at your birth. An empty house is not an empty area of life; its sign and ruler still speak for it.']],q:CAL_HQ[h-1],rel:inn.map(p=>[`planet:${p.n}`,`${p.n} in ${sIdx(p.sign).name}`])}}
+ if(t==='aspect'){const a=c.asp[+v];if(!a)return null;
+  return {g:a.g,title:`${a.a.n} ${a.n} ${a.b.n}`,kw:`${PL_KW[a.a.n]||a.a.n} · ${PL_KW[a.b.n]||a.b.n} · ${cap(a.n)}`,parts:[['What This Aspect Represents',`An aspect is an angle between two points of your chart. A ${a.n} ${({conjunction:'unites',sextile:'opens a gentle opportunity between',square:'creates a creative tension between',trine:'lets energy flow between',opposition:'holds in balance'})[a.n]||'links'} the two.`],['In Your Chart',`Your ${pmOf(a.a.n)} and your ${pmOf(a.b.n)} ${ASPT[a.n]}.`],['Your Strengths',({conjunction:'Focus and intensity: two parts of you working as one.',sextile:'Ease and opportunity when you reach for it.',square:'Drive and resilience born of friction.',trine:'Natural talent and flow.',opposition:'Perspective, and the ability to hold two truths.'})[a.n]],['Your Growth Opportunities',({conjunction:'Telling the two apart when one overwhelms the other.',sextile:'Acting on gifts that come easily.',square:'Turning tension into building rather than battle.',trine:'Not taking an easy gift for granted.',opposition:'Finding the middle way rather than swinging between extremes.'})[a.n]],['The Details',`Orb ${a.orb.toFixed(1)}°`]],q:`How do my ${pmOf(a.a.n).split(' and ')[0]} and my ${pmOf(a.b.n).split(' and ')[0]} work together?`,rel:[[`planet:${a.a.n}`,a.a.n],[`planet:${a.b.n}`,a.b.n]]}}
+ return null;
+}
+function mcPlacement(){
+ const c=myChart(),x=c&&mcPlacementData(c,V.mcP||'');
+ if(!x)return mcPage(`${hdr('Cosmic Placement')}<p class="muted center">This placement needs more of your birth details.</p><button class="btn" data-go="settings" data-t="birth">Add birth details</button>`);
+ const hk='place:'+V.mcP;
+ return mcPage(`${hdr(esc(x.title),{sub:'Your natal placement'})}
+ <section class="cal-ov">${ssGlyph(x.g,'big')}<p class="cal-th big">${esc(x.kw)}</p></section>
+ ${x.parts.filter(p=>p[1]).map(([h,t])=>`${ssHead(h)}<div class="dr-text"><p>${esc(t)}</p></div>`).join('')}
+ ${mbox(`<h3>A Question for You</h3><p class="quote center">“${esc(x.q)}”</p>`,'dr-q')}
+ <div class="ss-acts"><button class="btn ghost cj-heart" data-heart="${esc(hk)}" data-snap-t="${esc(x.title)}" aria-pressed="${hearted(hk)}" style="--fill:${hearted(hk)?'currentColor':'none'}">${IC.heart} ${hearted(hk)?'In My Library':'Keep in My Library'}</button><button class="btn ghost" data-jx="write" data-link="${esc(hk)}" data-t="${esc('My Cosmos — '+x.title)}">Write a Reflection</button></div>
+ <div class="ss-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(`In my birth chart I have ${x.title}. Help me understand what it may say about me.`)}">Ask Kassandra</button></div>
+ ${x.rel.length?`${ssHead('Related Placements')}<div class="dr-book">${x.rel.map(([k,t])=>`<button class="dr-entry" data-mc="pl" data-p="${esc(k)}"><strong>${esc(t)}</strong></button>`).join('')}</div>`:''}`,'place');
+}
+/* ---------- My Zodiac and My Cosmic Identity ---------- */
+const MC_Z={sun:['Your Sun','The Essence of Who You Are','Identity, vitality, conscious desires and self-expression.','Your sense of self tends to shine'],moon:['Your Moon','The World Within You','Emotional needs, instinctive responses and inner security.','Your feelings tend to move'],rising:['Your Rising','The Way You Meet the World','Outward presence, first impressions and approach to new experiences.','You tend to meet the world']};
+function mcZodiac(){
+ const c=myChart(),L=mcLights(),open=V.mcZ||'';
+ const sec=([n,,s,k])=>{const id=n.toLowerCase(),Z=MC_Z[id],on=open===id;
+  return `<section class="mc-z${on?' open':''}"><button class="mc-zh" data-mc="z" data-v="${id}" aria-expanded="${on}"><span class="mc-g">${s?s.g:'?'}</span><span><span class="dr-d">${Z[0]}</span><strong>${Z[1]}</strong><span class="mc-zs">${s?s.name:k==='uncertain'?'Uncertain without a birth time':'Unknown without a birth time and place'}</span></span><span class="lr-c">${IC.chev}</span></button>
+  ${on?(s?`<div class="mc-zb"><p class="dr-d">${s.name} · ${s.g} · ${s.el} · ${s.mod}</p><h4>What It Represents</h4><p>${Z[2]}</p><h4>How It May Express Itself</h4><p>${Z[3]} ${STYLE[s.id]}. ${id==='sun'?esc(SIGN_DESC[s.id]):''}</p><h4>Your Strengths</h4><p>${SIGN_KEYS[s.id].join(', ')}.</p><h4>Your Growth Opportunities</h4><p>${SIGN_GROW[s.id]}</p><h4>In Everyday Life</h4><p>You may notice it in ${SIGN_LIFE[s.id]}.</p></div>`
+   :`<div class="mc-zb"><p>${k==='uncertain'?`The Moon changed sign on your birth day (from ${sIdx(c.moonRange[0]).name} to ${sIdx(c.moonRange[1]).name}), so your Moon sign depends on your birth time.`:'Your Rising sign depends on the exact time and place of your birth.'}</p><button class="btn ghost" data-go="settings" data-t="birth">Add birth details</button></div>`):''}</section>`};
+ const [S1,M1,R1]=L.map(x=>x[2]);
+ const tog=S1?`Your ${S1.name} Sun is associated with ${SIGN_KEYS[S1.id].slice(0,2).join(' and ').toLowerCase()}${M1?`, while your ${M1.name} Moon brings themes of ${SIGN_KEYS[M1.id].slice(0,2).join(' and ').toLowerCase()}`:''}.${R1?` Your ${R1.name} Rising introduces ${SIGN_KEYS[R1.id][0].toLowerCase()} in the way you meet the world.`:''} ${M1||R1?`Together, these placements invite reflection on the balance between ${[S1,M1,R1].filter(Boolean).map(s=>EL_TXT[s.el][0].split(' and ')[0].toLowerCase()).filter((v,i,a)=>a.indexOf(v)===i).join(', ').replace(/, ([^,]*)$/,' and $1')}.`:'Add your birth time and place to see your Three Lights together.'}`:'';
+ return mcPage(`${hdr('My Zodiac',{sub:'Your Sun, Moon and Rising signs.'})}<div class="mc-zs-w">${L.map(sec).join('')}</div>
+ ${ssHead('Your Three Lights Together')}<div class="dr-text"><p>${esc(tog)}</p></div>`,'zod');
+}
+function mcElements(c){
+ const pts=c.pl.filter(p=>!(p.n==='Moon'&&c.moonRange)).map(p=>sIdx(p.sign).el).concat(c.known&&c.ang?[sIdx(Math.floor(c.ang.asc/30)).el]:[]),n=pts.length,cnt={Fire:0,Earth:0,Air:0,Water:0};pts.forEach(e=>cnt[e]++);
+ return Object.entries(cnt).map(([e,v])=>[e,Math.round(v/n*100),v]).sort((a,b)=>b[1]-a[1]);
+}
+function mcIdentity(){
+ const c=myChart();
+ if(!c)return mcPage(`${hdr('My Cosmic Identity',{sub:'Your nature, strengths and potential for growth.'})}${mcNeed('Add your birth date to see your Cosmic Identity drawn from your own chart.')}`);
+ const s=mcSign(c,'Sun'),m=mcSign(c,'Moon'),r=mcAsc(c),ve=mcSign(c,'Venus'),me=mcSign(c,'Mercury'),el=mcElements(c),nm=firstName(),lp=N.lifePath(S.birth.date).r.n,M=N.MEANING[lp]||N.MEANING[lp%9||9];
+ const por=`${nm?esc(nm)+', y':'Y'}our ${s.name} Sun is associated with ${SIGN_KEYS[s.id].join(', ').toLowerCase()}${m?`, and your ${m.name} Moon with ${SIGN_KEYS[m.id].slice(0,2).join(' and ').toLowerCase()}`:''}${r?`; with ${r.name} rising, you may meet the world ${STYLE[r.id].split(',')[0]}`:''}. ${el[0][0]} is your strongest element, bringing ${EL_TXT[el[0][0]][1]}${el[3][2]===0?`, while ${el[3][0]} is absent from your chart, a quality you may find yourself drawn to in others`:''}. ${m&&m.el!==s.el?`Your Sun and Moon speak different elemental languages, ${s.el.toLowerCase()} and ${m.el.toLowerCase()}: part of you may seek ${EL_TXT[s.el][1].split(',')[0]}, while another needs ${EL_TXT[m.el][1].split(',')[0]}. Both belong to you.`:m?`Your Sun and Moon share the element of ${s.el.toLowerCase()}, so what you want and what you need often move together.`:''}`;
+ return mcPage(`${hdr('My Cosmic Identity',{sub:'Your nature, strengths and potential for growth.'})}
+ ${ssHead('Your Cosmic Portrait')}<div class="dr-text"><p>${por}</p></div>
+ ${ssHead('Your Nature')}<div class="dr-text"><p>${esc(SIGN_BLURB[s.id])}</p></div>
+ ${ssHead('Your Strengths')}<div class="dr-text"><p>${esc([...new Set([s,m,r].filter(Boolean).flatMap(x=>SIGN_KEYS[x.id]))].join(' · '))}</p></div>
+ ${ssHead('Your Growth Opportunities')}<div class="dr-text"><p>${esc(SIGN_GROW[s.id])}${m&&m.id!==s.id?' '+esc(SIGN_GROW[m.id]):''}</p></div>
+ ${ssHead('Your Emotional World')}<div class="dr-text"><p>${m?`With your Moon in ${m.name}, your feelings tend to move ${STYLE[m.id]}. You may feel most at peace when there is room for ${SIGN_KEYS[m.id][0].toLowerCase()}.`:`The Moon changed sign on your birth day, so your emotional world depends on your birth time. <button class="link" data-go="settings" data-t="birth">Add it</button>`}</p></div>
+ ${ssHead('Your Way of Connecting')}<div class="dr-text"><p>With Venus in ${ve.name}, you tend to love ${STYLE[ve.id]}. With Mercury in ${me.name}, you tend to think and speak ${STYLE[me.id]}.</p></div>
+ ${ssHead('Your Elemental Balance')}<div class="mc-el">${el.map(([e,pc])=>`<div><span><b>${e}</b> ${pc}%</span><i><b class="el-${e.toLowerCase()}" style="width:${pc}%"></b></i><em>${EL_TXT[e][0]}</em></div>`).join('')}</div>
+ <details class="how"><summary>How this is worked out</summary><p>Each of the ten planets counts once${c.moonRange?' (the Moon is left out while its sign is uncertain)':''}${c.known?', and so does your Rising sign':''}, by the element of its sign. It is a symbolic distribution of your chart, not a measure of personality or emotional ability.</p></details>
+ ${ssHead('Your Life Path')}${mbox(`<p class="dr-d center">Your Life Path Number</p><p class="mc-lp">${lp}</p><h3>${esc(M[0])}</h3><p class="center small">${esc(M[1].split(/,\s*/).map(cap).join(' · '))}</p><p class="center">${esc(M[2]||'')}</p><button class="btn ghost" data-go="discover" data-t="life-path">Explore Your Life Path</button>`,'dr-q')}`,'id');
+}
+/* ---------- My Relationships, a person, and adding or editing someone ---------- */
+const MC_CAT=[['partner','Partner','romantic'],['interest','Romantic interest','romantic'],['friend','Friend','friendship'],['family','Family','family'],['colleague','Colleague','professional'],['other','Other','other']];
+const mcCatL=p=>(MC_CAT.find(c=>c[0]===p.cat)||[])[1]||(p.rel?CN_RELN[p.rel]:'');
+const mcSignOf=p=>p.sign||(p.date?sunSign(p.date):'');
+const mcReady=p=>p.date&&p.time&&p.place?'Complete birth details':p.date&&(p.unk||!p.time)?'Birth time unknown':p.date?'Birth date available':mcSignOf(p)?'Zodiac sign only':'Name only';
+function mcPeople(){
+ const q=(V.mcPq||'').trim().toLowerCase(),all=cnPeople(),l=all.filter(p=>!q||[p.name,mcCatL(p),mcSignOf(p)&&sg(mcSignOf(p)).name].join(' ').toLowerCase().includes(q)),cmp=V.mcCmp||[];
+ return mcPage(`${hdr('My Relationships',{sub:'Every connection brings another universe into yours.'})}
+ <button class="jx-write mc-add" data-mc="add"><span class="jx-pen">+</span><span><strong>Add Someone</strong><span>Only a name or nickname is needed.</span></span></button>
+ ${all.length>3?`<div class="field"><label for="mcpq" class="sr-only">Search your relationships</label><input type="search" id="mcpq" placeholder="Search your relationships…" value="${esc(V.mcPq||'')}" autocomplete="off"></div>`:''}
+ <div class="dr-book">${l.map(p=>{const sgn=mcSignOf(p);return V.mcCmpOn?`<button class="dr-entry mc-p" role="checkbox" aria-checked="${cmp.includes(p.id)}" data-mc="cmp" data-id="${esc(p.id)}"><span class="mc-g sm">${sgn?sg(sgn).g:'✦'}</span><span><strong>${esc(p.name)}</strong><span class="dr-d">${[mcCatL(p),sgn&&sg(sgn).name].filter(Boolean).join(' · ')}</span></span></button>`:`<button class="dr-entry mc-p" data-mc="person" data-id="${esc(p.id)}"><span class="mc-g sm">${sgn?sg(sgn).g:'✦'}</span><span><strong>${esc(p.name)}</strong><span class="dr-d">${[mcCatL(p),sgn&&sg(sgn).name].filter(Boolean).join(' · ')}</span><span class="dr-s">${mcReady(p)}</span></span></button>`}).join('')||`<p class="muted center">${all.length?'No one matches.':'The people who matter to you can be kept here, so their details never need entering twice.'}</p>`}</div>
+ ${all.length>1?(V.mcCmpOn?`<p class="muted small center">Choose two people (${cmp.length} of 2).</p><div class="ss-acts"><button class="btn" data-mc="cmpgo" ${cmp.length===2?'':'disabled'}>Explore Their Connection</button><button class="btn ghost" data-mc="cmpoff">Cancel</button></div>`:'<button class="btn ghost" data-mc="cmpon">Compare two people</button>'):''}
+ <p class="muted small center">People you keep stay private to you. Their birth details are kept only when they are happy for you to keep them.</p>`,'people');
+}
+function mcPerson(){
+ const p=cnPerson(V.cnPid);
+ if(!p)return mcPage(`${hdr('My Relationships')}<p class="muted center">This person is no longer here.</p><button class="btn" data-go="you" data-t="people">My Relationships</button>`);
+ const sgn=mcSignOf(p),reads=cnReads().filter(r=>(r.pids||[]).includes(p.id)),mine=myChart(),full=p.date&&!p.unk&&p.time&&p.place,meFull=mine&&mine.known;
+ const del=V.cnDel===p.id?`<div class="dr-confirm"><p>Remove ${esc(p.name)} from My Relationships?${reads.length?` ${reads.length===1?'One saved reading includes':reads.length+' saved readings include'} them.`:''}</p><div class="ss-acts">${reads.length?`<button class="btn ghost" data-cn="delp" data-id="${esc(p.id)}" data-all="0">Remove, keep the readings</button><button class="btn" data-cn="delp" data-id="${esc(p.id)}" data-all="1">Remove them and the readings</button>`:`<button class="btn" data-cn="delp" data-id="${esc(p.id)}" data-all="0">Remove</button>`}<button class="btn ghost" data-cn="delno">Cancel</button></div></div>`:'';
+ return mcPage(`${hdr(esc(p.name),{sub:[mcCatL(p),sgn&&sg(sgn).name].filter(Boolean).join(' · ')||'In My Relationships'})}
+ <section class="cal-ov">${ssGlyph(sgn?sg(sgn).g:'✦','big')}<p class="cal-mode">${mcReady(p)}</p></section>
+ ${ssHead('Your Connection')}<div class="list">
+ ${sgn?ssDoor('☉','Zodiac Compatibility','Explore the connection between your signs.',`data-mc="pz" data-id="${esc(p.id)}"`):''}
+ ${ssDoor('♡','Relationship Dynamics','Understand symbolic strengths and differences.',`data-cn="withp" data-t="insights" data-id="${esc(p.id)}"`)}
+ ${p.date?ssDoor('✶','Birth Chart Comparison',full&&meFull?'Explore the relationship between your natal charts.':'A limited comparison: houses and Rising need both birth times and places.',`data-cn="withp" data-t="synastry" data-id="${esc(p.id)}"`):''}</div>
+ ${!p.date?`<p class="muted small center">Add ${esc(p.name)}’s birth date, with their permission, for a birth chart comparison. <button class="link" data-mc="edit" data-id="${esc(p.id)}">Add details</button></p>`:''}
+ ${ssHead('Previous Readings')}${reads.length?`<div class="dr-book">${reads.map(r=>`<button class="dr-entry" data-cn="openr" data-id="${esc(r.id)}"><span class="dr-d">${ymdLong(r.day,{day:'numeric',month:'long',year:'numeric'})}</span><strong>${CN_TYPES[r.type]}</strong></button>`).join('')}</div>`:'<p class="muted center small">Readings about this connection will gather here and in Your Readings.</p>'}
+ <div class="ss-acts"><button class="btn ghost" data-mc="edit" data-id="${esc(p.id)}">Edit Details</button><button class="btn ghost" data-cn="del" data-id="${esc(p.id)}">Remove Person</button></div>${del}`,'person');
+}
+function mcPersonEdit(){
+ const id=V.cnPid,isNew=id==='new'||!cnPerson(id),p=isNew?(V.cnDraft&&!V.cnDraft.id?V.cnDraft:(V.cnDraft={name:'',rel:'',cat:'',sign:'',date:'',time:'',unk:false,place:'',consent:false})):(V.cnDraft&&V.cnDraft.id===id?V.cnDraft:(V.cnDraft=Object.assign({},cnPerson(id)))),P=V.places.cnp||{};
+ const sgn=p.sign||(p.date?sunSign(p.date):''),mine=myChart(),ex=[['Save relationship',!!(p.name||'').trim()],['Zodiac compatibility',!!sgn],['Relationship insights',!!(p.name||'').trim()],['Full birth chart comparison',!!(p.consent&&p.date&&!p.unk&&p.time&&p.place&&mine&&mine.known)]];
+ return mcPage(`${hdr(isNew?'Add Someone to Your Cosmos':'Edit '+esc(p.name))}
+ <div class="field mc-f1"><label for="cp-name">Name or nickname</label><input type="text" id="cp-name" data-cn="pf" data-k="name" value="${esc(p.name||'')}" autocomplete="off"></div>
+ <div class="field"><label for="mc-cat">Your connection</label><select id="mc-cat"><option value="">Choose, if you like</option>${MC_CAT.map(([k,l])=>`<option value="${k}" ${p.cat===k?'selected':''}>${l}</option>`).join('')}</select></div>
+ ${ssHead('Birth Details · Optional')}<label class="row cn-cb"><input type="checkbox" class="cb" data-cn="pf" data-k="consent" ${p.consent?'checked':''}> <span>They are happy for me to keep their birth details</span></label>
+ <div class="field"><label for="cp-date">Date of birth</label><input type="date" id="cp-date" data-cn="pf" data-k="date" value="${esc(p.date||'')}"></div>
+ <label class="row cn-cb"><input type="checkbox" class="cb" data-cn="pf" data-k="unk" ${p.unk?'checked':''}> <span>I don’t know their birth time</span></label>${p.unk?'':`<div class="field"><label for="cp-time">Time of birth</label><input type="time" id="cp-time" data-cn="pf" data-k="time" value="${esc(p.time||'')}"></div>`}
+ <div class="field"><label for="cnp-q">Place of birth</label><div class="row nowrap"><input type="text" id="cnp-q" value="${esc(P.q!=null?P.q:p.place||'')}" placeholder="Town or city" autocomplete="off"><button class="btn ghost sm" data-cn="psearch" data-slot="p">Search</button></div>
+ ${P.busy?'<p class="muted small">Searching…</p>':''}${P.results?(P.results.length?`<ul class="places">${P.results.map((r,i)=>`<li><button class="link" data-cn="ppick" data-slot="p" data-i="${i}">${esc([r.name,r.admin1,r.country].filter(Boolean).join(', '))}</button></li>`).join('')}</ul>`:'<p class="muted small">No places found.</p>'):''}${p.place&&!P.results?`<p class="muted small">${esc(p.place)}</p>`:''}</div>
+ <div class="field"><label for="cp-sign">Zodiac sign, if known</label><select id="cp-sign" data-cn="pf" data-k="sign"><option value="">${p.date?sg(sunSign(p.date)).name+' (from the date)':'Not known'}</option>${SIGNS.map(x=>`<option value="${x.id}" ${p.sign===x.id?'selected':''}>${x.name}</option>`).join('')}</select></div>
+ ${ssHead('Available Experiences')}<div class="mc-ex">${ex.map(([l,ok])=>`<p class="${ok?'on':''}">${ok?'✓':'○'} ${l}</p>`).join('')}</div>
+ <p class="muted small">${ex[3][1]?'':'A full birth chart comparison needs their date, time and place of birth, and your own complete birth details. Everything else works with what you know.'}</p>
+ <button class="btn" data-cn="savep">${isNew?'Save Relationship':'Save Changes'}</button>`,'pedit');
+}
+/* ---------- My Preferences and its pages ---------- */
+function mcPrefs(){
+ const row=(t,l,s)=>`<button class="dr-entry" data-go="settings" data-t="${t}"><strong>${l}</strong><span class="dr-x">${s}</span></button>`;
+ return mcPage(`${hdr('My Preferences',{sub:'Make Kosmia your own.'})}
+ <div class="dr-book mc-top">${row('birth','My Birth Details','Name, birth date, birth time and birthplace.')}${row('account','My Account','Email, sign-in and account security.')}${row('notifications','Notifications & Reminders','Celestial events, daily rituals and reminders.')}${row('ritual','My Ritual Times','Your morning and evening rhythm.')}${row('region','Language & Region','Language, time zone, clock and dates.')}${row('display','Display & Accessibility','Text size, contrast, motion and reading.')}${row('privacy','Privacy & My Data','Permissions, export and deletion.')}${row('subscription','My Membership','Your plan and what it includes.')}</div>
+ <p class="muted small center">${!C.enabled?'Kept on this device':C.user?'Signed in · synced across your devices':'Not signed in · kept on this device'}</p>`,'prefs');
+}
+const ritTimes=()=>{const r=Object.assign({m:'07:00',e:'21:00',we:false,wm:'09:00',wee:'22:00'},S.settings.rit||{}),wd=new Date().getDay(),wk=r.we&&(wd===0||wd===6);return {m:wk?r.wm:r.m,e:wk?r.wee:r.e,r}};
+const sw=(id,on,l,s)=>`<label class="row mc-sw"><input type="checkbox" class="cb" id="${id}" ${on?'checked':''}> <span><b>${l}</b>${s?`<em>${s}</em>`:''}</span></label>`;
+function mcNotifPage(){
+ const n=S.notif,d=n.moons||'';
+ return `<div class="stack"><h1>Notifications &amp; Reminders</h1><p class="note">Kosmia keeps these choices now. Today, reminders appear when you open Kosmia; notifications on your phone will follow once push delivery is switched on, and your browser will ask first. Nothing is ever sent in a hurried or fearful tone.</p>
+ ${panel(`${sw('n_mr',n.mr,'Morning Ritual','A gentle invitation to begin your day.')}${sw('n_er',n.er,'Evening Ritual','A moment to reflect before resting.')}${sw('n_nm',!!d&&n.nm!==false,'New Moon','Prepare for a new lunar cycle.')}${sw('n_fm',!!d&&n.fm!==false,'Full Moon','An invitation to reflect and release.')}${sw('n_ecl',n.ecl,'Eclipses','Upcoming solar and lunar eclipses.')}${sw('n_cyc',n.cyc,'Personal Cosmic Cycles','Significant changes in your personal transits.')}${sw('n_on',n.on,'Daily horoscope','')}${sw('n_wh',n.whisper,'Daily Whisper','')}`)}
+ ${panel(`<h3>Default celestial event reminders</h3><div class="field"><label for="n_def">When</label><select id="n_def">${[['before','The day before'],['day','On the day'],['both','The day before and on the day']].map(([v,l])=>`<option value="${v}" ${(d||'day')===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label for="n_time">Time</label><input type="time" id="n_time" value="${n.time}"></div><p class="muted small">A reminder set on a single event in the Calendar replaces this one for that event, so nothing arrives twice. <button class="link" data-go="discover" data-t="saved-events">Manage event reminders</button></p>`)}
+ ${panel(`<label class="row"><input type="checkbox" id="n_q" ${n.quiet?'checked':''} class="cb"> Quiet hours</label><div class="row two"><div class="field"><label for="n_qf">From</label><input type="time" id="n_qf" value="${n.quietFrom}"></div><div class="field"><label for="n_qt">To</label><input type="time" id="n_qt" value="${n.quietTo}"></div></div>`)}</div>`;
+}
+function mcRitualPage(){
+ const r=ritTimes().r;
+ return `<div class="stack"><h1>My Ritual Times</h1><p class="note">Your rhythm sets when your rituals are offered and which one the Ritual screen brings forward. Both are always open to you: waking late never takes the morning away.</p>
+ ${panel(`<h3>Your Daily Rhythm</h3><div class="field"><label for="r_m">Morning Ritual · begin your day with intention</label><input type="time" id="r_m" value="${r.m}"></div><div class="field"><label for="r_e">Evening Ritual · close your day with reflection</label><input type="time" id="r_e" value="${r.e}"></div>
+ <label class="row"><input type="checkbox" id="r_we" class="cb" ${r.we?'checked':''}> Use a different schedule on weekends</label>${r.we?`<div class="row two"><div class="field"><label for="r_wm">Weekend morning</label><input type="time" id="r_wm" value="${r.wm}"></div><div class="field"><label for="r_wee">Weekend evening</label><input type="time" id="r_wee" value="${r.wee}"></div></div>`:''}`)}</div>`;
+}
+function mcRegionPage(){
+ const st=S.settings;
+ return `<div class="stack"><h1>Language &amp; Region</h1>${panel(`<div class="field"><label for="g_lang">Language</label><select id="g_lang"><option>English</option></select><p class="muted small">More languages will follow.</p></div>
+ <div class="field"><label for="d_tz">Time zone</label><select id="d_tz"><option value="">Follow this device (${esc(DEVICE_TZ)}), adjusting when you travel</option>${(Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):[]).map(z=>`<option ${st.tz===z?'selected':''}>${z}</option>`).join('')}</select></div>
+ <div class="field"><label for="g_clock">Clock</label><select id="g_clock"><option value="24" ${st.clock!=='12'?'selected':''}>24-hour (21:00)</option><option value="12" ${st.clock==='12'?'selected':''}>12-hour (9:00 pm)</option></select></div>
+ <div class="field"><label for="g_date">Dates</label><select id="g_date"><option value="dmy" ${st.datefmt!=='mdy'?'selected':''}>Day before month (9 December)</option><option value="mdy" ${st.datefmt==='mdy'?'selected':''}>Month before day (December 9)</option></select></div>`)}
+ <p class="muted small">Your birth chart always uses the historical local time and place of your birth, whatever your current time zone.</p></div>`;
+}
+const mcDisplayExtra=()=>{const st=S.settings;return panel(`<h3>Comfort</h3>${sw('d_ct',st.contrast,'Enhanced contrast','Clearer text over the painted backgrounds.')}${sw('d_rd',st.readmode,'Reading mode','Long interpretations on a calm, plain page.')}<p class="muted small">Ambient soundscapes are not part of Kosmia yet.</p>`)};
+const mcPrivacyExtra=()=>{const st=S.settings,others=cnPeople().filter(p=>p.date).length;return panel(`<h3>Permissions</h3>${sw('p_ji',st.jInsights===true,'Journal insights','Let the Journal notice recurring words, themes and lunar rhythms in your entries, on this device.')}${sw('p_pat',st.patterns!==false,'Oracle patterns','Let Patterns gather themes across dreams, readings, signs and reflections.')}<p class="muted small">Your Journal never reaches Kassandra or Oracle patterns on its own; an entry is shared with Kassandra only when you choose Talk about this.</p><p class="muted small">Journal protection with your device’s lock is not available in the web app yet.</p>`)+panel(`<h3>Other people’s details</h3><p class="muted small">You keep birth details for ${others} ${others===1?'person':'people'}, each only with their agreement. They stay private to your account.</p>${others?'<button class="btn ghost" data-mc="clearothers">Remove everyone’s birth details</button>':''}<h3>Delete personal content</h3><p class="muted small">Entries, readings and people can each be deleted where they live:</p><div class="ss-acts"><button class="btn ghost sm" data-go="tarot" data-t="journal">Journal</button><button class="btn ghost sm" data-go="discover" data-t="readings">Your Readings</button><button class="btn ghost sm" data-go="you" data-t="people">My Relationships</button></div>`)};
+/* ---------- routes, actions, and returning to the exact place ---------- */
+{const MCV={home:mcHome,chart:mcChart,placement:mcPlacement,zodiac:mcZodiac,identity:mcIdentity,cycles:mcCycles,transit:mcTransitView,people:mcPeople,person:mcPerson,'person-edit':mcPersonEdit,preferences:mcPrefs};const vy=views.you;views.you=()=>MCV[tab()]?MCV[tab()]():vy()}
+{const vs=views.settings;views.settings=()=>{const t=tab();
+ if(t==='notifications')return nightSub(subPage(mcNotifPage()),'st');
+ if(t==='ritual')return nightSub(subPage(mcRitualPage()),'st');
+ if(t==='region')return nightSub(subPage(mcRegionPage()),'st');
+ if(t==='display')return nightSub(subPage(settingsPage('display').replace(/<\/div>$/,mcDisplayExtra()+'</div>')),'st');
+ if(t==='privacy')return nightSub(subPage(settingsPage('privacy').replace(/<\/div>$/,mcPrivacyExtra()+'</div>')),'st');
+ return vs()}}
+{const vd=views.discover;views.discover=()=>{const t=tab();
+ if(t==='people'||t==='person'){const t2=t==='person'&&V.cnPid&&V.cnPid!=='new'&&cnPerson(V.cnPid)?'person':'people';V.sec='you';V.tab.you=t2;history.replaceState(history.state,'',pathFor('you',t2,t2==='person'?{p:V.cnPid}:{}));return views.you()}
+ if(t==='patterns'&&S.settings.patterns===false)return mcPage(`${hdr('Patterns')}${mbox('<p class="center">Oracle patterns are turned off, so Kosmia does not gather themes across your dreams, readings and reflections.</p>')}<button class="btn ghost" data-go="settings" data-t="privacy">Privacy & My Data</button>`);
+ if(t==='profile'){const h=vd();return h.replace(/(<\/div>)\s*$/,`${mbox(`<h3>Birth time certainty</h3><div class="field"><label for="b_cert" class="sr-only">How certain is your birth time?</label><select id="b_cert"><option value="exact" ${(S.birth.cert||'exact')==='exact'?'selected':''}>Exact, from a record</option><option value="approx" ${S.birth.cert==='approx'?'selected':''}>Approximate</option><option value="unknown" ${S.birth.cert==='unknown'?'selected':''}>Unknown</option></select></div><p class="muted small">Changing your birth details recalculates your chart, Three Lights, Cosmic Identity, Cosmic Cycles and Life Path. Readings you have already saved keep the details they were made with.</p>`)}$1`)}
+ return vd()}}
+// the medallion opens My Cosmos over the place the reader was in; closing returns to that very scroll
+{const g0=go;go=(sec,t,o)=>{try{const inn=[...document.querySelectorAll('.mn-scroll,.pg-scroll,#rth,.sk-body')].map(e=>e.scrollTop);if(inn.some(Boolean))history.replaceState(Object.assign({},history.state,{inner:inn}),'')}catch(e){}return g0(sec,t,o)}}
+addEventListener('popstate',e=>{const inn=e.state&&e.state.inner;if(!inn)return;const put=()=>[...document.querySelectorAll('.mn-scroll,.pg-scroll,#rth,.sk-body')].forEach((el,i)=>{if(inn[i])el.scrollTop=inn[i]});requestAnimationFrame(()=>{put();setTimeout(put,120)})});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-mc]');if(!t)return;const a=t.dataset.mc,v=t.dataset.v;
+ if(a==='close'){if(((history.state&&history.state.d)||0)>0)return history.back();return go('home')}
+ if(a==='light'){V.mcZ=v;return go('you','zodiac')}
+ if(a==='z'){V.mcZ=V.mcZ===v?'':v;return render()}
+ if(a==='ch'){V.mcCh=v;return render()}
+ if(a==='pl'){V.mcP=t.dataset.p;if(/^planet:/.test(V.mcP))V.chartSel=V.mcP.slice(7);return go('you','placement')}
+ if(a==='cv'){V.mcCv=v;return render()}
+ if(a==='tr'){V.mcT=t.dataset.k;return go('you','transit')}
+ if(a==='trwrite'){const x=(mcTransits()||[]).find(y=>y.key===V.mcT);if(x)jxStart({cat:'reflection',prompt:x.kind==='house'?CAL_HQ[x.h-1]:PL_Q[x.N]||'',link:{k:'',t:'My Cosmic Cycles — '+mcTrTitle(x)},src:'cosmos',force:true});return}
+ if(a==='add'){V.cnPid='new';V.cnDraft=null;V.places.cnp={};return go('you','person-edit')}
+ if(a==='edit'){V.cnPid=t.dataset.id;V.cnDraft=null;V.places.cnp={};return go('you','person-edit')}
+ if(a==='person'){V.cnPid=t.dataset.id;V.cnDel=null;return go('you','person')}
+ if(a==='pz'){const p=cnPerson(t.dataset.id);V.love={a:S.sign,b:mcSignOf(p),done:true};return go('discover','affinity')}
+ if(a==='cmpon'||a==='cmpoff'){V.mcCmpOn=a==='cmpon';V.mcCmp=[];return render()}
+ if(a==='cmp'){const id=t.dataset.id,l=V.mcCmp||[];V.mcCmp=l.includes(id)?l.filter(x=>x!==id):l.concat(id).slice(-2);return render()}
+ if(a==='cmpgo'){const [x,y]=V.mcCmp||[];if(!y)return;const X=cnX();X.a={who:x};X.b={who:y};X.res=null;X.rel=(cnPerson(y)||{}).rel||'';V.mcCmpOn=false;return go('discover','insights')}
+ if(a==='clearothers'){cnPeople().filter(p=>p.date).forEach(p=>{const k=Object.assign({},p);['date','time','unk','place','lat','lon','tz'].forEach(f=>delete k[f]);k.consent=false;cnSaveBm('person',k)});toast('Everyone’s birth details are removed; their names stay.');return render()}
+});
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='mcpq'){V.mcPq=t.value;const y=scrollY;render();refocus('mcpq');window.scrollTo(0,y)}});
+document.addEventListener('change',e=>{
+ const t=e.target,id=t.id,n=S.notif,st=S.settings;
+ if(id==='mc-cat'&&V.cnDraft){V.cnDraft.cat=t.value;const m=MC_CAT.find(c=>c[0]===t.value);V.cnDraft.rel=m?m[2]:'';return}
+ const M={n_mr:()=>n.mr=t.checked,n_er:()=>n.er=t.checked,n_nm:()=>{n.nm=t.checked;if(t.checked&&!n.moons)n.moons=($('#n_def')||{}).value||'day';if(!t.checked&&n.fm===false)n.moons=''},n_fm:()=>{n.fm=t.checked;if(t.checked&&!n.moons)n.moons=($('#n_def')||{}).value||'day';if(!t.checked&&n.nm===false)n.moons=''},n_ecl:()=>n.ecl=t.checked,n_cyc:()=>n.cyc=t.checked,n_def:()=>{if(n.moons||n.ecl)n.moons=t.value;n.def=t.value},
+  r_m:()=>(st.rit=Object.assign({},st.rit,{m:t.value})),r_e:()=>(st.rit=Object.assign({},st.rit,{e:t.value})),r_we:()=>(st.rit=Object.assign({},st.rit,{we:t.checked})),r_wm:()=>(st.rit=Object.assign({},st.rit,{wm:t.value})),r_wee:()=>(st.rit=Object.assign({},st.rit,{wee:t.value})),
+  g_clock:()=>st.clock=t.value,g_date:()=>st.datefmt=t.value,d_ct:()=>st.contrast=t.checked,d_rd:()=>st.readmode=t.checked,p_ji:()=>st.jInsights=t.checked,p_pat:()=>st.patterns=t.checked,b_cert:()=>{S.birth.cert=t.value;chartCache.k='';mcTr.k=''}};
+ if(!M[id])return;M[id]();save();syncProfile();toast('Saved');
+ document.body.classList.toggle('contrast',!!st.contrast);document.body.classList.toggle('readmode',!!st.readmode);
+ if(/^(r_we|g_|d_)/.test(id))render();
+});
+document.body.classList.toggle('contrast',!!S.settings.contrast);document.body.classList.toggle('readmode',!!S.settings.readmode);
 
 {let drLast='';const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
  const vd=views.discover;views.discover=()=>{const t=tab(),k=V.sec+'/'+t;if(t==='dreams'&&drLast&&!/^(discover\/(dreams|dream|dream-patterns|dream-journal)|tarot\/entry)$/.test(drLast))V.drShow=null;drLast=k;return DRV[t]?DRV[t]():vd()};
