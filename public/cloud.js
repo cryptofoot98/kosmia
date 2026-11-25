@@ -79,7 +79,9 @@ const Cloud={
  },
  updateReading(id,note){if(!user||!id)return Promise.resolve();return soft(sb.from('tarot_readings').update({note}).eq('id',id).eq('user_id',user.id))},
  deleteReading(id){if(!user||!id)return Promise.resolve();return bg(sb.from('tarot_readings').delete().eq('id',id).eq('user_id',user.id).then(check))},
- saveJournal(e){if(!user)return Promise.resolve();return soft(sb.from('journal').upsert({id:e.id,user_id:user.id,day:e.day,kind:e.kind,title:e.title||'',body:e.body||''}))},
+ // a page's source, link and Moon travel in data; until the journal migration runs, the page is kept in the older shape
+ saveJournal(e){if(!user)return Promise.resolve();const row={id:e.id,user_id:user.id,day:e.day,kind:e.kind,title:e.title||'',body:e.body||'',data:e.data||{}};
+  return sb.from('journal').upsert(row).then(check).catch(err=>{if(missing(err)||err.code==='23514'||/check constraint|data/i.test(err.message||'')){delete row.data;if(!/^(reflection|synchronicity)$/.test(row.kind))row.kind='reflection';return soft(sb.from('journal').upsert(row))}fail(err);return null})},
  deleteJournal(id){if(!user)return Promise.resolve();return soft(sb.from('journal').delete().eq('id',id).eq('user_id',user.id))},
  saveConnection(c){if(!user)return Promise.resolve();return soft(sb.from('connections').upsert({id:c.id,user_id:user.id,name:c.name||'',kind:c.kind,data:c.data,note:c.note||''}))},
  deleteConnection(id){if(!user)return Promise.resolve();return soft(sb.from('connections').delete().eq('id',id).eq('user_id',user.id))},

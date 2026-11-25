@@ -100,7 +100,7 @@ async function pullMerge(){
  S.readings=mergeList(S.readings.map(r=>r.rid?Object.assign(r,{id:r.rid}):r),R.readings,
   r=>({id:r.id,rid:r.id,spread:r.spread,q:r.question,date:r.day,at:r.created_at,cards:r.cards,note:r.note||''}),
   l=>C.saveReading(l).then(id=>{if(id){l.id=l.rid=id}}));
- S.journal=mergeList(S.journal,R.journal,r=>({id:r.id,day:r.day,kind:r.kind,title:r.title,body:r.body,at:r.created_at}),l=>C.saveJournal(l));
+ {const L={};S.journal.forEach(j=>L[j.id]=j);const has=d=>d&&Object.keys(d).length;S.journal=mergeList(S.journal,R.journal,r=>({id:r.id,day:r.day,kind:has(r.data)?r.kind:((L[r.id]||{}).kind||r.kind),title:r.title,body:r.body,at:r.created_at,data:has(r.data)?r.data:(L[r.id]||{}).data}),l=>C.saveJournal(l))}
  // until the connections table exists, the older matches table still supplies saved pairings
  const remoteConns=R.connections.length||!R.matches.length?R.connections:[];
  S.conns=mergeList(S.conns,remoteConns,r=>({id:r.id,kind:r.kind,name:r.name,data:r.data,note:r.note,at:r.created_at}),l=>C.saveConnection(l));
@@ -199,8 +199,8 @@ function shuffle(a){a=a.slice();const r=new Uint32Array(a.length);crypto.getRand
 const SECTIONS={
  home:{label:'Home',tabs:[['today','Home']]},
  horoscope:{label:'Sky',tabs:[['overview','Your Sky'],['sign','Horoscope']]},
- tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal']]},
- discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['readings','Your Readings'],['saved','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
+ tarot:{label:'Oracle',tabs:[['home','Oracle'],['spreads','Tarot'],['whisper','Daily Whisper'],['reading','Card Reading'],['journal','Journal'],['entry','Journal Entry'],['calendar','Journal Calendar'],['insights','Your Journal'],['history','Journal'],['reflections','My Reflections'],['intentions','My Intentions'],['gratitude','My Gratitude'],['library','My Library'],['write','Write'],['page','Journal Entry'],['month','Your Journey']]},
+ discover:{label:'Discover',tabs:[['home','Discover'],['dreams','Dream Interpretation'],['new-dream','New Dream'],['dream','Your Dream Meaning'],['dream-journal','Dream Archive'],['dream-patterns','Dream Patterns'],['birth-chart','Birth Chart'],['profile','Cosmic Profile'],['affinity','Zodiac Compatibility'],['resonance','Compatibility'],['synastry','Birth Chart Comparison'],['connections','Connections'],['insights','Relationship Insights'],['people','My Relationships'],['person','My Relationships'],['conn-reading','Your Reading'],['event','Cosmic Event'],['event-ritual','Event Ritual'],['saved-events','Saved Events'],['readings','Your Readings'],['saved','Your Reading'],['life-path','Life Path'],['name-within','The Name Within'],['signs','Signs & Synchronicities'],['numbers','Sacred Numbers'],['number','Sacred Number'],['sync','Synchronicities'],['sync-reading','Synchronicity'],['patterns','Patterns'],['pattern','Pattern'],['numerology','Numerology'],['cycles','My Cycles'],['calendar','Cosmic Calendar'],['moon','The Moon'],['planets','Planets'],['events','Celestial Events'],['library','Astrology Library']]},
  kassandra:{label:'Kassandra',tabs:[['chat','Kassandra'],['history','Past Conversations']]},
  you:{label:'My Cosmos',tabs:[['home','My Cosmos']]},
  settings:{label:'Profile',tabs:[['account','Your Profile'],['birth','Birth Details'],['notifications','Notifications'],['privacy','Privacy & Data'],['display','Display'],['subscription','Membership']]}
@@ -210,8 +210,8 @@ const MAIN=['home','horoscope','tarot','discover','kassandra','you'];
 // (remember) and You (your Codex, your Circle and your settings)
 // the blueprint's five places (Ritual, Sky, Oracle, Calendar, Journal); My Cosmos opens from the round symbol at the top
 const NAV=[{key:'home',label:'Ritual'},{key:'horoscope',label:'Sky'},{key:'tarot',label:'Oracle'},{key:'calendar',label:'Calendar'},{key:'journal',label:'Journal'}];
-const CPAGES=['calendar','moon','planets','events'];
-const JPAGES=['journal','entry','insights','calendar','history','notebook'],DPAGES=['readings','saved','dreams','new-dream','dream','dream-journal','dream-patterns','connections','affinity','insights','synastry','people','person','conn-reading','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
+const CPAGES=['calendar','moon','planets','events','event','event-ritual','saved-events'];
+const JPAGES=['journal','entry','insights','calendar','history','notebook','reflections','intentions','gratitude','library','write','page','month'],DPAGES=['readings','saved','dreams','new-dream','dream','dream-journal','dream-patterns','connections','affinity','insights','synastry','people','person','conn-reading','signs','numbers','number','sync','sync-reading','patterns','pattern','numerology'],YPAGES=['profile','birth-chart','life-path','name-within','cycles','affinity','resonance','synastry'];
 // the place a page belongs to, lit in the menu: dreams are asked of the Oracle and kept in the Journal; the chart, the
 // numbers and the bonds are You; the calendar, the Moon, the planets and the library are Sky
 function navCur(){const t=tab();
@@ -223,7 +223,7 @@ function navCur(){const t=tab();
 // where a page's back arrow leads, when it is not the section's landing
 const PARENT={'tarot/entry':'tarot/journal','kassandra/chat':'tarot/home',
  'discover/new-dream':'discover/dreams','discover/dream':'discover/dream-journal','discover/dream-journal':'discover/dreams','discover/connections':'tarot/home','discover/readings':'tarot/home','discover/saved':'discover/readings','tarot/reading':'tarot/spreads','discover/affinity':'discover/connections','discover/insights':'discover/connections','discover/synastry':'discover/connections','discover/people':'discover/connections','discover/person':'discover/people','discover/conn-reading':'discover/connections','discover/dream-patterns':'discover/dreams','discover/dreams':'tarot/home','discover/signs':'tarot/home','discover/numbers':'discover/signs','discover/number':'discover/numbers','discover/sync':'discover/signs','discover/sync-reading':'discover/sync','discover/patterns':'discover/signs','discover/pattern':'discover/patterns','discover/numerology':'discover/signs',
- 'discover/moon':'discover/calendar','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
+ 'discover/moon':'discover/calendar','discover/event':'discover/calendar','discover/event-ritual':'discover/event','discover/saved-events':'discover/calendar','tarot/reflections':'tarot/journal','tarot/intentions':'tarot/journal','tarot/gratitude':'tarot/journal','tarot/library':'tarot/journal','tarot/write':'tarot/journal','tarot/page':'tarot/reflections','tarot/month':'tarot/journal','discover/planets':'discover/calendar','discover/events':'discover/calendar','discover/cycles':'discover/life-path','kassandra/history':'kassandra/chat'};
 function parentOf(sec,t){
  const p=PARENT[sec+'/'+t];if(p)return p.split('/');
  if(sec==='discover')return YPAGES.includes(t)?['you','home']:['horoscope','overview'];
@@ -262,7 +262,7 @@ function applyLocation(){
  if(sec==='discover'&&(!t||t==='home')){history.replaceState(history.state,'','/horoscope');V.sec='horoscope';V.tab.horoscope='overview';return}
  V.sec=sec;V.tab[sec]=SECTIONS[sec].tabs.some(x=>x[0]===t)?t:landing(sec);V.q=q;
  if(sec==='horoscope'){V.period=PERIODS.some(p=>p[0]===q.period)?q.period:'daily';V.exploreSign=SIGNS.some(s=>s.id===q.sign)?q.sign:null;V.hcat=HCATS.some(c=>c[0]===q.cat)?q.cat:'overview'}
- if(sec==='tarot'&&q.k)V.jkey=q.k;
+ if(sec==='tarot'&&q.k){V.jkey=q.k;V.jxk=q.k}if(sec==='tarot'&&q.m)V.jxm=q.m;if(sec==='discover'&&q.e)V.calRef=q.e;
  if(sec==='discover'){if(q.id){V.dreamId=q.id;V.ssId=q.id}if(q.k)V.ssPat=q.k;if(q.id)V.cnId=q.id;if(q.p)V.cnPid=q.p;if(q.r)V.rk=q.r;if(q.month)V.cal.month=q.month;if(q.view)V.cal.view=q.view;if(q.lib)V.lib.tab=q.lib}
 }
 // the query string mirrors the page's own choices, so a forecast, an entry or a month can be shared and reopened
@@ -270,6 +270,9 @@ function viewQuery(){
  const t=tab();
  if(V.sec==='horoscope')return t==='sign'?{sign:V.exploreSign||S.sign,period:V.period!=='daily'?V.period:'',cat:V.hcat!=='overview'?V.hcat:''}:{period:V.period!=='daily'?V.period:''};
  if(V.sec==='tarot'&&t==='entry')return {k:V.jkey};
+ if(V.sec==='tarot'&&t==='page')return {k:V.jxk};
+ if(V.sec==='tarot'&&t==='month')return {m:V.jxm};
+ if(V.sec==='discover'&&(t==='event'||t==='event-ritual'))return {e:V.calRef};
  if(V.sec==='discover'&&t==='dream')return {id:V.dreamId};
  if(V.sec==='discover'&&(t==='number'||t==='sync-reading'))return {id:V.ssId};
  if(V.sec==='discover'&&t==='pattern')return {k:V.ssPat};
@@ -1203,7 +1206,7 @@ function skyPop(x){
  <p class="cp-k">${x.when}</p><h2 class="cp-t">${x.title}</h2>
  <div class="skz-car"><div class="skz-track" aria-roledescription="carousel">${tiles.map((parts,i)=>`<section class="cp-box skz-tile${i===1?' you':''}${parts[0][0]==='A question to sit with'?' q':''}${parts.length>1?' two':''}" aria-label="${parts.map(u=>u[0]).join(' and ')}, ${i+1} of ${tiles.length}">${parts.map(([h,t])=>`<div class="skz-part"><h3>${h}</h3><p>${esc(t)}</p></div>`).join('')}</section>`).join('')}</div>
   <nav class="hp-dots skz-dn" aria-label="Swipe to move between them"><button class="hp-ch l" data-act="skzmove" data-d="-1" aria-label="Previous"><svg viewBox="0 0 10 16"><path d="M8 2L2 8l6 6"/></svg></button><span class="skz-d" aria-hidden="true">${tiles.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</span><button class="hp-ch r" data-act="skzmove" data-d="1" aria-label="Next"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button></nav></div>
-  <div class="skz-obj"><button data-act="kasask" data-q="${esc(x.q)}" aria-label="Ask Kassandra about it">${ui('ic-orb-k','skz-o')}</button><button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button><button data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it in your Journal">${ui('ic-quill-k','skz-o')}</button></div></div></div>`}
+  <div class="skz-obj"><button data-act="kasask" data-q="${esc(x.q)}" aria-label="Ask Kassandra about it">${ui('ic-orb-k','skz-o')}</button><button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button><button data-act="skdwrite" data-t="${esc(x.title)}" aria-label="Write about it in your Journal">${ui('ic-quill-k','skz-o')}</button><button class="skz-heart" data-heart="sky:${esc(x.id)}:${dkey()}" aria-pressed="${hearted('sky:'+x.id+':'+dkey())}" aria-label="${hearted('sky:'+x.id+':'+dkey())?'In My Library':'Keep in My Library'}" style="--fill:${hearted('sky:'+x.id+':'+dkey())?'currentColor':'none'}">${IC.heart}</button></div></div></div>`}
 // the window's tiles: the dots follow the swipe; one step is a tile and the gap after it
 const skzStep=T=>T.children.length>1?T.children[1].offsetLeft-T.children[0].offsetLeft:Math.max(1,T.clientWidth);
 function skzCar(){const t=$('.skz-track');if(!t||t._on)return;t._on=1;
@@ -1217,7 +1220,7 @@ function skyDetail(x){
  <section class="you"><h3>What it means for you</h3><p>${esc(x.you)}</p></section>
  <section><h3>One thing to do</h3><p>${esc(x.act)}</p></section>
  <p class="skd-q">“${esc(x.q)}”</p>
- <div class="sx-acts obj-row">${obj('kas',`data-act="kasask" data-q="${esc(x.q)}"`,'Ask Kassandra')}${obj('pen',`data-act="skdwrite" data-t="${esc(x.title)}"`,'Write about it in your Journal')}</div>
+ <div class="sx-acts obj-row">${obj('kas',`data-act="kasask" data-q="${esc(x.q)}"`,'Ask Kassandra')}${obj('pen',`data-act="skdwrite" data-t="${esc(x.title)}"`,'Write about it in your Journal')}<button class="skz-heart" data-heart="sky:${esc(x.id)}:${dkey()}" aria-pressed="${hearted('sky:'+x.id+':'+dkey())}" aria-label="Keep in My Library" style="--fill:${hearted('sky:'+x.id+':'+dkey())?'currentColor':'none'}">${IC.heart}</button></div>
  <button class="skd-m" data-go="discover" data-t="${x.more}">${x.moreL} ${IC.chev}</button></div></div>`}
 views.horoscope=()=>{
  if(!A||!K)return needLib();
@@ -2704,7 +2707,7 @@ views.settings=()=>{
 /* ----- the profile's own pages: notifications, privacy and display ----- */
 function settingsPage(t){
  const n=S.notif,st=S.settings;
- if(t==='notifications')return `<div class="stack"><h1>Notifications</h1><p class="note">Kosmia saves these choices now. Delivery is not switched on yet: it needs push messaging, which is coming in a later release. Nothing will be sent until then, and your browser will ask permission first.</p>${panel(`${[['n_on','Daily horoscope',n.on],['n_wh','Daily Whisper',n.whisper],['n_ev','Important celestial events',n.events],['n_mo','Monthly forecast reminder',n.monthly],['n_an','Yearly forecast reminder',n.annual]].map(([id,l,v])=>`<label class="row"><input type="checkbox" id="${id}" ${v?'checked':''} class="cb"> ${l}</label>`).join('')}<div class="field"><label for="n_time">Delivery time</label><input type="time" id="n_time" value="${n.time}"></div><label class="row"><input type="checkbox" id="n_q" ${n.quiet?'checked':''} class="cb"> Quiet hours</label><div class="row two"><div class="field"><label for="n_qf">From</label><input type="time" id="n_qf" value="${n.quietFrom}"></div><div class="field"><label for="n_qt">Until</label><input type="time" id="n_qt" value="${n.quietTo}"></div></div><p class="muted small">Times are in your time zone (${esc(TZ())}).</p>`)}</div>`;
+ if(t==='notifications')return `<div class="stack"><h1>Notifications</h1><p class="note">Kosmia saves these choices now. Delivery is not switched on yet: it needs push messaging, which is coming in a later release. Nothing will be sent until then, and your browser will ask permission first.</p>${panel(`${[['n_on','Daily horoscope',n.on],['n_wh','Daily Whisper',n.whisper],['n_ev','Important celestial events',n.events],['n_mo','Monthly forecast reminder',n.monthly],['n_an','Yearly forecast reminder',n.annual]].map(([id,l,v])=>`<label class="row"><input type="checkbox" id="${id}" ${v?'checked':''} class="cb"> ${l}</label>`).join('')}<div class="field"><label for="n_mn">Every New Moon and Full Moon</label><select id="n_mn">${[['','No reminder'],['before','The day before'],['day','On the day'],['both','The day before and on the day']].map(([v,l])=>`<option value="${v}" ${(n.moons||'')===v?'selected':''}>${l}</option>`).join('')}</select></div><p class="muted small">A reminder set on a single event replaces this one for that event, so nothing arrives twice.</p><div class="field"><label for="n_time">Delivery time</label><input type="time" id="n_time" value="${n.time}"></div><label class="row"><input type="checkbox" id="n_q" ${n.quiet?'checked':''} class="cb"> Quiet hours</label><div class="row two"><div class="field"><label for="n_qf">From</label><input type="time" id="n_qf" value="${n.quietFrom}"></div><div class="field"><label for="n_qt">Until</label><input type="time" id="n_qt" value="${n.quietTo}"></div></div><p class="muted small">Times are in your time zone (${esc(TZ())}).</p>`)}</div>`;
  if(t==='privacy')return `<div class="stack"><h1>Privacy</h1>
   ${panel(`<h3>What Kosmia keeps</h3><p>Your email, chosen sign and name; your Whispers, reflections, journal, readings, bookmarks and connections; and, only if you agree, your birth details. Everything is private to your account and protected so that only you can read it.</p><p class="muted small">AI features send only what they need: the tarot cards drawn, a forecast’s sign and period, or what you type to Kassandra. While personalisation is on, a short summary of the themes you have been writing about, with a few lines in your own words, is sent each day to write your message and to help Kassandra know you. It is never shared or used for anything else.</p>`)}
   ${panel(`<h3>Consent</h3><label class="row consent"><input type="checkbox" id="p_birth" ${S.birthConsent?'checked':''} class="cb"> <span>Keep my birth details in my account</span></label><label class="row consent"><input type="checkbox" id="p_pz" ${st.personal!==false?'checked':''} class="cb"> <span>Personalise my daily message, Whisper and Kassandra from what I write in my Journal, reflections, tarot questions and dreams</span></label><label class="row consent"><input type="checkbox" id="p_kas" ${st.kPersonal?'checked':''} class="cb"> <span>Let Kassandra see my sign, chart placements and numbers when I talk with her</span></label>`)}
@@ -2984,8 +2987,8 @@ function reveal(){
 }
 function bookmark(kind,ref,data){
  const i=S.bookmarks.findIndex(b=>b.kind===kind&&b.ref===ref);
- if(i>=0){S.bookmarks.splice(i,1);C.deleteBookmark&&C.deleteBookmark(kind,ref);toast('Removed from your journal')}
- else{const b={id:uuid(),kind,ref,data,at:new Date().toISOString()};S.bookmarks.push(b);C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()});toast('Saved to your journal')}
+ if(i>=0){S.bookmarks.splice(i,1);C.deleteBookmark&&C.deleteBookmark(kind,ref);toast(kind==='horoscope'?'Removed from My Library':kind==='event'?'Removed from Saved Events':'Removed from your journal')}
+ else{const b={id:uuid(),kind,ref,data,at:new Date().toISOString()};S.bookmarks.push(b);C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()});toast(kind==='horoscope'?'Kept in My Library':kind==='event'?'Saved to Saved Events':'Saved to your journal')}
  save();render();
 }
 // kept in the journal if it is not already, so a reflection can be written about it; its journal key comes back
@@ -3100,7 +3103,7 @@ document.addEventListener('click',e=>{
  if(a==='skd'){V.skd=t.dataset.id;return render()}
  if(a==='skdx'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.skd=null;return render()}
  if(a==='skzmove'){const T=$('.skz-track');if(!T)return;const n=T.children.length,w=skzStep(T),i=Math.round(T.scrollLeft/w);return T.scrollTo({left:Math.min(n-1,Math.max(0,i+ +t.dataset.d))*w,behavior:'smooth'})}
- if(a==='skdwrite'){const j={id:uuid(),day:dkey(),kind:'reflection',title:t.dataset.t,body:'',at:new Date().toISOString()};S.journal.push(j);save();V.skd=null;openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
+ if(a==='skdwrite'){const j={id:uuid(),day:dkey(),kind:'reflection',title:t.dataset.t,body:'',at:new Date().toISOString(),data:{src:'sky',link:{k:'',t:'Sky — '+plain(t.dataset.t)}}};S.journal.push(j);save();V.skd=null;openEntry('j:'+j.id);const x=$('#jet');if(x)x.focus();return}
  if(a==='pgcat'){const g=t.dataset.g,l=PGC[g].map(x=>x[0]),f=l.indexOf(pgCur(g)),n=l.indexOf(t.dataset.k);if(n<0||n===f)return;V.pdir=n>f?1:-1;S.pgc=S.pgc||{};S.pgc[g]=t.dataset.k;save();return render()}
  if(a==='jsub'){V.jsub=t.dataset.k||null;if(!V.jsub)V.jsearch=null;return render()}
  if(a==='spkclose'){if(e.target.closest('.cp-in')&&!e.target.closest('.cp-x'))return;V.spk=false;return render()}
@@ -3489,7 +3492,7 @@ function act(t,e){
  if(a==='skip'){close();return setTimeout(()=>toast('Rest well. Tonight needs no words.'),500)}
  if(a==='done'){const i=+t.dataset.i;
   if(i===0){S.readDay=k;save();return complete(0,'Your Horoscope is kept for today')}
-  if(i===1){if(!S.saved.some(x=>x.date===k)){S.saved.push({id:todayCard().id,date:k});save();syncFortune(k)}return complete(1,'Your Whisper walks with you today, kept in your Journal')}
+  if(i===1){if(!S.saved.some(x=>x.date===k)){S.saved.push({id:todayCard().id,date:k});save();syncFortune(k)}return complete(1,'Your Whisper walks with you today, kept in My Library')}
   if(i===2){const v=(document.getElementById('riin').value||'').trim();if(!v){toast('Write an intention, or choose one');document.getElementById('riin').focus();return}
    S.carry=S.carry||{};S.carry[k]=v.slice(0,60);Object.keys(S.carry).sort().slice(0,-40).forEach(x=>delete S.carry[x]);save();return complete(2,'Your intention is set for today')}
   if(i===3){mark(3);wheel();return open(4)}
@@ -3734,7 +3737,7 @@ function ssSyncView(){
 const ssRow=d=>lrow(ssGlyph(d.type==='number'?esc(d.number.length>4?d.number.slice(0,4)+'…':d.number):'✧','sm'),esc(d.type==='number'?`${d.number} · ${(d.r||{}).title||''}`:(d.r||{}).title||'A Synchronicity'),relDay(d.day),`data-ss="open" data-id="${esc(d.id)}"`);
 function ssReadActs(d){
  const kept=d.kept&&S.journal.some(j=>j.id===d.kept);
- return `<div class="ss-acts"><button class="btn${kept?' ghost':''}" data-ss="keep" data-id="${esc(d.id)}" style="--fill:${kept?'currentColor':'none'}">${IC.heart} ${kept?'In your Journal':'Save to Journal'}</button><button class="btn ghost" data-go="discover" data-t="readings">Your Readings</button></div>
+ return `<div class="ss-acts">${ssList().some(x=>x.id===d.id)?heartBtn('sign:'+d.id):''}<button class="btn ghost" data-ss="refl" data-id="${esc(d.id)}">Reflect in My Journal</button></div><div class="ss-acts"><button class="btn ghost" data-go="discover" data-t="readings">Your Readings</button></div>
  <p class="muted small center">${(d.r||{}).ai?'Read by Kassandra with AI. ':'Read from Kosmia’s book of signs. '}Kept in Your Readings. Signs are offered for reflection, not as predictions.</p>`;
 }
 function ssNumberReading(){
@@ -3870,7 +3873,7 @@ function drReading(d,saved){
  ${ssHead('Beneath the Surface')}<div class="dr-text">${paras(I.beneath||I.meaning)}</div>
  ${fam?`${ssHead('A Familiar Symbol')}<div class="dr-text"><p>${esc(fam)}</p><button class="dr-link" data-dr="fam" data-k="${esc(V.drFamK)}">Explore this pattern ${IC.chev}</button></div>`:''}
  ${mbox(`<h3>An Invitation to Reflect</h3><p class="quote center">“${esc(I.reflection||PROMPTS.d[2])}”</p>`,'dr-q')}
- <div class="ss-acts">${saved?`<button class="btn ghost" disabled>✓ In My Dreams</button>`:`<button class="btn" data-dr="save">Save to My Dreams</button>`}<button class="btn ghost" data-dr="journal" data-id="${esc(d.id)}">${kept?'Keep writing in My Journal':'Reflect in My Journal'}</button></div>
+ <div class="ss-acts">${saved?`<button class="btn ghost" disabled>✓ In My Dreams</button>${heartBtn('dream:'+d.id)}`:`<button class="btn" data-dr="save">Save to My Dreams</button>`}<button class="btn ghost" data-dr="journal" data-id="${esc(d.id)}">${kept?'Keep writing in My Journal':'Reflect in My Journal'}</button></div>
  <p class="muted small center">${I.ai?'Read by Kassandra with AI. ':I.ai===false?'Read with Kosmia’s dream dictionary. ':''}Dream meanings are possible emotional associations, offered for reflection rather than prediction.</p>`;
 }
 const drDoors=()=>`<div class="ss-pair dr-doors">${ssTile('⁂','Dream Patterns','Symbols that return to you','data-go="discover" data-t="dream-patterns"')}${ssTile('❦','Dream Archive','Revisit your dreams','data-go="discover" data-t="dream-journal"')}</div>`;
@@ -4333,12 +4336,10 @@ function ttBody(d){
 const ttKasQ=d=>{const cards=(d.cards||d.drawn||[]).map(c=>`${ttCard(c.id).name}${c.rv?' reversed':''} (${c.pos})`).join(', ');return `About my tarot reading${d.q?` on “${d.q}”`:''}: ${cards}. The message was: ${String((d.r||d.res||{}).message||'').slice(0,240)} What else might it be inviting me to see?`};
 const ttPage=h=>nightSub(`<div class="sub">${h}</div>`,'dj ss tt');
 function ttHome(){
- const T=ttX(),D=ttToday(),open=V.ttOpen,resume=T&&!T.res&&T.kind!=='daily'&&(T.drawn.length||T.stage!=='prep'||T.q);
- const dc=D?ttCard((D.cards||D.drawn)[0].id):null;
+ const T=ttX(),open=V.ttOpen,resume=T&&!T.res&&T.kind!=='daily'&&(T.drawn.length||T.stage!=='prep'||T.q);
  return ttPage(`${hdr('Tarot',{sub:'Discover what the cards invite you to see.'})}
  ${resume?`<button class="dr-link tt-resume" data-tt="resume">Continue your ${esc(TT[T.kind].n)} reading · ${T.drawn.length} of ${TT[T.kind].p.length} cards ${IC.chev}</button>`:''}
- <div class="list tt-doors">${D?`<button class="lrow ss-door big" data-tt="daily"><span class="lr-i">${pic('deck',dc.id,'tt-door')}</span><span class="lr-t"><strong>Daily Card · ${esc(dc.name)}</strong><span>Your card for today. Revisit its message.</span></span><span class="lr-c">${IC.chev}</span></button>`:ssDoor('1','Daily Card','A moment of guidance and reflection for today. One card.','data-tt="daily"','big')}
- ${ssDoor('3','Ask the Tarot','Explore a question or situation on your mind. Three cards.','data-tt="start" data-k="ask"','big')}
+ <div class="list tt-doors">${ssDoor('3','Ask the Tarot','Explore a question or situation on your mind. Three cards.','data-tt="start" data-k="ask"','big')}
  <button class="lrow ss-door big" data-tt="spreads" aria-expanded="${!!open}"><span class="lr-i">${ssGlyph('✶')}</span><span class="lr-t"><strong>Tarot Spreads</strong><span>Explore a particular area of your life in greater depth. 3 to 10 cards.</span></span><span class="lr-c tt-chev${open?' up':''}">${IC.chev}</span></button></div>
  ${open?`${ssHead('Choose your tarot spread')}<div class="list">${TT_SPREADS.map(k=>{const s=TT[k];return `<details class="acc tt-sp"${V.ttSp===k?' open':''} data-k="${k}"><summary><span class="lr-t"><strong>${s.n}</strong><span>${s.s}</span></span><span class="lr-m">${s.p.length} cards</span><span class="lr-c">${IC.chev}</span></summary><div class="acc-b"><p class="tt-pos-h">Card positions</p><ol class="tt-pos">${s.p.map(p=>`<li>${esc(p)}</li>`).join('')}</ol><button class="btn" data-tt="start" data-k="${k}">Begin this reading</button></div></details>`}).join('')}</div>`:''}
  <button class="dr-link" data-act="libgo" data-tab="tarot">Explore the Deck · all 78 cards ${IC.chev}</button>`);
@@ -4366,7 +4367,7 @@ function ttReadView(T){
  const kept=!!T.key;
  return ttPage(`${hdr('Your Tarot Reading',{sub:ymdLong(T.day||dkey(),{day:'numeric',month:'long'})})}${ttBody(T)}
  <div class="ss-acts">${kept?`<button class="btn ghost" data-go="discover" data-t="readings">✓ In Your Readings</button>`:`<button class="btn" data-tt="keep">Save Reading</button>`}<button class="btn ghost" data-tt="journal">Reflect in My Journal</button></div>
- <div class="ss-acts"><button class="btn ghost" data-act="kasask" data-q="${esc(ttKasQ(T))}">Ask Kassandra</button></div>
+ <div class="ss-acts">${kept?heartBtn(T.key):''}<button class="btn ghost" data-act="kasask" data-q="${esc(ttKasQ(T))}">Ask Kassandra</button></div>
  <div class="dr-tools"><button class="dr-link" data-tt="home">Return to Tarot</button><button class="dr-link" data-go="tarot" data-t="home">Return to Oracle</button></div>
  <p class="muted small center">${T.res.ai?'Read by Kassandra with AI. ':'Read from Kosmia’s own book of the cards. '}Tarot is a mirror for reflection, not a prediction.</p>`);
 }
@@ -4439,15 +4440,15 @@ function rdList(){
  const by={};l.forEach(x=>(by[(x.day||'').slice(0,7)]=by[(x.day||'').slice(0,7)]||[]).push(x));
  return Object.keys(by).sort(F.sort==='old'?undefined:(a,b)=>a<b?1:-1).map(m=>`<p class="dr-month">${ymdLong(m+'-01',{month:'long',year:'numeric'})} · ${by[m].length} reading${by[m].length>1?'s':''}</p>${by[m].map(rdRow).join('')}`).join('');
 }
-const rdRow=x=>`<div class="rd-row"><button class="dr-entry" data-rd="open" data-k="${esc(x.k)}"><span class="dr-d">${esc(x.kind)} · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.title)}</strong>${x.line?`<span class="dr-s">${esc(x.line)}</span>`:''}${x.refl.length?`<span class="dr-f">${x.refl.length} reflection${x.refl.length>1?'s':''}</span>`:''}</button><button class="rd-fav" data-rd="fav" data-k="${esc(x.k)}" aria-pressed="${x.fav}" aria-label="${x.fav?'Remove from favourites':'Add to favourites'}">${x.fav?'★':'☆'}</button></div>`;
+const rdRow=x=>`<div class="rd-row"><button class="dr-entry" data-rd="open" data-k="${esc(x.k)}"><span class="dr-d">${esc(x.kind)} · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.title)}</strong>${x.line?`<span class="dr-s">${esc(x.line)}</span>`:''}${x.refl.length?`<span class="dr-f">${x.refl.length} reflection${x.refl.length>1?'s':''}</span>`:''}</button><button class="rd-fav" data-rd="fav" data-k="${esc(x.k)}" aria-pressed="${x.fav}" aria-label="${x.fav?'Remove from My Library':'Keep in My Library'}">${x.fav?'♥':'♡'}</button></div>`;
 function rdView(){
  const all=rdAll(),F=rdF(),auto=S.settings.autosave!==false;
  return nightSub(`<div class="sub">${hdr('Your Readings',{sub:'Every insight is a thread in the story of your journey.'})}
- <div class="dr-stats"><div><b>${all.length}</b><span>Saved readings</span></div><div><b>${all.filter(x=>x.fav).length}</b><span>Favourites</span></div></div>
+ <div class="dr-stats"><div><b>${all.length}</b><span>Saved readings</span></div><div><b>${all.filter(x=>x.fav).length}</b><span>In My Library</span></div></div>
  <div class="field"><label for="rdq" class="sr-only">Search your readings</label><input type="search" id="rdq" placeholder="Search titles, cards, symbols, numbers, names…" value="${esc(F.q)}" autocomplete="off"></div>
  <div class="fchips ss-chips rd-cats"><button class="fchip" role="radio" aria-checked="${!F.cat}" data-rd="cat" data-v="">All Readings</button>${RD_CATS.filter(([k])=>all.some(x=>x.cat===k)||F.cat===k).map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.cat===k}" data-rd="cat" data-v="${k}">${l}</button>`).join('')}</div>
  <details class="cn-more rd-more"${F.fav||F.refl||F.range!=='all'||F.sort!=='new'?' open':''}><summary>Sort and filter</summary>
- <div class="fchips ss-chips"><button class="fchip" role="switch" aria-checked="${F.fav}" data-rd="tog" data-v="fav">★ Favourites</button><button class="fchip" role="switch" aria-checked="${F.refl}" data-rd="tog" data-v="refl">With reflections</button></div>
+ <div class="fchips ss-chips"><button class="fchip" role="switch" aria-checked="${F.fav}" data-rd="tog" data-v="fav">♥ In My Library</button><button class="fchip" role="switch" aria-checked="${F.refl}" data-rd="tog" data-v="refl">With reflections</button></div>
  <div class="fchips ss-chips">${RD_RANGES.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.range===k}" data-rd="range" data-v="${k}">${l}</button>`).join('')}</div>
  <div class="fchips ss-chips">${RD_SORT.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${F.sort===k}" data-rd="sort" data-v="${k}">${l}</button>`).join('')}</div></details>
  <div class="dr-book rd-book" id="rdlist">${rdList()}</div>
@@ -4479,7 +4480,7 @@ function rdDetail(){
  const refl=[...x.refl.map(id=>S.journal.find(j=>j.id===id)).filter(Boolean),...(x.d&&x.d.note&&!x.k.startsWith('old:')?[{day:x.d.day,body:x.d.note,legacy:true}]:[])].sort((a,b)=>a.day>b.day?1:-1);
  const E=V.rdEdit===x.k,del=V.rdDel===x.k;
  return nightSub(`<div class="sub">${hdr(esc(x.title),{sub:`${esc(x.kind)} · ${ymdLong(x.day,{day:'numeric',month:'long',year:'numeric'})}`})}
- <div class="rd-top"><button class="rd-fav big" data-rd="fav" data-k="${esc(x.k)}" aria-pressed="${x.fav}">${x.fav?'★ Favourite':'☆ Add to favourites'}</button></div>
+ <div class="rd-top"><button class="rd-fav big" data-rd="fav" data-k="${esc(x.k)}" aria-pressed="${x.fav}">${x.fav?'♥ In My Library':'♡ Keep in My Library'}</button></div>
  ${rdBody(x)}
  ${x.themes.length?`${ssHead('Key Themes')}<div class="pills">${x.themes.map(t=>`<span class="pill">${esc((ssTheme(t)||{name:t}).name)}</span>`).join('')}</div>`:''}
  ${ssHead('Your Reflections')}${refl.length?`<div class="rd-refl">${refl.map(j=>`<button class="rd-r" ${j.legacy?'':`data-act="jopen" data-k="j:${esc(j.id)}"`}><span class="dr-d">${ymdLong(j.day,{day:'numeric',month:'long',year:'numeric'})}${j.day!==x.day?' · '+relLater(x.day,j.day):' · Original reflection'}</span><span>${esc(clip(j.body||j.title||'',160))||'<i>A page waiting for your words</i>'}</span></button>`).join('')}</div>`:'<p class="muted small">No reflections yet. You can return to this reading and write at any time.</p>'}
@@ -4519,7 +4520,7 @@ document.addEventListener('input',e=>{if(e.target.id==='rdq'){rdF().q=e.target.v
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-rd]');if(!t)return;const a=t.dataset.rd,F=rdF();
  if(a==='open')return rdOpen(t.dataset.k);
- if(a==='fav'){rdSet(t.dataset.k,{fav:!rdM(t.dataset.k).fav});return render()}
+ if(a==='fav'){heartSet(t.dataset.k,!rdM(t.dataset.k).fav);return render()}
  if(a==='cat'){F.cat=t.dataset.v;return render()}
  if(a==='tog'){F[t.dataset.v]=!F[t.dataset.v];return render()}
  if(a==='range'){F.range=t.dataset.v;return render()}
@@ -4535,6 +4536,523 @@ document.addEventListener('click',e=>{
  if(a==='del'){V.rdDel=t.dataset.k;return render()}
  if(a==='delno'){V.rdDel=null;return render()}
  if(a==='delyes'){const x=rdAll().find(y=>y.k===t.dataset.k);if(x)rdDelete(x);V.rdDel=null;toast('The reading is deleted');return goBack()}
+});
+
+/* ===================== Cosmic Calendar and Journal =====================
+   Calendar looks forward (what is coming and how to prepare); the Journal looks inward (what was lived and kept).
+   The heart means "this resonates: keep it in My Library", one mark per item kept beside the item in the reading marks
+   (bookmark 'rmeta'); Save keeps a thing in its own collection (Your Readings, Saved Events). One record each, shown
+   wherever it belongs. */
+const hearted=k=>!!rdM(k).fav;
+function heartSet(k,on,snap){rdSet(k,Object.assign({fav:on,favAt:on?new Date().toISOString():''},snap?{snap}:{}));toast(on?'Kept in My Library':'Removed from My Library')}
+const heartBtn=(k,cls='btn ghost')=>`<button class="${cls} cj-heart" data-heart="${esc(k)}" aria-pressed="${hearted(k)}" style="--fill:${hearted(k)?'currentColor':'none'}">${IC.heart} ${hearted(k)?'In My Library':'Keep in My Library'}</button>`;
+const cjPage=(h,cls='')=>nightSub(`<div class="sub">${h}</div>`,'dj ss cj '+cls);
+const FEATHER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3C12 4 7 9 5.5 16.5L4 21M20 3c.5 6-3.5 11-10 12.5M20 3l-9 9M8.5 13.5H14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ---------- the Calendar ---------- */
+const CAL_F=[['','All'],['moons','Moons'],['eclipses','Eclipses'],['retro','Retrogrades'],['planets','Planets'],['seasons','Seasons']];
+const calCat=e=>e.k==='new_moon'||e.k==='full_moon'?'moons':e.type==='moon'?'quarter':e.type==='eclipse'?'eclipses':e.type==='retrograde'?'retro':e.k==='equinox'||e.k==='solstice'?'seasons':'planets';
+const calOk=e=>{const f=V.cal.f||'';return !f||calCat(e)===f};
+const calFam=e=>e.k==='new_moon'?'new':e.k==='full_moon'?'full':e.type==='moon'?'quarter':e.type==='eclipse'?'eclipse':e.type==='retrograde'?(e.planet==='Mercury'?'mercury':'retro'):e.type==='season'&&e.k!=='ingress'?'season':e.k==='meteor'?'meteor':'theme';
+const calName=e=>e.name+(e.sign!=null&&(e.type==='moon'||e.type==='eclipse')?` in ${sIdx(e.sign).name}`:'');
+const calType=e=>({moon:'Lunar event',eclipse:'Eclipse',retrograde:'Retrograde station',meteor:'Astronomical event',planet:'Astronomical event',conjunction:'Planetary alignment'})[e.type]||(e.k==='ingress'?(e.planet==='Sun'?'Zodiac season':'Planetary ingress'):'Seasonal event');
+function calTheme(e){
+ const T={new_moon:'New beginnings and meaningful intentions.',full_moon:'Illumination, release and gratitude.',first_quarter:'Action, decision and momentum.',last_quarter:'Reflection, release and clearing space.',lunar_eclipse:'Endings, revelation and release.',solar_eclipse:'Fresh starts and new chapters.',station_retro:'Review, revision and reconnection.',station_direct:'Clarity, integration and moving forward.',equinox:'Balance and turning points.',solstice:'Rest, renewal and the turning of the light.',meteor:'Wonder, perspective and contemplation.',conjunction:'Two energies meet and begin a new cycle.',opposition:'A planet at its brightest, fully seen.',elongation:'A fine time for sky-watching.',perihelion:'Earth’s rhythm around the Sun.',aphelion:'Earth’s rhythm around the Sun.'};
+ if(e.k==='ingress')return e.planet==='Sun'?`The season of ${sIdx(e.sign).name} begins: ${STYLE[sIdx(e.sign).id].split(',')[0]}.`:`${e.planet} brings ${PM[e.planet].split(' and ')[0]} into ${sIdx(e.sign).name}.`;
+ return T[e.k]||evKeys(e);
+}
+const calTime=e=>e.dateOnly?'Best seen after midnight · date approximate':fmt({hour:'2-digit',minute:'2-digit'},e.date)+' your time';
+function calCount(e){
+ const d=Math.round((K.parseYmd(evDay(e))-K.parseYmd(dkey()))/DAY);
+ if(d===0){if(e.dateOnly)return 'Today';const h=Math.round((e.date-Date.now())/36e5);return h>1?`In ${h} hours`:h>=0?'Within the hour':'Earlier today'}
+ return d===1?'Tomorrow':d>1?`In ${d} days`:d===-1?'Yesterday':`${-d} days ago`;
+}
+// retrograde periods still running today: from the station retrograde to the station direct
+function calOngoing(){
+ const now=new Date(),l=K.events(new Date(+now-200*DAY),new Date(+now+200*DAY)).filter(e=>e.type==='retrograde'),out=[];
+ [...new Set(l.map(e=>e.planet))].forEach(p=>{const pl=l.filter(e=>e.planet===p),last=pl.filter(e=>e.date<=now).pop();if(last&&last.k==='station_retro'){const end=pl.find(e=>e.date>now&&e.k==='station_direct');out.push({e:last,end})}});
+ return out;
+}
+function calFind(ref){if(!ref)return null;const t=Date.parse(ref.slice(-13)+':00:00Z');return isNaN(t)?null:findEvent(ref,new Date(t).toISOString())}
+// the event's own record: saved by choice, a reminder, a completed ritual; it stays while any of the three is there
+const calBm=ref=>S.bookmarks.find(b=>b.kind==='event'&&b.ref===ref);
+const calSaved=b=>!!b&&(b.data||{}).saved!==false;
+function calBmSet(e,patch){
+ const ref=evRef(e);let b=calBm(ref);
+ if(!b){b={id:uuid(),kind:'event',ref,data:Object.assign(evData(e),{saved:false,k:e.k,sign:e.sign}),at:new Date().toISOString()};S.bookmarks.push(b)}
+ b.data=Object.assign({saved:calSaved(b)},b.data,patch);
+ if(!b.data.saved&&!b.data.rem&&!b.data.ritual){S.bookmarks=S.bookmarks.filter(x=>x!==b);C.deleteBookmark&&C.deleteBookmark('event',ref)}
+ else C.saveBookmark&&C.saveBookmark(b).then(()=>{b.sy=true;save()},()=>{});
+ save();
+}
+const remTxt=r=>{if(!r)return '';const w=[r.before&&'the day before',r.day&&'on the day'].filter(Boolean);return w.length?`Reminder ${w.join(' and ')} at ${r.time||'08:00'}`:''};
+function calMarks(e){const b=calBm(evRef(e)),d=b?b.data:{};return [calSaved(b)?'✓ Saved':'',d.rem?'Reminder set':'',hearted('event:'+evRef(e))?'♥':'',d.ritual?'Ritual completed':''].filter(Boolean).map(x=>`<i>${x}</i>`).join('')}
+const calRow=(e,extra='')=>`<button class="dr-entry cal-ev" data-cal="open" data-ref="${esc(evRef(e))}"><span class="cal-i">${evArt(e,true)}</span><span class="cal-t"><span class="dr-d">${calType(e)} · ${extra||calCount(e)}</span><strong>${esc(calName(e))}</strong><span class="dr-s">${ymdLong(evDay(e),{weekday:'short',day:'numeric',month:'long'})}${e.dateOnly?'':' · '+fmt({hour:'2-digit',minute:'2-digit'},e.date)}</span><span class="cal-th">${esc(calTheme(e))}</span><span class="cal-mk">${calMarks(e)}</span></span></button>`;
+function calendarHome(){
+ V.cal.f=V.cal.f||'';const month=V.cal.view==='month',nSaved=S.bookmarks.filter(b=>b.kind==='event').length;
+ const head=`${hdr('Cosmic Calendar',{back:false,sub:'Discover the rhythms of the universe and prepare for what lies ahead.'})}
+ <div class="fchips ss-chips cal-view">${[['list','Timeline'],['month','Month']].map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${(V.cal.view==='month'?'month':'list')===k}" data-cal="view" data-v="${k}">${l}</button>`).join('')}</div>
+ <div class="fchips ss-chips rd-cats">${CAL_F.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${(V.cal.f||'')===k}" data-cal="f" data-v="${k}">${l}</button>`).join('')}</div>`;
+ const foot=`<button class="dr-link" data-go="discover" data-t="saved-events">Saved Events${nSaved?` · ${nSaved}`:''} ${IC.chev}</button>`;
+ return cjPage(head+(month?calMonth():calTimeline())+foot,'cal');
+}
+function calTimeline(){
+ const span=V.cal.span||30,start=new Date(dkey()+'T00:00:00'),now=new Date();
+ const all=K.events(start,new Date(+start+span*DAY)).filter(e=>evDay(e)>=dkey()&&calOk(e));
+ const fut=all.filter(e=>e.dateOnly?evDay(e)>=dkey():e.date>=now),hero=fut.find(e=>calCat(e)!=='quarter')||fut[0];
+ const ong=(!V.cal.f||V.cal.f==='retro')?calOngoing():[];
+ const rest=all.filter(e=>e!==hero),by={};rest.forEach(e=>{const m=evDay(e).slice(0,7);(by[m]=by[m]||[]).push(e)});
+ return `${hero?`<section class="cal-hero">${ssHead('The Next Celestial Event')}<button class="cal-hb" data-cal="open" data-ref="${esc(evRef(hero))}"><span class="cal-hi">${evArt(hero,true)}</span><span class="cal-cd">${calCount(hero)}</span><strong>${esc(calName(hero))}</strong><span class="cal-hd">${ymdLong(evDay(hero),{weekday:'long',day:'numeric',month:'long'})}${hero.dateOnly?'':' · '+fmt({hour:'2-digit',minute:'2-digit'},hero.date)}</span><span class="cal-th">${esc(calTheme(hero))}</span><span class="cal-mk">${calMarks(hero)}</span><span class="dr-link">Explore the event and its ritual ${IC.chev}</span></button></section>`:`<p class="muted center">No ${V.cal.f?CAL_F.find(x=>x[0]===V.cal.f)[1].toLowerCase():'events'} in the next ${span} days.</p>`}
+ ${ong.length?`${ssHead('Ongoing')}<div class="dr-book">${ong.map(o=>calRow(o.e,`Ongoing${o.end?' until '+ymdLong(evDay(o.end),{day:'numeric',month:'long'}):''}`)).join('')}</div>`:''}
+ ${rest.length?`${ssHead('Coming Next')}<div class="dr-book">${Object.keys(by).sort().map(m=>`<p class="dr-month">${ymdLong(m+'-01',{month:'long',year:'numeric'})}</p>${by[m].map(e=>calRow(e)).join('')}`).join('')}</div>`:''}
+ ${span<360?`<button class="btn ghost" data-cal="more">Explore the following month</button>`:''}`;
+}
+function calMonth(){
+ const today=dkey(),cur=today.slice(0,7),mk=V.cal.month||cur,[y,mo]=mk.split('-').map(Number),first=Date.UTC(y,mo-1,1);
+ const prev=new Date(Date.UTC(y,mo-2,1)).toISOString().slice(0,7),next=new Date(Date.UTC(y,mo,1)).toISOString().slice(0,7);
+ const evs=K.events(new Date(first-14*36e5),new Date(Date.UTC(y,mo,1)+14*36e5)).filter(e=>evDay(e).slice(0,7)===mk&&calOk(e)),byDay={};
+ evs.forEach(e=>(byDay[evDay(e)]=byDay[evDay(e)]||[]).push(e));
+ const days=new Date(Date.UTC(y,mo,0)).getUTCDate(),lead=(new Date(first).getUTCDay()+6)%7;
+ const sel=V.cal.day&&V.cal.day.slice(0,7)===mk?V.cal.day:mk===cur?today:'';
+ return `<div class="mnav cal-mnav"><button class="ibtn" data-cal="month" data-v="${prev}" aria-label="Previous month">${IC.back}</button><h2>${ymdLong(mk+'-01',{month:'long',year:'numeric'})}</h2><button class="ibtn flip" data-cal="month" data-v="${next}" aria-label="Next month">${IC.back}</button></div>
+ ${mk!==cur?`<button class="dr-link cal-today" data-cal="month" data-v="${cur}">Return to today</button>`:''}
+ <div class="jcal cal-grid" role="grid">${['M','T','W','T','F','S','S'].map(d=>`<div class="jc-d" role="columnheader">${d}</div>`).join('')}${Array.from({length:lead},()=>'<div></div>').join('')}${Array.from({length:days},(_,i)=>{const k=`${mk}-${String(i+1).padStart(2,'0')}`,es=byDay[k]||[],ph=es.find(e=>e.type==='moon');return `<button class="jc-c${k===today?' today':''}${k===sel?' sel':''}${k<today?' past':''}" data-cal="day" data-v="${k}" aria-label="${ymdLong(k)}${es.length?', '+es.length+' event'+(es.length>1?'s':''):''}"><span>${i+1}</span>${ph?pic('moons',phaseSlug(ph.name),'jc-moon'):es.length?'<i class="jc-star">✦</i>':''}</button>`}).join('')}</div>
+ ${sel?`${ssHead(ymdLong(sel,{weekday:'long',day:'numeric',month:'long'}))}<div class="dr-book">${(byDay[sel]||[]).map(e=>calRow(e)).join('')||'<p class="muted center small">A quiet sky that day. Nothing is asked of you.</p>'}</div>`:'<p class="muted center small">Choose a day to see its events.</p>'}`;
+}
+/* the personal part of an event: the house it falls in (only with a birth time and place), the natal planets it touches
+   and a question; without the details, the sign's relation to the reader's Sun and an offer to complete the profile */
+const CAL_HQ=['How would I like to show up in the world right now?','What do I truly value, and does my life reflect it?','What would I like to learn, say or understand?','What helps me feel at home within myself?','What brings me joy and lets me create?','Which daily habit would care for me best?','What do I bring to my closest relationships?','What am I ready to share, trust or let transform?','What larger meaning am I searching for?','What do I want to build in my work and public life?','Which friendships and hopes nourish me?','What needs rest, solitude or quiet healing?'];
+const CAL_HV={new:'It invites a fresh intention in this part of your life.',full:'What has been growing here may come into fuller view.',eclipse:'This part of your life may be ready for an ending, or a new chapter.',mercury:'It may ask you to revisit and review matters here.',retro:'It may ask you to revisit and review matters here.',season:'A new season may begin to colour this part of your life.',quarter:'It may bring this part of your life into focus.',theme:'It may bring this part of your life into focus.'};
+const calBody=e=>e.type==='moon'||e.k==='lunar_eclipse'?'Moon':e.k==='solar_eclipse'||e.type==='season'?'Sun':e.planet&&e.planet!=='Earth'?e.planet:null;
+const CJ_ORD=n=>n+(n===1?'st':n===2?'nd':n===3?'rd':'th');
+function calYou(e){
+ const c=myChart(),f=calFam(e),b=calBody(e);
+ if(!c)return `<p>${esc(calTheme(e))} Everyone feels it a little differently, depending on their birth chart.</p><p class="muted small">Add your birth details and Kosmia can show which area of your life this event touches and which of your planets it meets.</p><button class="btn ghost" data-go="settings" data-t="birth">Complete my birth profile</button>`;
+ let lon=null;try{if(b)lon=(K.positions(e.date).find(p=>p.n===b)||{}).lon}catch(x){}
+ const out=[],sign=lon!=null?Math.floor(((lon%360)+360)%360/30):e.sign;let q='';
+ if(sign!=null&&c.known&&c.ang&&f!=='meteor'){const h=(sign-Math.floor(c.ang.asc/30)+12)%12+1;out.push(['House activated',`Your ${CJ_ORD(h)} house: ${HOUSE[h-1]}. ${CAL_HV[f]||''}`]);q=CAL_HQ[h-1]}
+ if(lon!=null){const W={conjunction:'meets',sextile:'gently supports',square:'challenges',trine:'flows with',opposition:'faces'};
+  const asp=c.pl.filter(p=>!(p.n==='Moon'&&!c.known)).map(p=>{const d=Math.abs(((lon-p.lon)%360+540)%360-180);for(const [n,a,o] of [['conjunction',0,6],['sextile',60,3],['square',90,5],['trine',120,5],['opposition',180,6]])if(Math.abs(d-a)<=o)return {p,n,orb:Math.abs(d-a)};return null}).filter(Boolean).sort((a,b2)=>a.orb-b2.orb).slice(0,3);
+  if(asp.length)out.push(['Natal planets involved',asp.map(a=>`It ${W[a.n]} your natal ${a.p.n} (${a.n}, within ${a.orb.toFixed(1)}°), touching your ${PM[a.p.n]}.`).join(' ')]);
+  else if(f!=='meteor')out.push(['Natal planets involved','It makes no close aspect to your natal planets, so it may be felt as a gentle background.'])}
+ if(!c.known&&sign!=null){const me=SIGNS.findIndex(s=>s.id===S.sign),d=(sign-me+12)%12;
+  out.push(['Your Sun sign',`${[`It falls in your own sign, so it may feel especially personal.`,'It falls in the sign beside yours, quietly, in the background.','It falls in a sign friendly to yours, which may open gentle opportunities.','It falls in a sign square to yours, which may bring a little useful friction.','It falls in a sign in harmony with yours, which may make it feel easy and supportive.','It falls in a sign with little in common with yours, so its themes may feel subtle.','It falls in the sign opposite yours, often a moment of balance between yourself and others.'][Math.min(d,12-d)]}`]);
+  out.push(['Houses','Without your birth time and place, Kosmia cannot place this event in your houses, so none are shown.'])}
+ q=q||evInfo(e).ref||'What does this moment ask of me?';
+ return `${out.map(([h,t])=>`<p><b>${h}.</b> ${esc(t)}</p>`).join('')}<p class="quote">“${esc(q)}”</p>${!c.known?'<button class="btn ghost" data-go="settings" data-t="birth">Add my birth time and place</button>':''}`;
+}
+const CAL_TH={new:[['Beginnings','What would I like to begin, or begin again?'],['Intention','What do I want to nurture over the coming weeks?'],['Space','What could I clear to make room for something new?']],
+ full:[['Clarity','What has become clearer to me recently?'],['Release','Which thoughts or expectations am I ready to let go of?'],['Gratitude','What has grown in my life that I am grateful for?']],
+ quarter:[['Momentum','Where am I ready to commit a little more energy?'],['Adjustment','What would I like to adjust rather than abandon?'],['Rest','Where could I slow down?']],
+ eclipse:[['Endings','What chapter of my life feels as if it is closing?'],['Beginnings','What fresh chapter do I want to write?'],['Revelation','What is coming into view that I had not noticed?']],
+ mercury:[['Communication','What have I been meaning to express but have not found the words for?'],['Review','Which plan deserves a second look?'],['Reconnection','Who would I like to reconnect with?']],
+ retro:[['Review','What deserves a second look before I move forward?'],['Patience','Where could I let things take their time?'],['Lessons','What have the past months taught me?']],
+ season:[['Balance','Where in my life do I want more balance?'],['Change','What is changing in me with the season?'],['Welcome','What would I like to bring into the new season?']],
+ meteor:[['Wonder','When did I last feel wonder?'],['Perspective','What worry feels smaller beneath the sky?'],['A Wish','If I made one wish tonight, what would it be?']],
+ theme:[['The Theme','What does this moment invite me to notice?'],['My Life','Where does this theme already live in my life?'],['A Small Step','What is one small step I could take?']]};
+const CAL_PREP={new:['Choose a quiet moment on the day, or the day after; the exact minute does not matter.','Clear one small space, a desk or a drawer, as a sign of making room.','Keep your intention short and in your own words.'],
+ full:['Look up on the night if the sky is clear; the Moon looks full for a day or so either side.','Notice what has come to light over the last two weeks.','Let strong feelings settle before you act on them.'],
+ quarter:['Look back at what you began at the New Moon.','Choose one thing to adjust or commit to.','Be kind to yourself if plans have shifted.'],
+ eclipse:['Keep your plans light around the eclipse; there is no need for big decisions.','Notice what is ending without rushing to replace it.','Write down anything that feels significant.'],
+ mercury:['Double-check messages, travel and arrangements.','Return to unfinished conversations rather than starting new ones.','Back up what matters and allow a little extra time.'],
+ retro:['Revisit before you launch something new.','Allow delays without reading them as failure.','Note what keeps returning for your attention.'],
+ season:['Spend a few minutes outside and notice the light.','Look back over the past three months.','Choose one thing to carry into the new season.'],
+ meteor:['Find somewhere dark, away from city lights, after midnight.','Give your eyes twenty minutes to adjust; look up and wide, not at one spot.','Dress warmly and bring patience.'],
+ theme:['Read the event’s meaning once, then let it rest.','Notice where its theme shows up in your days.','Write a line in your Journal if something stirs.']};
+/* the rituals: each event offers its paths, each path three to five short steps, the last an intention */
+const CAL_LP={love:['Love & Relationships','Connection, compassion, emotional awareness and meaningful bonds.','your relationships and the bonds that matter to you','Where would I like more warmth, honesty or closeness?','an old hurt, a resentment, or an expectation of how others should love you','one kind message, one honest conversation, or an evening given fully to someone you love','three people or moments of connection','I intend to love with more openness…'],
+ abundance:['Abundance & Wealth','Resources, financial intentions, opportunities and appreciation.','your resources, your work and what you value','Where do I already have enough, and where would I like more?','a worry about money, a habit of scarcity, or the belief that rest must be earned','one practical step: a budget looked at kindly, an idea written down, an opportunity followed up','three things you already have','I intend to welcome…'],
+ wisdom:['Wisdom & Clarity','Understanding, decisions, learning and personal direction.','the decisions, questions and learning in your life','What am I trying to understand right now?','a doubt, an old certainty, or the need to have every answer at once','one question to explore, one conversation to seek out, one decision to sit with','three things you have learned recently','I intend to see clearly…'],
+ peace:['Peace & Healing','Rest, self-compassion, emotional reflection and inner balance.','your rest, your heart and your inner balance','Where in my life am I asking too much of myself?','tension, guilt, or a thought that keeps returning','one gentle act of care: an early night, a walk, a moment of quiet each day','three moments of calm','I intend to be gentle with myself…'],
+ comm:['Communication','The way you speak, listen and write.','the way you speak, listen and write','Is there something I said, or left unsaid, that needs revisiting?','','one message to clarify or one conversation to return to','','I intend to speak and listen with care…'],
+ plans:['Plans','Your plans, projects and arrangements.','your plans, projects and arrangements','Which plan deserves a second look before I move forward?','','one plan to review, one detail to check','','I intend to move forward with clarity…'],
+ rel:['Relationships','People you have drifted from or misunderstood.','the people you have drifted from or misunderstood','Who would I like to reconnect with?','','one person to reach out to, with no pressure','','I intend to reconnect with…']};
+function calPaths(e){
+ const f=calFam(e);
+ if(f==='new'||f==='full'||f==='eclipse')return ['love','abundance','wisdom','peace'];
+ if(f==='mercury')return ['comm','plans','rel'];
+ return [f==='retro'?'review':f==='season'?'season':f==='meteor'?'wonder':'theme'];
+}
+const calPathInfo=(e,p)=>CAL_LP[p]?CAL_LP[p].slice(0,2):p==='review'?[`${e.planet} Review`,`Revisit ${PM[e.planet]}, gently and without hurry.`]:p==='season'?['Seasonal Ritual','Honour the turning of the year and find your balance.']:p==='wonder'?['Contemplation Ritual','Wonder, perspective and a single wish.']:['A Ritual for This Moment',`Reflect on ${calTheme(e).replace(/\.$/,'').toLowerCase()}.`];
+const calRitName=e=>({new:'The Ritual of Beginning',full:'The Ritual of Release',eclipse:'The Ritual of Thresholds',mercury:e.k==='station_direct'?'The Ritual of Moving Forward':'The Ritual of Review',retro:'The Ritual of Review',season:'The Ritual of the Turning Year',meteor:'The Ritual of Wonder'})[calFam(e)]||'The Ritual of Reflection';
+const calRitWhy=e=>({new:'New beginnings and intentions.',full:'Release and gratitude.',eclipse:'Endings and beginnings.',mercury:'Review, repair and reconnect.',retro:`Reviewing ${PM[e.planet]||'what matters'}.`,season:'Seasonal transition and balance.',meteor:'Wonder and perspective.'})[calFam(e)]||'Reflection on a new theme.';
+function calSteps(e,p){
+ const f=calFam(e),P=CAL_LP[p]||[],i=evInfo(e),A=['Arrive','Take a moment to become present.','Find a comfortable position. Take three slow, natural breaths and allow yourself to settle.'];
+ const I=f==='meteor'?['Your Wish','Make one wish.','Write your wish in your own words. You may keep it in your Journal, or simply hold it in mind.','My wish is…']:['Your Intention','What will you carry forward?','Write an intention in your own words. You may keep it in your Journal, or simply hold it in mind.',P[7]||'I intend to…'];
+ if(f==='new')return [A,['Turn Inward',`Bring to mind ${P[2]}.`,`${P[3]} Let the answer come slowly; there is no wrong one.`],['Imagine','Picture this part of your life gently changed.','Imagine it a month from now, a little lighter and truer. What do you notice first? Let the picture stay simple and kind.'],['A First Step','Beginnings are small.',`Choose ${P[5]}. It does not need to be big: the New Moon favours small, sincere beginnings.`],I];
+ if(f==='full')return [A,['Look Back','What has become clearer?',`Think back over the last two weeks and ${P[2]}. ${P[3]}`],['Release','Set something down.',`Name ${P[4]}. Breathe out slowly and imagine setting it down in the moonlight. You do not have to carry it tonight.`],['Gratitude','Notice what has grown.',`Name ${P[6]} you are grateful for, aloud or quietly to yourself.`],I];
+ if(f==='eclipse')return [A,['What Is Ending','Honour what is closing.',`Think of ${P[2]}. Which chapter here feels as if it is closing, or has already closed?`],['What Is Beginning','Make room.',`What would you like to grow in the space it leaves? ${P[3]}`],['Trust','Let it unfold.','Eclipses are traditionally thresholds. There is nothing to force: simply notice, and trust your own timing.'],I];
+ if(f==='mercury')return [A,['Review','Look back with curiosity.',`Look back at ${P[2]}. ${P[3]}`],['Repair','Mend gently.',`Choose ${P[5]}. Small repairs are enough.`],['Reconnect','Return with care.','Notice who or what you would like to return to with fresh understanding.'],I];
+ if(f==='retro')return [A,['Review',`Revisit ${PM[e.planet]}.`,`Where in your life have ${PM[e.planet]} asked for attention lately? What deserves a second look?`],['Integrate','What have you learned?','Name one lesson from the past months that you would like to keep.'],I];
+ if(f==='season')return [A,['Look Back','The season that is ending.','What did the last three months bring you? Name one thing you are glad of, and one thing you are ready to leave behind.'],['Balance','Find your centre.','The turning points of the year are traditionally moments of balance. Where would you like more balance between giving and resting?'],['Welcome','The season that begins.','What would you like to bring into the new season?'],I];
+ if(f==='meteor')return [A,['Look Up','Wonder.','If you can, step outside or open a window. Look up for a few minutes and let your eyes adjust to the dark. Even without a shooting star, the sky is there.'],['Perspective','Feel the scale of things.',`The meteors are dust from ${e.parent||'a comet'}, burning high above you. What worry feels a little smaller beside the sky?`],I];
+ return [A,['The Theme',esc(calName(e)),i.sym||calTheme(e)],['Your Life','A question to sit with.',i.ref||'What does this moment invite me to notice?'],I];
+}
+const calClose=e=>({new:'Your intention is planted. Let it grow in its own time.',full:'What you released can rest now. Carry your gratitude with you.',eclipse:'A threshold, crossed gently. Trust your own timing.',mercury:'Reviewed with care. Move forward at your own pace.',retro:'Reviewed with care. Move forward at your own pace.',season:'The year turns, and you with it.',meteor:'May your wish travel far.'})[calFam(e)]||'Thank you for this quiet moment.';
+const calDur=e=>calSteps(e,calPaths(e)[0]).length>4?'About 8 minutes · 5 steps':'About 5 minutes · '+calSteps(e,calPaths(e)[0]).length+' steps';
+// the New Moon intention set before a Full Moon, to revisit at the Full Moon
+function calNewMoonIntent(e){
+ if(calFam(e)!=='full')return null;const t=evDay(e),from=dkey(new Date(+e.date-32*DAY));
+ return S.journal.filter(j=>j.kind==='intention'&&j.data&&j.data.ev&&j.data.ev.k==='new_moon'&&j.day<=t&&j.day>=from).sort((a,b)=>a.day<b.day?1:-1)[0]||null;
+}
+function calEventView(){
+ const e=calFind(V.calRef);
+ if(!e)return cjPage(`${hdr('Cosmic Event')}<p class="muted center">This event could not be found.</p><button class="btn" data-go="discover" data-t="calendar">Return to Calendar</button>`,'cal');
+ const ref=evRef(e),b=calBm(ref),d=b?b.data:{},i=evInfo(e),now=new Date(),day=evDay(e),today=dkey(),on=calOngoing().find(o=>evRef(o.e)===ref);
+ const st=on?['Ongoing',`Retrograde until ${on.end?ymdLong(evDay(on.end),{day:'numeric',month:'long'}):'later this year'}`,'Experience']:day===today?['Happening today',calCount(e),'Experience']:day>today?['Upcoming',calCount(e),'Prepare']:['Past event',ymdLong(day,{day:'numeric',month:'long',year:'numeric'}),'Reflect'];
+ const prog=(S.evRit||{})[ref],paths=calPaths(e),pick=V.calPath&&paths.includes(V.calPath)?V.calPath:(prog&&prog.path)||paths[0],nmi=calNewMoonIntent(e),b2=calBody(e);
+ const rem=d.rem||{},remOpen=V.calRem===ref;if(remOpen)setTimeout(calRemPreview);
+ return cjPage(`${hdr(esc(calName(e)),{sub:`${st[0]} · ${st[1]}`})}
+ <section class="cal-ov">${evArt(e,true)}<p class="cal-when">${ymdLong(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}<br>${calTime(e)}</p><p class="cal-mode">${st[0]} · ${st[1]}</p><p class="cal-th big">${esc(calTheme(e))}</p><p class="cal-mode">A time to ${st[2].toLowerCase()}</p></section>
+ <div class="ss-acts cal-acts"><button class="btn${calSaved(b)?' ghost':''}" data-cal="save">${calSaved(b)?'✓ Saved':'Save'}</button><button class="btn ghost" data-cal="rem" aria-expanded="${remOpen}">${d.rem?'Reminder set':'Set a Reminder'}</button>${heartBtn('event:'+ref)}</div>
+ ${remOpen?mbox(`<h3>Set a Reminder</h3><p class="muted small">${esc(calName(e))}</p><label class="row cn-cb"><input type="checkbox" class="cb" id="calrb" ${rem.before?'checked':''}> <span>The day before</span></label><label class="row cn-cb"><input type="checkbox" class="cb" id="calrd" ${rem.day||!d.rem?'checked':''}> <span>On the day</span></label><div class="field"><label for="calrt">Preferred time</label><input type="time" id="calrt" value="${esc(rem.time||S.notif.time||'08:00')}"></div><p class="muted small" id="calrp"></p><div class="ss-acts"><button class="btn" data-cal="remsave">Save Reminder</button>${d.rem?'<button class="btn ghost" data-cal="remoff">Remove Reminder</button>':''}</div><p class="muted small">Kosmia shows your reminder when you open it on the day. Notifications on your phone will follow once push delivery is switched on.</p>`,'cal-rem'):''}
+ ${ssHead('What’s Happening in the Universe')}<div class="dr-text"><p>${i.fact||esc(calTheme(e))}</p><p class="muted small">${e.dateOnly?'Peak on '+ymdLong(day,{day:'numeric',month:'long'})+' (approximate).':'Exact time: '+evt(e.date)+', in your time zone.'}</p></div>
+ ${ssHead('The Astrological Meaning')}<div class="dr-text"><p>${i.sym||''} ${e.sign!=null&&calFam(e)!=='meteor'?`In ${sIdx(e.sign).name}, its themes are coloured ${STYLE[sIdx(e.sign).id]}.`:''}</p><p class="cal-kw">${esc(evKeys(e))}</p></div>
+ ${ssHead('What It Means for You')}<div class="dr-text cal-you">${calYou(e)}</div>
+ ${ssHead('Themes to Reflect On')}<div class="dr-book cal-ths">${(CAL_TH[calFam(e)]||CAL_TH.theme).map(([t,q])=>`<button class="dr-entry" data-cal="theme" data-q="${esc(q)}"><span class="dr-d">${t}</span><strong>${esc(q)}</strong><span class="dr-s">Write in My Journal</span></button>`).join('')}</div>
+ ${ssHead('How to Prepare')}<ul class="cal-prep">${(CAL_PREP[calFam(e)]||CAL_PREP.theme).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+ ${nmi?mbox(`<h3>Your New Moon Intention</h3><p class="quote center">“${esc(nmi.body)}”</p><p class="muted small center">Set on ${ymdLong(nmi.day,{day:'numeric',month:'long'})} · ${esc((nmi.data||{}).path||'')}</p><button class="btn ghost" data-jx="open" data-k="j:${esc(nmi.id)}">Revisit this intention</button>`,'dr-q'):''}
+ ${ssHead('Your Event Ritual')}<div class="dr-text"><p><b>${calRitName(e)}.</b> ${calRitWhy(e)} A short, peaceful practice in a few steps, whenever it suits you.</p></div>
+ ${d.ritual?`<p class="cal-done">Ritual completed on ${ymdLong(d.ritual.day,{day:'numeric',month:'long'})} · ${esc(d.ritual.label||'')}${d.ritual.jid&&S.journal.some(j=>j.id===d.ritual.jid)?` · <button class="link" data-jx="open" data-k="j:${esc(d.ritual.jid)}">View your intention</button>`:''}</p>`:''}
+ ${prog?`<button class="btn" data-cal="ritgo">Continue Your Ritual · step ${prog.step+1} of ${calSteps(e,prog.path).length}</button>`:''}
+ <div class="dr-book cal-paths" role="radiogroup" aria-label="Choose a ritual path">${paths.map(p=>{const [n,w]=calPathInfo(e,p);return `<button class="dr-entry cal-path" role="radio" aria-checked="${pick===p}" data-cal="path" data-v="${p}"><strong>${esc(n)}</strong><span class="dr-s">${esc(w)}</span><span class="dr-d">${calSteps(e,p).length>4?'About 8 minutes':'About 5 minutes'} · ${calSteps(e,p).length} steps</span></button>`}).join('')}</div>
+ ${prog&&prog.path===pick?'':`<button class="btn${prog?' ghost':''}" data-cal="ritstart" data-v="${pick}">${prog?'Begin this path instead':'Begin the Ritual'}</button>`}
+ ${ssHead('Continue Exploring')}<div class="ss-acts"><button class="btn ghost" data-cal="share">Share</button><button class="btn ghost" data-act="kasask" data-q="${esc(`Tell me about the ${calName(e)} on ${ymdLong(day,{day:'numeric',month:'long'})}. What does it invite me to reflect on, and how could I prepare for it?`)}">Ask Kassandra</button></div>
+ <div class="ss-acts"><button class="btn ghost" data-cal="sky">${b2==='Moon'?'See the Moon in the Sky':b2?`See ${b2} in the Sky`:'See It in the Sky'}</button><button class="btn ghost" data-cal="theme" data-q="">Write in My Journal</button></div>
+ ${b2?`<p class="muted small center">The Sky shows where ${b2==='Moon'?'the Moon is':b2+' is'} now${day>today?', not its future position':''}.</p>`:''}
+ <div class="dr-tools"><button class="dr-link" data-go="discover" data-t="calendar">Return to Calendar</button></div>`,'cal');
+}
+function calRitualView(){
+ const e=calFind(V.calRef);if(!e)return calEventView();
+ const ref=evRef(e);S.evRit=S.evRit||{};
+ if(V.calDone===ref){const d=(calBm(ref)||{data:{}}).data.ritual||{};
+  return cjPage(`${hdr(calRitName(e),{sub:esc(calName(e))})}<section class="cal-fin">${ssGlyph('☾','big')}<h2>The ritual is complete.</h2><p class="quote center">${calClose(e)}</p><p class="muted small center">There is nothing to keep up and nothing to make up. Return whenever you like.</p></section>
+  <div class="ss-acts">${d.jid?`<button class="btn" data-jx="open" data-k="j:${esc(d.jid)}">View My Intention</button>`:''}<button class="btn ghost" data-cal="openev">Return to the Event</button><button class="btn ghost" data-go="discover" data-t="calendar">Return to Calendar</button></div>`,'cal rit')}
+ let pr=S.evRit[ref];if(!pr){pr=S.evRit[ref]={path:calPaths(e)[0],step:0,text:'',day:dkey()};save()}
+ const st=calSteps(e,pr.path),i=Math.min(pr.step,st.length-1),s=st[i],last=i===st.length-1,[pn]=calPathInfo(e,pr.path);
+ return cjPage(`${hdr(calRitName(e),{sub:`${esc(calName(e).replace(/ in .*/,''))} · ${esc(pn)}`})}
+ <p class="tt-count" aria-live="polite">Step ${i+1} of ${st.length}</p><div class="cal-dots" aria-hidden="true">${st.map((_,n)=>`<i class="${n<=i?'on':''}"></i>`).join('')}</div>
+ <section class="cal-step">${mbox(`<h2>${s[0]}</h2><p class="cal-st">${s[1]}</p><p>${s[2]}</p>${last?`<div class="field dr-parch"><label for="calin" class="sr-only">${s[0]}</label><textarea id="calin" rows="4" maxlength="400" placeholder="${esc(s[3])}">${esc(pr.text||'')}</textarea></div>`:''}`)}</section>
+ ${last?`<div class="ss-acts"><button class="btn" data-cal="ritkeep">Add to Journal</button><button class="btn ghost" data-cal="ritpriv">Complete privately</button></div>`:`<button class="btn" data-cal="next">Continue</button>`}
+ ${i?'<button class="dr-link" data-cal="prev">Previous step</button>':''}
+ <p class="muted small center">Your place is kept if you leave; the event page will offer to continue.</p>`,'cal rit');
+}
+function savedEventsView(){
+ const f=V.calSv||'up',today=dkey(),all=S.bookmarks.filter(b=>b.kind==='event').map(b=>({b,d:b.data||{},day:(b.data||{}).date?dkey(new Date(b.data.date)):''}));
+ const F=[['up','Upcoming'],['rem','Reminders'],['past','Past Events'],['rit','Completed Rituals']];
+ const l=all.filter(x=>f==='up'?x.day>=today:f==='rem'?!!x.d.rem:f==='past'?x.day<today:!!x.d.ritual).sort((a,b)=>f==='past'||f==='rit'?(a.day<b.day?1:-1):(a.day>b.day?1:-1));
+ return cjPage(`${hdr('Saved Events',{sub:'The celestial moments you are watching for.'})}
+ <div class="fchips ss-chips rd-cats">${F.map(([k,l2])=>`<button class="fchip" role="radio" aria-checked="${f===k}" data-cal="sv" data-v="${k}">${l2}</button>`).join('')}</div>
+ <div class="dr-book">${l.map(x=>`<div class="cal-sv"><button class="dr-entry" data-cal="open" data-ref="${esc(x.b.ref)}"><span class="dr-d">${x.day?ymdLong(x.day,{weekday:'short',day:'numeric',month:'long',year:'numeric'}):''}</span><strong>${esc(x.d.name||'A celestial event')}${x.d.sign!=null&&/moon|eclipse/i.test(x.d.k||'')?' in '+sIdx(x.d.sign).name:''}</strong><span class="dr-s">${x.d.rem?esc(remTxt(x.d.rem)):'No reminder'}${x.d.ritual?' · Ritual completed, '+esc(x.d.ritual.label||''):''}</span></button>
+ <div class="cal-svb"><button class="link" data-cal="openrem" data-ref="${esc(x.b.ref)}">${x.d.rem?'Change reminder':'Set a reminder'}</button>${x.d.ritual&&x.d.ritual.jid&&S.journal.some(j=>j.id===x.d.ritual.jid)?`<button class="link" data-jx="open" data-k="j:${esc(x.d.ritual.jid)}">Revisit intention</button>`:''}<button class="link" data-cal="unsave" data-ref="${esc(x.b.ref)}">Remove</button></div></div>`).join('')||`<p class="muted center">${f==='up'?'Save an event, or set a reminder, and it will wait for you here.':f==='rem'?'No reminders yet. Every event has Set a Reminder.':f==='past'?'Saved events that have passed will gather here.':'Events whose ritual you complete will gather here.'}</p>`}</div>
+ <button class="dr-link" data-go="discover" data-t="calendar">Return to Calendar</button>`,'cal');
+}
+// reminders, shown when Kosmia is open on the day (or the day before): one per event and moment, never twice
+function calRemCheck(){
+ if(!K||!S.sign)return;S.remSeen=S.remSeen||{};const now=new Date(),today=dkey(),tom=dkey(new Date(+now+DAY)),hm=fmt({hour:'2-digit',minute:'2-digit',hourCycle:'h23'},now),due=[];
+ S.bookmarks.filter(b=>b.kind==='event'&&(b.data||{}).rem).forEach(b=>{const r=b.data.rem,d=dkey(new Date(b.data.date));if(hm<(r.time||'08:00'))return;if(r.before&&d===tom)due.push([b.ref+':b',b.data.name,'before',b.ref]);if(r.day&&d===today)due.push([b.ref+':d',b.data.name,'day',b.ref])});
+ const mn=S.notif.moons;if(mn&&hm>=(S.notif.time||'08:00'))K.lunarPhases(new Date(+now-DAY),new Date(+now+2*DAY)).filter(e=>e.k==='new_moon'||e.k==='full_moon').forEach(e=>{const ref=evRef(e),d=evDay(e),b=calBm(ref);if(b&&b.data.rem)return;if((mn==='before'||mn==='both')&&d===tom)due.push([ref+':b',e.name,'before',ref]);if((mn==='day'||mn==='both')&&d===today)due.push([ref+':d',e.name,'day',ref])});
+ const x=due.find(d=>!S.remSeen[d[0]]);if(!x)return;S.remSeen[x[0]]=today;Object.keys(S.remSeen).forEach(k=>{if(S.remSeen[k]<dkey(new Date(+now-10*DAY)))delete S.remSeen[k]});save();
+ const nm=x[1].replace(/ meteor shower peak/,' meteor shower');V.remRef=x[3];
+ toast(x[2]==='before'?`Tomorrow brings the ${nm}. Discover its themes and take a moment to prepare.`:`The ${nm} is here. Your reflection and ritual are ready whenever you are.`,'calremgo','Open');
+}
+setTimeout(calRemCheck,2500);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(calRemCheck,800)});
+function calRemPreview(){const p=$('#calrp');if(!p)return;const b=$('#calrb').checked,d=$('#calrd').checked,t=$('#calrt').value||'08:00',n=+b+ +d;p.textContent=n?`You would receive ${n===1?'one reminder':'two reminders'} at ${t} local time${n===1?(b?', the day before':', on the day'):', the day before and on the day'}.`:'Choose the day before, the day itself, or both.'}
+
+/* ---------- the Journal ---------- */
+const JX_SRC={free:'Free entry',evening:'Evening Ritual',morning:'Morning Ritual',calendar:'Calendar Ritual',oracle:'Oracle',sky:'Sky',kassandra:'Kassandra',horoscope:'Horoscope',event:'Calendar',signs:'Signs & Synchronicities'};
+const jxBucket=n=>/^New/.test(n||'')?'new':/^Full/.test(n||'')?'full':/Waxing|First/.test(n||'')?'waxing':'waning';
+const JX_PH={new:'New Moon',waxing:'Waxing Moon',full:'Full Moon',waning:'Waning Moon'};
+const jxPhaseAt=(day,at)=>{try{return K.moon(new Date(at&&at.length>10?at:day+'T21:00:00')).name}catch(e){return ''}};
+const RD_CATL={tarot:'Tarot',dreams:'Dreams',numbers:'Sacred Numbers',sync:'Synchronicities',patterns:'Patterns',numerology:'Numerology',connections:'Connections',kassandra:'Kassandra'};
+// every personal entry in one shape: written pages, Ritual intentions and evening words, and words written beside kept items
+function jxAll(){
+ const lk={},rd={};Object.entries(rdMeta().data||{}).forEach(([k,v])=>(v.refl||[]).forEach(id=>lk[id]=k));
+ const needRd=Object.keys(lk).length?rdAll():[];needRd.forEach(x=>rd[x.k]=x);
+ const out=[];
+ S.journal.forEach(j=>{const d=j.data||{},cat=j.kind==='intention'?'intention':j.kind==='gratitude'||(j.kind==='reflection'&&j.title==='My Gratitude')?'gratitude':'reflection';
+  let link=d.link||null,src=d.src||(j.kind==='synchronicity'?'signs':'free');
+  if(!link&&lk[j.id]){const x=rd[lk[j.id]];link={k:'saved:'+lk[j.id],t:x?`${RD_CATL[x.cat]||'Oracle'} — ${x.title}`:'A saved reading'};src='oracle'}
+  if(d.ev&&!link)link={k:'event:'+d.ev.ref,t:`${d.ev.name}${d.path?' — '+d.path:''}`};
+  out.push({k:'j:'+j.id,cat,day:j.day,at:j.at||j.day,title:cat==='gratitude'&&j.title==='My Gratitude'?'':(j.title||''),body:j.body||'',src,link,phase:d.phase||jxPhaseAt(j.day,j.at),j,path:d.path||''})});
+ Object.keys(S.notes||{}).forEach(day=>{const n=S.notes[day];if(!n)return;out.push({k:'fortune:'+day,cat:'reflection',day,at:day+'T21:00',title:'',body:n,src:'evening',link:{k:'fortune:'+day,t:'Daily Whisper — '+cardFor(day).title},phase:jxPhaseAt(day)})});
+ Object.keys(S.carry||{}).forEach(day=>{const n=S.carry[day];if(!n)return;out.push({k:'carry:'+day,cat:'intention',day,at:day+'T08:00',title:'',body:n,src:'morning',link:null,phase:jxPhaseAt(day,day+'T08:00')})});
+ journalItems().filter(p=>p.t!=='j'&&p.t!=='n'&&jNote(p)).forEach(p=>{const L={h:['horoscope','Horoscope'],e:['event','Calendar'],r:['oracle','Tarot'],c:['oracle','Connections'],d:['oracle','Dreams']}[p.t]||['free',''];
+  out.push({k:jKey(p),cat:'reflection',day:p.day,at:p.at||p.day,title:'',body:jNote(p),src:L[0],link:{k:jKey(p),t:`${L[1]} — ${plain(jHeading(p))}`,item:true},phase:jxPhaseAt(p.day)})});
+ return out.sort((a,b)=>String(b.at)>String(a.at)?1:-1);
+}
+const jxTitle=x=>x.title||clip((x.body||'').split('\n')[0],60)||'An untitled page';
+const jxSrcL=x=>x.link&&x.src!=='free'?`From ${x.link.t}`:JX_SRC[x.src]||'Free entry';
+const jxRow=x=>`<button class="dr-entry" data-jx="open" data-k="${esc(x.k)}"><span class="dr-d">${ymdLong(x.day,{day:'numeric',month:'long'})}${x.phase?' · '+JX_PH[jxBucket(x.phase)]:''}</span><strong>${esc(jxTitle(x))}</strong>${x.title&&x.body?`<span class="dr-x">${esc(clip(x.body,90))}</span>`:x.body.length>60?`<span class="dr-x">${esc(clip(x.body.slice(60),80))}</span>`:''}<span class="dr-f">${esc(jxSrcL(x))}</span></button>`;
+const jxMonths=l=>{const by={};l.forEach(x=>{const m=(x.day||'').slice(0,7);(by[m]=by[m]||[]).push(x)});return Object.keys(by).sort((a,b)=>a<b?1:-1).map(m=>`<p class="dr-month">${ymdLong(m+'-01',{month:'long',year:'numeric'})}</p>${by[m].map(jxRow).join('')}`).join('')};
+// My Library: everything given a heart, kept as it was
+const JX_LC=[['horoscopes','Horoscopes'],['whispers','Whispers'],['tarot','Tarot'],['dreams','Dreams'],['signs','Signs & Synchronicities'],['connections','Connections'],['events','Cosmic Events'],['sky','Sky'],['kassandra','Kassandra']];
+function jxLib(){
+ const out=[];
+ S.saved.forEach(x=>out.push({k:'whisper:'+x.date,cat:'whispers',title:cardFor(x.date).title,day:x.date,at:x.date,open:`data-act="jopen" data-k="fortune:${x.date}"`}));
+ S.bookmarks.filter(b=>b.kind==='horoscope').forEach(b=>{const d=b.data||{};out.push({k:'bk:horoscope:'+b.ref,cat:'horoscopes',title:`${sg(d.sign).name} — ${cap(d.period||'daily')} Horoscope`,day:(b.at||'').slice(0,10)||dkey(),at:b.at,open:`data-act="jopen" data-k="bk:horoscope:${esc(b.ref)}"`})});
+ const CM={tarot:'tarot',dreams:'dreams',numbers:'signs',sync:'signs',patterns:'signs',numerology:'signs',connections:'connections',kassandra:'kassandra'};
+ rdAll().filter(x=>x.fav).forEach(x=>{const m=rdM(x.k);out.push({k:x.k,cat:CM[x.cat]||'tarot',title:x.title,day:(m.favAt||x.at||x.day||'').slice(0,10),at:m.favAt||x.at,open:`data-rd="open" data-k="${esc(x.k)}"`})});
+ Object.entries(rdMeta().data||{}).filter(([k,v])=>v.fav&&v.snap&&/^(event|sky):/.test(k)).forEach(([k,v])=>out.push({k,cat:k.startsWith('event:')?'events':'sky',title:v.snap.title,day:(v.favAt||'').slice(0,10)||dkey(),at:v.favAt,open:k.startsWith('event:')?`data-cal="open" data-ref="${esc(k.slice(6))}"`:`data-jx="open" data-k="${esc(k)}"`}));
+ return out.sort((a,b)=>String(b.at)>String(a.at)?1:-1);
+}
+function jxUnheart(k){
+ if(k.startsWith('whisper:')){const d=k.slice(8);S.saved=S.saved.filter(x=>x.date!==d);save();syncFortune(d);toast('Removed from My Library');return}
+ if(k.startsWith('bk:horoscope:')){const r=k.slice(13);S.bookmarks=S.bookmarks.filter(b=>!(b.kind==='horoscope'&&b.ref===r));save();C.deleteBookmark&&C.deleteBookmark('horoscope',r);toast('Removed from My Library');return}
+ heartSet(k,false);
+}
+// the months of the journey and what each holds
+function jxMonth(m){
+ const e=jxAll().filter(x=>x.day.slice(0,7)===m),lib=jxLib().filter(x=>(x.day||'').slice(0,7)===m);
+ return {e,lib,r:e.filter(x=>x.cat==='reflection'),i:e.filter(x=>x.cat==='intention'),g:e.filter(x=>x.cat==='gratitude')};
+}
+function jxMilestones(){
+ const all=jxAll().slice().reverse(),out=[],first=c=>all.find(x=>x.cat===c);
+ const r=first('reflection'),i=first('intention'),g=first('gratitude');
+ if(r)out.push([r.day,'The First Page','Your first reflection in the Journal.']);if(i)out.push([i.day,'A Seed of Intention','Your first intention.']);if(g)out.push([g.day,'A Grateful Heart','Your first moment of gratitude.']);
+ const rit=S.bookmarks.filter(b=>b.kind==='event'&&(b.data||{}).ritual).map(b=>b.data.ritual.day).sort()[0];if(rit)out.push([rit,'Your First Ritual','Your first Calendar ritual.']);
+ const st=all[0];if(st){const a=dkey(new Date(K.parseYmd(st.day)+30*DAY)),later=all.find(x=>x.day>=a);if(later)out.push([later.day,'A Month of Reflection','A month since your Journal journey began.']);
+  const y=dkey(new Date(K.parseYmd(st.day)+365*DAY));if(y<=dkey())out.push([y,'A Year of Becoming','One year since your journey began.']);
+  try{const nm=K.lunarPhases(new Date(K.parseYmd(st.day)-30*DAY),new Date()).filter(x=>x.k==='new_moon');for(let n=0;n<nm.length-1;n++){const a2=dkey(nm[n].date),b2=dkey(nm[n+1].date),w=all.filter(x=>x.cat==='reflection'&&x.day>=a2&&x.day<b2);if(new Set(w.map(x=>jxBucket(x.phase))).size===4){out.push([b2,'A Lunar Chapter','Reflections written across a whole cycle of the Moon.']);break}}}catch(x){}}
+ return out.sort((a,b)=>a[0]<b[0]?-1:1);
+}
+function jxMonthLine(m,M){
+ const ms=jxMilestones().filter(x=>x[0].slice(0,7)===m),allm=[...new Set(jxAll().map(x=>x.day.slice(0,7)))].sort();
+ if(allm[0]===m)return 'The beginning of your journey.';
+ if(ms.some(x=>x[1]==='A Lunar Chapter'))return 'Your first complete lunar cycle of reflection.';
+ const sc=jxThemes(M.e).slice(0,2);if(sc.length===2&&sc[1][2]>1)return `A month of ${sc[0][0].toLowerCase()} and ${sc[1][0].toLowerCase()}.`;
+ return M.e.length+M.lib.length>5?'A full chapter of your journey.':'A quiet chapter of your journey.';
+}
+const jxThemes=l=>THEMES.map(([lab,ic,re])=>[lab,ic,l.filter(x=>(x.title+' '+x.body).toLowerCase().match(re)).length]).filter(x=>x[2]).sort((a,b)=>b[2]-a[2]);
+function jxHome(){
+ const all=jxAll(),c=k=>all.filter(x=>x.cat===k).length,lib=jxLib(),nm=firstName();
+ const months=[...new Set([...all.map(x=>x.day.slice(0,7)),...lib.map(x=>(x.day||'').slice(0,7))].filter(Boolean))].sort((a,b)=>a<b?1:-1);
+ const draft=S.jdraft&&(S.jdraft.body||S.jdraft.title);
+ return cjPage(`${hdr('Journal',{back:false,sub:'The story of your becoming, written in your own words.'})}
+ <button class="jx-write" data-jx="write"><span class="jx-pen">${FEATHER}</span><span><strong>${draft?'Continue your page':'Write'}</strong><span>${draft?esc(clip(S.jdraft.body||S.jdraft.title,50)):nm?esc(nm)+', capture a thought, a feeling, a moment.':'Capture a thought, a feeling, a moment.'}</span></span></button>
+ ${ssHead('Your Personal Collection')}<div class="list">
+ ${ssDoor('✎','My Reflections',`Your thoughts, experiences and moments of understanding.${c('reflection')?` · ${c('reflection')}`:''}`,'data-go="tarot" data-t="reflections"')}
+ ${ssDoor('✧','My Intentions',`The things you choose to nurture and carry forward.${c('intention')?` · ${c('intention')}`:''}`,'data-go="tarot" data-t="intentions"')}
+ ${ssDoor('❀','My Gratitude',`The moments, people and experiences you appreciate.${c('gratitude')?` · ${c('gratitude')}`:''}`,'data-go="tarot" data-t="gratitude"')}
+ ${ssDoor('♥','My Library',`The words and discoveries you have chosen to keep.${lib.length?` · ${lib.length}`:''}`,'data-go="tarot" data-t="library"')}</div>
+ ${ssHead('Your Journey')}
+ ${months.length?`<div class="dr-book">${months.slice(0,3).map(m=>{const M=jxMonth(m);return `<button class="dr-entry" data-jx="month" data-v="${m}"><span class="dr-d">${ymdLong(m+'-01',{month:'long',year:'numeric'})}</span><strong>${esc(jxMonthLine(m,M))}</strong><span class="dr-s">${M.r.length} reflection${M.r.length===1?'':'s'} · ${M.i.length} intention${M.i.length===1?'':'s'} · ${M.lib.length} saved item${M.lib.length===1?'':'s'}</span></button>`}).join('')}</div>
+ ${months.length>3?`<div class="field"><label for="jxmsel">Another month</label><select id="jxmsel"><option value="">Choose a month…</option>${months.map(m=>`<option value="${m}">${ymdLong(m+'-01',{month:'long',year:'numeric'})}</option>`).join('')}</select></div>`:''}`
+ :'<p class="muted center">Your journey begins with your first page. Whatever you write, intend or keep will gather here, month by month.</p>'}`,'jx');
+}
+const JXR_F=[['','All'],['evening','Evening Ritual'],['free','Free entries'],['oracle','Oracle'],['calendar','Calendar'],['event','Calendar'],['sky','Sky'],['horoscope','Horoscope'],['signs','Signs'],['kassandra','Kassandra']];
+function jxReflections(){
+ const F=V.jxR||(V.jxR={q:'',src:'',m:''}),all=jxAll().filter(x=>x.cat==='reflection'),q=F.q.trim().toLowerCase();
+ const srcs=[...new Set(all.map(x=>x.src==='event'?'calendar':x.src))],months=[...new Set(all.map(x=>x.day.slice(0,7)))].sort((a,b)=>a<b?1:-1);
+ const l=all.filter(x=>(!F.src||(x.src==='event'?'calendar':x.src)===F.src)&&(!F.m||x.day.slice(0,7)===F.m)&&(!q||[x.title,x.body,x.link&&x.link.t,ymdLong(x.day,{day:'numeric',month:'long',year:'numeric'})].join(' ').toLowerCase().includes(q)));
+ return cjPage(`${hdr('My Reflections',{sub:'Your thoughts, experiences and moments of understanding.'})}
+ <button class="jx-write sm" data-jx="write" data-c="reflection"><span class="jx-pen">${FEATHER}</span><span><strong>A new reflection</strong></span></button>
+ <div class="field"><label for="jxq" class="sr-only">Search your reflections</label><input type="search" id="jxq" data-f="jxR" placeholder="Search your reflections…" value="${esc(F.q)}" autocomplete="off"></div>
+ <div class="fchips ss-chips rd-cats"><button class="fchip" role="radio" aria-checked="${!F.src}" data-jx="fsrc" data-v="">All</button>${JXR_F.filter(([k])=>k&&k!=='event'&&srcs.includes(k)).map(([k,l2])=>`<button class="fchip" role="radio" aria-checked="${F.src===k}" data-jx="fsrc" data-v="${k}">${l2}</button>`).join('')}</div>
+ ${months.length>1?`<div class="field"><label for="jxrm" class="sr-only">Month</label><select id="jxrm"><option value="">Every month</option>${months.map(m=>`<option value="${m}" ${F.m===m?'selected':''}>${ymdLong(m+'-01',{month:'long',year:'numeric'})}</option>`).join('')}</select></div>`:''}
+ <div class="dr-book" id="jxlist">${l.length?jxMonths(l):`<p class="muted center">${all.length?'No reflection matches.':'Your reflections will gather here: evening words from the Ritual, pages from the feather pen, and thoughts about readings, events and the sky.'}</p>`}</div>`,'jx');
+}
+function jxIntentions(){
+ const v=V.jxI||'current',all=jxAll().filter(x=>x.cat==='intention'),today=dkey();
+ let nm='';try{const p=K.lunarPhases(new Date(Date.now()-31*DAY),new Date()).filter(x=>x.k==='new_moon').pop();nm=p?dkey(p.date):''}catch(e){}
+ const tday=all.find(x=>x.day===today&&x.src==='morning')||all.find(x=>x.day===today),cyc=all.filter(x=>x!==tday&&nm&&x.day>=nm),past=all.filter(x=>x!==tday&&!cyc.includes(x));
+ const card=x=>`<button class="dr-entry" data-jx="open" data-k="${esc(x.k)}"><span class="dr-d">${x.src==='calendar'&&x.link?esc(x.link.t.split(' — ')[0])+' Intention':x.src==='morning'?'Daily Intention':'Personal Intention'} · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.body)}</strong><span class="dr-f">${x.src==='calendar'?esc((x.path?x.path+' · ':'')+'Calendar Ritual'):esc(JX_SRC[x.src]||'Free entry')}</span></button>`;
+ let body;
+ if(v==='current')body=`${ssHead('Today’s Intention')}${tday?`<div class="dr-book">${card(tday)}</div>`:`<p class="muted center small">No intention yet today. The Morning Ritual offers one, or write your own.</p><button class="btn ghost" data-go="home">Open the Morning Ritual</button>`}
+  ${ssHead('This Lunar Cycle')}${cyc.length?`<div class="dr-book">${cyc.map(card).join('')}</div>`:`<p class="muted center small">${nm?`Since the New Moon on ${ymdLong(nm,{day:'numeric',month:'long'})}, no other intentions yet.`:'No other intentions this cycle yet.'}</p>`}`;
+ else body=`<div class="dr-book">${(v==='past'?past:all).map(card).join('')||'<p class="muted center">Nothing here yet.</p>'}</div>`;
+ return cjPage(`${hdr('My Intentions',{sub:'The things you choose to nurture and carry forward.'})}
+ <div class="fchips ss-chips">${[['current','Current'],['past','Past'],['all','All']].map(([k,l2])=>`<button class="fchip" role="radio" aria-checked="${v===k}" data-jx="iv" data-v="${k}">${l2}</button>`).join('')}</div>
+ ${body}<button class="jx-write sm" data-jx="write" data-c="intention"><span class="jx-pen">${FEATHER}</span><span><strong>A personal intention</strong></span></button>
+ <p class="muted small center">Intentions are not tasks. Nothing here is overdue, scored or failed.</p>`,'jx');
+}
+function jxGratitude(){
+ const all=jxAll().filter(x=>x.cat==='gratitude'),by={};all.forEach(x=>(by[x.day]=by[x.day]||[]).push(x));
+ return cjPage(`${hdr('My Gratitude',{sub:'The moments, people and experiences you appreciate.'})}
+ ${V.jxG?mbox(`<h3>Add Gratitude</h3><p class="muted small">One thing or several, one on each line. A single sentence is enough.</p><div class="field dr-parch"><label for="jxgt" class="sr-only">What are you grateful for?</label><textarea id="jxgt" rows="4" placeholder="Today I am grateful for…"></textarea></div><div class="ss-acts"><button class="btn" data-jx="gsave">Save for ${ymdLong(dkey(),{day:'numeric',month:'long'})}</button><button class="btn ghost" data-jx="gadd">Cancel</button></div>`):`<button class="btn" data-jx="gadd">Add Gratitude</button>`}
+ <div class="dr-book jx-grat">${Object.keys(by).sort((a,b)=>a<b?1:-1).map(d=>`<p class="dr-month">${ymdLong(d,{day:'numeric',month:'long',year:'numeric'})}</p>${by[d].map(x=>V.jxGe===x.k?`<div class="jx-ge"><div class="field dr-parch"><textarea id="jxge" rows="2">${esc(x.body)}</textarea></div><div class="ss-acts"><button class="btn sm" data-jx="gupd" data-k="${esc(x.k)}">Save</button><button class="btn ghost sm" data-jx="gdel" data-k="${esc(x.k)}">Delete</button><button class="btn ghost sm" data-jx="gedit" data-k="">Cancel</button></div></div>`:`<button class="jx-g" data-jx="gedit" data-k="${esc(x.k)}" aria-label="Edit">${esc(x.body)}</button>`).join('')}`).join('')||'<p class="muted center">Your gratitude will gather here, from the Evening Ritual, the Calendar rituals and your own words.</p>'}</div>`,'jx');
+}
+function jxLibrary(){
+ const F=V.jxL||(V.jxL={q:'',c:''}),all=jxLib(),q=F.q.trim().toLowerCase(),l=all.filter(x=>(!F.c||x.cat===F.c)&&(!q||(x.title+' '+(JX_LC.find(c=>c[0]===x.cat)||['',''])[1]).toLowerCase().includes(q)));
+ return cjPage(`${hdr('My Library',{sub:'The things you chose to keep.'})}
+ <div class="field"><label for="jxlq" class="sr-only">Search your library</label><input type="search" id="jxlq" data-f="jxL" placeholder="Search your library…" value="${esc(F.q)}" autocomplete="off"></div>
+ <div class="fchips ss-chips rd-cats"><button class="fchip" role="radio" aria-checked="${!F.c}" data-jx="lc" data-v="">All</button>${JX_LC.filter(([k])=>all.some(x=>x.cat===k)||F.c===k).map(([k,l2])=>`<button class="fchip" role="radio" aria-checked="${F.c===k}" data-jx="lc" data-v="${k}">${l2}</button>`).join('')}</div>
+ <div class="dr-book" id="jxlist">${l.map(x=>`<div class="rd-row"><button class="dr-entry" ${x.open}><span class="dr-d">${(JX_LC.find(c=>c[0]===x.cat)||['',''])[1]} · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.title)}</strong></button><button class="rd-fav" data-jx="unheart" data-k="${esc(x.k)}" aria-label="Remove from My Library">♥</button></div>`).join('')||`<p class="muted center">${all.length?'Nothing matches.':'Whenever something resonates, give it a heart: a Whisper, a horoscope, a reading, an event or an insight from the Sky. It will be kept here, as it was.'}</p>`}</div>
+ <p class="muted small center">Removing a heart takes an item out of My Library only; your readings stay in Your Readings.</p>`,'jx');
+}
+/* Write: one page for every kind of entry; dated and stamped with the Moon, its draft kept until it is saved */
+function jxStart(o={}){
+ const d=S.jdraft;
+ if(!o.edit&&d&&(d.body||d.title)&&!o.force&&!o.link&&!o.prompt){if(o.cat&&!d.edit)d.cat=o.cat;return go('tarot','write')}
+ S.jdraft=Object.assign({cat:o.cat||'reflection',title:'',body:'',link:null,prompt:'',src:'free'},o);save();go('tarot','write');
+}
+function jxWriteView(){
+ const d=S.jdraft||(S.jdraft={cat:'reflection',title:'',body:'',link:null,prompt:'',src:'free'}),m=K.moon(new Date()),wc=(d.body.trim().match(/\S+/g)||[]).length;
+ const where={reflection:'My Reflections',intention:'My Intentions',gratitude:'My Gratitude'}[d.cat];
+ return cjPage(`${hdr(d.edit?'Edit Your Entry':'A Moment for Yourself',{sub:`${ymdLong(d.day||dkey(),{weekday:'long',day:'numeric',month:'long'})} · ${JX_PH[jxBucket(m.name)]}`})}
+ ${d.fixed?'':`<div class="fchips ss-chips">${[['reflection','Reflection'],['intention','Intention'],['gratitude','Gratitude']].map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${d.cat===k}" data-jx="cat" data-v="${k}">${l}</button>`).join('')}</div>`}
+ ${d.link?`<p class="jx-insp">Inspired by: <b>${esc(d.link.t)}</b> <button class="link" data-jx="unlink">Remove</button></p>`:''}
+ ${d.prompt?`<p class="tt-lead">“${esc(d.prompt)}”</p>`:''}
+ <div class="field dr-parch"><label for="jxt" class="sr-only">Title (optional)</label><input type="text" id="jxt" class="jx-title" maxlength="80" placeholder="A title, if you like" value="${esc(d.title)}"></div>
+ <div class="field dr-parch"><label for="jxb" class="sr-only">Your entry</label><textarea id="jxb" rows="9" placeholder="${d.cat==='intention'?'I intend to…':d.cat==='gratitude'?'Today I am grateful for…':'Write freely. Nothing here is shared.'}">${esc(d.body)}</textarea></div>
+ <p class="jx-wc"><span>Private entry</span><span id="jxwc">${wc} word${wc===1?'':'s'}</span></p>
+ <button class="btn" data-jx="save">Save</button>
+ <p class="muted small center">This entry will be kept in ${where}${d.edit?'':' and in this month of Your Journey'}.</p>
+ ${!d.edit&&(d.body||d.title)?'<button class="dr-link" data-jx="discard">Discard this draft</button>':''}`,'jx write');
+}
+function jxSave(){
+ const d=S.jdraft;if(!d)return;d.title=(($('#jxt')||{}).value||d.title||'').trim();d.body=(($('#jxb')||{}).value||d.body||'').trim();
+ if(!d.body&&!d.title){toast('Write a few words first');return}
+ let k=d.edit;
+ if(d.edit&&d.edit.startsWith('carry:')){S.carry[d.edit.slice(6)]=d.body.slice(0,200)}
+ else if(d.edit&&d.edit.startsWith('fortune:')){const day=d.edit.slice(8);S.notes[day]=d.body;syncFortune(day)}
+ else if(d.edit&&d.edit.startsWith('j:')){const j=S.journal.find(x=>'j:'+x.id===d.edit);if(j){j.title=d.title;j.body=d.body;j.kind=d.cat;j.data=Object.assign({},j.data,{link:d.link||undefined});if(!d.link&&j.data)delete j.data.link;C.saveJournal&&C.saveJournal(j)}}
+ else{const j={id:d.id||uuid(),day:dkey(),kind:d.cat,title:d.title,body:d.body,at:new Date().toISOString(),data:Object.assign({src:d.src||'free',phase:K.moon(new Date()).name},d.link?{link:d.link}:{},d.ev?{ev:d.ev,path:d.path}:{})};S.journal.push(j);C.saveJournal&&C.saveJournal(j);k='j:'+j.id}
+ S.jdraft=null;save();toast({reflection:'Kept in My Reflections',intention:'Kept in My Intentions',gratitude:'Kept in My Gratitude'}[d.cat]||'Kept');
+ V.jxk=k;go('tarot','page',{replace:true});
+}
+function jxEntryView(){
+ const k=V.jxk||'';
+ if(k.startsWith('sky:')){const m=rdM(k),s=m.snap;if(!s)return cjPage(`${hdr('My Library')}<p class="muted center">This insight is no longer kept.</p>`,'jx');
+  return cjPage(`${hdr(esc(s.title),{sub:`Kept from the Sky · ${ymdLong(s.day||dkey(),{day:'numeric',month:'long',year:'numeric'})}`})}<p class="cal-when center">${esc(s.when||'')}</p>
+  ${[['What Was Happening',s.fact],['What It Meant for You',s.you],['One Thing to Do',s.act]].filter(x=>x[1]).map(([h,t])=>`${ssHead(h)}<div class="dr-text"><p>${esc(t)}</p></div>`).join('')}${s.q?mbox(`<h3>A Question to Sit With</h3><p class="quote center">“${esc(s.q)}”</p>`,'dr-q'):''}
+  <div class="ss-acts">${m.fav?`<button class="btn ghost" data-jx="unheart" data-k="${esc(k)}">♥ Remove from My Library</button>`:''}<button class="btn ghost" data-jx="write" data-link="${esc(k)}" data-t="${esc('Sky — '+s.title)}">Reflect in My Journal</button><button class="btn ghost" data-act="kasask" data-q="${esc(`Something from the sky I kept on ${ymdLong(s.day||dkey(),{day:'numeric',month:'long'})}: “${s.title}”. ${s.fact||''} What might it be inviting me to see?`)}">Ask Kassandra</button></div>`,'jx')}
+ const x=jxAll().find(y=>y.k===k);
+ if(!x)return cjPage(`${hdr('Journal Entry')}<p class="muted center">This page is no longer in your Journal.</p><button class="btn" data-go="tarot" data-t="journal">Return to Journal</button>`,'jx');
+ const linked=jxAll().filter(y=>y.j&&y.j.data&&y.j.data.link&&y.j.data.link.k===k),area={reflection:'My Reflections',intention:'My Intentions',gratitude:'My Gratitude'}[x.cat];
+ return cjPage(`${hdr(esc(x.title||{reflection:'Reflection',intention:'Intention',gratitude:'Gratitude'}[x.cat]),{sub:area})}
+ <p class="jx-meta">${ymdLong(x.day,{day:'numeric',month:'long',year:'numeric'})}${x.phase?' · '+esc(x.phase):''}</p>
+ <div class="dr-text jx-body"><p class="pre">${esc(x.body)}</p></div>
+ ${x.link?`${ssHead('Inspired By')}<div class="dr-book"><button class="dr-entry" data-jx="golink" data-k="${esc(x.link.k)}"${x.link.k?'':' disabled'}><strong>${esc(x.link.t)}</strong><span class="dr-s">${esc(x.src==='calendar'?'Calendar · '+(x.path||'Ritual'):JX_SRC[x.src]||'')}</span></button></div>`:x.src!=='free'?`<p class="dr-f center">${esc(JX_SRC[x.src]||'')}</p>`:''}
+ ${linked.length?`${ssHead('Linked Reflections')}<div class="dr-book">${linked.map(jxRow).join('')}</div>`:''}
+ ${x.cat==='intention'?`<button class="btn ghost" data-jx="write" data-c="reflection" data-link="${esc(k)}" data-t="${esc('Intention — '+clip(x.body,50))}">Reflect on This Intention</button>`:''}
+ <div class="ss-acts"><button class="btn ghost" data-jx="edit" data-k="${esc(k)}">Edit</button><button class="btn ghost" data-jx="del">Delete</button><button class="btn ghost" data-jx="kas">Talk about this — Kassandra</button></div>
+ ${V.jxDel===k?mbox(`<p class="center">Delete this ${x.cat}? This cannot be undone.</p><div class="ss-acts"><button class="btn danger" data-jx="delyes" data-k="${esc(k)}">Delete</button><button class="btn ghost" data-jx="del">Keep it</button></div>`):''}
+ ${V.jxKas===k?mbox(`<p class="center">Kassandra will read this entry so she can talk with you about it. Your Journal stays private otherwise; she never reads it on her own.</p><div class="ss-acts"><button class="btn" data-act="kasask" data-q="${esc(`I would like to talk about something I wrote in my Journal on ${ymdLong(x.day,{day:'numeric',month:'long'})}${x.title?` (“${x.title}”)`:''}: “${clip(x.body,1200)}” Help me explore it.`)}">Share it with Kassandra</button><button class="btn ghost" data-jx="kas">Not now</button></div>`):''}`,'jx');
+}
+function jxMonthView(){
+ const m=V.jxm||dkey().slice(0,7),M=jxMonth(m),[y,mo]=m.split('-').map(Number),ms=jxMilestones().filter(x=>x[0].slice(0,7)===m);
+ const written=M.e.filter(x=>x.body),ok=S.settings.jInsights===true,enough=written.length>=7;
+ let moons='';try{moons=K.lunarPhases(new Date(Date.UTC(y,mo-1,1)-DAY),new Date(Date.UTC(y,mo,1))).filter(e=>(e.k==='new_moon'||e.k==='full_moon')&&dkey(e.date).slice(0,7)===m).map(e=>`${e.name} ${ymdLong(dkey(e.date),{day:'numeric',month:'short'})}`).join(' · ')}catch(e){}
+ const rh={new:0,waxing:0,full:0,waning:0};written.forEach(x=>rh[jxBucket(x.phase)]++);const top=Object.entries(rh).sort((a,b)=>b[1]-a[1])[0];
+ const th=jxThemes(written).slice(0,8),T=V.jxTheme&&th.find(t=>t[0]===V.jxTheme);
+ const tl=[...M.e.map(x=>({day:x.day,at:x.at,h:jxRow(x)})),...M.lib.map(x=>({day:x.day,at:x.at||x.day,h:`<button class="dr-entry" ${x.open}><span class="dr-d">Kept · ${ymdLong(x.day,{day:'numeric',month:'long'})}</span><strong>${esc(x.title)}</strong><span class="dr-f">My Library · ${(JX_LC.find(c=>c[0]===x.cat)||['',''])[1]}</span></button>`})),...ms.map(x=>({day:x[0],at:x[0]+'T23',h:`<p class="jx-ms">✦ <b>${x[1]}</b> · ${x[2]}</p>`}))].sort((a,b)=>String(a.at)>String(b.at)?1:-1);
+ return cjPage(`${hdr(ymdLong(m+'-01',{month:'long',year:'numeric'}),{sub:'A chapter of your journey'})}
+ ${moons?`<p class="jx-meta">${esc(moons)}</p>`:''}
+ <div class="dr-stats jx-stats"><div><b>${M.r.length}</b><span>Reflections</span></div><div><b>${M.i.length}</b><span>Intentions</span></div><div><b>${M.g.length}</b><span>Gratitude</span></div><div><b>${M.lib.length}</b><span>Saved items</span></div></div>
+ ${ms.length?`${ssHead('Personal Milestones')}${ms.map(x=>mbox(`<h3>${x[1]}</h3><p class="center">${x[2]}</p><p class="muted small center">${ymdLong(x[0],{day:'numeric',month:'long'})}</p>`,'dr-q')).join('')}`:''}
+ ${ssHead('Personal Insights')}${!ok?`<div class="dr-text"><p>Kosmia can notice the words, themes and lunar rhythms in what you write this month. It is worked out on this device from your own words, and only when you allow it.</p></div><button class="btn ghost" data-jx="insok">Show insights from my words</button>`
+  :!enough?`<p class="muted center small">Insights appear once there are seven written entries in a month (${written.length} so far).</p>`
+  :`<p class="jx-sub">Your Writing Rhythm</p><div class="jx-rh">${Object.entries(rh).map(([k,n])=>`<div><b>${n}</b><span>${JX_PH[k]}</span></div>`).join('')}</div>${top[1]?`<p class="center small">You wrote most often during the ${JX_PH[top[0]].replace(' Moon','').toLowerCase()} Moon this month.</p>`:''}
+  ${th.length?`<p class="jx-sub">Themes in Your Words</p><div class="fchips ss-chips">${th.map(([l,,n])=>`<button class="fchip" role="switch" aria-checked="${V.jxTheme===l}" data-jx="theme" data-v="${esc(l)}">${esc(l)} · ${n}</button>`).join('')}</div>${T?`<p class="center small">You mentioned ${esc(T[0].toLowerCase())} in ${T[2]} ${T[2]===1?'entry':'entries'} this month.</p><div class="dr-book">${written.filter(x=>(x.title+' '+x.body).toLowerCase().match(THEMES.find(t=>t[0]===T[0])[2])).map(jxRow).join('')}</div>`:''}`:''}
+  <p class="muted small center">Observations only, from your own words. The Moon does not cause how you feel. <button class="link" data-jx="insno">Turn insights off</button></p>`}
+ ${M.i.length?`${ssHead('Your Intentions')}<div class="dr-book">${M.i.map(jxRow).join('')}</div>`:''}
+ ${ssHead('Your Timeline')}<div class="dr-book">${tl.map(x=>x.h).join('')||'<p class="muted center">Nothing kept this month.</p>'}</div>`,'jx');
+}
+
+/* ---------- routes, actions and typing ---------- */
+{const CJV={calendar:calendarHome,event:calEventView,'event-ritual':calRitualView,'saved-events':savedEventsView};const vd=views.discover;views.discover=()=>CJV[tab()]?CJV[tab()]():vd()}
+{const JXV={journal:jxHome,reflections:jxReflections,intentions:jxIntentions,gratitude:jxGratitude,library:jxLibrary,write:jxWriteView,page:jxEntryView,month:jxMonthView};const vt=views.tarot;views.tarot=()=>JXV[tab()]?JXV[tab()]():vt()}
+// a blank page begun from elsewhere (a reading, a connection, the sky) is written on Write; a written page opens to be read
+{const oe=openEntry;openEntry=k=>{
+ if(/^j:/.test(k)){const j=S.journal.find(x=>'j:'+x.id===k);
+  if(j&&!j.body){S.journal=S.journal.filter(x=>x!==j);save();const lk=Object.entries(rdMeta().data||{}).find(([,v])=>(v.refl||[]).includes(j.id));let link=(j.data||{}).link||null;
+   if(lk){const x=rdAll().find(y=>y.k===lk[0]);link={k:'saved:'+lk[0],t:x?`${RD_CATL[x.cat]||'Oracle'} — ${x.title}`:'A saved reading'}}
+   return jxStart({id:j.id,cat:j.kind==='intention'?'intention':'reflection',title:'',prompt:j.title,link,src:(j.data||{}).src||(link?'oracle':'free'),force:true})}
+  if(j){V.jxk=k;return go('tarot','page')}}
+ return oe(k)}}
+jNew=()=>jxStart({});
+function jxGoLink(k){
+ if(k.startsWith('saved:')){V.rk=k.slice(6);return go('discover','saved')}
+ if(k.startsWith('event:')){V.calRef=k.slice(6);return go('discover','event')}
+ if(k.startsWith('j:')){V.jxk=k;return go('tarot','page')}
+ if(k.startsWith('sky:')){V.jxk=k;return go('tarot','page')}
+ return openEntry(k);
+}
+document.addEventListener('click',e=>{
+ const h=e.target.closest('[data-heart]');
+ if(h){const k=h.dataset.heart,on=!hearted(k);let snap=null;
+  if(on&&k.startsWith('event:')){const ev=calFind(k.slice(6));if(ev)snap={title:calName(ev),date:ev.date.toISOString()}}
+  if(on&&k.startsWith('sky:')){const it=skyItems().find(i=>'sky:'+i.id+':'+dkey()===k);if(it)snap={title:plain(it.title),when:plain(it.when||''),fact:plain(it.fact||''),you:plain(it.you||''),act:plain(it.act||''),q:plain(it.q||''),day:dkey()}}
+  heartSet(k,on,snap);return render()}
+ const a0=e.target.closest('[data-act=calremgo]');if(a0&&V.remRef){V.calRef=V.remRef;$('#toast').hidden=true;return go('discover','event')}
+ const c=e.target.closest('[data-cal]');
+ if(c){const a=c.dataset.cal,v=c.dataset.v;
+  if(a==='view'){V.cal.view=v;if(v==='month')V.cal.day='';render();return syncUrl()}
+  if(a==='f'){V.cal.f=v;return render()}
+  if(a==='more'){V.cal.span=(V.cal.span||30)+30;return render()}
+  if(a==='month'){V.cal.month=v;V.cal.day='';render();return syncUrl()}
+  if(a==='day'){V.cal.day=v;return render()}
+  if(a==='open'){V.calRef=c.dataset.ref;V.calRem=null;V.calPath=null;return go('discover','event')}
+  if(a==='openrem'){V.calRef=c.dataset.ref;V.calRem=c.dataset.ref;return go('discover','event')}
+  if(a==='openev'){V.calDone=null;return goBack()}
+  if(a==='sv'){V.calSv=v;return render()}
+  if(a==='unsave'){const b=calBm(c.dataset.ref);if(b){S.bookmarks=S.bookmarks.filter(x=>x!==b);C.deleteBookmark&&C.deleteBookmark('event',b.ref);save();toast('Removed from Saved Events')}return render()}
+  const ev=calFind(V.calRef);if(!ev)return;const ref=evRef(ev);
+  if(a==='save'){const b=calBm(ref);calBmSet(ev,{saved:!calSaved(b)});toast(calSaved(calBm(ref))?'Saved to Saved Events':'Removed from Saved Events');return render()}
+  if(a==='rem'){V.calRem=V.calRem===ref?null:ref;render();return calRemPreview()}
+  if(a==='remsave'){const r={before:$('#calrb').checked,day:$('#calrd').checked,time:$('#calrt').value||'08:00'};if(!r.before&&!r.day){toast('Choose the day before, the day itself, or both');return}calBmSet(ev,{rem:r});V.calRem=null;toast('Reminder set · kept in Saved Events');return render()}
+  if(a==='remoff'){calBmSet(ev,{rem:null});V.calRem=null;toast('Reminder removed');return render()}
+  if(a==='theme'){return jxStart({cat:'reflection',prompt:c.dataset.q||evInfo(ev).ref,link:{k:'event:'+ref,t:calName(ev)},src:'event',force:true})}
+  if(a==='path'){V.calPath=v;return render()}
+  if(a==='ritstart'){S.evRit=S.evRit||{};S.evRit[ref]={path:v,step:0,text:'',day:dkey()};V.calDone=null;save();return go('discover','event-ritual')}
+  if(a==='ritgo'){V.calDone=null;return go('discover','event-ritual')}
+  if(a==='next'||a==='prev'){const p=S.evRit[ref];p.step=Math.max(0,p.step+(a==='next'?1:-1));save();render();return window.scrollTo(0,0)}
+  if(a==='ritkeep'||a==='ritpriv'){const p=S.evRit[ref],txt=(($('#calin')||{}).value||'').trim(),[pn]=calPathInfo(ev,p.path);let jid='';
+   if(a==='ritkeep'){if(!txt){toast('Write your intention, or complete privately');return $('#calin').focus()}
+    const j={id:uuid(),day:dkey(),kind:'intention',title:`${calName(ev)} — ${pn}`,body:txt,at:new Date().toISOString(),data:{src:'calendar',path:pn,ritual:calRitName(ev),phase:K.moon(new Date()).name,ev:{ref,name:calName(ev),date:ev.date.toISOString(),k:ev.k}}};S.journal.push(j);C.saveJournal&&C.saveJournal(j);jid=j.id}
+   calBmSet(ev,{ritual:{path:p.path,label:pn,day:dkey(),jid}});delete S.evRit[ref];V.calDone=ref;save();if(jid)toast('Your intention is kept in My Intentions');render();return window.scrollTo(0,0)}
+  if(a==='share'){const txt=`${calName(ev)} · ${ymdLong(evDay(ev),{weekday:'long',day:'numeric',month:'long'})}. ${calTheme(ev)}`,url=location.origin+'/discover/event?e='+encodeURIComponent(ref);
+   if(navigator.share)return navigator.share({title:calName(ev),text:txt,url}).catch(()=>{});
+   return (navigator.clipboard?navigator.clipboard.writeText(txt+' '+url):Promise.reject()).then(()=>toast('Copied to share'),()=>toast('Sharing is not available here'))}
+  if(a==='sky'){const b=calBody(ev);if(b==='Moon')return go('discover','moon');go('horoscope','overview');V.skp=b==='Sun'?'sun':b&&b!=='Earth'?'pl:'+b:null;V.skpIn=false;V.spo={};return render()}
+  return}
+ const j=e.target.closest('[data-jx]');
+ if(j){const a=j.dataset.jx,v=j.dataset.v;
+  if(a==='write'){const lk=j.dataset.link;return jxStart(lk?{cat:j.dataset.c||'reflection',link:{k:lk,t:j.dataset.t||''},src:lk.startsWith('sky:')?'sky':'free',force:true}:{cat:j.dataset.c})}
+  if(a==='open'){V.jxk=j.dataset.k;if(!/^(j|carry|fortune|sky):/.test(V.jxk))return openEntry(V.jxk);return go('tarot','page')}
+  if(a==='golink')return jxGoLink(j.dataset.k);
+  if(a==='month'){V.jxm=v;V.jxTheme=null;return go('tarot','month')}
+  if(a==='fsrc'){V.jxR.src=v;return render()}
+  if(a==='iv'){V.jxI=v;return render()}
+  if(a==='lc'){V.jxL.c=v;return render()}
+  if(a==='unheart'){jxUnheart(j.dataset.k);return render()}
+  if(a==='gadd'){V.jxG=!V.jxG;render();const t=$('#jxgt');if(t)t.focus();return}
+  if(a==='gsave'){const l=(($('#jxgt')||{}).value||'').split('\n').map(x=>x.replace(/^[•\-\s]+/,'').trim()).filter(Boolean);if(!l.length){toast('Write one thing you are grateful for');return}
+   l.forEach(t=>{const g={id:uuid(),day:dkey(),kind:'gratitude',title:'',body:t,at:new Date().toISOString(),data:{src:'free',phase:K.moon(new Date()).name}};S.journal.push(g);C.saveJournal&&C.saveJournal(g)});V.jxG=false;save();toast('Kept in My Gratitude');return render()}
+  if(a==='gedit'){V.jxGe=j.dataset.k||null;return render()}
+  if(a==='gupd'||a==='gdel'){const g=S.journal.find(x=>'j:'+x.id===j.dataset.k);if(g){if(a==='gdel'){S.journal=S.journal.filter(x=>x!==g);C.deleteJournal&&C.deleteJournal(g.id);toast('Removed')}else{g.body=(($('#jxge')||{}).value||'').trim()||g.body;C.saveJournal&&C.saveJournal(g)}}V.jxGe=null;save();return render()}
+  if(a==='cat'){S.jdraft.cat=v;S.jdraft.title=($('#jxt')||{}).value||S.jdraft.title;S.jdraft.body=($('#jxb')||{}).value||S.jdraft.body;save();return render()}
+  if(a==='unlink'){S.jdraft.link=null;save();return render()}
+  if(a==='save')return jxSave();
+  if(a==='discard'){S.jdraft=null;save();toast('Draft discarded');return goBack()}
+  if(a==='edit'){const k=j.dataset.k,x=jxAll().find(y=>y.k===k);if(!x)return;if(x.link&&x.link.item)return oe2(k);
+   S.jdraft={edit:k,cat:x.cat,title:x.title,body:x.body,link:x.j?((x.j.data||{}).link||null):null,day:x.day,fixed:!x.j,src:x.src};save();return go('tarot','write')}
+  if(a==='del'){V.jxDel=V.jxDel?null:V.jxk;return render()}
+  if(a==='delyes'){const k=j.dataset.k;
+   if(k.startsWith('j:')){const id=k.slice(2);S.journal=S.journal.filter(x=>x.id!==id);C.deleteJournal&&C.deleteJournal(id)}
+   else if(k.startsWith('carry:'))delete S.carry[k.slice(6)];
+   else if(k.startsWith('fortune:')){const d=k.slice(8);S.notes[d]='';syncFortune(d)}
+   else{const p=jFind(k);if(p)jSetNote(p,'')}
+   V.jxDel=null;save();toast('Deleted');return goBack()}
+  if(a==='kas'){V.jxKas=V.jxKas?null:V.jxk;return render()}
+  if(a==='theme'){V.jxTheme=V.jxTheme===v?null:v;return render()}
+  if(a==='insok'||a==='insno'){S.settings.jInsights=a==='insok';save();syncProfile();return render()}
+ }
+});
+const oe2=k=>{V.jkey=k;V.jmenu=false;go('tarot','entry')};
+document.addEventListener('input',e=>{
+ const t=e.target;
+ if(t.id==='jxt'||t.id==='jxb'){if(!S.jdraft)return;S.jdraft[t.id==='jxt'?'title':'body']=t.value;if(t.id==='jxb'){const n=(t.value.trim().match(/\S+/g)||[]).length,w=$('#jxwc');if(w)w.textContent=`${n} word${n===1?'':'s'}`}clearTimeout(jxSave.t);jxSave.t=setTimeout(save,600);return}
+ if(t.id==='jxq'||t.id==='jxlq'){const F=t.id==='jxq'?V.jxR:V.jxL;F.q=t.value;const y=scrollY;render();refocus(t.id);window.scrollTo(0,y);return}
+ if(t.id==='calin'){const ev=calFind(V.calRef),p=ev&&(S.evRit||{})[evRef(ev)];if(p){p.text=t.value;clearTimeout(calRemPreview.t);calRemPreview.t=setTimeout(save,600)}return}
+});
+document.addEventListener('change',e=>{
+ const t=e.target;
+ if(t.id==='jxmsel'&&t.value){V.jxm=t.value;V.jxTheme=null;return go('tarot','month')}
+ if(t.id==='jxrm'){V.jxR.m=t.value;return render()}
+ if(t.id==='calrb'||t.id==='calrd'||t.id==='calrt')calRemPreview();
+ if(t.id==='n_mn'){S.notif.moons=t.value;save();syncProfile();toast('Saved')}
 });
 
 {let drLast='';const DRV={dreams:drHome,'new-dream':drHome,dream:drOpen,'dream-journal':drArchive,'dream-patterns':drPatternsView};
@@ -4576,6 +5094,7 @@ document.addEventListener('click',e=>{
  if(a==='mic'){if(!C.user)return toast('Sign in to describe it by voice');const x=$('#sst');if(x)ssS().text=x.value;return voiceRec('sync')}
  if(a==='open'){const d=ssGet(t.dataset.id);if(!d)return;V.sheet=null;V.ssId=d.id;return go('discover',d.type==='number'?'number':'sync-reading')}
  if(a==='keep'){const d=ssGet(t.dataset.id);if(d)ssToJournal(d);return}
+ if(a==='refl'){const d=ssGet(t.dataset.id);if(d){if(!ssList().some(x=>x.id===d.id))ssKeep(d);rdReflect('sign:'+d.id)}return}
  if(a==='range'){V.ssRange=t.dataset.v;return render()}
  if(a==='pat'){V.ssPat=t.dataset.k;return go('discover','pattern')}
  if(a==='snap'){const R=ssRange(),p=(ssPatterns(R).list.find(x=>x.k===V.ssPat)||ssPatterns('all').list.find(x=>x.k===V.ssPat));if(!p)return;const th=p.t,nm=p.num?SS_NUM[N.reduce(p.name.split('').reduce((a,b)=>a+ +b,0)).n]:null;
