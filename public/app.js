@@ -1743,7 +1743,7 @@ function matchBody(a,b){const r=zodiacMatch(a,b);
 }
 function numBlock(title,x,steps){
  if(!x||!x.r.n)return `<div class="label">${title}</div><p class="muted">Not enough letters to calculate.</p>`;
- return `<div class="label">${title}</div><div class="num-line"><span class="num">${x.r.n}</span><div><strong>${N.MEANING[x.r.n][0]}</strong><p class="muted small">${N.MEANING[x.r.n][1]}</p></div></div>${steps?`<p class="calc">${x.parts.map(p=>`${p.word}: ${p.vals.join('+')} = ${p.total}${p.r.chain.length>1?' → '+p.r.chain.slice(1).join(' → '):''}`).join('<br>')}<br>Total ${x.parts.map(p=>p.r.n).join(' + ')} = ${x.total}${x.r.chain.length>1?' → '+x.r.chain.slice(1).join(' → '):''}</p>`:''}`;
+ return `<div class="label">${title}</div><div class="num-line"><span class="num">${x.r.n}</span><div><strong>${N.MEANING[x.r.n][0]}</strong><p class="muted small">${N.MEANING[x.r.n][1]}</p></div></div>${steps?`<p class="sg-calc">${x.parts.map(p=>`${p.word}: ${p.vals.join('+')} = ${p.total}${p.r.chain.length>1?' → '+p.r.chain.slice(1).join(' → '):''}`).join('<br>')}<br>Total ${x.parts.map(p=>p.r.n).join(' + ')} = ${x.total}${x.r.chain.length>1?' → '+x.r.chain.slice(1).join(' → '):''}</p>`:''}`;
 }
 // the three numerology comparisons for two names, each wrapped as a panel (page) or a section (pop-up)
 function resonanceRows(a,b,wrap){const x=N.name(a,S.settings.yMode),y=N.name(b,S.settings.yMode);
@@ -1813,7 +1813,7 @@ function cyclesView(){
  const [y,mo,d]=dkey().split('-').map(Number),b=other?V.cyOther:S.birth.date,py=N.personalYear(b,y),pyn=N.personalYear(b,y+1),pm=N.personalMonth(b,y,mo),pdd=N.personalDay(b,y,mo,d),uy=N.universalYear(y),by=Number(b.slice(0,4));
  const mname=ymdLong(dkey(),{month:'long',year:'numeric'});
  return `<div class="stack"><h1>Personal Year</h1>
- ${panel(`${plate('cycles')}<div class="label">Personal Year · ${y}</div><div class="num-line"><span class="num">${py.r.n}</span><p>${cap(N.CYCLE[py.r.n])}.</p></div><p class="calc">Birth month ${Number(b.slice(5,7))} + birth day ${Number(b.slice(8,10))} + year ${y}, each reduced: total ${py.total} → ${py.r.n}</p><p class="muted small">Your Personal Year runs with the calendar year, 1 January to 31 December ${y}.</p><div class="soul"><p class="soul-t">${other?'':esc(firstOf(S.name||S.fullName))+', '}${(YEAR[py.r.n]||YEAR[py.r.n%9||9]).replace(/^This/,other?'This':'this')}</p><p class="soul-q">“${soul(py.r.n)[2][0]}”<span>${soul(py.r.n)[2][1]}</span></p></div>`)}
+ ${panel(`${plate('cycles')}<div class="label">Personal Year · ${y}</div><div class="num-line"><span class="num">${py.r.n}</span><p>${cap(N.CYCLE[py.r.n])}.</p></div><p class="sg-calc">Birth month ${Number(b.slice(5,7))} + birth day ${Number(b.slice(8,10))} + year ${y}, each reduced: total ${py.total} → ${py.r.n}</p><p class="muted small">Your Personal Year runs with the calendar year, 1 January to 31 December ${y}.</p><div class="soul"><p class="soul-t">${other?'':esc(firstOf(S.name||S.fullName))+', '}${(YEAR[py.r.n]||YEAR[py.r.n%9||9]).replace(/^This/,other?'This':'this')}</p><p class="soul-q">“${soul(py.r.n)[2][0]}”<span>${soul(py.r.n)[2][1]}</span></p></div>`)}
  ${panel(`<div class="label">Personal Month · ${mname}</div><div class="num-line"><span class="num">${pm.r.n}</span><p>${cap(N.CYCLE[pm.r.n].replace('a year','a month'))}.</p></div><div class="rule"></div><div class="label">Personal Day · ${ymdLong(dkey(),{weekday:'long',day:'numeric',month:'long'})}</div><div class="num-line"><span class="num">${pdd.r.n}</span><p>${cap(N.CYCLE[pdd.r.n].replace('a year','a day'))}.</p></div>`)}
  ${panel(`<div class="label">Next year · ${y+1}</div><p>Personal Year <strong>${pyn.r.n}</strong>: ${N.CYCLE[pyn.r.n]}.</p><div class="label">Universal Year · ${y}</div><p>${uy.n}: the shared backdrop for everyone, ${N.CYCLE[uy.n]}.</p>`)}
  ${panel(`<h3>Pinnacles and challenges</h3><p class="muted small">Four long chapters of life, counted from your birth date.</p><div class="tbl"><table><tr><th>Ages</th><th>Years</th><th>Pinnacle</th><th>Challenge</th></tr>${N.pinnacles(b).map(p=>`<tr><td>${p.from}${p.to!=null?'–'+p.to:'+'}</td><td>${by+p.from}${p.to!=null?'–'+(by+p.to):' onward'}</td><td>${p.p} · ${N.MEANING[p.p][0]}</td><td>${p.c}</td></tr>`).join('')}</table></div><p class="muted small">The first pinnacle ends at age 36 minus your Life Path number; the next two last nine years each; the fourth runs for the rest of life.</p>`)}
@@ -2124,7 +2124,7 @@ function lifePathView(){
  return `<div class="sub">${H}${form}
  ${panel(`<div class="lp"><span class="num big">${L.r.n}</span><div><p class="kick">${other?'Their':'Your'} Life Path Number</p><h2>${M[0]}</h2><p class="muted">${M[1]}</p></div></div><p>${M[2]}</p>${soulBlock(L.r.n,other?'':firstOf(S.name||S.fullName),'A message for '+(other?'this path':'you'))}`,'ornate')}
  <div class="list">${acc(ui('t-whisper','acc-i round'),'Key Strengths','Your natural gifts',`<p>${X[0]}</p>`,true)}${acc(ui('ds-flying','acc-i round'),'Challenges','Lessons to grow from',`<p>${X[1]}</p>`)}${acc(ui('t-journal','acc-i round'),'Purpose &amp; Growth','How to align with your path',`<p>${X[2]}</p>`)}${acc(pic('cats','love','acc-i'),'Relationships','How you love and connect',`<p>${LPREL[L.r.n]||LPREL[L.r.n%9||9]}</p>`)}${acc(pic('cats','insights','acc-i'),'Reflection','A question to carry',`<p class="quote">“${LPQ[L.r.n]||LPQ[L.r.n%9||9]}”</p>`)}
- ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
+ ${acc(ui('ex-name','acc-i round'),'The Calculation','How your number was found',`<p class="sg-calc">Birth date ${ymdLong(d)}<br>Month ${L.m}: ${ch(L.parts.month)}<br>Day ${L.d}: ${ch(L.parts.day)}<br>Year ${L.y}: ${String(L.y).split('').join(' + ')} = ${L.parts.year.chain.slice(1).join(' → ')}<br>Together: ${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="muted small">Method: month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
  ${acc(ui('ex-lifepath','acc-i round'),`Birthday Number · ${bd.n}`,N.MEANING[bd.n][0],`<p>The day you were born adds a gift to your path: ${N.MEANING[bd.n][1]}.</p>`)}</div>
  ${other?'':'<button class="btn ghost" data-ss="savelp">Save to Your Readings</button>'}${nsBtn('lp')}${other?mineBtn('lp',hasBirthDate()):'<button class="btn ghost" data-go="discover" data-t="cycles">Personal Year</button>'}</div>`;
 }
@@ -5746,6 +5746,138 @@ SECTIONS.discover.tabs.push(['timeline','Cosmic Calendar']);CPAGES.push('timelin
 {const vd=views.discover;views.discover=()=>K&&tab()==='calendar'?calHomeP():tab()==='timeline'?calendarHome():vd()}
 {const vt2=views.tarot;views.tarot=()=>tab()==='journal'?jrHomeP():vt2()}
 {const vy2=views.you;views.you=()=>tab()==='home'?mcHomeP():vy2()}
+/* ---------- Signs & Synchronicities, painted: the cathedral ceiling and, behind each of its panels, its own close-up.
+   Asking pages are one painting with the form lettered into its sky; reading pages are layered: the sky at the back, the
+   words scrolling over it, and the panel's arch and its figure in front, so the words pass behind them ---------- */
+const SG='/art/signs/';
+const sgBk=`<button class="sg-bk" data-act="back" aria-label="Back"></button>`,sgMe=`<button class="sg-me" data-go="you" aria-label="My Cosmos"><img src="${SKY}or-me.webp" alt=""></button>`;
+const sgHot=(attr,label,x,y,w,h,r=40)=>`<button class="rit-hot" ${attr} aria-label="${label}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r}px"></button>`;
+const sgNumFs=t=>Math.min(168,Math.round(1150/Math.max(1,String(t).length)));
+function sgHome(){
+ const L=[[333,722,'Sacred<br>Numbers','Numbers you<br>keep seeing.','numbers',[60,430,420,410]],[677,716,'Synchronicities','Meaningful<br>coincidences.','sync',[530,450,430,410]],[315,1312,'Patterns','Themes that<br>keep returning.','patterns',[20,1060,440,400]],[700,1352,'Numerology','The numbers<br>within you.','numerology',[560,1070,430,400]]];
+ return `<div class="rit sg0 sgh" role="main" aria-label="Signs and Synchronicities"><div class="rit-in">
+  <div class="rit-sc"><div class="kt sg-ttl"><h1>Signs &amp;<br>Synchronicities</h1><p>Discover the meaning woven<br>into everyday life.</p></div>
+   ${L.map(([x,y,t,s])=>`<div class="sg-pl" style="left:${x}px;top:${y}px"><b>${t}</b><span>${s}</span></div>`).join('')}
+   ${L.map(([,,t,,k,[x,y,w,h]])=>sgHot(`data-go="discover" data-t="${k}"`,t.replace('<br>',' '),x,y,w,h,120)).join('')}</div>
+  <div class="sg-shd"></div><div class="sg-fl">${sgBk}${sgMe}</div>
+  <div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+}
+// the two asking pages: one painting each, its sky holding the form
+function sgNumbers(){
+ const F=ssN(),busy=F.busy,shown=F.num||'11:11';
+ return `<div class="rit sg0 sga sgn" role="main" aria-label="Sacred Numbers"><div class="rit-in"><div class="rit-sc">
+  <div class="kt sg-kt" style="left:132px;top:186px;width:760px"><h1>Sacred Numbers</h1><p>What number has been finding<br>its way into your days?</p></div>
+  ${busy?`<div class="sg-num" style="top:410px;font-size:${sgNumFs(shown)}px">${esc(shown)}</div><div class="sg-busy" style="top:660px">Kassandra is reading your number…</div>`:`
+  <input class="sg-num" id="ssn" style="top:410px" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="11:11" value="${esc(F.num)}" aria-label="The number you noticed">
+  <div class="sg-k" style="top:612px">Tap to write the number you keep seeing</div>
+  <div class="sg-ch" style="top:672px">${SS_FREQ.filter(n=>n!=='11:11').slice(0,6).map(n=>`<button data-ss="num" data-v="${n}" aria-pressed="${F.num===n}"${F.num===n?' class="on"':''}>${n}</button>`).join('<i></i>')}</div>
+  <label class="sg-q" for="ssc" style="top:768px">What was happening when you noticed it? <i>· Optional</i></label>
+  <input class="sg-line" id="ssc" style="left:162px;top:810px;width:700px" maxlength="400" placeholder="A thought, a place, a feeling…" value="${esc(F.ctx)}">
+  <button class="sg-gold" data-ss="numgo" style="left:192px;top:950px;width:640px">Reveal its meaning</button>`}
+ </div><div class="sg-fl">${sgBk}${sgMe}</div><div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+}
+function sgSync(){
+ const F=ssS(),busy=F.busy,rec=KS.state!=='idle'&&KS.target==='sync';
+ return `<div class="rit sg0 sga sgy" role="main" aria-label="Synchronicities"><div class="rit-in"><div class="rit-sc">
+  <div class="kt sg-kt l" style="left:64px;top:236px;width:600px"><h1>Synchronicities</h1><p>Not everything needs an explanation.<br>Some moments simply invite reflection.</p></div>
+  ${busy?`<div class="sg-busy" style="top:880px">Kassandra is listening to your moment…</div>`:`
+  <div class="sg-k" style="top:790px"><label for="sst">What happened?</label> <button data-ss="mic" class="sg-mic">· ${rec?(KS.state==='listening'?'listening… tap to finish':'hearing you…'):'or tell it by voice'}</button></div>
+  <textarea class="sg-lines" id="sst" style="left:142px;top:826px;width:740px" maxlength="1200" placeholder="A feather on your doorstep, a song at the right moment…">${esc(F.text)}</textarea>
+  <div class="sg-k" style="top:996px">How did it feel? <em>· optional</em></div>
+  <div class="sg-fe" style="top:1022px">${SS_FEEL.map(([k,l])=>`<button data-ss="feel" data-v="${k}" aria-pressed="${F.feel===k}"${F.feel===k?' class="on"':''}>${l}</button>`).join('<i></i>')}</div>
+  <button class="sg-gold" data-ss="syncgo" style="left:242px;top:1076px;width:540px">Explore its meaning</button>`}
+ </div><div class="sg-fl">${sgBk}${sgMe}</div><div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+}
+/* a layered reading: o = {cls, label, sky, arch:[file,x,y,w,h], fig:[file,w,h,side,scale], youth, head, hd, body} */
+function sgLayer(o){
+ const [ff,fw,fh,side,sc]=o.fig,a=o.arch;
+ return `<div class="rit sg0 sgl ${o.cls||''}" role="main" aria-label="${o.label}" style="--fsc:${sc};--fr:${fh/fw}"><div class="rit-in">
+  <div class="sg-bg" style="background-image:url(${SG}${o.sky})"></div>
+  ${o.youth?`<div class="sg-fl sg-back">${o.youth}</div>`:''}
+  <div class="sg-sc"><div class="sg-hd" style="--hd:${o.hd||1000}px"><div class="sg-u">${o.head}</div></div><div class="sg-main">${o.body}</div></div>
+  <div class="sg-fl"><img src="${SG}${a[0]}" alt="" style="left:${a[1]}px;top:${a[2]}px;width:${a[3]}px;height:${a[4]}px"></div>
+  <img class="sg-fig ${side}" src="${SG}${ff}" alt="">
+  <div class="sg-fl">${sgBk}${sgMe}</div><div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+}
+const sgPn=(h,t,cls='')=>`<div class="sg-pn${cls?' '+cls:''}">${h?`<h3>${h}</h3>`:''}${t}</div>`;
+const sgActs=l=>`<div class="sg-acts">${l.join('<i></i>')}</div>`;
+const sgKeep=k=>`<button data-heart="${esc(k)}" aria-pressed="${hearted(k)}">${hearted(k)?'♥ Kept':'♡ Keep'}</button>`;
+const SGAR={sn:['snr-arch.webp',0,0,727,766],sy:['syr-arch.webp',408,0,616,351],pt:['pt-arch.webp',0,0,870,505],nm:['nm-arch.webp',294,0,730,451]};
+function sgNumberReading(){
+ const d=ssGet(V.ssId||(V.q||{}).id);if(!d||d.type!=='number')return null;
+ const r=d.r||{},since=dkey(new Date(Date.now()-29*DAY)),seen=ssList().filter(x=>x.type==='number'&&x.number===d.number&&x.day>=since).length,shown=d.shown||d.number;
+ return sgLayer({cls:'sgr',label:'Your sacred number',sky:'snr-sky.webp',arch:SGAR.sn,fig:['snr-woman.webp',1536,827,'l',1.35],hd:760,
+  head:`<div class="kt sg-kt" style="left:300px;top:186px;width:640px"><h1>Sacred Numbers</h1><p>${ymdLong(d.day,{weekday:'long',day:'numeric',month:'long'})}</p></div><div class="sg-num" style="left:200px;top:336px;font-size:${sgNumFs(shown)}px">${esc(shown)}</div>`,
+  body:`<div class="sg-ttl2">${esc(r.title||'')}</div>${sgPn('The Symbolism',`<p>${esc(r.symbolism||'')}</p>`)}${sgPn('What It May Mean for You',`<p>${esc(r.meaning||'')}</p>${d.context?`<p class="ctx">You noticed it when: ${esc(d.context)}</p>`:''}`)}${sgPn('An Invitation to Reflect',`<p>${esc(r.reflection||'')}</p>`,'q')}
+  ${seen>1?`<p class="sg-note">You have explored this number ${ssTimes(seen)} recently. <button class="sg-lk" data-go="discover" data-t="patterns">Explore your patterns</button></p>`:''}
+  ${sgActs([ssList().some(x=>x.id===d.id)?sgKeep('sign:'+d.id):'',`<button data-ss="refl" data-id="${esc(d.id)}">Write in Journal</button>`,`<button data-go="discover" data-t="readings">Your Readings</button>`].filter(Boolean))}
+  <button class="sg-lk" data-go="discover" data-t="numbers">Explore another number</button><p class="sg-note">${r.ai?'Read by Kassandra with AI. ':'Read from Kosmia’s book of signs. '}Signs are offered for reflection, not as predictions.</p>`});
+}
+const SGYO=`<img src="${SG}syr-youth.webp" alt="" style="left:340px;top:150px;width:684px;height:568px">`;
+function sgSyncReading(){
+ const d=ssGet(V.ssId||(V.q||{}).id);if(!d||d.type!=='sync')return null;const r=d.r||{};
+ return sgLayer({cls:'sgr',label:'Your synchronicity',sky:'syr-sky.webp',arch:SGAR.sy,fig:['syr-woman.webp',1536,934,'l',1.18],youth:SGYO,hd:820,
+  head:`<div class="kt sg-kt l" style="left:64px;top:236px;width:600px"><h1>Synchronicities</h1><p>${ymdLong(d.day,{weekday:'long',day:'numeric',month:'long'})}</p></div>`,
+  body:`<div class="sg-ttl2">${esc(r.title||'A Meaningful Moment')}</div>${sgPn('The Moment',`<p>${esc(r.moment||'')}</p>`)}${sgPn('The Symbolism',`<p>${esc(r.symbolism||'')}</p>`)}${sgPn('A Deeper Meaning',paras(r.deeper))}${sgPn('An Invitation to Reflect',`<p>${esc(r.reflection||'')}</p>`,'q')}${r.action?sgPn('A Gentle Action',`<p>${esc(r.action)}</p>`):''}
+  ${(d.themes||[]).length?`<p class="sg-note">This moment touches ${d.themes.map(ssTheme).filter(Boolean).map(t=>t.name.toLowerCase()).join(' and ')}. <button class="sg-lk" data-go="discover" data-t="patterns">See where else it appears</button></p>`:''}
+  ${sgActs([ssList().some(x=>x.id===d.id)?sgKeep('sign:'+d.id):'',`<button data-ss="refl" data-id="${esc(d.id)}">Write in Journal</button>`,`<button data-go="discover" data-t="readings">Your Readings</button>`].filter(Boolean))}
+  <button class="sg-lk" data-go="discover" data-t="sync">Share another moment</button><p class="sg-note">${r.ai?'Read by Kassandra with AI. ':'Read from Kosmia’s book of signs. '}Signs are offered for reflection, not as predictions.</p>`});
+}
+const sgRange=()=>`<div class="sg-rng" role="radiogroup" aria-label="Time">${SS_RANGES.map(([k,l])=>`<button role="radio" aria-checked="${ssRange()===k}" data-ss="range" data-v="${k}"${ssRange()===k?' class="on"':''}>${l}</button>`).join('<i></i>')}</div>`;
+function sgPatterns(){
+ const R=ssRange(),{list}=ssPatterns(R),T=list.filter(p=>p.t).slice(0,3);let thread='';
+ if(T.length>1)thread=`Themes of ${T[0].t.ph} and ${T[1].t.ph} have appeared across several of your ${R==='all'?'':'recent '}experiences. You may find it meaningful to ask yourself: “${T[0].t.q}”`;
+ else if(T.length)thread=`${T[0].name} has appeared ${ssTimes(T[0].n)}, in your ${T[0].where.toLowerCase()}. ${T[0].t.m} You may find it meaningful to ask yourself: “${T[0].t.q}”`;
+ return sgLayer({cls:'sgp',label:'Patterns',sky:'ptbg.webp',arch:SGAR.pt,fig:['pt-woman2.webp',1536,790,'l',1.35],hd:900,
+  head:`<div class="kt sg-kt halo" style="left:132px;top:186px;width:760px"><h1>Patterns</h1><p>The invisible threads woven<br>through your journey.</p></div>`,
+  body:`${sgRange()}${list.length?`${sgPn('Your Recurring Themes',list.map(p=>`<button class="sg-th" data-ss="pat" data-k="${esc(p.k)}"><span><b>${esc(p.name)}</b><span>${esc(p.where)}</span></span><em>${ssTimes(p.n)}</em><small>›</small></button>`).join(''))}${thread?sgPn('The Thread Connecting Them',`<p>${esc(thread)}</p>`):''}`
+   :sgPn('Every journey begins with a single thread',`<p>As you record your dreams, signs and reflections, your recurring themes will begin to unfold here.</p>`)+sgActs([`<button data-go="discover" data-t="numbers">A number</button>`,`<button data-go="discover" data-t="new-dream">A dream</button>`,`<button data-go="discover" data-t="sync">A moment</button>`])}
+  <p class="sg-note">Patterns are found in what you have kept in Kosmia, on this device and in your account. Nothing is invented.</p>`});
+}
+function sgPattern(){
+ const R=ssRange(),{list}=ssPatterns(R),p=list.find(x=>x.k===V.ssPat)||ssPatterns('all').list.find(x=>x.k===V.ssPat);if(!p)return null;
+ const t=p.t,nm=p.num?SS_NUM[N.reduce(p.name.split('').reduce((a,b)=>a+ +b,0)).n]:null,items=p.it.slice().sort((a,b)=>a.day>b.day?1:-1);
+ return sgLayer({cls:'sgp',label:p.name,sky:'ptbg.webp',arch:SGAR.pt,fig:['pt-woman2.webp',1536,790,'l',1.35],hd:900,
+  head:`<div class="kt sg-kt halo" style="left:132px;top:186px;width:760px"><h1>Patterns</h1><p>Appeared ${ssTimes(p.n)}${R==='all'?'':' in the last '+R+' days'}</p></div>`,
+  body:`<div class="sg-ttl2">${esc(p.name)}</div>${sgPn('Where It Appeared',`<p class="sg-wh">${p.srcs.map(([s,n])=>`${SS_SRC[s]} <b>${n}</b>`).join(' · ')}</p>`)}${sgPn('What It May Mean',`<p>${esc(t?t.m:(nm?nm[1]:''))}</p>`)}
+  ${sgPn('Its Thread Through Your Journey',`<div class="sg-tl">${items.map(e=>`<button ${e.open}><b>${esc(e.title)}</b><span>${SS_SRC[e.src]} · ${relDay(e.day)}</span></button>`).join('')}</div>`)}${sgPn('An Invitation to Reflect',`<p>${esc(t?t.q:(nm?nm[3]:''))}</p>`,'q')}
+  <button class="sg-lk" data-ss="snap">Save this thread to Your Readings</button>`});
+}
+const sgNm=(label,head,body,hd=1090)=>sgLayer({cls:'sgm',label,sky:'nmsky.webp',arch:SGAR.nm,fig:['nm-sage.webp',1536,793,'r',1.2],hd,
+ head:`<img class="sg-dial" src="${SG}nm-dial.webp" alt="" style="left:131px;top:292px;width:760px;height:760px">${head}`,body});
+const sgNmHead=(t,s)=>`<div class="kt sg-kt halo" style="left:132px;top:150px;width:760px"><h1>${t}</h1><p>${s}</p></div>`;
+function sgNumerology(){
+ const bd=hasBirthDate()?S.birth.date:'',L=bd?N.lifePath(bd).r.n:0,nm=nameNums(S.fullName),E=nm&&nm.expression.r.n;
+ const door=(t,n,name,txt,k)=>`<button class="sg-door" data-go="discover" data-t="${k}"><h3>${t}</h3><span class="sg-big">${n||'✶'}</span><b>${name}</b><span>${txt}</span><u>Open ${t==='Life Path'?'your Life Path':t} ›</u></button>`;
+ return sgNm('Numerology',sgNmHead('Numerology','The hidden symbolism of your birth and name.'),
+  sgPn('',door('Life Path',L,L?N.MEANING[L][0]:'Your Life Path','The symbolic journey revealed through your date of birth.','life-path'))+sgPn('',door('The Name Within',E,E?N.MEANING[E][0]:'The Name Within','The qualities, desires and expression in your name.','name-within'))
+  +`<p class="sg-note">${L?'Calculated from your birth date':'Add your birth date to your birth details to reveal your Life Path'}${E?' and your full birth name.':'; the Name Within reads your full birth name.'}</p>`);
+}
+function sgLifePath(){
+ if(V.ns.lp||!hasBirthDate())return null;
+ const d=S.birth.date,L=N.lifePath(d),n=L.r.n,M=N.MEANING[n],X=LPX[n]||LPX[n%9||9],x=soul(n),who=firstOf(S.name||S.fullName);
+ return sgNm('Life Path',sgNmHead('Life Path','The road your soul chose.'),
+  `${sgPn('Your Life Path Number',`<span class="sg-big">${n}</span><div class="sg-ttl2 c">${M[0]}</div><p class="kw">${M[1].split(/,\s*/).join(' · ')}</p>`)}${sgPn('',`<p>${M[2]}</p>`)}
+  ${sgPn('A Message for You',`<p>${who?esc(who)+', '+x[0].charAt(0).toLowerCase()+x[0].slice(1):x[0]}</p><p>${x[1]}</p><p class="ctx">“${x[2][0]}” · ${x[2][1]}</p>`)}
+  ${sgPn('Key Strengths',`<p>${X[0]}</p>`)}${sgPn('Challenges',`<p>${X[1]}</p>`)}${sgPn('Purpose &amp; Growth',`<p>${X[2]}</p>`)}${sgPn('Relationships',`<p>${LPREL[n]||LPREL[n%9||9]}</p>`)}
+  ${sgPn('An Invitation to Reflect',`<p>${LPQ[n]||LPQ[n%9||9]}</p>`,'q')}
+  ${sgPn('The Calculation',`<p class="sg-calc">${ymdLong(d,{day:'numeric',month:'long',year:'numeric'})}</p><p class="sg-calc">${L.parts.month.n} + ${L.parts.day.n} + ${L.parts.year.n} = ${L.total}${L.r.chain.length>1?' → '+L.r.chain.slice(1).join(' → '):''}</p><p class="ctx">Month, day and year are each reduced to a single digit or a master number (11, 22, 33), then added and reduced again.</p>`)}
+  ${sgActs([`<button data-ss="savelp">Save to Your Readings</button>`,`<button data-go="discover" data-t="cycles">Personal Year</button>`])}
+  <button class="sg-lk" data-act="nsearch" data-k="lp">Someone else’s Life Path</button>`);
+}
+function sgName(){
+ const nm=V.ns.nw?null:nameNums(S.fullName);if(!nm||!nm.expression.r.n)return null;
+ const L=hasBirthDate()?N.lifePath(S.birth.date):null,ma=L?N.reduce(L.r.n+nm.expression.r.n).n:0,x=soul(nm.expression.r.n),who=firstOf(S.name||S.fullName);
+ const four=[['Expression',nm.expression.r.n,'Your natural gifts and purpose'],['Soul Urge',nm.soul&&nm.soul.r.n,'What your heart longs for'],['Personality',nm.personality&&nm.personality.r.n,'How others first meet you'],['Maturity',ma,'Who you are becoming']].filter(f=>f[1]);
+ return sgNm('The Name Within',sgNmHead('The Name Within','The music in your name.'),
+  `${sgPn('Your Name',`<div class="sg-nmw">${[...new Set(nm.letters.map(l=>l.wi))].map(wi=>`<div>${nm.letters.filter(l=>l.wi===wi).map(l=>`<span class="${l.vowel?'v':''}"><b>${l.c}</b><i>${l.v}</i></span>`).join('')}</div>`).join('')}</div><p class="ctx">Each letter carries a number. The vowels, in brighter gold, are the voice of your heart.</p>`)}
+  ${sgPn('',`<div class="sg-four">${four.map(([k,v,s])=>`<div><h3 class="sg-fk">${k}</h3><span class="sg-big">${v}</span><b>${N.MEANING[v][0]}</b><span>${s}</span></div>`).join('')}</div>`)}
+  ${sgPn('What Your Name Carries',`<p>${who?esc(who)+', '+x[0].charAt(0).toLowerCase()+x[0].slice(1):x[0]}</p><p>${x[1]}</p>`)}
+  ${sgActs([`<button data-ss="savenw">Save to Your Readings</button>`])}
+  <button class="sg-lk" data-act="nsearch" data-k="nw">Someone else’s name</button>`);
+}
+{const SGV={signs:sgHome,numbers:sgNumbers,sync:sgSync,number:sgNumberReading,'sync-reading':sgSyncReading,patterns:sgPatterns,pattern:sgPattern,numerology:sgNumerology,'life-path':sgLifePath,'name-within':sgName};
+ const vd=views.discover;views.discover=()=>{const f=SGV[tab()];const h=f&&f();return h||vd()}}
 {const vh=views.horoscope;views.horoscope=()=>(!A||!K||tab()==='sign')?vh():skyHome()}
 {const vt=views.tarot;views.tarot=()=>tab()==='home'?oracleHome():vt()}
 SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
