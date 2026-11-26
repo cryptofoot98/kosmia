@@ -3415,6 +3415,7 @@ function view(){
    <button class="rit-hot" data-ract="time" aria-label="${eve?'Show the morning ritual':'Show the evening ritual'}" style="left:330px;top:40px;width:364px;height:120px;border-radius:40%"></button>
    <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:900px;top:80px;width:88px;height:88px"></button></div>
   <div class="rit-ft"></div>
+  <div class="kfr"><i></i><i></i></div>
   ${knNav('home')}
  </div>
  <div class="rit-ov${op!=null?' on now':''}" id="rov">${op!=null?POPS[op]().replace('class="rt','class="rt on in'+(op===1&&S.revealed[dkey()]?' now':'')):''}</div></div>`;
@@ -3426,7 +3427,7 @@ function fit(){
  const s=Math.max(W/1024,H/2192);
  r.setProperty('--rw',W+'px');r.setProperty('--rs',s);r.setProperty('--rx',(W-1024*s)/2+'px');r.setProperty('--rnh',nh+'px');
  r.setProperty('--pw',W+'px');
- const o=document.querySelector('.or0');if(o){const v=H/W>1.93?'b':'a',sc=o.querySelector('.or-sc');if(sc&&sc.dataset.v!==v)return render();const os=Math.max(W/1024,H/ORV[v].h);o.style.setProperty('--os',os);o.style.setProperty('--ox',(W-1024*os)/2+'px')}
+ const o=document.querySelector('.or0');if(o){const sc=o.querySelector('.or-sc');if(sc&&sc.dataset.k!==W+'x'+H)return render()}
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
   let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
   if(id==='rtu'||id==='rtq'){const n=id==='rtu'?'u':'q',L=UQL[n],hs=Object.keys(L.v).map(Number);ch=hs.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
@@ -3558,6 +3559,7 @@ function skyHome(){
   </div>
   <div class="rit-ft"></div>
   <div class="sk0-tip">Tap on the Sun, Moon, planets or your sign<br>to explore their meaning for you.</div>
+  <div class="kfr"><i></i><i></i></div>
   ${knNav('horoscope')}
  </div>${V.spk&&V.skp==='sign'?signPick(V.exploreSign||S.sign):''}${V.skp?`<div class="rit-ov on${V.skpIn?' now':''}" id="rov">${V.skp==='moon'?moonPop():V.skp==='sun'?sunPop():V.skp==='sign'?signPop():planetPop(V.skp.slice(3))}</div>`:''}</div>${sk?skyPop(sk):''}`;
 }
@@ -3567,17 +3569,27 @@ function skyHome(){
 // it a little and squeezes it very slightly, its edges melting into the frame's shadow, so all of it stays above the bar
 // two paintings of the one scene, each 1170 wide: A for shorter screens, B for full-height ones; shown at the screen's
 // width, never stretched. Each thing's place [x, y, w, h] in its own painting
-const ORV={a:{h:1744,img:'or-body-s',t:[512,208],l:{omens:[190,505],dreams:[842,470],conn:[850,725],read:[272,1488],kas:[516,1488],tarot:[736,1488]},hot:{omens:[60,200,270,340],dreams:[750,260,190,240],conn:[730,520,250,240],read:[160,1240,250,250],kas:[420,1170,185,320],tarot:[600,1270,280,220],me:[840,94,88,88]}},
- b:{h:2192,img:'or-body',t:[512,246],l:{omens:[194,560],dreams:[850,522],conn:[850,864],read:[226,1812],kas:[510,1932],tarot:[800,1824]},hot:{omens:[50,230,290,390],dreams:[750,300,200,260],conn:[730,620,260,280],read:[50,1590,300,300],kas:[375,1590,270,380],tarot:[610,1620,380,240],me:[890,110,88,88]}}};
-const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities','Signs &amp;<br>Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams','Dreams'],conn:['data-go="discover" data-t="connections"','Connections','Connections'],read:['data-go="discover" data-t="readings"','Your Readings','Your Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot','Tarot'],kas:['data-act="kasgo"','Kassandra','Kassandra'],me:['data-go="you"','My Cosmos']};
+// one painting, 1296 wide and 2192 tall, shown at the screen's height so the seeker is the same on every phone; the
+// book, the crystal ball and the cards are their own pieces and rise a little on shorter screens to stay above the menu
+const ORW=1296,ORH=2192,ORX=136;
+const ORL={omens:[194,560],dreams:[850,522],conn:[850,864],read:[226,1812],kas:[510,1932],tarot:[800,1824]};
+const ORHOT={omens:[50,230,290,390],dreams:[750,300,200,260],conn:[730,620,260,280],read:[50,1560,300,330],kas:[375,1590,270,380],tarot:[610,1620,380,240],me:[878,109,92,92]};
+const OROBJ={book:[68,1570,262,226],ball:[401,1611,218,294],cards:[615,1640,347,138]};
+const ORLOW={read:1,kas:1,tarot:1};
+const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities','Signs &amp;<br>Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams','Dreams'],conn:['data-go="discover" data-t="connections"','Connections','Connections'],read:['data-go="discover" data-t="readings"','Your Readings','Your<br>Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot','Tarot'],kas:['data-act="kasgo"','Kassandra','Kassandra'],me:['data-go="you"','My Cosmos']};
+const orGeo=()=>{const W=Math.min(innerWidth,520),H=innerHeight,os=Math.max(H/ORH,W/ORW),lk=Math.min(1.35,(W/1024)/os),top=(H-W*86/390)/os;
+ return {W,H,os,lk,ox:(W-ORW*os)/2,lift:Math.max(0,Math.round(ORL.kas[1]+30*lk-(top-6)))}};
 function oracleHome(){
- const v=innerHeight/Math.min(innerWidth,520)>1.93?'b':'a',P=ORV[v];
- return `<div class="rit or0" role="main" aria-label="Oracle"><div class="rit-in">
-  <div class="or-sc" data-v="${v}" style="height:${P.h}px"><img class="or-bg" src="${SKY}${P.img}.webp" alt="" style="height:${P.h}px">
-   <div class="kt" style="left:${P.t[0]-330}px;top:${P.t[1]}px;width:660px"><h1>Oracle</h1><p>Guidance, insight and deeper<br>meaning for your journey.</p></div>
-   ${Object.entries(P.l).map(([k,[x,y]])=>`<span class="or-l${k==='kas'?' or-lk':''}${/read|kas|tarot/.test(k)?' or-lo':''}${v==='b'&&k==='read'?' or-l2':''}" style="left:${x}px;top:${y}px">${v==='b'&&k==='read'?'Your<br>Readings':ORT[k][2]}</span>`).join('')}
-   ${Object.entries(P.hot).map(([k,[x,y,w,h]])=>`<button class="rit-hot" ${ORT[k][0]} aria-label="${ORT[k][1]}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${k==='me'?'50%':'48px'}"></button>`).join('')}
+ const G=orGeo(),up=k=>ORLOW[k]?G.lift:0;
+ return `<div class="rit or0" role="main" aria-label="Oracle" style="--os:${G.os};--ox:${G.ox}px;--lk:${G.lk}"><div class="rit-in">
+  <div class="or-sc" data-k="${G.W}x${G.H}"><img class="or-bg" src="${SKY}or-wide.webp" alt="">
+   ${Object.entries(OROBJ).map(([k,[x,y,w,h]])=>`<img class="or-ob" src="${SKY}or-${k}.webp" alt="" style="left:${x+ORX}px;top:${y-G.lift}px;width:${w}px;height:${h}px">`).join('')}
+   <img class="or-ob or-me" src="${SKY}or-me.webp" alt="" style="left:${878+ORX}px;top:109px;width:92px;height:92px">
+   <div class="kt" style="left:${ORX+512-380}px;top:246px;width:760px"><h1>Oracle</h1><p>Guidance, insight and deeper<br>meaning for your journey.</p></div>
+   ${Object.entries(ORL).map(([k,[x,y]])=>`<span class="or-l${k==='kas'?' or-lk':''}${k==='read'||k==='omens'?' or-l2':''}" style="left:${x+ORX}px;top:${y-up(k)}px">${ORT[k][2]}</span>`).join('')}
+   ${Object.entries(ORHOT).map(([k,[x,y,w,h]])=>`<button class="rit-hot" ${ORT[k][0]} aria-label="${ORT[k][1]}" style="left:${x+ORX}px;top:${y-up(k)}px;width:${w}px;height:${h}px;border-radius:${k==='me'?'50%':'48px'}"></button>`).join('')}
   </div>
+  <div class="kfr"><i></i><i></i></div>
   ${knNav('tarot')}
  </div>${sheetView()}</div>`;
 }

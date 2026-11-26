@@ -275,3 +275,21 @@ body:has(.or0){overflow:hidden}
 #app .or-l{text-shadow:0 1px 3px rgba(4,7,22,1),0 0 8px rgba(4,7,22,.95),0 0 16px rgba(4,7,22,.9),0 0 28px rgba(4,7,22,.7)}
 #app .or-sc[data-v=a] .or-l.or-lo::after{display:none}
 @media (max-height:700px){#app .sk0-tip{bottom:calc(var(--rnh,86px) + env(safe-area-inset-bottom,0px) - 13px)}}
+
+/* Oracle in layers: one wide painting at the screen's height, its three objects apart, lettering kept at Ritual's size */
+#app .or-sc{width:1296px;height:2192px}
+#app .or-bg{width:1296px;height:2192px}
+#app .or-ob{display:block;pointer-events:none;filter:drop-shadow(0 10px 14px rgba(4,10,6,.55))}
+#app .or0 .kt h1{font-size:calc(58px*var(--lk,1))!important}
+#app .or0 .kt h1::after{width:calc(300px*var(--lk,1))}
+#app .or0 .kt p{font-size:calc(30px*var(--lk,1))!important}
+#app .or0 .or-l{font-size:calc(46px*var(--lk,1))}
+#app .or-me{filter:none}
+/* the one golden frame, laid over every painting: a fine line at the edges and the same ornament in the two upper corners */
+#app .kfr{--ku:calc(var(--rw,100vw)/390);--fc:calc(78*var(--ku));position:absolute;inset:0;z-index:2;pointer-events:none;
+ background:linear-gradient(#F1D08C,#C9984C) calc(5*var(--ku)) 100%/1.5px calc(100% - var(--fc) + 6px) no-repeat,
+  linear-gradient(#F1D08C,#C9984C) calc(100% - 5*var(--ku)) 100%/1.5px calc(100% - var(--fc) + 6px) no-repeat,
+  linear-gradient(90deg,#C9984C,#F1D08C 50%,#C9984C) 50% calc(4*var(--ku))/calc(100% - 2*var(--fc) + 12px) 1.5px no-repeat;
+ -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 93%);mask-image:linear-gradient(to bottom,#000 78%,transparent 93%);filter:drop-shadow(0 0 2px rgba(255,190,100,.45))}
+#app .kfr i{position:absolute;top:calc(1*var(--ku));left:calc(1*var(--ku));width:var(--fc);height:var(--fc);background:url(/art/nav2/frame-corner.webp) 0 0/100% 100% no-repeat}
+#app .kfr i+i{left:auto;right:calc(1*var(--ku));transform:scaleX(-1)}
