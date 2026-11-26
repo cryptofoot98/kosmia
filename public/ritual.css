@@ -236,3 +236,42 @@ body:has(.or0){overflow:hidden}
 #app .or-l{transform:translate(-50%,-50%);white-space:nowrap;font:italic 500 58px/1 'Cormorant Garamond',Georgia,serif;color:#F6E6C4;letter-spacing:.01em;text-shadow:0 0 14px rgba(245,190,110,.55),0 0 4px rgba(255,225,170,.6),0 1px 2px rgba(6,8,24,.8);pointer-events:none}
 #app .or-nav{background-image:url(/art/sky/or-nav.webp)}
 #app .or-l2{font-size:50px;line-height:.98;text-align:center}
+
+/* ---------- the repainted world: each painting runs to the foot of the screen, the menu floats on it, and every
+   place is lettered alike (title, line beneath it, names) ---------- */
+#app .rit-sc,#app .rit-ws{height:2192px}
+#app .rit-ft{position:absolute;left:var(--rx,0px);bottom:0;width:calc(1024px*var(--rs,.38));height:calc(300px*var(--rs,.38));background:url(/art/ritual/m-body.webp) 50% 100%/100% auto no-repeat;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 34%);mask-image:linear-gradient(to bottom,transparent,#000 34%);pointer-events:none}
+#app .rit.eve .rit-ft{background-image:url(/art/ritual/e-body.webp)}
+#app .sky0 .rit-ft{background-image:url(/art/sky/sk-body.webp)}
+#app .rit-nav.kn{--ku:calc(var(--rw,100vw)/390);left:0;right:0;bottom:env(safe-area-inset-bottom,0px);height:calc(86*var(--ku));background:none;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:0 calc(10*var(--ku)) calc(8*var(--ku));box-sizing:border-box;z-index:3}
+#app .rit-nav.kn::after{display:none}
+#app .rit-nav.kn svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#app .rit-nav.kn button{position:relative;flex:none;display:flex;flex-direction:column;align-items:center;gap:1px;font:italic 500 calc(14*var(--ku))/1 'Cormorant Garamond',Georgia,serif;color:#F3DFB0;text-shadow:0 1px 2px #000,0 0 6px #050818,0 0 12px #050818}
+#app .rit-nav.kn i{display:block;width:calc(40*var(--ku));height:calc(40*var(--ku));background:50%/contain no-repeat;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6)) drop-shadow(0 0 5px rgba(255,170,80,.3))}
+#app .rit-nav.kn button:nth-child(2),#app .rit-nav.kn button:nth-child(6){transform:translateY(calc(5*var(--ku)))}
+#app .rit-nav.kn button:nth-child(4){transform:translateY(calc(-3*var(--ku)))}
+#app .rit-nav.kn button::after{content:"";width:calc(30*var(--ku));height:calc(9*var(--ku));background:radial-gradient(closest-side,#FFF3D6,rgba(255,190,110,.75) 30%,rgba(255,150,60,.25) 60%,transparent) 50%/calc(11*var(--ku)) calc(9*var(--ku)) no-repeat,linear-gradient(90deg,transparent,rgba(255,190,110,.85),transparent) 50%/100% 1px no-repeat;filter:drop-shadow(0 0 3px rgba(255,160,70,.8));opacity:.6}
+#app .rit-nav.kn [aria-current]{color:#FFF1CC;font-weight:600;font-size:calc(15*var(--ku))}
+#app .rit-nav.kn [aria-current] i{width:calc(48*var(--ku));height:calc(48*var(--ku));filter:drop-shadow(0 0 10px rgba(255,180,90,.85)) drop-shadow(0 0 22px rgba(255,150,60,.45))}
+#app .rit-nav.kn [aria-current]::after{opacity:1;width:calc(44*var(--ku));background-size:calc(14*var(--ku)) calc(9*var(--ku)),100% 1px}
+/* the shared lettering, in the paintings' own units: Ritual's painted title is the measure */
+#app .kt{text-align:center;pointer-events:none;color:#F3DDAE}
+#app .kt h1{margin:0;font:italic 600 58px/1.05 'Cormorant Garamond',Georgia,serif;letter-spacing:.01em;color:#F3DDAE;text-shadow:0 0 14px rgba(245,190,110,.4),0 1px 3px rgba(4,7,22,.9)}
+#app .kt h1::after{content:'';display:block;width:300px;height:14px;margin:8px auto 10px;background:radial-gradient(closest-side,#FFF3D6,rgba(255,200,120,.7) 40%,transparent) 50%/16px 14px no-repeat,linear-gradient(90deg,transparent,#E2B872 35%,#E2B872 65%,transparent) 50%/100% 1.5px no-repeat}
+#app .kt p{margin:0;font:italic 500 30px/1.22 'Cormorant Garamond',Georgia,serif;color:#F4E7CB;text-shadow:0 1px 3px rgba(4,7,22,.95),0 0 10px rgba(4,7,22,.8)}
+#app .sk0-n{top:812px}
+#app .sk0-n span{font:italic 600 46px/1 'Cormorant Garamond',Georgia,serif;letter-spacing:.01em;margin-right:0}
+#app .sk0-l{font:italic 500 30px/1 'Cormorant Garamond',Georgia,serif;letter-spacing:.01em;margin-right:0;text-transform:none;color:#F1DDB0}
+#app .sk0-tip{bottom:calc(var(--rnh,86px) + env(safe-area-inset-bottom,0px) + 6px);z-index:2}
+#app .sk0-tip::after{display:none}
+#app .or-sc{left:var(--ox,0px);width:1024px}
+#app .or-bg{width:1024px}
+#app .or-l{font:italic 500 46px/1 'Cormorant Garamond',Georgia,serif;color:#F6E6C4;text-align:center;text-shadow:0 1px 3px rgba(4,7,22,.95),0 0 12px rgba(4,7,22,.85),0 0 22px rgba(4,7,22,.6)}
+#app .or-l2{font-size:46px;line-height:.98}
+#app .or-l::after{content:'';display:block;width:150px;height:12px;margin:6px auto 0;background:radial-gradient(closest-side,#FFF3D6,rgba(255,200,120,.7) 40%,transparent) 50%/14px 12px no-repeat,linear-gradient(90deg,transparent,#E2B872,transparent) 50%/100% 1.5px no-repeat}
+#app .or-lk::after{display:none}
+#app .kt h1{font:italic 600 58px/1.05 'Cormorant Garamond',Georgia,serif!important;margin:0!important}
+#app .kt p{font:italic 500 30px/1.22 'Cormorant Garamond',Georgia,serif!important;margin:0!important}
+#app .or-l{text-shadow:0 1px 3px rgba(4,7,22,1),0 0 8px rgba(4,7,22,.95),0 0 16px rgba(4,7,22,.9),0 0 28px rgba(4,7,22,.7)}
+#app .or-sc[data-v=a] .or-l.or-lo::after{display:none}
+@media (max-height:700px){#app .sk0-tip{bottom:calc(var(--rnh,86px) + env(safe-area-inset-bottom,0px) - 13px)}}
