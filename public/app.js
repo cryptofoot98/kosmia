@@ -4617,7 +4617,7 @@ function calMarks(e){const b=calBm(evRef(e)),d=b?b.data:{};return [calSaved(b)?'
 const calRow=(e,extra='')=>`<button class="dr-entry cal-ev" data-cal="open" data-ref="${esc(evRef(e))}"><span class="cal-i">${evArt(e,true)}</span><span class="cal-t"><span class="dr-d">${calType(e)} · ${extra||calCount(e)}</span><strong>${esc(calName(e))}</strong><span class="dr-s">${ymdLong(evDay(e),{weekday:'short',day:'numeric',month:'long'})}${e.dateOnly?'':' · '+fmt({hour:'2-digit',minute:'2-digit'},e.date)}</span><span class="cal-th">${esc(calTheme(e))}</span><span class="cal-mk">${calMarks(e)}</span></span></button>`;
 function calendarHome(){
  V.cal.f=V.cal.f||'';const month=V.cal.view==='month',nSaved=S.bookmarks.filter(b=>b.kind==='event').length;
- const head=`${hdr('Cosmic Calendar',{back:false,sub:'Discover the rhythms of the universe and prepare for what lies ahead.'})}
+ const head=`${hdr('Cosmic Calendar',{back:tab()==='timeline',sub:'Discover the rhythms of the universe and prepare for what lies ahead.'})}
  <div class="fchips ss-chips cal-view">${[['list','Timeline'],['month','Month']].map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${(V.cal.view==='month'?'month':'list')===k}" data-cal="view" data-v="${k}">${l}</button>`).join('')}</div>
  <div class="fchips ss-chips rd-cats">${CAL_F.map(([k,l])=>`<button class="fchip" role="radio" aria-checked="${(V.cal.f||'')===k}" data-cal="f" data-v="${k}">${l}</button>`).join('')}</div>`;
  const foot=`<button class="dr-link" data-go="discover" data-t="saved-events">Saved Events${nSaved?` · ${nSaved}`:''} ${IC.chev}</button>`;
@@ -5685,6 +5685,67 @@ document.addEventListener('click',e=>{
  if(e.target.closest('[data-skx]')){V.exploreSign=null;const t=document.querySelector('#rov .rt');if(t)t.classList.remove('in');const ov=document.getElementById('rov');if(ov)ov.classList.remove('on');setTimeout(()=>{V.skp=null;render()},500)}
 });
 document.addEventListener('keydown',e=>{if(V.sec==='horoscope'&&V.skp&&e.key==='Escape'){V.skp=null;render()}});
+/* ---------- the painted homes of Calendar, Journal and My Cosmos: each is one painting in Ritual's 1024 x 2192 units,
+   under the shared header (Ritual's arc of moons, title, words), the shared frame and the floating menu. The words are
+   lettered on the painted parchment in ink; every place in the painting that can be opened is a hotspot ---------- */
+const HP='/art/home/';
+const hpHd=(t,s)=>`<div class="hp-hd"><img src="/art/nav2/hd-moons.webp" alt="" style="left:180px;top:14px;width:664px;height:198px"><div class="kt" style="left:132px;top:186px;width:760px"><h1>${t}</h1><p>${s}</p></div></div>`;
+const hpMe=()=>`<img class="hp-me" src="${SKY}or-me.webp" alt=""><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:872px;top:103px;width:104px;height:104px;border-radius:50%"></button>`;
+const hpWrap=(cls,label,cur,body)=>`<div class="rit hp0 ${cls}" role="main" aria-label="${label}"><div class="rit-in"><div class="rit-sc">${body}</div><div class="rit-ft"></div><div class="kfr"><i></i><i></i></div>${knNav(cur)}</div></div>`;
+const hpHot=(attr,label,x,y,w,h,r=40)=>`<button class="rit-hot" ${attr} aria-label="${label}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r}px"></button>`;
+// Calendar: the wheel's six medallions choose what is shown; the scroll carries the next event of that kind
+const HCM=[['',509,518,'All',510,566],['moons',312,597,'Moon',312,657],['eclipses',710,597,'Eclipses',710,657],['retro',312,833,'Retrogrades',312,899],['planets',710,833,'Planets',710,899],['seasons',509,919,'Seasons',508,984]];
+function hcNext(){
+ const start=new Date(dkey()+'T00:00:00'),now=new Date();
+ const fut=K.events(start,new Date(+start+400*DAY)).filter(e=>calOk(e)&&(e.dateOnly?evDay(e)>=dkey():e.date>=now));
+ return fut.find(e=>calCat(e)!=='quarter')||fut[0];
+}
+function calHomeP(){
+ V.cal.f=V.cal.f||'';const f=V.cal.f,e=hcNext(),nm=(HCM.find(m=>m[0]===f)||HCM[0])[3];
+ return hpWrap('hc0','Cosmic Calendar','calendar',`${hpHd('Cosmic Calendar','A guide to celestial movements<br>and astrological events.')}${hpMe()}
+  ${HCM.map(([k,x,y,l,lx,ly])=>`<i class="hc-on${f===k?' on':''}" style="left:${x-96}px;top:${y-96}px"></i><span class="hp-rb" style="left:${lx}px;top:${ly}px">${l}</span><button class="rit-hot" data-cal="f" data-v="${k}" aria-pressed="${f===k}" aria-label="${k?l:'All events'}" style="left:${x-98}px;top:${y-98}px;width:196px;height:206px;border-radius:50%"></button>`).join('')}
+  <div class="hc-tg"><button data-hc="list" aria-label="Timeline: every coming event">Timeline</button><i></i><button data-hc="month" aria-label="Month view">Month</button></div>
+  <div class="hp-sm" style="left:512px;top:1214px">The Next Celestial Event</div>
+  ${e?`<span class="hc-pic">${evArt(e,true)||`<img src="${HP}cal-ev.webp" alt="">`}</span>
+  <div class="hc-ev" id="hcev"><div class="hk">${calCount(e)}</div><b>${esc(calName(e))}</b><em>${ymdLong(evDay(e),{weekday:'long',day:'numeric',month:'long'})}${e.dateOnly?'':' · '+fmt({hour:'2-digit',minute:'2-digit'},e.date)}</em><span>${esc(calTheme(e))}</span></div>
+  <u class="hc-go">Explore the Event &amp; Ritual</u>
+  ${hpHot(`data-cal="open" data-ref="${esc(evRef(e))}"`,esc(calName(e))+': explore the event and its ritual',120,1246,790,270,30)}`
+  :`<div class="hc-ev hc-none"><span>No ${nm.toLowerCase()} in the coming year.</span></div>`}`);
+}
+function hpFit(){
+ const b=document.getElementById('hcev');if(!b)return;const t=b.querySelector('b'),p=b.querySelector('span');let f=44,g=28;
+ const set=()=>{t.style.fontSize=f+'px';p.style.fontSize=g+'px'};set();
+ while(b.scrollHeight>b.clientHeight+1&&f>26){f-=2;if(g>22)g-=1;set()}
+}
+{const ra=ritAfter;ritAfter=y=>{ra(y);hpFit()}}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hpFit);
+document.addEventListener('click',e=>{const t=e.target.closest('[data-hc]');if(!t)return;V.cal.view=t.dataset.hc;if(t.dataset.hc==='month')V.cal.day='';go('discover','timeline')});
+// Journal: the open book; each torn note is a way in
+function jrHomeP(){
+ const draft=S.jdraft&&(S.jdraft.body||S.jdraft.title);
+ const pt=(x,y,b,sub)=>`<div class="hp-pt" style="left:${x}px;top:${y}px"><b>${b}</b><span>${sub}</span></div>`;
+ return hpWrap('hj0','Journal','journal',`${hpHd('Journal','A personal space for reflection,<br>intention and discovery.')}${hpMe()}
+  ${pt(282,676,'Write',draft?'Continue<br>your page.':'Capture a thought,<br>a feeling.')}${pt(800,706,'My Reflections','Your moments<br>of understanding.')}${pt(742,1012,'My Gratitude','The moments and people<br>you appreciate.')}${pt(292,1186,'My Intentions','The things you choose<br>to nurture.')}${pt(808,1322,'My Library','The words you have<br>chosen to keep.')}
+  ${hpHot('data-jx="write"',draft?'Continue your page':'Write',146,574,350,246)}
+  ${hpHot('data-go="tarot" data-t="reflections"','My Reflections',556,580,380,214)}
+  ${hpHot('data-go="tarot" data-t="gratitude"','My Gratitude',556,900,380,250)}
+  ${hpHot('data-go="tarot" data-t="intentions"','My Intentions',136,1056,330,262)}
+  ${hpHot('data-go="tarot" data-t="library"','My Library',672,1206,304,210)}`);
+}
+// My Cosmos: the three lights on their plaques, six entrances, and the way back
+function mcHomeP(){
+ const L=mcLights(),X=[[198,838],[514,820],[812,838]];
+ const big=([n,l,sgn,k],[x,y])=>`<div class="hp-pt hp-big" style="left:${x}px;top:${y}px"><i>${sgn?`<img src="${SKY}sk-g-${sgn.id}.webp" alt="">`:'?'}</i><b>${sgn?sgn.name:k==='uncertain'?'Uncertain':'Unknown'}</b><div class="hk">${n}</div><span>${sgn?l:'Add birth details'}</span></div>${hpHot(sgn?`data-mc="light" data-v="${n.toLowerCase()}"`:'data-go="settings" data-t="birth"',sgn?`${n} in ${sgn.name}: ${l}`:`${n}: add your birth details`,x-112,y-128,224,262,60)}`;
+ const row=(x,y,b,sub,t)=>`<div class="hp-pt hp-row" style="left:${x}px;top:${y}px"><b>${b}</b><span>${sub}</span></div>${hpHot(`data-go="you" data-t="${t}"`,b,x-158,y-66,316,132,50)}`;
+ return hpWrap('hm0','My Cosmos','',`${hpHd('My Cosmos','Your personal universe.')}<button class="hp-bk" data-mc="close" aria-label="Back"></button>
+  ${L.map((l,i)=>big(l,X[i])).join('')}
+  ${row(205,1082,'My Birth Chart','The map of the moment you were born.','chart')}${row(205,1238,'My Cosmic Identity','Your nature, strengths and potential.','identity')}${row(205,1398,'My Relationships','Your universe and others.','people')}
+  ${row(816,1082,'My Zodiac','Your Sun, Moon and Rising signs.','zodiac')}${row(816,1238,'My Cosmic Cycles','The chapters unfolding in your life.','cycles')}${row(816,1398,'My Preferences','Make Kosmia your own.','preferences')}`);
+}
+SECTIONS.discover.tabs.push(['timeline','Cosmic Calendar']);CPAGES.push('timeline');PARENT['discover/timeline']='discover/calendar';
+{const vd=views.discover;views.discover=()=>K&&tab()==='calendar'?calHomeP():tab()==='timeline'?calendarHome():vd()}
+{const vt2=views.tarot;views.tarot=()=>tab()==='journal'?jrHomeP():vt2()}
+{const vy2=views.you;views.you=()=>tab()==='home'?mcHomeP():vy2()}
 {const vh=views.horoscope;views.horoscope=()=>(!A||!K||tab()==='sign')?vh():skyHome()}
 {const vt=views.tarot;views.tarot=()=>tab()==='home'?oracleHome():vt()}
 SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
