@@ -3572,9 +3572,9 @@ function skyHome(){
 // one painting, 1296 wide and 2192 tall, shown at the screen's height so the seeker is the same on every phone; the
 // book, the crystal ball and the cards are their own pieces and rise a little on shorter screens to stay above the menu
 const ORW=1296,ORH=2192,ORX=136;
-const ORL={omens:[194,560],dreams:[850,522],conn:[850,864],read:[226,1812],kas:[510,1932],tarot:[800,1824]};
-const ORHOT={omens:[50,230,290,390],dreams:[750,300,200,260],conn:[730,620,260,280],read:[50,1560,300,330],kas:[375,1590,270,380],tarot:[610,1620,380,240],me:[878,109,92,92]};
-const OROBJ={book:[68,1570,262,226],ball:[401,1611,218,294],cards:[615,1640,347,138]};
+const ORL={omens:[194,587],dreams:[850,553],conn:[850,857],read:[226,1698],kas:[510,1804],tarot:[800,1708]};
+const ORHOT={omens:[50,294,290,346],dreams:[750,356,200,231],conn:[730,640,260,248],read:[50,1474,300,293],kas:[375,1501,270,337],tarot:[610,1527,380,213],me:[878,109,92,92]};
+const OROBJ={book:[68,1474,262,209],ball:[401,1508,218,272],cards:[615,1539,347,128]};
 const ORLOW={read:1,kas:1,tarot:1};
 const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities','Signs &amp;<br>Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams','Dreams'],conn:['data-go="discover" data-t="connections"','Connections','Connections'],read:['data-go="discover" data-t="readings"','Your Readings','Your<br>Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot','Tarot'],kas:['data-act="kasgo"','Kassandra','Kassandra'],me:['data-go="you"','My Cosmos']};
 const orGeo=()=>{const W=Math.min(innerWidth,520),H=innerHeight,os=Math.max(H/ORH,W/ORW),lk=Math.min(1.35,(W/1024)/os),top=(H-W*86/390)/os;
@@ -3585,7 +3585,7 @@ function oracleHome(){
   <div class="or-sc" data-k="${G.W}x${G.H}"><img class="or-bg" src="${SKY}or-wide.webp" alt="">
    ${Object.entries(OROBJ).map(([k,[x,y,w,h]])=>`<img class="or-ob" src="${SKY}or-${k}.webp" alt="" style="left:${x+ORX}px;top:${y-G.lift}px;width:${w}px;height:${h}px">`).join('')}
    <img class="or-ob or-me" src="${SKY}or-me.webp" alt="" style="left:${878+ORX}px;top:109px;width:92px;height:92px">
-   <div class="kt" style="left:${ORX+512-380}px;top:246px;width:760px"><h1>Oracle</h1><p>Guidance, insight and deeper<br>meaning for your journey.</p></div>
+   <div class="or-hd" style="left:${ORX}px"><img src="/art/nav2/hd-moons.webp" alt="" style="left:180px;top:14px;width:664px;height:198px"><div class="kt" style="left:132px;top:186px;width:760px"><h1>Oracle</h1><p>Guidance, insight and deeper<br>meaning for your journey.</p></div></div>
    ${Object.entries(ORL).map(([k,[x,y]])=>`<span class="or-l${k==='kas'?' or-lk':''}${k==='read'||k==='omens'?' or-l2':''}" style="left:${x+ORX}px;top:${y-up(k)}px">${ORT[k][2]}</span>`).join('')}
    ${Object.entries(ORHOT).map(([k,[x,y,w,h]])=>`<button class="rit-hot" ${ORT[k][0]} aria-label="${ORT[k][1]}" style="left:${x+ORX}px;top:${y-up(k)}px;width:${w}px;height:${h}px;border-radius:${k==='me'?'50%':'48px'}"></button>`).join('')}
   </div>
