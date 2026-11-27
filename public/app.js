@@ -3410,7 +3410,7 @@ function view(){
  const box=b=>`left:${b[0]}px;top:${b[1]}px;width:${b[2]}px;height:${b[3]}px`;
  const lits=POS[m].map(([l,t],i)=>`<img id="rl${i}" class="rl ${done(i)?'done':i===nx?'now':''}" src="${R}${m}l${i}.webp" alt="" style="${box(l)}"><img id="rk${i}" class="rk${done(i)?' done':''}" src="${R}${m}t${i}.webp" alt="" style="${box(t)}">`).join('');
  const pans=POLY[m].map((p,i)=>`<polygon class="rit-pan" data-p="${i}" role="button" tabindex="0" aria-label="${i+1}. ${NAMES[i]}${done(i)?', done':''}" points="${p.map(q=>q.join(',')).join(' ')}"/>`).join('');
- return `<div class="rit${eve?' eve':''}" role="main" aria-label="${eve?'Your evening ritual':'Your daily ritual'}"><div class="rit-in">
+ return `<div class="rit kw${eve?' eve':''}" role="main" aria-label="${eve?'Your evening ritual':'Your daily ritual'}"><div class="rit-in">
   <div class="rit-sc"><div class="rit-lit">${lits}</div><svg class="rit-ws" viewBox="0 0 1024 2192" aria-label="The parts of your ritual">${pans}</svg>
    <button class="rit-hot" data-ract="time" aria-label="${eve?'Show the morning ritual':'Show the evening ritual'}" style="left:330px;top:40px;width:364px;height:120px;border-radius:40%"></button>
    <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:900px;top:80px;width:88px;height:88px"></button></div>
@@ -3429,6 +3429,7 @@ function fit(){
  r.setProperty('--pw',W+'px');
  const o=document.querySelector('.or0');if(o){const sc=o.querySelector('.or-sc');if(sc&&sc.dataset.k!==W+'x'+H)return render()}
  for(const id in PANE){const t=document.getElementById(id);if(!t)continue;
+  const H=Math.round(innerHeight*.75);
   let [cw,ch,fh,C]=PANE[id],sc=W/cw,hr=H/sc,th=Math.max(hr,C+fh),st=t.style,sy=sc;
   if(id==='rtu'||id==='rtq'){const n=id==='rtu'?'u':'q',L=UQL[n],hs=Object.keys(L.v).map(Number);ch=hs.reduce((a,b)=>Math.abs(Math.log(b/hr))<Math.abs(Math.log(a/hr))?b:a);th=ch;sy=H/ch;
    st.setProperty('--img',`url(${R}${n}-bg-${ch*2}.webp)`);const [k,b1]=L.v[ch];
@@ -3539,22 +3540,36 @@ const SKY='/art/sky/';
 const SKYPL=[[163,789,74,0,'Jupiter'],[292,810,30,0,'Mercury'],[284,917,46,0,'Venus'],[216,1084,131,56,'Saturn'],[893,862,46,0,'Neptune'],[770,950,50,0,'Mars'],[741,1137,66,0,''],[863,1175,30,0,'Pluto'],[870,995,48,0,'Uranus']];
 // each body's name, delicate, beneath it
 const SKYLB=[['Sun',510,1190],['Moon',764,828],['Mercury',292,756],['Venus',284,965],['Earth',735,1207],['Mars',762,1003],['Jupiter',163,866],['Saturn',216,1144],['Uranus',870,1054],['Neptune',893,910],['Pluto',866,1207]];
+// the planets circle the Sun, each on its own tilted ring, at its own pace (Mercury quickest), starting where the painting
+// shows it, its name and its tap moving with it; the open hand is in front, so they pass behind it.
+// [planet, painted piece, width, ring radius, starting angle, seconds per turn, name or '' (Earth opens the planets now)]
+const SKO=[['mercury','/art/sky/pl-p-mercury.webp',52,200,236,22,'Mercury'],['venus','/art/world/pl-venus.webp',105,234,217,34,'Venus'],
+ ['earth','/art/world/pl-earth.webp',150,266,31,46,''],['moon','/art/world/pl-moon.webp',150,296,302,52,'Moon'],['mars','/art/world/pl-mars.webp',105,322,333,62,'Mars'],
+ ['jupiter','/art/world/pl-jupiter.webp',162,346,226,85,'Jupiter'],['saturn','/art/world/pl-saturn.webp',255,366,168,110,'Saturn'],
+ ['uranus','/art/world/pl-uranus.webp',95,384,350,135,'Uranus'],['neptune','/art/world/pl-neptune.webp',95,398,326,160,'Neptune'],['pluto','/art/world/pl-pluto.webp',72,412,28,190,'Pluto']];
+const SKFIT={mercury:.92,saturn:.42};
+const skOrbits=()=>`<div class="sk-orbs">${SKO.map(([k,src,w,R,a,T,n])=>{const d=-(a/360*T).toFixed(2),hd=w*(SKFIT[k]||.66)/2,
+  at=k==='moon'?'data-skp="moon"':n?`data-skp="pl:${n}"`:'data-go="discover" data-t="planets"',lb=k==='moon'?'The Moon today':n?`${n} today`:'Where the planets are now';
+  return `<div class="sk-rot" style="animation-duration:${T}s;animation-delay:${d}s"><div class="sk-at" style="left:${R}px"><div class="sk-up" style="animation-duration:${T}s;animation-delay:${d}s"><div class="sk-pl">
+   <img class="sk-im${k==='saturn'?'':' sk-spin'}" src="${src}" alt="" style="width:${w}px;height:${w}px;margin:${-w/2}px 0 0 ${-w/2}px">
+   <span class="sk0-l" style="top:${hd+20}px">${n||'Earth'}</span>
+   <button class="rit-hot" ${at} aria-label="${lb}" style="left:${-hd-8}px;top:${-hd-8}px;width:${2*hd+16}px;height:${2*hd+16}px"></button></div></div></div></div>`}).join('')}</div>`;
 function skyHome(){
  const s=sg(S.sign),sk=V.skd&&skyItems().find(i=>i.id===V.skd);if(V.skd&&!sk)V.skd=null;
  const circ=(x,y,r,a,attr)=>`<button class="rit-hot" ${attr} aria-label="${a}" style="left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px"></button>`;
  const pl=SKYPL.map(([x,y,rx,ry,n])=>{const at=n?`data-skp="pl:${n}"`:'data-go="discover" data-t="planets"',lb=n?`${n} today`:'Where the planets are now';
   return ry?`<button class="rit-hot" ${at} aria-label="${lb}" style="left:${x-rx}px;top:${y-ry}px;width:${2*rx}px;height:${2*ry}px"></button>`:circ(x,y,rx,lb,at)}).join('');
- return `<div class="rit sky0" role="main" aria-label="The Sky"><div class="rit-in">
+ return `<div class="rit sky0 kw" role="main" aria-label="The Sky"><div class="rit-in">
   <div class="rit-sc">
    <img class="sk0-fig" src="${SKY}sk-fig-${s.id}.webp" alt="" style="left:330px;top:495px;width:370px;height:325px">
    <img class="sk0-g" src="${SKY}sk-g-${s.id}.webp" alt="" style="left:458px;top:732px;width:112px;height:112px">
    <div class="kt" style="left:30px;top:96px;width:440px"><h1>The Sky</h1><p>The universe right now,<br>and what it means for you.</p></div>
    <div class="sk0-n"><span>${s.name}</span></div>
    ${circ(510,1043,150,'The Sun today','data-skp="sun"')}
-   ${circ(764,757,66,'The Moon today','data-skp="moon"')}
-   ${pl}
-   ${SKYLB.map(([n,x,y])=>`<span class="sk0-l" style="left:${x}px;top:${y}px">${n}</span>`).join('')}
+   <span class="sk0-l" style="left:510px;top:1190px">Sun</span>
    <button class="rit-hot" data-skp="sign" aria-label="Your horoscope, ${s.name}" style="left:340px;top:500px;width:350px;height:370px;border-radius:30%"></button>
+   ${skOrbits()}
+   <img class="sk-hand" src="/art/world/sk-hand.webp" alt="" style="left:300px;top:1200px;width:724px;height:400px">
    <button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:904px;top:84px;width:88px;height:88px"></button>
   </div>
   <div class="rit-ft"></div>
@@ -3572,8 +3587,8 @@ function skyHome(){
 // one painting, 1296 wide and 2192 tall, shown at the screen's height so the seeker is the same on every phone; the
 // book, the crystal ball and the cards are their own pieces and rise a little on shorter screens to stay above the menu
 const ORW=1296,ORH=2192,ORX=136;
-const ORL={omens:[194,587],dreams:[850,553],conn:[850,857],read:[226,1698],kas:[510,1804],tarot:[800,1708]};
-const ORHOT={omens:[50,294,290,346],dreams:[750,356,200,231],conn:[730,640,260,248],read:[50,1474,300,293],kas:[375,1501,270,337],tarot:[610,1527,380,213],me:[878,109,92,92]};
+const ORL={omens:[194,587],dreams:[821,560],conn:[850,857],read:[226,1698],kas:[510,1804],tarot:[800,1708]};
+const ORHOT={omens:[50,294,290,346],dreams:[696,262,250,330],conn:[730,640,260,248],read:[50,1474,300,293],kas:[375,1501,270,337],tarot:[610,1527,380,213],me:[878,109,92,92]};
 const OROBJ={book:[68,1474,262,209],ball:[401,1508,218,272],cards:[615,1539,347,128]};
 const ORLOW={read:1,kas:1,tarot:1};
 const ORT={omens:['data-go="discover" data-t="signs"','Signs and Synchronicities','Signs &amp;<br>Synchronicity'],dreams:['data-go="discover" data-t="dreams"','Dreams','Dreams'],conn:['data-go="discover" data-t="connections"','Connections','Connections'],read:['data-go="discover" data-t="readings"','Your Readings','Your<br>Readings'],tarot:['data-go="tarot" data-t="spreads"','Tarot','Tarot'],kas:['data-act="kasgo"','Kassandra','Kassandra'],me:['data-go="you"','My Cosmos']};
@@ -3581,8 +3596,8 @@ const orGeo=()=>{const W=Math.min(innerWidth,520),H=innerHeight,os=Math.max(H/OR
  return {W,H,os,lk,ox:(W-ORW*os)/2,lift:Math.max(0,Math.round(ORL.kas[1]+30*lk-(top-6)))}};
 function oracleHome(){
  const G=orGeo(),up=k=>ORLOW[k]?G.lift:0;
- return `<div class="rit or0" role="main" aria-label="Oracle" style="--os:${G.os};--ox:${G.ox}px;--lk:${G.lk}"><div class="rit-in">
-  <div class="or-sc" data-k="${G.W}x${G.H}"><img class="or-bg" src="${SKY}or-wide.webp" alt="">
+ return `<div class="rit or0 kw" role="main" aria-label="Oracle" style="--os:${G.os};--ox:${G.ox}px;--lk:${G.lk}"><div class="rit-in">
+  <div class="or-sc" data-k="${G.W}x${G.H}"><img class="or-bg" src="/art/world/p-or.webp" alt="">
    ${Object.entries(OROBJ).map(([k,[x,y,w,h]])=>`<img class="or-ob" src="${SKY}or-${k}.webp" alt="" style="left:${x+ORX}px;top:${y-G.lift}px;width:${w}px;height:${h}px">`).join('')}
    <img class="or-ob or-me" src="${SKY}or-me.webp" alt="" style="left:${878+ORX}px;top:109px;width:92px;height:92px">
    <div class="or-hd" style="left:${ORX}px"><img src="/art/nav2/hd-moons.webp" alt="" style="left:180px;top:14px;width:664px;height:198px"><div class="kt" style="left:132px;top:186px;width:760px"><h1>Oracle</h1><p>Guidance, insight and deeper<br>meaning for your journey.</p></div></div>
@@ -5008,7 +5023,7 @@ document.addEventListener('click',e=>{
  const c=e.target.closest('[data-cal]');
  if(c){const a=c.dataset.cal,v=c.dataset.v;
   if(a==='view'){V.cal.view=v;if(v==='month')V.cal.day='';render();return syncUrl()}
-  if(a==='f'){V.cal.f=v;return render()}
+  if(a==='f'){V.cal.f=v;if(c.closest('.hc0')){const was=V.cal.sh;V.cal.sh=1;V.cal.shIn=!!was}return render()}
   if(a==='more'){V.cal.span=(V.cal.span||30)+30;return render()}
   if(a==='month'){V.cal.month=v;V.cal.day='';render();return syncUrl()}
   if(a==='day'){V.cal.day=v;return render()}
@@ -5689,35 +5704,41 @@ document.addEventListener('keydown',e=>{if(V.sec==='horoscope'&&V.skp&&e.key==='
    under the shared header (Ritual's arc of moons, title, words), the shared frame and the floating menu. The words are
    lettered on the painted parchment in ink; every place in the painting that can be opened is a hotspot ---------- */
 const HP='/art/home/';
-const hpHd=(t,s)=>`<div class="hp-hd"><img src="/art/nav2/hd-moons.webp" alt="" style="left:180px;top:14px;width:664px;height:198px"><div class="kt" style="left:132px;top:186px;width:760px"><h1>${t}</h1><p>${s}</p></div></div>`;
+const hpHd=(t,s,bare)=>`<div class="hp-hd">${bare?'':'<img src="/art/nav2/hd-moons.webp" alt="" style="left:180px;top:14px;width:664px;height:198px">'}<div class="kt" style="left:132px;top:186px;width:760px"><h1>${t}</h1><p>${s}</p></div></div>`;
 const hpMe=()=>`<img class="hp-me" src="${SKY}or-me.webp" alt=""><button class="rit-hot" data-go="you" aria-label="My Cosmos" style="left:872px;top:103px;width:104px;height:104px;border-radius:50%"></button>`;
-const hpWrap=(cls,label,cur,body)=>`<div class="rit hp0 ${cls}" role="main" aria-label="${label}"><div class="rit-in"><div class="rit-sc">${body}</div><div class="rit-ft"></div><div class="kfr"><i></i><i></i></div>${knNav(cur)}</div></div>`;
+const hpWrap=(cls,label,cur,body,over='')=>`<div class="rit hp0 ${cls}${cls==='hm0'?'':' kw'}" role="main" aria-label="${label}"><div class="rit-in"><div class="rit-sc">${body}</div><div class="rit-ft"></div>${over}${cls==='hm0'?'':'<div class="kfr"><i></i><i></i></div>'}${knNav(cur)}</div></div>`;
 const hpHot=(attr,label,x,y,w,h,r=40)=>`<button class="rit-hot" ${attr} aria-label="${label}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r}px"></button>`;
 // Calendar: the wheel's six medallions choose what is shown; the scroll carries the next event of that kind
-const HCM=[['',509,518,'All',510,566],['moons',312,597,'Moon',312,657],['eclipses',710,597,'Eclipses',710,657],['retro',312,833,'Retrogrades',312,899],['planets',710,833,'Planets',710,899],['seasons',509,919,'Seasons',508,984]];
+const HK=1.4,hk=(x,y)=>[Math.round(512+(x-510)*HK),Math.round(880+(y-716)*HK)];
+const HCM=[['',509,518,'All',510,566],['moons',312,597,'Moon',312,657],['eclipses',710,597,'Eclipses',710,657],['retro',312,833,'Retrogrades',312,899],['planets',710,833,'Planets',710,899],['seasons',509,919,'Seasons',508,984]].map(([k,x,y,l,lx,ly])=>[k,...hk(x,y),l,...hk(lx,ly)]);
 function hcNext(){
  const start=new Date(dkey()+'T00:00:00'),now=new Date();
  const fut=K.events(start,new Date(+start+400*DAY)).filter(e=>calOk(e)&&(e.dateOnly?evDay(e)>=dkey():e.date>=now));
  return fut.find(e=>calCat(e)!=='quarter')||fut[0];
 }
 function calHomeP(){
- V.cal.f=V.cal.f||'';const f=V.cal.f,e=hcNext(),nm=(HCM.find(m=>m[0]===f)||HCM[0])[3];
+ V.cal.f=V.cal.f||'';const f=V.cal.f,e=hcNext(),nm=(HCM.find(m=>m[0]===f)||HCM[0])[3],sh=!!V.cal.sh;
+ // the wheel alone; choosing one of its medallions raises the parchment from below with that kind's next event,
+ // and a swipe down lowers it again
  return hpWrap('hc0','Cosmic Calendar','calendar',`${hpHd('Cosmic Calendar','A guide to celestial movements<br>and astrological events.')}${hpMe()}
-  ${HCM.map(([k,x,y,l,lx,ly])=>`<i class="hc-on${f===k?' on':''}" style="left:${x-96}px;top:${y-96}px"></i><span class="hp-rb" style="left:${lx}px;top:${ly}px">${l}</span><button class="rit-hot" data-cal="f" data-v="${k}" aria-pressed="${f===k}" aria-label="${k?l:'All events'}" style="left:${x-98}px;top:${y-98}px;width:196px;height:206px;border-radius:50%"></button>`).join('')}
+  ${HCM.map(([k,x,y,l,lx,ly])=>`<i class="hc-on${sh&&f===k?' on':''}" style="left:${x-96*HK}px;top:${y-96*HK}px;width:${192*HK}px;height:${192*HK}px"></i><span class="hp-rb" style="left:${lx}px;top:${ly}px;font-size:${Math.round(30*HK)}px">${l}</span><button class="rit-hot" data-cal="f" data-v="${k}" aria-pressed="${sh&&f===k}" aria-label="${k?l:'All events'}" style="left:${x-98*HK}px;top:${y-98*HK}px;width:${196*HK}px;height:${206*HK}px;border-radius:50%"></button>`).join('')}`,
+ `<div class="hc-sh${sh&&V.cal.shIn?' on':''}" id="hcsh" role="dialog" aria-label="${esc(nm)}: the next celestial event"${sh?'':' aria-hidden="true" inert'}><button class="hc-x" data-act="hcclose" aria-label="Close"></button><div class="hc-shs"><div class="hc-shi">
   <div class="hc-tg"><button data-hc="list" aria-label="Timeline: every coming event">Timeline</button><i></i><button data-hc="month" aria-label="Month view">Month</button></div>
-  <div class="hp-sm" style="left:512px;top:1214px">The Next Celestial Event</div>
+  <div class="hp-sm" style="left:512px;top:1214px">${f?esc(nm)+' · ':''}The Next Celestial Event</div>
   ${e?`<span class="hc-pic">${evArt(e,true)||`<img src="${HP}cal-ev.webp" alt="">`}</span>
   <div class="hc-ev" id="hcev"><div class="hk">${calCount(e)}</div><b>${esc(calName(e))}</b><em>${ymdLong(evDay(e),{weekday:'long',day:'numeric',month:'long'})}${e.dateOnly?'':' · '+fmt({hour:'2-digit',minute:'2-digit'},e.date)}</em><span>${esc(calTheme(e))}</span></div>
   <u class="hc-go">Explore the Event &amp; Ritual</u>
   ${hpHot(`data-cal="open" data-ref="${esc(evRef(e))}"`,esc(calName(e))+': explore the event and its ritual',120,1246,790,270,30)}`
-  :`<div class="hc-ev hc-none"><span>No ${nm.toLowerCase()} in the coming year.</span></div>`}`);
+  :`<div class="hc-ev hc-none"><span>No ${nm.toLowerCase()} in the coming year.</span></div>`}</div></div></div>`);
 }
 function hpFit(){
  const b=document.getElementById('hcev');if(!b)return;const t=b.querySelector('b'),p=b.querySelector('span');let f=44,g=28;
  const set=()=>{t.style.fontSize=f+'px';p.style.fontSize=g+'px'};set();
  while(b.scrollHeight>b.clientHeight+1&&f>26){f-=2;if(g>22)g-=1;set()}
 }
-{const ra=ritAfter;ritAfter=y=>{ra(y);hpFit()}}
+{const ra=ritAfter;ritAfter=y=>{ra(y);hpFit();const h=document.getElementById('hcsh');if(h&&V.cal.sh&&!V.cal.shIn){V.cal.shIn=1;requestAnimationFrame(()=>requestAnimationFrame(()=>h.classList.add('on')))}}}
+document.addEventListener('click',e=>{if(!e.target.closest('[data-act=hcclose]'))return;const h=document.getElementById('hcsh');V.cal.sh=0;V.cal.shIn=0;
+ if(h){h.classList.remove('on');h.inert=true;document.querySelectorAll('#app .hc-on.on').forEach(x=>x.classList.remove('on'))}});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hpFit);
 document.addEventListener('click',e=>{const t=e.target.closest('[data-hc]');if(!t)return;V.cal.view=t.dataset.hc;if(t.dataset.hc==='month')V.cal.day='';go('discover','timeline')});
 // Journal: the open book; each torn note is a way in
@@ -5725,19 +5746,19 @@ function jrHomeP(){
  const draft=S.jdraft&&(S.jdraft.body||S.jdraft.title);
  const pt=(x,y,b,sub)=>`<div class="hp-pt" style="left:${x}px;top:${y}px"><b>${b}</b><span>${sub}</span></div>`;
  return hpWrap('hj0','Journal','journal',`${hpHd('Journal','A personal space for reflection,<br>intention and discovery.')}${hpMe()}
-  ${pt(282,676,'Write',draft?'Continue<br>your page.':'Capture a thought,<br>a feeling.')}${pt(800,706,'My Reflections','Your moments<br>of understanding.')}${pt(742,1012,'My Gratitude','The moments and people<br>you appreciate.')}${pt(292,1186,'My Intentions','The things you choose<br>to nurture.')}${pt(808,1322,'My Library','The words you have<br>chosen to keep.')}
+  <div class="hj-bk">${pt(282,676,'Write',draft?'Continue<br>your page.':'Capture a thought,<br>a feeling.')}${pt(800,706,'My Reflections','Your moments<br>of understanding.')}${pt(742,1012,'My Gratitude','The moments and people<br>you appreciate.')}${pt(292,1186,'My Intentions','The things you choose<br>to nurture.')}${pt(808,1322,'My Library','The words you have<br>chosen to keep.')}
   ${hpHot('data-jx="write"',draft?'Continue your page':'Write',146,574,350,246)}
   ${hpHot('data-go="tarot" data-t="reflections"','My Reflections',556,580,380,214)}
   ${hpHot('data-go="tarot" data-t="gratitude"','My Gratitude',556,900,380,250)}
   ${hpHot('data-go="tarot" data-t="intentions"','My Intentions',136,1056,330,262)}
-  ${hpHot('data-go="tarot" data-t="library"','My Library',672,1206,304,210)}`);
+  ${hpHot('data-go="tarot" data-t="library"','My Library',672,1206,304,210)}</div>`);
 }
 // My Cosmos: the three lights on their plaques, six entrances, and the way back
 function mcHomeP(){
  const L=mcLights(),X=[[198,838],[514,820],[812,838]];
  const big=([n,l,sgn,k],[x,y])=>`<div class="hp-pt hp-big" style="left:${x}px;top:${y}px"><i>${sgn?`<img src="${SKY}sk-g-${sgn.id}.webp" alt="">`:'?'}</i><b>${sgn?sgn.name:k==='uncertain'?'Uncertain':'Unknown'}</b><div class="hk">${n}</div><span>${sgn?l:'Add birth details'}</span></div>${hpHot(sgn?`data-mc="light" data-v="${n.toLowerCase()}"`:'data-go="settings" data-t="birth"',sgn?`${n} in ${sgn.name}: ${l}`:`${n}: add your birth details`,x-112,y-128,224,262,60)}`;
  const row=(x,y,b,sub,t)=>`<div class="hp-pt hp-row" style="left:${x}px;top:${y}px"><b>${b}</b><span>${sub}</span></div>${hpHot(`data-go="you" data-t="${t}"`,b,x-158,y-66,316,132,50)}`;
- return hpWrap('hm0','My Cosmos','',`${hpHd('My Cosmos','Your personal universe.')}<button class="hp-bk" data-mc="close" aria-label="Back"></button>
+ return hpWrap('hm0','My Cosmos','',`${hpHd('My Cosmos','Your personal universe.',1)}<button class="hp-bk" data-mc="close" aria-label="Back"></button>
   ${L.map((l,i)=>big(l,X[i])).join('')}
   ${row(205,1082,'My Birth Chart','The map of the moment you were born.','chart')}${row(205,1238,'My Cosmic Identity','Your nature, strengths and potential.','identity')}${row(205,1398,'My Relationships','Your universe and others.','people')}
   ${row(816,1082,'My Zodiac','Your Sun, Moon and Rising signs.','zodiac')}${row(816,1238,'My Cosmic Cycles','The chapters unfolding in your life.','cycles')}${row(816,1398,'My Preferences','Make Kosmia your own.','preferences')}`);
@@ -5760,7 +5781,7 @@ function sgHome(){
    ${L.map(([x,y,t,s])=>`<div class="sg-pl" style="left:${x}px;top:${y}px"><b>${t}</b><span>${s}</span></div>`).join('')}
    ${L.map(([,,t,,k,[x,y,w,h]])=>sgHot(`data-go="discover" data-t="${k}"`,t.replace('<br>',' '),x,y,w,h,120)).join('')}</div>
   <div class="sg-shd"></div><div class="sg-fl">${sgBk}${sgMe}</div>
-  <div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+  ${knNav('tarot')}</div></div>`;
 }
 // the two asking pages: one painting each, its sky holding the form
 function sgNumbers(){
@@ -5774,7 +5795,7 @@ function sgNumbers(){
   <label class="sg-q" for="ssc" style="top:768px">What was happening when you noticed it? <i>· Optional</i></label>
   <input class="sg-line" id="ssc" style="left:162px;top:810px;width:700px" maxlength="400" placeholder="A thought, a place, a feeling…" value="${esc(F.ctx)}">
   <button class="sg-gold" data-ss="numgo" style="left:192px;top:950px;width:640px">Reveal its meaning</button>`}
- </div><div class="sg-fl">${sgBk}${sgMe}</div><div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+ </div><div class="sg-fl">${sgBk}${sgMe}</div>${knNav('tarot')}</div></div>`;
 }
 function sgSync(){
  const F=ssS(),busy=F.busy,rec=KS.state!=='idle'&&KS.target==='sync';
@@ -5786,7 +5807,7 @@ function sgSync(){
   <div class="sg-k" style="top:996px">How did it feel? <em>· optional</em></div>
   <div class="sg-fe" style="top:1022px">${SS_FEEL.map(([k,l])=>`<button data-ss="feel" data-v="${k}" aria-pressed="${F.feel===k}"${F.feel===k?' class="on"':''}>${l}</button>`).join('<i></i>')}</div>
   <button class="sg-gold" data-ss="syncgo" style="left:242px;top:1076px;width:540px">Explore its meaning</button>`}
- </div><div class="sg-fl">${sgBk}${sgMe}</div><div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+ </div><div class="sg-fl">${sgBk}${sgMe}</div>${knNav('tarot')}</div></div>`;
 }
 /* a layered reading: o = {cls, label, sky, arch:[file,x,y,w,h], fig:[file,w,h,side,scale], youth, head, hd, body} */
 function sgLayer(o){
@@ -5797,7 +5818,7 @@ function sgLayer(o){
   <div class="sg-sc"><div class="sg-hd" style="--hd:${o.hd||1000}px"><div class="sg-u">${o.head}</div></div><div class="sg-main">${o.body}</div></div>
   <div class="sg-fl"><img src="${SG}${a[0]}" alt="" style="left:${a[1]}px;top:${a[2]}px;width:${a[3]}px;height:${a[4]}px"></div>
   <img class="sg-fig ${side}" src="${SG}${ff}" alt="">
-  <div class="sg-fl">${sgBk}${sgMe}</div><div class="kfr"><i></i><i></i></div>${knNav('tarot')}</div></div>`;
+  <div class="sg-fl">${sgBk}${sgMe}</div>${knNav('tarot')}</div></div>`;
 }
 const sgPn=(h,t,cls='')=>`<div class="sg-pn${cls?' '+cls:''}">${h?`<h3>${h}</h3>`:''}${t}</div>`;
 const sgActs=l=>`<div class="sg-acts">${l.join('<i></i>')}</div>`;
@@ -5884,6 +5905,132 @@ SECTIONS.home.label='Ritual';SECTIONS.home.tabs=[['today','Ritual']];
 fit();
 }
 // With accounts enabled, only a saved session opens straight onto a page; everyone else starts at onboarding.
+// ---- Motion: one way of moving through the whole app. The five places and My Cosmos are the ground. Every other page
+// rises from the bottom over the one it came from, with no back button, and a swipe down lowers it again (the page it
+// came from is waiting underneath). A sideways swipe on a place moves to the place beside it, the one dissolving into the
+// other. The Ritual's pop-ups rise and fall the same way. Reduced motion keeps every move but without the animation.
+{
+const MAIN={'/':'home','/horoscope':'horoscope','/tarot':'tarot','/discover/calendar':'calendar','/tarot/journal':'journal','/you':'you'};
+const ORDER=['home','horoscope','tarot','calendar','journal'];
+const BACK=['[data-act=back]','[data-ract=back]','[data-skx]','[data-act=skdx]','[data-act=tspreadback]','[data-act$=close]','.sg-bk','.hp-bk','.kz-back .ibtn','.tt-back'].join(',');
+const isMain=p=>p in MAIN;
+const still=()=>!!(S.settings&&S.settings.reduce)||matchMedia('(prefers-reduced-motion: reduce)').matches;
+const depth=()=>(history.state&&history.state.d)||0;
+const EASE='cubic-bezier(.22,.8,.24,1)';
+let last={p:location.pathname,d:depth()},navTap=0,navDir=0,skip=false;
+document.addEventListener('click',e=>{const n=e.target.closest('[data-nav]');if(!n)return;navTap=Date.now();
+ const a=ORDER.indexOf(MAIN[location.pathname]),b=ORDER.indexOf(n.dataset.nav);navDir=a<0||b<0?0:Math.sign(b-a)},true);
+// the page being left stays on the screen, still, as the new one is drawn: it is the old #app itself, set aside
+// (the pages sit above the temple's front frame, as the painted screens do)
+// a painted screen holds its pieces fixed to the screen; while it moves, it is the screen's height
+const lead=a=>[...a.children].find(c=>c.matches('.rit,.mo-sh')||getComputedStyle(c).position==='fixed'&&c.offsetHeight>=innerHeight*.6);
+const pinned=a=>!!lead(a);
+const hold=a=>{if(pinned(a)){a.style.setProperty('height',innerHeight+'px','important');a.style.setProperty('min-height','0','important');a.style.setProperty('padding-bottom','0','important')}},free=a=>{['height','min-height','padding-bottom'].forEach(k=>a.style.removeProperty(k))};
+const setAside=()=>{const old=$('#app');if(!old||!old.firstElementChild)return null;
+ const nw=document.createElement('main');nw.id='app';nw.className=old.className;old.before(nw);
+ const fx=pinned(old);old.classList.add('mo-old');old.style.top=fx?'0px':(-scrollY)+'px';if(fx)hold(old);else old.style.height=(innerHeight+scrollY)+'px';old.inert=true;old.setAttribute('aria-hidden','true');return [old,nw]};
+let ground=null;
+const toGround=old=>{old.classList.remove('mo-old');old.classList.add('mo-under');old.style.zIndex='';ground=old};
+const dropGround=()=>{if(ground){ground.remove();ground=null}};
+const tl=()=>[$('#t-back'),$('#t-front')].filter(Boolean);
+const play=(kind,old,nw,keep)=>{
+ const B=document.body,t=kind==='fade'?760:620,done=()=>{if(keep)toGround(old);else old.remove();nw.style.zIndex='';B.classList.remove('mo-moving','mo-sheet')};B.classList.add('mo-moving');const nt=lead(nw)||nw;
+ const flow=B.classList.contains('sheet')&&!nt.matches('.rit');
+ if(kind==='up'){old.style.zIndex='35';nw.style.zIndex='36';nt.style.opacity='0';
+  // the new page is drawn once in place, unseen, so its whole painting is ready before it rises
+  if(flow){B.classList.add('mo-sheet');tl().forEach(e=>e.style.opacity='0')}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{nt.style.opacity='';const k=[{transform:'translateY(100vh)'},{transform:'translateY(0)'}];nt.animate(k,{duration:t,easing:EASE});if(flow)tl().forEach(e=>{e.style.opacity='';e.animate(k,{duration:t,easing:EASE})})}));
+  old.animate([{filter:'brightness(1)'},{filter:'brightness(.45)'}],{duration:t,easing:EASE,fill:'forwards'}).onfinish=done}
+ else if(kind==='down'){old.style.zIndex='37';{const o=lead(old)||old;if(!o.matches('.rit')){o.style.background='#0B1024';o.style.borderRadius='26px 26px 0 0'}}
+  // the page underneath is drawn first (two frames), then the one on top lowers away from it
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{old.animate([{transform:'translateY(0)'},{transform:'translateY(100%)'}],{duration:old.dataset.moY?380:t,easing:EASE,fill:'forwards'}).onfinish=done}))}
+ else{old.style.zIndex='37';const dx=navDir*6;
+  nt.animate([{transform:`scale(1.06) translateX(${dx}%)`,filter:'blur(6px)'},{transform:'none',filter:'blur(0)'}],{duration:t,easing:EASE});
+  old.animate([{opacity:1,transform:'none',filter:'blur(0)'},{opacity:0,transform:`scale(.96) translateX(${-dx}%)`,filter:'blur(8px)'}],{duration:t*.8,easing:EASE,fill:'forwards'}).onfinish=done}
+};
+// the clouds that carry you between the five places (see ritual.css)
+const KW={'/':'rit','/horoscope':'sky','/tarot':'or','/discover/calendar':'cal','/tarot/journal':'jr'};
+const kw=document.createElement('div');kw.id='kw';kw.setAttribute('aria-hidden','true');
+kw.innerHTML=`<div class="kw-in"><i class="kw-fog"></i><div class="kw-sc">
+ <img class="kw-c kw-sea" src="/art/world/sea.webp" alt="" style="left:0;top:700px;width:1024px;height:1492px;transform-origin:50% 100%">
+ <img class="kw-c kw-bL" src="/art/world/bankL.webp" alt="" style="left:0;top:560px;width:560px;height:560px;transform-origin:0 60%">
+ <img class="kw-c kw-bR" src="/art/world/bankR.webp" alt="" style="left:560px;top:300px;width:464px;height:840px;transform-origin:100% 60%"></div></div>`;
+document.body.append(kw);
+let kwT=0,kwFirst=true;
+const world=(p,kind)=>{const k=KW[p],b=document.body;
+ if(!S.sign||onboarding()||!k||still()){if(k)kwFirst=false;return}
+ // opening the app: the clouds are gathered over it, then part to show the place
+ if(kwFirst){kwFirst=false;clearTimeout(kwT);b.classList.add('kw-slow','kw-now');b.dataset.kw='closed';kw.offsetWidth;b.classList.remove('kw-now');kwT=setTimeout(()=>{delete b.dataset.kw;setTimeout(()=>b.classList.remove('kw-slow'),2600)},450);return}
+ if(kind==='fade'){clearTimeout(kwT);b.dataset.kw='closed';kwT=setTimeout(()=>delete b.dataset.kw,640)}};
+// the inner page's own frame (the painted screen, or the page's fixed body) is what rises and rests as the sheet; pages
+// that redraw themselves are watched so the frame keeps its place
+const tagSheet=()=>{const B=document.body,a=$('#app'),L=B.classList.contains('sheet')&&a&&(lead(a)||a);B.classList.toggle('sh-paint',!!(L&&L.matches('.rit')));if(L&&!L.classList.contains('mo-sh'))L.classList.add('mo-sh');
+ if(a&&a!==shWatched){shObs.disconnect();shObs.observe(a,{childList:true});shWatched=a}};
+let shWatched=null;const shObs=new MutationObserver(()=>tagSheet());
+const r0=render;
+render=function(){
+ const p=location.pathname,d=depth();let kind=null,pair=null;
+ if(p!==last.p&&!skip&&S.sign&&!onboarding()&&!onboardingWas){
+  if(isMain(p)&&(isMain(last.p)||Date.now()-navTap<1500))kind='fade';
+  else if(d>last.d)kind='up';
+  else if(d<last.d||isMain(p)||($('#app')&&$('#app').dataset.moY))kind='down';
+  if(kind&&(!still()||(kind==='up'&&isMain(last.p))))pair=setAside();
+  if(pair&&kind==='up'&&isMain(last.p))pair.push(true);
+ }
+ if(!kind&&skip&&$('#app'))$('#app').style.transform='';
+ last={p,d};skip=false;navTap=0;
+ document.body.classList.toggle('sheet',!!(S.sign&&!onboarding()&&!isMain(p)));
+ const out=r0.apply(this,arguments);
+ tagSheet();
+ world(p,kind);
+ if(pair&&still()){if(pair[2])toGround(pair[0]);else pair[0].remove()}
+ else if(pair)play(kind,pair[0],pair[1],pair[2]);
+ if(isMain(p)&&ground){const g0=ground;ground=null;setTimeout(()=>g0.remove(),pair&&!still()?900:0)}
+ return out;
+};
+let onboardingWas=onboarding();
+{const r1=render;render=function(){const o=r1.apply(this,arguments);onboardingWas=onboarding()||!S.sign;return o}}
+
+addEventListener('scroll',()=>document.documentElement.style.setProperty('--sy',Math.min(scrollY,innerHeight*.25)+'px'),{passive:true});
+// a swipe down lowers the page (or pop-up) on top: it follows the finger, and once let go far enough it goes
+const visible=el=>{if(!el.getClientRects().length)return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'};
+const closer=()=>{const a=$('#app');if(!a)return null;const c=[...a.querySelectorAll(BACK)].filter(visible);return c[c.length-1]||null};
+const fixedOf=el=>{for(let n=el.parentElement;n&&n.id!=='app';n=n.parentElement){if(getComputedStyle(n).position==='fixed'&&!n.matches('.rit'))return n}return null};
+const scrolled=el=>{for(let n=el;n&&n!==document.body;n=n.parentElement){if(n.scrollTop>0){const o=getComputedStyle(n).overflowY;if(o==='auto'||o==='scroll')return true}}return scrollY>2};
+const sideScroller=el=>{for(let n=el;n&&n!==document.body;n=n.parentElement){if(n.scrollWidth>n.clientWidth+4){const o=getComputedStyle(n).overflowX;if(o==='auto'||o==='scroll')return true}}return false};
+const FORM='input,textarea,select,[contenteditable],.en-car,.pg-strip,[data-noswipe]';
+let g=null;
+document.addEventListener('touchstart',e=>{g=null;if(e.touches.length!==1||!S.sign||onboarding()||$('.mo-old'))return;
+ const tg=e.target,t=e.touches[0];if(tg.closest(FORM))return;
+ const c=closer(),main=isMain(location.pathname);
+ g={x:t.clientX,y:t.clientY,t:Date.now(),tg,c,main,dn:(c||!main)&&!scrolled(tg),side:main&&!c&&!sideScroller(tg),drag:false,layer:null}},{passive:true});
+document.addEventListener('touchmove',e=>{if(!g)return;const t=e.touches[0],dx=t.clientX-g.x,dy=t.clientY-g.y;
+ if(!g.drag){if(g.dn&&dy>10&&dy>Math.abs(dx)*1.3){g.drag=true;const a=$('#app');g.page=!(g.c&&fixedOf(g.c));g.layer=g.page?(lead(a)||a):fixedOf(g.c);g.layer.style.transition='none';g.layer.classList.add('mo-drag');if(g.page)document.body.classList.add('mo-moving')}
+  else if(Math.abs(dy)>14&&!g.drag){g.dn=false}if(!g.drag)return}
+ e.preventDefault();g.dy=Math.max(0,dy);g.layer.style.transform=`translateY(${g.dy}px)`;if(g.page&&!g.layer.matches('.rit'))tl().forEach(x=>{x.style.transition='none';x.style.transform=`translateY(${g.dy}px)`})},{passive:false});
+document.addEventListener('touchend',e=>{if(!g)return;const s=g;g=null;const t=e.changedTouches[0],dx=t.clientX-s.x,dy=t.clientY-s.y,v=dy/Math.max(1,Date.now()-s.t);
+ if(s.drag){const L=s.layer;L.classList.remove('mo-drag');const back=()=>tl().forEach(x=>{x.style.transition='transform .3s '+EASE;x.style.transform='';setTimeout(()=>x.style.transition='',320)});setTimeout(back,dy>Math.min(150,innerHeight*.2)?950:0);
+  if(dy>Math.min(150,innerHeight*.2)||(v>.55&&dy>45)){
+   if(s.page){const a=$('#app');a.dataset.moY='1';L.style.transition='none';if(s.c)s.c.click();else goBack();setTimeout(()=>{if(L.isConnected){L.style.transform='';L.style.transition=''}const n=$('#app');if(n)delete n.dataset.moY;if(!$('.mo-old'))document.body.classList.remove('mo-moving')},900);return}
+   L.style.transition='transform .34s '+EASE;L.style.transform='translateY(105%)';
+   setTimeout(()=>{skip=true;s.c.click();setTimeout(()=>{skip=false;L.style.transition='';L.style.transform=''},700)},300)}
+  else{L.style.transition='transform .3s '+EASE;L.style.transform='';setTimeout(()=>{L.style.transition='';document.body.classList.remove('mo-moving')},320)}
+  return}
+ if(s.side&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6){const k=MAIN[location.pathname],i=ORDER.indexOf(k),n=k==='you'?null:ORDER[i+(dx<0?1:-1)];
+  const b=n&&$(`#app [data-nav="${n}"]`);if(b)b.click()}},{passive:true});
+document.addEventListener('touchcancel',()=>{tl().forEach(x=>x.style.transform='');if(g&&g.drag&&g.layer){g.layer.style.transition='';g.layer.style.transform='';document.body.classList.remove('mo-moving')}g=null},{passive:true});
+// a tap on the dimmed place above a sheet lowers the sheet
+document.addEventListener('click',e=>{if(!document.body.classList.contains('sheet')||e.clientY>innerHeight*.25||!(e.target===document.body||e.target===document.documentElement||e.target.closest('.mo-under')))return;
+ const c=closer();if(c)c.click();else goBack()});
+// on a keyboard, Escape does what the swipe down does
+document.addEventListener('keydown',e=>{if(e.key!=='Escape'||!S.sign||onboarding()||e.target.closest('input,textarea'))return;const c=closer();if(c)c.click();else if(!isMain(location.pathname))goBack()});
+
+// the living light: the candles of the Calendar and the Journal burn, and a soft light breathes behind each of the
+// Journal's notes (each in its own time)
+const LIGHT={hj0:'<i class="mo-glow" style="left:108px;top:420px"></i><img class="mo-flame" src="/art/home/jr-flame.webp" alt="" style="left:80px;top:360px;width:56px;height:100px">'+
+  [[321,697,350,246],[746,687,380,214],[746,1025,380,250],[301,1187,330,262],[824,1311,304,210]].map(([x,y,w,h],i)=>`<i class="mo-halo" style="left:${x}px;top:${y}px;width:${w*1.25}px;height:${h*1.25}px;animation-delay:${-i*1.7}s"></i>`).join('')};
+{const ra=ritAfter;ritAfter=y=>{ra(y);for(const k in LIGHT){const sc=document.querySelector(`#app .${k} .hj-bk`)||document.querySelector(`#app .${k} .rit-sc`);if(sc&&!sc.querySelector('.mo-flame'))sc.insertAdjacentHTML('afterbegin',LIGHT[k])}}}
+}
 if(S.sign&&(!C.enabled||C.hasStoredSession())){applyLocation();if(!EMB&&V.sec!=='home'&&!onboarding()){V.sec='home';V.tab.home='today';history.replaceState(history.state,'','/')}}   // opening the app always lands on Todayelse V.sec='welcome';
 render();
 C.onError(()=>toast('Could not sync. Your changes are kept on this device.'));
