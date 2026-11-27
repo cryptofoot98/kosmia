@@ -42,12 +42,19 @@ netlify.toml              publish dir, SPA fallback, headers
 
 ## AI features
 
-OpenAI and ElevenLabs keys stay on the server. Never put them in `config.js`.
+Anthropic, OpenAI and ElevenLabs keys stay on the server. Never put them in `config.js`.
+
+- **Writing**: every generated text (horoscopes, the daily message, dreams, tarot readings, Kassandra) is written by
+  Claude through `lib/claude.mjs` (`ANTHROPIC_API_KEY`, model `claude-sonnet-5-5`, override with `ANTHROPIC_TEXT_MODEL`).
+  If Claude cannot answer, the same request goes to OpenAI's text model. OpenAI is otherwise used only for images and voice.
 
 - **Crafted art**: run `node scripts/craft-images.mjs` locally. It reads `OPENAI_API_KEY` from `.env`
   and writes square art for the 12 oracle cards, 22 major arcana and 12 signs into `public/art/`,
   plus `public/art/index.js` listing what exists. Commit the results. Cards fall back to the SVG
-  symbols for anything missing. Use `--only oracle|tarot|signs`, `--force` and `--quality`.
+  symbols for anything missing. Use `--only oracle|tarot|signs|scenes|cards|whispers`, `--ids a,b`, `--force` and `--quality`.
+  - `whispers/`: one collage artwork for each of the 55 whispers (the daily cards) listed in `public/whispers.js`,
+    the single source for card titles, messages and art motifs shared by the app and the functions.
+  - `cards/`: the lunar-chart card back and the gilded message plaque; `scenes/`: the dashboard's sign backdrops.
 - **Paint my card** (`netlify/functions/paint.mjs`, `POST /api/paint`): a signed-in user gets a
   personal painting of today's oracle card for their sign. Prompts are built on the server from card and sign
   ids, so users cannot send free-form prompts. Images go to the private `paintings` Storage bucket.
@@ -56,7 +63,7 @@ OpenAI and ElevenLabs keys stay on the server. Never put them in `config.js`.
 - Both endpoints check the user's Supabase token and claim from a per-user daily quota
   (`claim_ai_quota`, defaults of 3 paintings and 30 readings). Set `PAINT_DAILY_LIMIT` / `SPEAK_DAILY_LIMIT` to change it.
 
-On Netlify, set `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` as **secret** variables scoped to Functions.
+On Netlify, set `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` as **secret** variables scoped to Functions.
 `SUPABASE_URL` and `SUPABASE_ANON_KEY` must be scoped to both Builds and Functions. See `.env.example`
 for optional overrides (model, voice, limits).
 

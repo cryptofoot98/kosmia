@@ -1,0 +1,7 @@
+# Remote project settings applied with `npx supabase config push`.
+# Only properties declared here are changed; everything else stays as set in the dashboard.
+project_id = "kosmia"
+
+[auth.email]
+# Accounts are usable immediately after sign-up; no confirmation email.
+enable_confirmations = false
