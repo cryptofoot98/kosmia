@@ -6030,6 +6030,54 @@ document.addEventListener('keydown',e=>{if(e.key!=='Escape'||!S.sign||onboarding
 const LIGHT={hj0:'<i class="mo-glow" style="left:108px;top:420px"></i><img class="mo-flame" src="/art/home/jr-flame.webp" alt="" style="left:80px;top:360px;width:56px;height:100px">'+
   [[321,697,350,246],[746,687,380,214],[746,1025,380,250],[301,1187,330,262],[824,1311,304,210]].map(([x,y,w,h],i)=>`<i class="mo-halo" style="left:${x}px;top:${y}px;width:${w*1.25}px;height:${h*1.25}px;animation-delay:${-i*1.7}s"></i>`).join('')};
 {const ra=ritAfter;ritAfter=y=>{ra(y);for(const k in LIGHT){const sc=document.querySelector(`#app .${k} .hj-bk`)||document.querySelector(`#app .${k} .rit-sc`);if(sc&&!sc.querySelector('.mo-flame'))sc.insertAdjacentHTML('afterbegin',LIGHT[k])}}}
+
+// the living clouds: in the Ritual, the Sky and the Oracle the painted clouds drift slowly. One WebGL canvas lies over the
+// painting and moves only the clouds, through a soft mask cut from each painting (art/world/fl-*.png); the woman, the
+// wheel, the lilies and the suns are drawn exactly as painted. The foot of the painting (.rit-ft) is copied from it.
+const FLOW={rit:['/art/ritual/m-body.webp','/art/world/fl-rit.png',[1,0]],eve:['/art/ritual/e-body.webp','/art/world/fl-eve.png',[1,0]],
+ sky:['/art/world/p-sky.webp','/art/world/fl-sky.png',[1,-.12]],or:['/art/world/p-or.webp','/art/world/fl-or.png',[1,0]]};
+const FL={cv:null,gl:null,tex:{},key:'',raf:0,ft:null,t0:performance.now(),last:0};
+const flowGL=()=>{if(FL.gl)return FL.gl;const cv=document.createElement('canvas');cv.className='fl-cv';
+ const gl=cv.getContext('webgl',{alpha:false,antialias:false,premultipliedAlpha:false,powerPreference:'low-power'});if(!gl)return null;
+ const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return o};
+ const pr=gl.createProgram();
+ gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 p;varying vec2 uv;void main(){uv=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
+ gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,`precision highp float;uniform sampler2D img,msk;uniform float t;uniform vec2 dir,px;varying vec2 uv;
+  void main(){float m=texture2D(msk,uv).r;vec2 fl=dir*m*18.*px;float p0=fract(t/7.),p1=fract(t/7.+.5);
+   vec2 wob=vec2(sin(uv.y*11.+t*.4),cos(uv.x*8.+t*.33))*m*2.5*px;
+   vec4 a=texture2D(img,uv-fl*p0+wob),b=texture2D(img,uv-fl*p1+wob);gl_FragColor=mix(a,b,abs(1.-2.*p0));}`));
+ gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return null;gl.useProgram(pr);
+ const bf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ const lp=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+ gl.uniform1i(gl.getUniformLocation(pr,'img'),0);gl.uniform1i(gl.getUniformLocation(pr,'msk'),1);
+ FL.u={t:gl.getUniformLocation(pr,'t'),dir:gl.getUniformLocation(pr,'dir'),px:gl.getUniformLocation(pr,'px')};
+ FL.cv=cv;FL.gl=gl;cv.addEventListener('webglcontextlost',e=>{e.preventDefault();FL.gl=null;FL.tex={};FL.cv=null;FL.key=''});return gl};
+const flowTex=(gl,src)=>new Promise(res=>{const im=new Image();im.onload=()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,im);res({t,w:im.naturalWidth,h:im.naturalHeight})};im.onerror=()=>res(null);im.src=src});
+const flowFrame=now=>{FL.raf=0;const cv=FL.cv,gl=FL.gl;if(!cv||!gl||!cv.isConnected||!FL.key)return;
+ if(!document.hidden&&now-FL.last>=32){FL.last=now;const T=FL.cur;
+  gl.uniform1f(FL.u.t,(now-FL.t0)/1000);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  if(FL.ft&&FL.ft.isConnected){const c=FL.ft.getContext('2d');c.drawImage(cv,0,T.h-300,T.w,300,0,0,FL.ft.width,FL.ft.height)}
+  if(!cv.classList.contains('on'))cv.classList.add('on')}
+ FL.raf=requestAnimationFrame(flowFrame)};
+const flowMount=async()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const host=document.querySelector('#app:not(.mo-under) .rit.kw:not(.hp0)');
+ const key=!host?'':host.classList.contains('sky0')?'sky':host.classList.contains('or0')?'or':host.classList.contains('eve')?'eve':'rit';
+ if(!key){FL.key='';return}
+ const gl=flowGL();if(!gl)return;const cv=FL.cv,[src,msk,dir]=FLOW[key];
+ const box=key==='or'?host.querySelector('.or-sc'):host.querySelector('.rit-sc');if(!box)return;
+ if(cv.parentNode!==box){cv.classList.remove('on');if(key==='or'){const bg=box.querySelector('.or-bg');bg?bg.after(cv):box.prepend(cv)}else box.prepend(cv)}
+ const ftb=key==='or'?null:host.querySelector('.rit-ft');FL.ft=null;
+ if(!FL.tex[key])FL.tex[key]=Promise.all([flowTex(gl,src),flowTex(gl,msk)]);
+ const [im,mk]=await FL.tex[key];if(!im||!mk||FL.cv!==cv||!cv.isConnected)return;FL.cur=im;
+ cv.width=im.w;cv.height=im.h;cv.style.width=im.w+'px';cv.style.height=im.h+'px';gl.viewport(0,0,im.w,im.h);
+ gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,im.t);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,mk.t);
+ gl.uniform2f(FL.u.dir,dir[0],dir[1]);gl.uniform2f(FL.u.px,1/im.w,1/im.h);
+ if(ftb){let f=ftb.querySelector('canvas');if(!f){f=document.createElement('canvas');f.width=im.w;f.height=300;ftb.append(f)}FL.ft=f}
+ FL.key=key;if(!FL.raf)FL.raf=requestAnimationFrame(flowFrame)};
+{const ra=ritAfter;ritAfter=y=>{ra(y);flowMount()}}
 }
 if(S.sign&&(!C.enabled||C.hasStoredSession())){applyLocation();if(!EMB&&V.sec!=='home'&&!onboarding()){V.sec='home';V.tab.home='today';history.replaceState(history.state,'','/')}}   // opening the app always lands on Todayelse V.sec='welcome';
 render();
